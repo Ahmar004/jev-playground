@@ -8,11 +8,22 @@ Claude-Code-only. Don't duplicate rules back into this file; add them to
 
 This file holds the two things that genuinely are Claude-Code-specific.
 
+## ROADMAP.md file at root:
+
+Follow @ROADMAP.md at root at all costs, ask and share before editing anything in it, it contains a well planned roadmap that we must follow, it also contains some rules not to break, and we have to do one step at a time from roadmap for proper focus (unless user asks to do multiple steps simultaneously.)
+
 ## Session logs
 
 `.claude-logs/` is tracked, not gitignored — the transcript for the session
 that produced a change belongs on the branch that ships it. Stage it
 immediately before every `git push`, separately from the code commit.
+
+Always commit `.claude-logs/` with your changes.
+
+Capture is automatic: user-level `UserPromptSubmit` and `Stop` hooks in
+`~/.claude/settings.json` run `~/.claude/extract-log.py`, which writes only
+prompts and final replies (no tool calls). Setup and proof are in
+`CAPTURE-TEST.md`; the guide is `docs/agent-session-logs-setup.md`.
 
 ## Skills
 
