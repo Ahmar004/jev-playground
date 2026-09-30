@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { captureClientError } from '@/lib/observability/capture-client-error'
 import { isChunkLoadError, reloadOnceForChunkError } from '@/lib/errors/chunk-load-error'
 
-// Replaces the ENTIRE app (including the [locale] root layout) when an
+// Replaces the ENTIRE app (including the root layout) when an
 // error escapes even that layout, so it must render its own <html>/<body>
 // and can't rely on globals.css having loaded — hence the inline styles and
 // hardcoded colors below instead of Tailwind classes/design tokens. This is

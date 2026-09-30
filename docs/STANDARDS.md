@@ -163,8 +163,7 @@ git repository, for the same reason.
 - **That the gates pass.** That is CI's other jobs. This checks that they
   _run_.
 - **Anything that lives outside the repo.** Branch protection, GitHub
-  secrets, the `production-database` environment, Vercel env vars —
-  `docs/CI_CD_SETUP.md` is the checklist for those, and it is a human's.
+  secrets and service accounts are a human's to set up.
 - **Whether a rule is any good.** A rule file can exist, be linked, and be
   wrong. The check proves the scaffolding is wired, not that what it
   carries is true.

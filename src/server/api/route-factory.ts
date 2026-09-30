@@ -1,10 +1,7 @@
 import 'server-only'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { isCronAuthorized } from './cron-auth'
 import { captureError } from '@/lib/observability/capture-error'
-import { enforceAuthorize, type AdminContext } from '@/lib/rbac/context'
-import type { Permission } from '@/lib/rbac/permissions'
 
 // Route files under src/app/api/**/route.ts should contain zero logic —
 // just `export const GET = createApiRoute(...)`. Schema + handler logic
@@ -18,20 +15,10 @@ import type { Permission } from '@/lib/rbac/permissions'
 // means no validation" escape hatch.
 export function createApiRoute<InputSchema extends z.ZodType, Output>(config: {
 	input: InputSchema
-	// Optional admin authorization gate, run BEFORE input parsing/handler: a
-	// permission key, or a predicate over the resolved AdminContext. On failure
-	// it throws AppError (unauthorized/forbidden), which the catch below turns
-	// into the right status — so a route can't forget the check. Omit it for
-	// public/unauthenticated routes. See docs/rules/authorization.md.
-	authorize?: Permission | ((ctx: AdminContext) => boolean | Promise<boolean>)
 	handler: (input: z.infer<InputSchema>, req: NextRequest) => Promise<Output>
 }) {
 	return async function (req: NextRequest) {
 		try {
-			if (config.authorize !== undefined) {
-				await enforceAuthorize(config.authorize)
-			}
-
 			const rawInput =
 				req.method === 'GET'
 					? Object.fromEntries(req.nextUrl.searchParams)
@@ -55,17 +42,5 @@ export function createApiRoute<InputSchema extends z.ZodType, Output>(config: {
 			const { userMessage, status } = captureError(error)
 			return NextResponse.json({ error: userMessage }, { status })
 		}
-	}
-}
-
-// Cron routes check CRON_SECRET instead of a user session — wrap any route
-// under src/app/api/cron/** with this so the check can't be forgotten.
-export function createCronRoute(handler: (req: NextRequest) => Promise<Response>) {
-	return async function (req: NextRequest) {
-		const authHeader = req.headers.get('authorization')
-		if (!isCronAuthorized(authHeader, process.env.CRON_SECRET)) {
-			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-		}
-		return handler(req)
 	}
 }

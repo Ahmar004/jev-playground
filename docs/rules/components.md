@@ -60,7 +60,7 @@ const mutation = useMutation({
 })
 ```
 
-`<Toaster />` is mounted once in the root layout (`src/app/[locale]/layout.tsx`)
+`<Toaster />` is mounted once in the root layout (`src/app/layout.tsx`)
 — nothing else to wire up per call site. `useToast()` (also in
 `src/lib/toast.ts`) is what `<Toaster />` itself uses to subscribe to the
 current queue; application code should call `toast()`, not `useToast()`.

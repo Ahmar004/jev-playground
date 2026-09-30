@@ -2,8 +2,6 @@ import 'server-only'
 import { unstable_rethrow } from 'next/navigation'
 import { z } from 'zod'
 import { captureError } from '@/lib/observability/capture-error'
-import { enforceAuthorize, type AdminContext } from '@/lib/rbac/context'
-import type { Permission } from '@/lib/rbac/permissions'
 
 export type ActionResult<Output> =
 	{ ok: true; data: Output } | { ok: false; error: string; status: number }
@@ -17,19 +15,10 @@ export type ActionResult<Output> =
 // error Next can't recover from cleanly. See docs/rules/error-handling.md.
 export function validatedAction<InputSchema extends z.ZodType, Output>(config: {
 	input: InputSchema
-	// Optional admin authorization gate, run BEFORE input parsing/handler — a
-	// permission key or a predicate over the resolved AdminContext. Throws
-	// AppError on failure, which the catch turns into { ok:false, error, status }.
-	// Omit for actions that aren't admin-gated. See docs/rules/authorization.md.
-	authorize?: Permission | ((ctx: AdminContext) => boolean | Promise<boolean>)
 	handler: (input: z.infer<InputSchema>) => Promise<Output>
 }) {
 	return async function (rawInput: unknown): Promise<ActionResult<Output>> {
 		try {
-			if (config.authorize !== undefined) {
-				await enforceAuthorize(config.authorize)
-			}
-
 			const input = config.input.parse(rawInput)
 			const data = await config.handler(input)
 			return { ok: true, data }

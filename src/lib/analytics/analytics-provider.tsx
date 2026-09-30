@@ -7,9 +7,7 @@ import { ANALYTICS_EVENTS } from './events'
 import { captureAttribution } from './attribution'
 import { track } from './track'
 
-// Deliberately next/navigation, not the locale-aware @/i18n/routing versions
-// — those strip the locale prefix (by design, for building links), but a
-// pageview should record the real browser URL, locale included.
+// usePathname from next/navigation: a pageview records the real browser URL.
 function AnalyticsProviderInner() {
 	const pathname = usePathname()
 	const searchParams = useSearchParams()

@@ -2,8 +2,7 @@
 
 **Default: Supabase Auth, for anything with real user accounts.** A pure
 landing/marketing page with no sign-in gets it removed entirely — see
-"Removing auth" below. `template-setup` asks this explicitly; don't leave
-it undecided.
+"Removing auth" below.
 
 ## Why Supabase Auth, not next-auth or something else
 
@@ -16,8 +15,8 @@ ever (see `docs/rules/database.md`).
 
 ## The three pieces
 
-1. **`src/proxy.ts`** refreshes the session cookie on every request, before
-   next-intl's locale routing runs. It fails open — if
+1. **`src/proxy.ts`** refreshes the session cookie on every page request. It
+   fails open — if
    `NEXT_PUBLIC_SUPABASE_URL`/`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` aren't set, or
    the network call to Supabase fails, the site still serves pages; the
    session just doesn't get refreshed on that request. Confirmed directly:
@@ -112,7 +111,7 @@ policy is refused even on an exempt table.
 
 This whole section applies the moment a project has real user accounts.
 
-## Wiring it up (when `template-setup` says this project needs accounts)
+## Wiring it up (when a project needs accounts)
 
 1. `pnpm add @supabase/supabase-js @supabase/ssr` (already the case if
    you're reading this in a repo generated after this rule was added —

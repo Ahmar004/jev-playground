@@ -23,7 +23,7 @@ function Fallback({ resetErrorBoundary }: FallbackProps) {
 // Wrap a subtree that can fail independently of the rest of the page — a
 // widget backed by a flaky embed, a chart that might choke on malformed
 // data — so one broken component doesn't take down the whole route. For
-// whole-route failures, the [locale]/error.tsx boundary already handles
+// whole-route failures, the app/error.tsx boundary already handles
 // it; reach for this only when you want a smaller blast radius. See
 // docs/rules/error-handling.md.
 export function ErrorBoundary({ children }: { children: ReactNode }) {

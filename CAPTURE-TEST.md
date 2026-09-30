@@ -6,13 +6,13 @@ final response to `.claude-logs/`, and nothing else.
 
 ## Setup
 
-| Item | Value |
-|---|---|
-| Machine | Windows 11 Pro, Claude Code CLI, Python 3.13 |
-| Script | `~/.claude/extract-log.py` (the guide's script with the Windows fixes below) |
-| Hooks | `UserPromptSubmit` and `Stop` in `~/.claude/settings.json`, both running `python "C:/Users/Ahmar Ali/.claude/extract-log.py"` (existing settings kept; a backup is in `settings.json.bak-step0`) |
-| Output | `<repo>/.claude-logs/<timestamp>_<session-id>.md`, committed (not gitignored) |
-| Commit policy | `CLAUDE.md` > Session logs: "Always commit `.claude-logs/` with your changes." |
+| Item          | Value                                                                                                                                                                                            |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Machine       | Windows 11 Pro, Claude Code CLI, Python 3.13                                                                                                                                                     |
+| Script        | `~/.claude/extract-log.py` (the guide's script with the Windows fixes below)                                                                                                                     |
+| Hooks         | `UserPromptSubmit` and `Stop` in `~/.claude/settings.json`, both running `python "C:/Users/Ahmar Ali/.claude/extract-log.py"` (existing settings kept; a backup is in `settings.json.bak-step0`) |
+| Output        | `<repo>/.claude-logs/<timestamp>_<session-id>.md`, committed (not gitignored)                                                                                                                    |
+| Commit policy | `CLAUDE.md` > Session logs: "Always commit `.claude-logs/` with your changes."                                                                                                                   |
 
 ## Changes from the guide's script, and why
 
@@ -29,13 +29,13 @@ Output format, file naming and the prompt-and-reply-only filtering are unchanged
 
 Session A is this interactive setup session. Sessions B to C are separate headless sessions (`claude -p --model haiku`) started in the repo root, so the hooks ran on their own.
 
-| Session | Log file (`.claude-logs/`) | Result |
-|---|---|---|
-| A - setup session, first prompt "deliver step-0 under @ROADMAP.md ..." | `2026-09-30_20-49-03_fff54380-...md` | Initial prompt captured (requested by the user) |
-| B - `CANARY-B` | `2026-09-30_20-49-36_fc10a8c1-...md` | Prompt captured, reply missing (the Stop race, fix 6). Regenerated from its transcript after the fix |
-| B2 - `CANARY-B2` | `2026-09-30_20-50-24_aa2b770b-...md` | Prompt and reply captured, but the prompt hook added ~10 s (fix 5) |
-| B3 - `CANARY-B3` | `2026-09-30_20-50-58_c4aede5d-...md` | Prompt and reply captured. Its first prompt also leaked into session A's log (fix 4); A's log was regenerated clean |
-| C - `CANARY-C` | `2026-09-30_20-51-28_2dcc1d83-...md` | Pass: log created at prompt time, reply added at stop, `session_status: complete`, 4 s total, no leak into any other log |
+| Session                                                                | Log file (`.claude-logs/`)           | Result                                                                                                                   |
+| ---------------------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| A - setup session, first prompt "deliver step-0 under @ROADMAP.md ..." | `2026-09-30_20-49-03_fff54380-...md` | Initial prompt captured (requested by the user)                                                                          |
+| B - `CANARY-B`                                                         | `2026-09-30_20-49-36_fc10a8c1-...md` | Prompt captured, reply missing (the Stop race, fix 6). Regenerated from its transcript after the fix                     |
+| B2 - `CANARY-B2`                                                       | `2026-09-30_20-50-24_aa2b770b-...md` | Prompt and reply captured, but the prompt hook added ~10 s (fix 5)                                                       |
+| B3 - `CANARY-B3`                                                       | `2026-09-30_20-50-58_c4aede5d-...md` | Prompt and reply captured. Its first prompt also leaked into session A's log (fix 4); A's log was regenerated clean      |
+| C - `CANARY-C`                                                         | `2026-09-30_20-51-28_2dcc1d83-...md` | Pass: log created at prompt time, reply added at stop, `session_status: complete`, 4 s total, no leak into any other log |
 
 ## How to re-check
 

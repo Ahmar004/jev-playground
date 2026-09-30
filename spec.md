@@ -8,34 +8,34 @@ Jev's Playground is an interactive website that teaches people where System One 
 
 ### 1.1 Users [R0, R1]
 
-| User | Needs | Mode |
-|---|---|---|
-| Beginner (no API keys) | Learn the difference with no setup, no keys and no code | Beginner mode |
+| User                     | Needs                                                            | Mode           |
+| ------------------------ | ---------------------------------------------------------------- | -------------- |
+| Beginner (no API keys)   | Learn the difference with no setup, no keys and no code          | Beginner mode  |
 | Developer (own API keys) | Run real experiments in real time with their own keys and models | Developer mode |
 
 ### 1.2 Vocabulary
 
 Use these words consistently in UI, code and docs.
 
-| Term | Meaning |
-|---|---|
-| Jev | TypeSafe's System One model. Makes fast typed judgments; does not write text. |
-| LLM | A frontier generative model (Claude, GPT, Gemini, ...). The "System Two" side. |
-| Code | Plain deterministic code (counting, math, date comparison). The third tool. |
-| State | The input text or JSON that Jev judges. |
-| Question | One typed question about the state: Noul, Choice or Score. |
-| Noul | Yes/no question; answer is the probability of yes (0-1). |
-| Choice | Pick one option from a set (max 255); answer is the option, a probability per option, and confidence. |
-| Score | Rate against 2-10 ordered levels; answer is a probability-weighted score, a probability per level, a legend, and confidence. |
-| Confidence | 0-1 value on Choice and Score answers saying how certain Jev is; used to decide whether to act. |
-| Beginner mode | Replays real pre-recorded results. No keys, no live calls. |
-| Developer mode | Live calls with the user's own keys. |
-| Recording | One stored, real result from the owner's keys, used by Beginner mode. |
-| Level | One lesson on the learning path. |
-| VS game | An animated race where Jev and an LLM do the same job. |
-| Arena | Side-by-side comparison of Jev and an LLM on a task. |
-| Sandbox | Hands-on builder for Jev states and questions. |
-| Racer | Jev or the LLM inside a game. |
+| Term           | Meaning                                                                                                                      |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Jev            | TypeSafe's System One model. Makes fast typed judgments; does not write text.                                                |
+| LLM            | A frontier generative model (Claude, GPT, Gemini, ...). The "System Two" side.                                               |
+| Code           | Plain deterministic code (counting, math, date comparison). The third tool.                                                  |
+| State          | The input text or JSON that Jev judges.                                                                                      |
+| Question       | One typed question about the state: Noul, Choice or Score.                                                                   |
+| Noul           | Yes/no question; answer is the probability of yes (0-1).                                                                     |
+| Choice         | Pick one option from a set (max 255); answer is the option, a probability per option, and confidence.                        |
+| Score          | Rate against 2-10 ordered levels; answer is a probability-weighted score, a probability per level, a legend, and confidence. |
+| Confidence     | 0-1 value on Choice and Score answers saying how certain Jev is; used to decide whether to act.                              |
+| Beginner mode  | Replays real pre-recorded results. No keys, no live calls.                                                                   |
+| Developer mode | Live calls with the user's own keys.                                                                                         |
+| Recording      | One stored, real result from the owner's keys, used by Beginner mode.                                                        |
+| Level          | One lesson on the learning path.                                                                                             |
+| VS game        | An animated race where Jev and an LLM do the same job.                                                                       |
+| Arena          | Side-by-side comparison of Jev and an LLM on a task.                                                                         |
+| Sandbox        | Hands-on builder for Jev states and questions.                                                                               |
+| Racer          | Jev or the LLM inside a game.                                                                                                |
 
 ## 2. Facts about the models (verified 2026-09-30)
 
@@ -59,13 +59,13 @@ Literal reading of wording; math and numbers (including counting); date and time
 
 ### 2.3 Browser access per provider (CORS preflight from `http://localhost:3000`)
 
-| Provider | Direct browser call allowed? | So Developer mode calls go |
-|---|---|---|
-| TypeSafe (Jev) | No ("Disallowed CORS origin") | Through our server as a pass-through [R18] |
-| OpenRouter (Jev and LLMs) | Yes | Browser to OpenRouter directly [R17] |
-| Anthropic | Yes (needs the direct-browser-access header) | Browser directly [R17] |
-| OpenAI | Yes | Browser directly [R17] |
-| Google (Gemini) | Yes | Browser directly [R17] |
+| Provider                  | Direct browser call allowed?                 | So Developer mode calls go                 |
+| ------------------------- | -------------------------------------------- | ------------------------------------------ |
+| TypeSafe (Jev)            | No ("Disallowed CORS origin")                | Through our server as a pass-through [R18] |
+| OpenRouter (Jev and LLMs) | Yes                                          | Browser to OpenRouter directly [R17]       |
+| Anthropic                 | Yes (needs the direct-browser-access header) | Browser directly [R17]                     |
+| OpenAI                    | Yes                                          | Browser directly [R17]                     |
+| Google (Gemini)           | Yes                                          | Browser directly [R17]                     |
 
 This answers the requirements' open question: TypeSafe does not allow browser calls, so TypeSafe-key Jev calls use the server pass-through.
 
@@ -123,22 +123,22 @@ A Beginner/Developer switch sits in the header on every page. Anyone can switch 
 
 ### 5.1 Pages
 
-| Page | Purpose |
-|---|---|
-| Sign-in | Separate first page. Email and password sign-up and sign-in. No other page can be reached without signing in. [R55] |
-| Home | Welcome, path progress, one-click "Play level 1: Speed Race", optional start quiz. |
-| Path | The 8 levels with status (not started, in progress, done, skipped). |
-| Level | One level's Learn, Predict, Play, Reveal and Check steps. |
-| Games | The VS games. |
-| Game | One VS game. |
-| Arena | Side-by-side comparisons. |
-| Sandbox | Jev state and question builder. |
-| Quizzes | Start quiz and end quiz, with results and solutions. |
-| Leaderboard | The user's own model results in timed games. |
-| Profile | XP, badges, quiz improvement, completion card, sign out. |
-| Keys | Paste, test and remove keys; plain-language safety info. Opens as a panel from the header. |
-| Glossary | Plain-English definitions of every technical term. [R74] |
-| Methodology | How every comparison is made and recorded, public. [R93] Also hosts the published load-test results. [R78] |
+| Page          | Purpose                                                                                                                      |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Sign-in       | Separate first page. Email and password sign-up and sign-in. No other page can be reached without signing in. [R55]          |
+| Home          | Welcome, path progress, one-click "Play level 1: Speed Race", optional start quiz.                                           |
+| Path          | The 8 levels with status (not started, in progress, done, skipped).                                                          |
+| Level         | One level's Learn, Predict, Play, Reveal and Check steps.                                                                    |
+| Games         | The VS games.                                                                                                                |
+| Game          | One VS game.                                                                                                                 |
+| Arena         | Side-by-side comparisons.                                                                                                    |
+| Sandbox       | Jev state and question builder.                                                                                              |
+| Quizzes       | Start quiz and end quiz, with results and solutions.                                                                         |
+| Leaderboard   | The user's own model results in timed games.                                                                                 |
+| Profile       | XP, badges, quiz improvement, completion card, sign out.                                                                     |
+| Keys          | Paste, test and remove keys; plain-language safety info. Opens as a panel from the header.                                   |
+| Glossary      | Plain-English definitions of every technical term. [R74]                                                                     |
+| Methodology   | How every comparison is made and recorded, public. [R93] Also hosts the published load-test results. [R78]                   |
 | Shared result | Public read-only view of a shared comparison (the one page reachable without signing in, so a link can be opened by anyone). |
 
 Note on sign-in vs sharing: R55 requires sign-in for every page, and R46 requires sharing by link. A shared result is useless if the recipient can't open it, so the shared result page is the single public exception. It is read-only and shows a "Sign in to try it yourself" button. Confirmed by the user in Step-0.1.
@@ -171,16 +171,16 @@ After the first sign-in, Home shows one button that starts level 1 (Speed Race) 
 
 ### 6.2 The levels
 
-| # | Level | What happens | The user learns | Winner | Docs |
-|---|---|---|---|---|---|
-| 1 | Speed Race [R30] | Jev and the LLM classify the same big batch of items (Choice) and race; counters show items done, time and cost. | Jev is built for fast, cheap judgments at scale. | Jev (speed, cost) | `/concepts/system-one` |
-| 2 | Write Me a Haiku [R31] | Both are asked to write a haiku. The LLM writes one; Jev cannot, since it only returns typed answers. | Jev does not generate text; that is System Two work. | LLM | jaggedness#generation |
-| 3 | Count the Fruits / Which Date First? [R32] | Jev is asked to count fruits in a list and to say which of two dates is first, and struggles. The user then applies the fix: one Noul per item with the count done in code, and date parts extracted by Jev then compared in code. | Keep counting, math and dates in code. | Code (with Jev as helper) | jaggedness#math-and-numbers, `/cookbooks/date_extraction_cookbook` |
-| 4 | How Sure Are You? [R33] | The user rates their own confidence on items, then sees Jev's confidence on the same items and how often each was right at each confidence level. | What calibrated confidence is and why it matters. | Jev (calibration) | `/confidence` |
-| 5 | Break It Down [R34] | One broad question ("is this a good product review?") is split into small atomic questions, and the answers are combined in code with weights. | Atomic questions combined in code. | Jev plus code | `/patterns/composite-scoring` |
-| 6 | The Router [R35] | The user sorts task cards into Jev, LLM or Code (drag-and-drop, with keyboard and tap alternatives), then runs the pipeline and sees each tool's result. | Picking the right tool for each job. | Depends on the card | `/patterns/intent-routing` |
-| 7 | Spot the Phish [R36] | One email is checked for many phishing signals in a single Jev request; each signal lights up with its probability and a short explanation. | Asking many questions in one request. | Jev | `/patterns/fan-out` |
-| 8 | Trick Jev [R37] | The user tries to fool Jev with wording. In Beginner mode they pick from recorded trick attempts; in Developer mode they write their own. | Literal reading and precise instructions. | Varies; shows Jev can be fooled | jaggedness#literal-reading, jaggedness#adversarial-content |
+| #   | Level                                      | What happens                                                                                                                                                                                                                       | The user learns                                      | Winner                          | Docs                                                               |
+| --- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------ |
+| 1   | Speed Race [R30]                           | Jev and the LLM classify the same big batch of items (Choice) and race; counters show items done, time and cost.                                                                                                                   | Jev is built for fast, cheap judgments at scale.     | Jev (speed, cost)               | `/concepts/system-one`                                             |
+| 2   | Write Me a Haiku [R31]                     | Both are asked to write a haiku. The LLM writes one; Jev cannot, since it only returns typed answers.                                                                                                                              | Jev does not generate text; that is System Two work. | LLM                             | jaggedness#generation                                              |
+| 3   | Count the Fruits / Which Date First? [R32] | Jev is asked to count fruits in a list and to say which of two dates is first, and struggles. The user then applies the fix: one Noul per item with the count done in code, and date parts extracted by Jev then compared in code. | Keep counting, math and dates in code.               | Code (with Jev as helper)       | jaggedness#math-and-numbers, `/cookbooks/date_extraction_cookbook` |
+| 4   | How Sure Are You? [R33]                    | The user rates their own confidence on items, then sees Jev's confidence on the same items and how often each was right at each confidence level.                                                                                  | What calibrated confidence is and why it matters.    | Jev (calibration)               | `/confidence`                                                      |
+| 5   | Break It Down [R34]                        | One broad question ("is this a good product review?") is split into small atomic questions, and the answers are combined in code with weights.                                                                                     | Atomic questions combined in code.                   | Jev plus code                   | `/patterns/composite-scoring`                                      |
+| 6   | The Router [R35]                           | The user sorts task cards into Jev, LLM or Code (drag-and-drop, with keyboard and tap alternatives), then runs the pipeline and sees each tool's result.                                                                           | Picking the right tool for each job.                 | Depends on the card             | `/patterns/intent-routing`                                         |
+| 7   | Spot the Phish [R36]                       | One email is checked for many phishing signals in a single Jev request; each signal lights up with its probability and a short explanation.                                                                                        | Asking many questions in one request.                | Jev                             | `/patterns/fan-out`                                                |
+| 8   | Trick Jev [R37]                            | The user tries to fool Jev with wording. In Beginner mode they pick from recorded trick attempts; in Developer mode they write their own.                                                                                          | Literal reading and precise instructions.            | Varies; shows Jev can be fooled | jaggedness#literal-reading, jaggedness#adversarial-content         |
 
 ## 7. VS games [R38]
 
@@ -198,16 +198,16 @@ After the first sign-in, Home shows one button that starts level 1 (Speed Race) 
 
 ### 7.2 The games
 
-| Game | Priority | Use case | How it plays | Expected lesson |
-|---|---|---|---|---|
-| Guardrail Gauntlet | P0 | LLM guardrails | Messages, some carrying prompt injections or harmful asks, rush at a gate. Jev and the LLM are bouncers deciding pass, review or block. | Jev screens fast and cheaply; the scoreboard shows catches and misses. |
-| Needle Hunt | P0 | Semantic search / re-ranking | A long document; both must find the lines that answer a question. Jev scores every line in one call; the LLM reads the whole document. | Jev ranks many candidates at once, fast and cheaply. |
-| Number Crunch Showdown | P0 | Knowing when not to use Jev | A counting and arithmetic duel. Jev visibly falls over, the LLM does better, and plain code wins outright. | Keep math in code. Jev loses here on purpose. |
-| Review Tug-of-War | P0 | Rating at scale (Score) | A stream of product reviews; each correct sentiment score pulls the rope toward that racer. | Score questions are fast and consistent at volume. |
-| Smart Home Dash | P1 | Intent routing / function calling | Jev and the LLM are two robot runners in a house; voice commands pop up and each racer must route the command to the right device before the next one arrives. | Jev routes intents quickly. |
-| Twin Finder | P1 | Entity matching | Two conveyor belts carry product cards from two shops; each pair must be stamped "same" or "different" before it falls off. | Cost and speed at scale for pairwise judgments. |
-| Confidence Catch | P1 | Confidence-gated routing | Answers fall like fruit and land in "act", "human review" or the bin, based on a confidence threshold the user drags. | Jev's calibrated confidence makes safe automation possible. |
-| Citation Cop | P1 | Citation checking | Claims with quotes zoom past a checkpoint; each racer flags citations the source doesn't support. | A close race that teaches trade-offs. |
+| Game                   | Priority | Use case                          | How it plays                                                                                                                                                   | Expected lesson                                                        |
+| ---------------------- | -------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Guardrail Gauntlet     | P0       | LLM guardrails                    | Messages, some carrying prompt injections or harmful asks, rush at a gate. Jev and the LLM are bouncers deciding pass, review or block.                        | Jev screens fast and cheaply; the scoreboard shows catches and misses. |
+| Needle Hunt            | P0       | Semantic search / re-ranking      | A long document; both must find the lines that answer a question. Jev scores every line in one call; the LLM reads the whole document.                         | Jev ranks many candidates at once, fast and cheaply.                   |
+| Number Crunch Showdown | P0       | Knowing when not to use Jev       | A counting and arithmetic duel. Jev visibly falls over, the LLM does better, and plain code wins outright.                                                     | Keep math in code. Jev loses here on purpose.                          |
+| Review Tug-of-War      | P0       | Rating at scale (Score)           | A stream of product reviews; each correct sentiment score pulls the rope toward that racer.                                                                    | Score questions are fast and consistent at volume.                     |
+| Smart Home Dash        | P1       | Intent routing / function calling | Jev and the LLM are two robot runners in a house; voice commands pop up and each racer must route the command to the right device before the next one arrives. | Jev routes intents quickly.                                            |
+| Twin Finder            | P1       | Entity matching                   | Two conveyor belts carry product cards from two shops; each pair must be stamped "same" or "different" before it falls off.                                    | Cost and speed at scale for pairwise judgments.                        |
+| Confidence Catch       | P1       | Confidence-gated routing          | Answers fall like fruit and land in "act", "human review" or the bin, based on a confidence threshold the user drags.                                          | Jev's calibrated confidence makes safe automation possible.            |
+| Citation Cop           | P1       | Citation checking                 | Claims with quotes zoom past a checkpoint; each racer flags citations the source doesn't support.                                                              | A close race that teaches trade-offs.                                  |
 
 ## 8. Arena [R39-R46]
 
@@ -309,15 +309,15 @@ Level status, quiz attempts, XP, badges and leaderboard entries are saved to the
 
 ## 13. What we store and what we never store
 
-| Stored (per signed-in user, unless noted) | Never stored |
-|---|---|
-| Email and auth record | Any API key (DB, logs, analytics, browser storage) |
-| Level status, check answers, quiz attempts | User task text in analytics |
-| XP and badges | Request bodies of TypeSafe pass-through calls |
-| Leaderboard entries (numbers and model IDs only) | Personal data beyond email |
-| Shared snapshots (only when the user chooses to share) | |
-| Recordings (global, owner-created) | |
-| Theme choice (in the browser) | |
+| Stored (per signed-in user, unless noted)              | Never stored                                       |
+| ------------------------------------------------------ | -------------------------------------------------- |
+| Email and auth record                                  | Any API key (DB, logs, analytics, browser storage) |
+| Level status, check answers, quiz attempts             | User task text in analytics                        |
+| XP and badges                                          | Request bodies of TypeSafe pass-through calls      |
+| Leaderboard entries (numbers and model IDs only)       | Personal data beyond email                         |
+| Shared snapshots (only when the user chooses to share) |                                                    |
+| Recordings (global, owner-created)                     |                                                    |
+| Theme choice (in the browser)                          |                                                    |
 
 ## 14. Constraints [R94-R98]
 
@@ -333,16 +333,16 @@ Level status, quiz attempts, XP, badges and leaderboard entries are saved to the
 
 The Step-3 slice plan builds every P0 item before any P1 item.
 
-| P0 (must ship) | P1 (ship if time allows) |
-|---|---|
-| Sign-in, header, navigation, themes, Glossary, Methodology | Smart Home Dash, Twin Finder, Confidence Catch, Citation Cop |
-| All 8 levels with the full loop and checks | Arena batch mode [R45] |
-| Guardrail Gauntlet, Needle Hunt, Number Crunch Showdown, Review Tug-of-War | Published load-test results [R78] |
-| Beginner mode recordings and replay, and the recording tool | |
-| Developer mode, the Keys screen, key safety | |
-| Arena (presets, live runs, model picker, share links) | |
-| Sandbox | |
-| Quizzes, progress, XP, badges, completion card, leaderboard | |
+| P0 (must ship)                                                             | P1 (ship if time allows)                                     |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Sign-in, header, navigation, themes, Glossary, Methodology                 | Smart Home Dash, Twin Finder, Confidence Catch, Citation Cop |
+| All 8 levels with the full loop and checks                                 | Arena batch mode [R45]                                       |
+| Guardrail Gauntlet, Needle Hunt, Number Crunch Showdown, Review Tug-of-War | Published load-test results [R78]                            |
+| Beginner mode recordings and replay, and the recording tool                |                                                              |
+| Developer mode, the Keys screen, key safety                                |                                                              |
+| Arena (presets, live runs, model picker, share links)                      |                                                              |
+| Sandbox                                                                    |                                                              |
+| Quizzes, progress, XP, badges, completion card, leaderboard                |                                                              |
 
 ## 16. Decisions made in Step-0.1 (2026-10-01)
 

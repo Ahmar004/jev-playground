@@ -2,6 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import {
 	chmodSync,
+	copyFileSync,
 	cpSync,
 	existsSync,
 	mkdirSync,
@@ -9,6 +10,7 @@ import {
 	readdirSync,
 	readFileSync,
 	rmSync,
+	statSync,
 	symlinkSync,
 	writeFileSync
 } from 'node:fs'
@@ -21,15 +23,13 @@ import { CHECKS, runStandardsChecks } from './check-standards.mjs'
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const SCRIPT = join(REPO_ROOT, 'scripts/check-standards.mjs')
+const IS_WINDOWS = process.platform === 'win32'
 
 // Everything the checks read. Copied, not referenced, so a test can break one
 // thing in isolation without touching the real repo.
 const FIXTURE_FILES = [
 	'AGENTS.md',
 	'CLAUDE.md',
-	'GEMINI.md',
-	'QWEN.md',
-	'.cursor/rules/project.mdc',
 	'README.md',
 	'docs/rules',
 	'.githooks/commit-msg',
@@ -50,8 +50,7 @@ const FIXTURE_FILES = [
 	'scripts/check-rls.mjs',
 	'tsconfig.json',
 	'eslint.config.mjs',
-	'.claude-logs/.gitkeep',
-	'.codex-logs/.gitkeep'
+	'.claude-logs/.gitkeep'
 ]
 
 function git(root, ...args) {
@@ -69,11 +68,20 @@ function createFixture() {
 	// to the whole tree, because git refuses to evaluate a path "beyond a
 	// symbolic link" — and the ignore check probes node_modules/x.js.
 	mkdirSync(join(root, 'node_modules'))
+	// Windows only lets an admin or Developer Mode create symlinks, so there
+	// directories become junctions and loose files are copied.
 	for (const entry of readdirSync(join(REPO_ROOT, 'node_modules'))) {
-		symlinkSync(join(REPO_ROOT, 'node_modules', entry), join(root, 'node_modules', entry))
+		const source = join(REPO_ROOT, 'node_modules', entry)
+		const target = join(root, 'node_modules', entry)
+		if (!IS_WINDOWS) symlinkSync(source, target)
+		else if (statSync(source).isDirectory()) symlinkSync(source, target, 'junction')
+		else copyFileSync(source, target)
 	}
 	git(root, 'init', '-q')
 	git(root, 'add', '-A')
+	// A fresh repo on Windows has core.fileMode off, so `git add` records the
+	// hooks as 100644; mark them executable the way the real repo has them.
+	git(root, 'update-index', '--chmod=+x', '.githooks/commit-msg', '.githooks/pre-commit')
 	return root
 }
 
@@ -91,8 +99,11 @@ function withFixture(mutate, ids) {
 	}
 }
 
+// Normalised to LF first: a Windows checkout with core.autocrlf has CRLF
+// files, and the mutations match on '\n'-terminated lines.
 function edit(root, path, transform) {
-	writeFileSync(join(root, path), transform(readFileSync(join(root, path), 'utf8')))
+	const text = readFileSync(join(root, path), 'utf8').replace(/\r\n/g, '\n')
+	writeFileSync(join(root, path), transform(text))
 }
 
 test('the template itself meets every standard', () => {
@@ -162,7 +173,6 @@ test('logging lint boundaries survive each dependency-specific exemption', async
 	for (const filePath of [
 		'src/lib/env.ts',
 		'src/components/ui/icons.tsx',
-		'src/server/ai/anthropic.ts',
 		'src/server/db/client.ts',
 		'src/lib/supabase/server.ts',
 		'src/proxy.ts',
@@ -243,14 +253,20 @@ test('per-tool-entry-points fails when an optional per-tool file exists without 
 	assert.match(results['per-tool-entry-points'].detail, /GEMINI\.md exists but/)
 })
 
-test('commit-msg-hook fails when the hook is not executable on disk', () => {
-	const results = withFixture(
-		(root) => chmodSync(join(root, '.githooks/commit-msg'), 0o644),
-		['commit-msg-hook']
-	)
-	assert.equal(results['commit-msg-hook'].ok, false)
-	assert.match(results['commit-msg-hook'].detail, /not executable/)
-})
+test(
+	'commit-msg-hook fails when the hook is not executable on disk',
+	{
+		skip: IS_WINDOWS && 'NTFS has no executable bit; the git index mode test covers Windows'
+	},
+	() => {
+		const results = withFixture(
+			(root) => chmodSync(join(root, '.githooks/commit-msg'), 0o644),
+			['commit-msg-hook']
+		)
+		assert.equal(results['commit-msg-hook'].ok, false)
+		assert.match(results['commit-msg-hook'].detail, /not executable/)
+	}
+)
 
 test('commit-msg-hook fails when the hook is executable locally but not in the git index', () => {
 	const results = withFixture(
@@ -517,7 +533,11 @@ test('session-logs-tracked fails when Prettier is not told to skip the transcrip
 
 test('session-logs-tracked names the one present log dir left out of prettierignore', () => {
 	const results = withFixture(
-		(root) => edit(root, '.prettierignore', (text) => text.replace('.codex-logs/\n', '')),
+		(root) => {
+			mkdirSync(join(root, '.codex-logs'))
+			writeFileSync(join(root, '.codex-logs/.gitkeep'), '')
+			git(root, 'add', '.codex-logs/.gitkeep')
+		},
 		['session-logs-tracked']
 	)
 	assert.equal(results['session-logs-tracked'].ok, false)
@@ -525,13 +545,7 @@ test('session-logs-tracked names the one present log dir left out of prettierign
 })
 
 test('session-logs-tracked passes a Claude-only repo with no .codex-logs dir', () => {
-	const results = withFixture(
-		(root) => {
-			rmSync(join(root, '.codex-logs'), { recursive: true, force: true })
-			edit(root, '.prettierignore', (text) => text.replace('.codex-logs/\n', ''))
-		},
-		['session-logs-tracked']
-	)
+	const results = withFixture(() => {}, ['session-logs-tracked'])
 	assert.equal(results['session-logs-tracked'].ok, true, results['session-logs-tracked'].detail)
 })
 

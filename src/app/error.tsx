@@ -6,7 +6,7 @@ import { isChunkLoadError, reloadOnceForChunkError } from '@/lib/errors/chunk-lo
 import { ErrorPage, errorPageActionClassName } from '@/components/error-page'
 
 // Route-level boundary — Next renders this for any error thrown while
-// rendering a page/layout under [locale]. `error` here is NOT necessarily
+// rendering a page or layout. `error` here is NOT necessarily
 // an AppError even if one was thrown server-side: Next strips custom
 // properties off errors crossing the server→client boundary in production,
 // leaving only `message`/`digest`. That's why this shows one generic,

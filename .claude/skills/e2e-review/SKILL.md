@@ -5,11 +5,11 @@ description: Boot the app and run Playwright end-to-end tests against the curren
 
 # E2E review
 
-Proves a user-facing change actually works end to end, against a real running app — not just that it compiles. This is the **local** sibling of `preview-acceptance-testing`, which runs the same kind of loop against the PR's live Vercel preview. Use this one for local iteration before the PR exists; use that one as the pre-merge gate once it does. Note that a fresh clone of this template has no test-auth bypass, so `preview-acceptance-testing` can only reach the public surface until the project adds one — which is another reason to keep local coverage real.
+Proves a user-facing change actually works end to end, against a real running app — not just that it compiles.
 
 ## 1. Make sure there's something to run against
 
-Playwright's config (`playwright.config.ts`) boots `pnpm dev` itself and waits for it to be ready — you don't need to start the dev server by hand. If you want to test an already-running server instead (e.g. a Vercel preview URL), set `E2E_BASE_URL` and the config skips its own `webServer` step.
+Playwright's config (`playwright.config.ts`) boots `pnpm dev` itself and waits for it to be ready — you don't need to start the dev server by hand. If you want to test an already-running server instead, set `E2E_BASE_URL` and the config skips its own `webServer` step.
 
 If Chromium isn't installed yet (`~/Library/Caches/ms-playwright/` empty, or the run fails with a "browser not found" error), install it first:
 
@@ -22,7 +22,6 @@ pnpm exec playwright install chromium
 ```bash
 DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder" \
 DIRECT_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder" \
-CRON_SECRET="placeholder-secret" \
 pnpm test:e2e
 ```
 
@@ -36,15 +35,10 @@ Don't guess at a fix from the error message alone. Open `playwright-report/index
 
 Diff the branch (`git diff main...HEAD`) for new pages, routes, or user-facing flows. If something new and user-facing has no corresponding spec under `e2e/`, either:
 
-- Write a minimal spec covering its golden path (not every edge case — that's what the deeper preview/staging QA skills are for once this project has them), or
+- Write a minimal spec covering its golden path (not every edge case), or
 - Flag it explicitly as untested and let the user decide if that's acceptable for this change.
 
-If the diff touches an AI call, a model id, or `src/server/lib/ai-usage/`,
-this skill is not the right gate on its own — run `/ai-usage-check`, which
-covers the model map, the pricing arithmetic, and a real row written to a
-real database. The specs here only prove the endpoint's auth boundary holds.
-
-Delete `e2e/smoke.spec.ts` once the project has real coverage — it exists only to prove the initial App Router + i18n wiring works on a fresh clone.
+Delete `e2e/smoke.spec.ts` once the project has real coverage — it exists only to prove the initial App Router wiring works on a fresh clone.
 
 ## 5. Report
 

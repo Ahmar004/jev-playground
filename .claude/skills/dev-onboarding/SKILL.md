@@ -1,15 +1,12 @@
 ---
 name: dev-onboarding
-description: Get a new developer's local environment running on an already-set-up project generated from this template — not for creating a new project (see template-setup for that). Walks through install, env vars, migrations, and confirming the dev server actually boots. Use when the user says "/dev-onboarding", "I just joined this project", "get my local env running", "set up my machine for this repo", or is new to a repo whose package.json name is no longer "8x-web-template".
+description: Get a new developer's local environment running on this project. Walks through install, env vars, migrations, and confirming the dev server actually boots. Use when the user says "/dev-onboarding", "I just joined this project", "get my local env running", "set up my machine for this repo", or is new to this repo.
 ---
 
 # Dev onboarding
 
-For a developer who has clone/pull access to an **already-customized**
-project (post `template-setup`) and needs to get productive locally. If
-`package.json`'s `"name"` is still `8x-web-template`, this is the wrong
-skill — that's `template-setup`'s job (creating/naming a new project), not
-this one (getting an existing project running on a new machine).
+For a developer who has clone/pull access to this project and needs to get
+productive locally. The app runs on localhost only (`docs/rules/deployment.md`).
 
 ## 1. Install
 
@@ -42,8 +39,6 @@ it's for. You'll need real values for at minimum:
   auth per `docs/rules/auth.md` and these don't apply to it). Get real
   values from the project's Supabase dashboard (Settings → API) or a
   teammate.
-- `CRON_SECRET` — any value locally (`openssl rand -hex 32`); only needs
-  to match production if you're testing a cron route end to end.
 
 Sentry/PostHog vars can stay empty locally — both no-op gracefully. Don't
 spend time chasing real values for these unless you're specifically
@@ -73,8 +68,7 @@ to what's already committed.
 pnpm dev
 ```
 
-Open the URL it prints — if the project has i18n, it redirects to a
-locale-prefixed path automatically. If this fails, work through it in
+Open the URL it prints. If this fails, work through it in
 order: env vars first (the most common cause), then whether migrations
 actually applied, then whether `node_modules` is stale
 (`rm -rf node_modules && pnpm install`).
@@ -88,13 +82,4 @@ feature approach, commits, pull requests, and deployment. Read
 before you push anything: **don't commit once per fix while iterating**,
 and don't write a PR's real title/description until the work is actually
 done (open it draft if it needs to exist earlier) — run `local-review`
-before committing, so CI confirms a change that already works instead of
-being how you discover whether it
-does. Every push is a real, paid CI run.
-
-## 6. If you're also setting up infrastructure, not just local dev
-
-That's a separate, one-time job — see `docs/CI_CD_SETUP.md` for GitHub
-secrets/environments and Vercel configuration. Most developers joining an
-existing project don't need this; it's for whoever originally ran
-`template-setup` or is provisioning a new environment from scratch.
+before committing. GitHub CI is disabled, so `local-review` is the only gate.

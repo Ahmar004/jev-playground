@@ -1,4 +1,4 @@
-import { Link } from '@/i18n/routing'
+import Link from 'next/link'
 import { ErrorPage, errorPageActionClassName } from '@/components/error-page'
 
 export default function NotFound() {

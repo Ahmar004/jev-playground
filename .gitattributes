@@ -1,0 +1,3 @@
+# Check out LF on every OS, so Prettier (endOfLine lf) and the sh hooks in
+# .githooks behave the same on Windows as on Linux.
+* text=auto eol=lf

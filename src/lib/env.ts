@@ -33,16 +33,6 @@ const envSchema = z.object({
 
 	NEXT_PUBLIC_POSTHOG_KEY: z.string().optional().or(z.literal('')),
 	NEXT_PUBLIC_POSTHOG_HOST: z.string().url().default('https://us.i.posthog.com'),
-	POSTHOG_PERSONAL_API_KEY: z.string().optional(),
-
-	// Optional — captureError() no-ops on Slack alerting entirely without
-	// this. See docs/rules/error-handling.md.
-	SLACK_ALERT_WEBHOOK_URL: z.string().url().optional().or(z.literal('')),
-
-	NEXT_PUBLIC_DEFAULT_LOCALE: z.string().default('en'),
-
-	// Required by cron routes only; an unset secret must not break unrelated pages.
-	CRON_SECRET: z.string().optional(),
 
 	NEXT_PUBLIC_APP_URL: z.string().url().default('http://localhost:3000'),
 

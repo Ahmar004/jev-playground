@@ -28,7 +28,7 @@ const buttonVariants = cva(
 
 type ButtonProps = React.ComponentProps<'button'> &
 	VariantProps<typeof buttonVariants> & {
-		// Renders as its child (e.g. next-intl's <Link>) instead of a <button>
+		// Renders as its child (e.g. next/link's <Link>) instead of a <button>
 		// — keeps the same classes/focus styles without nesting an <a> inside
 		// a <button>. See https://www.radix-ui.com/primitives/docs/utilities/slot.
 		asChild?: boolean

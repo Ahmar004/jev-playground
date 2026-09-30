@@ -19,7 +19,8 @@
 // Exit codes: 0 every standard met, 1 at least one not met.
 
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { createRequire } from 'node:module'
+import { dirname, join, resolve } from 'node:path'
 import { execFileSync, spawnSync } from 'node:child_process'
 import { pathToFileURL } from 'node:url'
 
@@ -192,7 +193,12 @@ function ruleFilesIn(ctx) {
 		.sort()
 }
 
+const IS_WINDOWS = process.platform === 'win32'
+
 function isExecutable(ctx, path) {
+	// NTFS has no executable bit, so on Windows the git index mode (checked
+	// right after this by the callers) is the only real signal.
+	if (IS_WINDOWS) return true
 	const EXECUTE_BITS = 0o111
 	return (statSync(join(ctx.root, path)).mode & EXECUTE_BITS) !== 0
 }
@@ -209,16 +215,34 @@ function isIgnored(ctx, path) {
 	return ctx.git('check-ignore', '-q', '--', path).status === 0
 }
 
-function runBinary(ctx, name, args) {
-	const bin = join(ctx.root, 'node_modules', '.bin', name)
-	if (!existsSync(bin)) {
+// On Windows, node_modules/.bin holds .cmd shims that execFileSync cannot
+// spawn without a shell, so run the package's own bin script through node.
+function windowsBinScript(ctx, packageName, name) {
+	const requireFromRoot = createRequire(join(ctx.root, 'package.json'))
+	let manifestPath
+	try {
+		manifestPath = requireFromRoot.resolve(`${packageName}/package.json`)
+	} catch {
+		return null
+	}
+	const { bin } = JSON.parse(readFileSync(manifestPath, 'utf8'))
+	const relative = typeof bin === 'string' ? bin : bin?.[name]
+	return relative ? join(dirname(manifestPath), relative) : null
+}
+
+function runBinary(ctx, packageName, name, args) {
+	const bin = IS_WINDOWS
+		? windowsBinScript(ctx, packageName, name)
+		: join(ctx.root, 'node_modules', '.bin', name)
+	if (bin == null || !existsSync(bin)) {
 		return {
 			error: `${name} is not installed under node_modules — run the package manager's install first`
 		}
 	}
+	const [command, commandArgs] = IS_WINDOWS ? [process.execPath, [bin, ...args]] : [bin, args]
 	try {
 		return {
-			stdout: execFileSync(bin, args, {
+			stdout: execFileSync(command, commandArgs, {
 				cwd: ctx.root,
 				encoding: 'utf8',
 				stdio: ['ignore', 'pipe', 'pipe']
@@ -242,7 +266,7 @@ function effectiveEslintRules(ctx) {
 	// config resolves a rule by last match wins, so a rule can be written down
 	// and still be off. Memoised on the context — three checks read it.
 	if (!ctx.memo.has('eslint')) {
-		const result = runBinary(ctx, 'eslint', ['--print-config', ENV_SCHEMA])
+		const result = runBinary(ctx, 'eslint', 'eslint', ['--print-config', ENV_SCHEMA])
 		let outcome
 		if (result.error) {
 			outcome = { error: result.error }
@@ -561,7 +585,7 @@ export const CHECKS = [
 		title: 'TypeScript runs in strict mode',
 		run(ctx) {
 			if (!ctx.has('tsconfig.json')) return fail('tsconfig.json is missing')
-			const result = runBinary(ctx, 'tsc', ['--showConfig', '-p', 'tsconfig.json'])
+			const result = runBinary(ctx, 'typescript', 'tsc', ['--showConfig', '-p', 'tsconfig.json'])
 			if (result.error) return fail(result.error)
 			let config
 			try {

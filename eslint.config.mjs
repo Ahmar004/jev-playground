@@ -19,30 +19,10 @@ const ICON_PROVIDER_IMPORTS = {
 		"Import icons from '@/components/ui/icons' instead — that file is the only place an icon provider is imported. Add the icon there if it's missing. See docs/rules/icons.md."
 }
 
-// Every provider SDK, plus the wrappers that would route around one. An
-// import here is an AI call that no ai_usage row will ever account for, which
-// is the failure this whole subsystem exists to make impossible rather than
-// merely discouraged.
-const AI_SDK_IMPORTS = {
-	group: [
-		'@anthropic-ai/sdk',
-		'@anthropic-ai/sdk/**',
-		'openai',
-		'openai/**',
-		'@google/genai',
-		'@google/genai/**',
-		'@google/generative-ai',
-		'ai',
-		'@ai-sdk/**'
-	],
-	message:
-		"Call the provider through 'src/server/ai/<provider>' instead — that file is the only place an AI SDK is imported, and the only place trackAiCall is called. Add the method there if it's missing. See docs/rules/ai-usage.md."
-}
-
 // Prisma is the only data path (docs/rules/database.md). The client is
 // constructed once, in src/server/db/client.ts, and everything else imports
 // `db` from there. Type imports stay allowed — typing a parameter as
-// `AdminRole` is not a second connection. The raw drivers and other ORMs have
+// a Prisma model is not a second connection. The raw drivers and other ORMs have
 // no legitimate importer anywhere in src/.
 const DATA_ACCESS_IMPORTS = {
 	group: [
@@ -111,10 +91,10 @@ const eslintConfig = defineConfig([
 		}
 	},
 	{
-		// Icons come from '@/components/ui/icons', AI SDKs from 'src/server/ai/*',
-		// the Prisma client from 'src/server/db/client.ts' and Supabase from
-		// 'src/lib/supabase/*' — never from the package directly. See
-		// docs/rules/icons.md, ai-usage.md, database.md and auth.md. Same
+		// Icons come from '@/components/ui/icons', the Prisma client from
+		// 'src/server/db/client.ts' and Supabase from 'src/lib/supabase/*' —
+		// never from the package directly. See docs/rules/icons.md,
+		// database.md and auth.md. Same
 		// enforcement shape as the logger rule below: one file owns the
 		// dependency, the rest of the codebase imports the wrapper.
 		//
@@ -129,13 +109,7 @@ const eslintConfig = defineConfig([
 			'no-restricted-imports': [
 				'error',
 				{
-					patterns: [
-						ICON_PROVIDER_IMPORTS,
-						AI_SDK_IMPORTS,
-						DATA_ACCESS_IMPORTS,
-						SUPABASE_IMPORTS,
-						LOGGER_IMPORTS
-					]
+					patterns: [ICON_PROVIDER_IMPORTS, DATA_ACCESS_IMPORTS, SUPABASE_IMPORTS, LOGGER_IMPORTS]
 				}
 			]
 		}
@@ -145,18 +119,7 @@ const eslintConfig = defineConfig([
 		rules: {
 			'no-restricted-imports': [
 				'error',
-				{ patterns: [AI_SDK_IMPORTS, DATA_ACCESS_IMPORTS, SUPABASE_IMPORTS, LOGGER_IMPORTS] }
-			]
-		}
-	},
-	{
-		// src/server/ai/* is where the AI SDKs are allowed to be imported, and
-		// the only place trackAiCall is called. Every other ban still applies.
-		files: ['src/server/ai/**/*.ts'],
-		rules: {
-			'no-restricted-imports': [
-				'error',
-				{ patterns: [ICON_PROVIDER_IMPORTS, DATA_ACCESS_IMPORTS, SUPABASE_IMPORTS, LOGGER_IMPORTS] }
+				{ patterns: [DATA_ACCESS_IMPORTS, SUPABASE_IMPORTS, LOGGER_IMPORTS] }
 			]
 		}
 	},
@@ -166,7 +129,7 @@ const eslintConfig = defineConfig([
 		rules: {
 			'no-restricted-imports': [
 				'error',
-				{ patterns: [ICON_PROVIDER_IMPORTS, AI_SDK_IMPORTS, SUPABASE_IMPORTS, LOGGER_IMPORTS] }
+				{ patterns: [ICON_PROVIDER_IMPORTS, SUPABASE_IMPORTS, LOGGER_IMPORTS] }
 			]
 		}
 	},
@@ -177,7 +140,7 @@ const eslintConfig = defineConfig([
 		rules: {
 			'no-restricted-imports': [
 				'error',
-				{ patterns: [ICON_PROVIDER_IMPORTS, AI_SDK_IMPORTS, DATA_ACCESS_IMPORTS, LOGGER_IMPORTS] }
+				{ patterns: [ICON_PROVIDER_IMPORTS, DATA_ACCESS_IMPORTS, LOGGER_IMPORTS] }
 			]
 		}
 	},
@@ -186,7 +149,7 @@ const eslintConfig = defineConfig([
 		rules: {
 			'no-restricted-imports': [
 				'error',
-				{ patterns: [ICON_PROVIDER_IMPORTS, AI_SDK_IMPORTS, DATA_ACCESS_IMPORTS, SUPABASE_IMPORTS] }
+				{ patterns: [ICON_PROVIDER_IMPORTS, DATA_ACCESS_IMPORTS, SUPABASE_IMPORTS] }
 			]
 		}
 	},

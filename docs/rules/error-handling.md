@@ -18,7 +18,7 @@ Two failure modes get two different responses — don't blend them.
 `error.message` into a response/UI directly.** Always go through:
 
 - **`captureError(error, context?)`** — `src/lib/observability/capture-error.ts`,
-  server-only (route handlers, server actions, cron jobs).
+  server-only (route handlers, server actions).
 - **`captureClientError(error, context?)`** — `src/lib/observability/capture-client-error.ts`,
   client components (error boundaries, event handlers).
 
@@ -74,8 +74,8 @@ don't (see below).
 
 ## Error boundaries
 
-- **`src/app/[locale]/error.tsx`, `src/app/global-error.tsx`,
-  `src/app/[locale]/not-found.tsx`** — route-level, already wired, nothing
+- **`src/app/error.tsx`, `src/app/global-error.tsx`,
+  `src/app/not-found.tsx`** — route-level, already wired, nothing
   to add per-project. Both `error.tsx`/`global-error.tsx` auto-recover from
   a stale-chunk error after a redeploy (reload once, throttled) before
   showing the fallback UI. These show one generic, friendly message — not a
@@ -94,47 +94,10 @@ don't (see below).
   `notFound()`/`redirect()` thrown inside the wrapped subtree still reaches
   Next's own handling instead of being swallowed into a generic fallback —
   keep that call if you ever touch this file.
-- **`src/app/[locale]/[...rest]/page.tsx`** — exists purely so
-  `[locale]/not-found.tsx` actually gets used. Without it, a URL with no
-  matching page (e.g. `/typo`) never resolves into the `[locale]`
-  segment at all, so Next falls back to its own built-in default 404
-  instead of your custom one — a real Next.js App Router + next-intl
-  gotcha, confirmed by testing it in a browser, not just assumed. Leave
-  this file alone; it's plumbing, not a page to build on.
-
-`global-error.tsx` uses hardcoded hex values instead of the design tokens —
-deliberate, not an oversight: it can render before `globals.css` loads, so
-it can't depend on `@theme`. Every other error UI goes through
-`src/components/error-page.tsx` and the real tokens.
-
-## Slack alerts
-
-`captureError` also posts to Slack (`src/lib/notifications/slack.ts`) for
-every unexpected error, production-only — local/preview noise never pages
-anyone. No-ops entirely until `SLACK_ALERT_WEBHOOK_URL` is set (create an
-"Incoming Webhook" in Slack's app settings), same "off until configured"
-convention as Sentry/PostHog. Fire-and-forget and never throws, same as
-every other observability call in this file.
-
-This posts every occurrence with no de-duplication — fine at a template's
-starting scale, but a hot error loop will flood the channel until nobody
-reads it. If that happens, extend `notifyUnexpectedError` in
-`src/lib/notifications/slack.ts` with a fingerprinted digest (track
-last-alerted-at per `error.name`, only post on first occurrence and again
-after a cooldown) rather than adding a second, uncoordinated alert path —
-`8x-payout`'s `lib/observability/alerts.ts` is the org's reference
-implementation of that pattern if this project needs it. Swapping the
-destination entirely (Discord, PagerDuty, Teams) means changing
-`postToSlack`'s body only — `captureError` and everything upstream of it
-doesn't know or care what `notifyUnexpectedError` actually does.
-
-`captureClientError` does **not** trigger a Slack alert — a webhook URL is
-a secret and can't safely ship in the client bundle. If client-side errors
-need to reach Slack too, the org's own pattern (legacy `8x`,
-`app/error.tsx`) is to `POST` to a dedicated internal API route from the
-error boundary, which then calls `captureError` server-side; that's the
-extension point if this project needs it, not a reason to move the webhook
-URL to `NEXT_PUBLIC_*`.
+  `global-error.tsx` uses hardcoded hex values instead of the design tokens —
+  deliberate, not an oversight: it can render before `globals.css` loads, so
+  it can't depend on `@theme`. Every other error UI goes through
+  `src/components/error-page.tsx` and the real tokens.
 
 ## Why `AppError` isn't Sentry-reported
 

@@ -4,7 +4,7 @@ A credential belongs in an environment variable, read once through
 `src/lib/env.ts` — never hardcoded in source, and never committed. `.gitignore`
 blocks every `.env*` file except `.env.example`, so the files themselves can't
 land in git. The hole this rule closes is the one an agent opens: a session
-transcript is committed verbatim to `.claude-logs/` or `.codex-logs/` (see
+transcript is committed verbatim to `.claude-logs/` (see
 below), and a real `DATABASE_URL`, Supabase secret key or `Authorization`
 header that scrolled past during the session rides along into history.
 
@@ -53,9 +53,8 @@ fix for a real one is to remove it, not to allowlist it.
 
 ## Session transcripts
 
-`.claude-logs/` (Claude Code) and `.codex-logs/` (Codex) are tracked, not
+`.claude-logs/` (Claude Code, the only agent on this project) is tracked, not
 gitignored — the transcript for the session that produced a change ships on the
-branch that ships it (see `CLAUDE.md`). Both are scanned, both are exempt from
-Prettier (they're verbatim records), and `check:standards`' `session-logs`
-check keeps both wired. Whichever agent you drive this repo with, its
-transcript goes in its own directory and is held to this rule.
+branch that ships it (see `CLAUDE.md`). It is scanned, exempt from Prettier
+(transcripts are verbatim records), and `check:standards`' `session-logs`
+check keeps it wired.

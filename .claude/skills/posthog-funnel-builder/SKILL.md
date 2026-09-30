@@ -24,7 +24,7 @@ list with the user, then build.
 ## How this repo is instrumented
 
 - **Client** — `posthog-js`, wired in `src/lib/posthog/client.tsx`. Events
-  fire from Client Components under `src/app/[locale]/**` and
+  fire from Client Components under `src/app/**` and
   `src/components/**`. Client events carry `$lib = web`.
 - **Server** — `posthog-node`, via `getPostHogServerClient()` in
   `src/lib/posthog/server.ts`. Events fire from server actions in
@@ -53,7 +53,7 @@ otherwise proceed.
 
 ### 2. Locate the code for each stage
 
-Map each stage to its route or component: `src/app/[locale]/…/page.tsx` for
+Map each stage to its route or component: `src/app/…/page.tsx` for
 pages, `src/app/api/**/route.ts` and `src/server/actions/**` for the server
 side of a submit/complete action.
 
@@ -84,7 +84,7 @@ anything obviously over- or under-firing.
 
 | Step | Event                  | Source | Fires from                                | In PostHog (14d) |
 | ---- | ---------------------- | ------ | ----------------------------------------- | ---------------- |
-| 1    | `pricing_viewed`       | client | `src/app/[locale]/pricing/page.tsx:NN`    | ✅ 4.4k          |
+| 1    | `pricing_viewed`       | client | `src/app/pricing/page.tsx:NN`             | ✅ 4.4k          |
 | 2    | `checkout_started`     | client | Checkout button — `src/components/…:NN`   | ✅ 310           |
 | 3    | `subscription_created` | server | `src/app/api/billing/webhook/route.ts:NN` | ✅ 95            |
 
