@@ -77,13 +77,13 @@ Use /superpowers:brainstorming writing-plans skill to create a design.md documen
 Use /superpowers:brainstorming skill to re-analyze Design.md, @spec.md, @tech-stack.md, ROADMAP.md & CLAUDE.md files  and validate that we are ready to build a solid app that is beneficial for beginners, really interactive and super cool to play with. Ask any open-questions from user related to confusions or conflicts in between the docs, and ensure that our next step could be starting the code implementation (meaning that the plan and design is solid and smooth, having no conflicts/confusion and no weaknesses)
 
 ### Step-5:
-Foundation (git and GitHub already set up): scaffold the project, set up the database and external services under .env.local along with an env.example file, finish any other foundational work needed after approval from me. This includes renaming the template placeholders (package name, app title, .env.example header), creating the free Sentry and PostHog projects, and generating and applying the baseline Prisma migration plus the enable-RLS migration locally.
+Foundation (git and GitHub already set up): scaffold the project, set up the database and external services under .env.local along with an env.example file, finish any other foundational work needed after approval from me. This includes renaming the template placeholders (package name, app title, .env.example header), creating the free Sentry and PostHog projects, and generating and applying the baseline Prisma migration plus the enable-RLS migration locally. Also apply the Step-5 items from TECH-STACK.md and docs/progress.md: upgrade Prisma to 7 (the pg driver adapter and `prisma.config.ts`), switch `proxy.ts` to `getClaims()`, add Vitest, turn on `cacheComponents`, and install the UI libraries TECH-STACK.md names.
 
 ### Step-6:
 Use subagent-driven-development skill to build the app slice by slice in the order of the slice plan in Design.md, on the basis of Design.md, @spec.md and @tech-stack.md files. For every slice: write tests first (test-driven-development), build it, test it, then commit and push to gitHub before starting the next slice. Use Opus 5.5 for the main agent and Sonnet 5.5 for the subagents to avoid hitting token limits. Use maximum one agent under the sub agnts to avoid hitting token limits. GitHub CI is disabled, so run the local-review skill before every commit and push. It is the only gate.
 
 ### Step-7:
-Hardening: use systematic-debugging skill and end-to-end tests for testing all workflows and functionalities to find and fix bugs across the whole system
+Hardening: use systematic-debugging skill and end-to-end tests for testing all workflows and functionalities to find and fix bugs across the whole system. Also run the k6 load test against the local production build and publish its results on the Methodology page (R78, P1).
 
 ### Step-8:
 Write the README at root for submission: what is built, how to run it locally, the trade-offs made, and how AI was used to build it, and a talking-point outline for me for the Loom walkthrough video of this project at the end of the readme.

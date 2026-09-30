@@ -10,6 +10,23 @@ Keep sessions short: one ROADMAP step per session, and save progress and hand-of
 
 Jev's Playground is an interactive website that teaches where System One models like Jev work well, where they break, and where a frontier LLM or plain code is the better tool. It teaches through levels, VS games, an Arena, a Sandbox and quizzes, in Beginner mode (replays of real recordings, no keys) and Developer mode (live calls with the user's own keys). It runs on localhost only.
 
+## Stack and commands
+
+Next.js 16 App Router (React 19, TypeScript strict) for frontend and backend; Supabase Postgres and Auth, reached only through Prisma 7; Tailwind v4 tokens, Radix, Motion, dnd-kit, hand-built SVG charts, canvas-confetti and next-themes; plain `fetch` plus Zod per provider; Vitest, Playwright, k6, Sentry, PostHog and Pino. `TECH-STACK.md` gives the reasons. Ask before adding a library it doesn't name.
+
+`pnpm` is not on PATH on this machine, so run every script as `corepack pnpm <script>`.
+
+| Command                                                         | What it does                                                                                    |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `dev` / `build` / `start`                                       | Dev server; production build; serve the build on localhost.                                     |
+| `lint` / `typecheck`                                            | ESLint with zero warnings; `tsc --noEmit`.                                                      |
+| `format` / `format:check`                                       | Prettier write / check.                                                                         |
+| `test` / `test:e2e`                                             | Unit tests; Playwright e2e.                                                                     |
+| `check:env` / `check:secrets` / `check:standards` / `check:rls` | Env vars documented; no secrets in source or logs; 8x standards wired; RLS on with no policies. |
+| `prisma:generate` / `db:run-once`                               | Regenerate the Prisma client; apply `prisma/run-once.sql` once per database.                    |
+
+Step-5 moves `test` to Vitest and Step-6 adds `pnpm record` (the recording CLI). Add their rows here when they exist.
+
 ## Source of truth
 
 - Follow `ROADMAP.md` at all costs. It sets the order of work: one step at a time, unless the user asks for several at once. Don't edit it without the user's approval of the exact change (Rule-0). Don't start a later step or invent a new one; propose it in `ROADMAP.md` and wait for approval (Rule-4).
@@ -55,6 +72,7 @@ These restate spec rules that code can break silently. The spec section holds th
 - Actions feel instant: optimistic updates that roll back on failure, a toast confirming each action, and skeletons for data that streams in. Long runs show progress so the site never looks frozen (R80).
 - One fluid, desktop-first layout with no fixed minimum width and no separate mobile component trees. It scales down to phones, and the phone UI must stay easy to navigate and as polished as desktop (R73).
 - Forms and dialogs: Enter submits, Esc cancels. Use a real `<form onSubmit>` with `event.preventDefault()`, `type="submit"` on the primary button and `type="button"` on every other button.
+- Animations use Motion inside `LazyMotion` with `MotionConfig reducedMotion="user"`. Drag-and-drop uses dnd-kit plus tap buttons. Charts are hand-built SVG components, not a chart library.
 - Accessibility (spec 12.3): WCAG 2.1 AA in both themes, visible focus states, labelled inputs, keyboard and touch alternatives to every drag-and-drop, color never the only signal, and animations that respect reduced motion. Every screen has meaningful empty, loading and error states.
 
 ## Architecture
@@ -62,14 +80,26 @@ These restate spec rules that code can break silently. The spec section holds th
 - No data fetching, timers or business logic inside UI components. Put them in hooks or controllers, keep components pure (data in through props, actions out through callbacks), and lift shared state to the nearest common parent.
 - Database access goes only through Prisma (`docs/rules/database.md`), behind server-side data functions. Pages and components never import the database client.
 - Every signed-in UI decision comes from one session object. The UI alone never authorizes: every read or write of a user-owned row (progress, quiz attempts, XP, badges, leaderboard entries, shares) checks ownership on the server against the session (`docs/rules/auth.md`).
-- Provider calls go through one module per provider, shared by the browser and the recording CLI, with shapes that match the real API payloads.
+- Provider calls go through one module per provider, shared by the browser and the recording CLI, with shapes that match the real API payloads. They use plain `fetch` plus Zod, never a provider SDK: we time exactly one request with no hidden retries, so latency stays honest (R7).
+- Content and Recordings are versioned JSON under `content/`, validated with Zod at build. Beginner mode reads only these files, never the database or a model API (R76). Only the recording CLI writes them.
+- Keys live in one React context in tab memory. Never put a key in a TanStack Query key, a URL, an error message or an analytics property.
 - Shared code follows the Rule of Three (`docs/rules/code-quality.md`).
+
+## Rendering and caching (Next.js 16 Cache Components)
+
+`cacheComponents: true` is on (Step-5 enables it), so nothing is cached unless the code asks. `TECH-STACK.md` > Rendering strategy says which pages are SSG, PPR, CSR or cached SSR.
+
+- Content from `content/` is imported, not fetched, so it renders at build time.
+- Per-user data (session, progress, XP, leaderboard) never goes inside `'use cache'`. It is read in a component wrapped in `<Suspense>` with a skeleton fallback, so the static shell paints first. `cookies()`, `headers()`, `params` and `searchParams` are async and also go under `<Suspense>`.
+- Use `'use cache'` only for data that is the same for every viewer, and always pair it with `cacheLife` and `cacheTag`. A cached function can't read cookies or headers, even through a helper; read them outside and pass the values in.
+- After a write in a Server Action, call `updateTag` so the user sees the change at once. `revalidateTag(tag, 'max')` serves stale content once more, so it is only for Route Handlers where that is fine. Deleting a share calls `updateTag` with the share's tag, so the link stops working at once (R87).
+- `Math.random()`, `Date.now()` and `crypto.randomUUID()` in a Server Component need `await connection()` first, or prerendering fails.
 
 ## Workflow
 
 - Ask, don't assume. On any confusion or important decision, ask through the AskUserQuestion tool and keep asking follow-up rounds until every open point is resolved. Don't end a turn with questions asked only in prose.
 - Invoke the skill a ROADMAP step names before starting that step, and say which skill is in use. The superpowers skills (brainstorming, writing-plans, test-driven-development, subagent-driven-development, systematic-debugging) are installed but not listed in the session, so read `~/.claude/plugins/cache/claude-plugins-official/superpowers/<version>/skills/<name>/SKILL.md` and follow it by hand.
-- Testing: write tests first (TDD) for the runner, parsing, scoring, cost math, key handling, API routes, server actions and hooks. Check presentational components with screenshots in both themes at desktop and phone widths. Every user flow gets a Playwright e2e test.
+- Testing: write tests first (TDD) for the runner, parsing, scoring, cost math, key handling, API routes, server actions and hooks. Check presentational components with screenshots in both themes at desktop and phone widths. Every user flow gets a Playwright e2e test. App tests run in Vitest; the template's `node:test` stays only for its `scripts/` tests.
 - Subagents (Step-6): Opus 5.5 for the main agent, Sonnet 5.5 for subagents, at most one subagent at a time.
 - Git: one commit per finished slice, with a Conventional Commits message (`docs/rules/commits.md`). Run the `local-review` skill before every commit and push; GitHub CI is disabled, so it is the only gate. Never commit `.env.local` or any secret.
 - Use current docs, not memory. Next.js 16 ships its docs in `node_modules/next/dist/docs/`; for any other library or API, fetch its current docs.
@@ -96,8 +126,12 @@ See `.claude/skills/*/SKILL.md` for full detail. In short:
 - `create-issue`: file work as a GitHub issue instead of doing it now.
 - `posthog-funnel-builder`: build a PostHog funnel from the events the code fires.
 
-## Local only
+## Local now, Vercel later
 
-The app runs on localhost (spec R95). Never deploy. Prisma migrations are generated and applied locally against our database (`pnpm exec prisma migrate deploy`, then `node scripts/generate-migration.mjs --name <name> --db-url <url>`), as 8x confirmed.
+The app runs on localhost (spec R95). Never deploy from this repo: 8x owns it. Build everything so it deploys to Vercel unchanged later, from the owner's personal repo (ROADMAP Rule-9, `docs/rules/deployment.md`):
 
-The Commands table, the one-line stack summary and the Next.js 16 caching rules are added in Step-2, after `TECH-STACK.md` is approved.
+- No file writes at runtime. Recordings are build-time JSON that only the local CLI writes.
+- No state kept in one process's memory. Rate limits and counters live in Postgres.
+- Pooled database connections: `DATABASE_URL` through the Supavisor pooler (port 6543), migrations over `DIRECT_URL` (port 5432).
+
+Prisma migrations are generated and applied locally against our database (`pnpm exec prisma migrate deploy`, then `node scripts/generate-migration.mjs --name <name> --db-url <url>`), as 8x confirmed. The full flow is in `docs/rules/migrations.md`.

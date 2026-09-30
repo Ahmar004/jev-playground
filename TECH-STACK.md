@@ -1,6 +1,6 @@
 # Tech Stack - Jev's Playground
 
-Status: proposed in Step-1 (2026-10-01), awaiting user approval. Every choice below was weighed against `spec.md`, `ROADMAP.md` and `CLAUDE.md`, not kept because the 8x template ships it.
+Status: approved in Step-1 (2026-10-01). Every choice below was weighed against `spec.md`, `ROADMAP.md` and `CLAUDE.md`, not kept because the 8x template ships it.
 
 ## Summary
 
@@ -60,12 +60,12 @@ Recording CLI (`pnpm record`, owner's machine) -> same runner -> content/recordi
 
 Next.js 16 Cache Components (`cacheComponents: true`) let each page mix a prerendered shell with per-request parts, so each kind of page gets the strategy that fits it.
 
-| Pages                                                                                                 | Strategy                                                                                                               | Reason                                                                                                              |
-| ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Sign-in, Glossary, Methodology; the content of Level, Game, Arena presets, Sandbox templates, Quizzes | SSG: prerendered at build from `content/`                                                                              | Identical for every user. Served from the CDN worldwide, fast on phones (R79), no server cost at 1,000 users (R75). |
-| Home, Path, Profile, Leaderboard, header progress bar                                                 | PPR: static shell plus per-user parts rendered on the server per request, streamed inside `<Suspense>`                 | The shell paints at once. Only the user's own numbers wait on the database.                                         |
-| Game runtime, Arena runs, Sandbox builder, Keys panel, mode switch, replays                           | CSR: client components                                                                                                 | They depend on in-memory keys, timers and animation. Replays run in the browser at recorded latency (R7).           |
-| Shared result                                                                                         | On-demand cached SSR (ISR-like): `'use cache'` + `cacheTag(shareId)`, purged with `revalidateTag` on delete, `noindex` | A snapshot never changes, so the first render is cached. Deleting it takes effect at once (R87).                    |
+| Pages                                                                                                 | Strategy                                                                                                            | Reason                                                                                                              |
+| ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Sign-in, Glossary, Methodology; the content of Level, Game, Arena presets, Sandbox templates, Quizzes | SSG: prerendered at build from `content/`                                                                           | Identical for every user. Served from the CDN worldwide, fast on phones (R79), no server cost at 1,000 users (R75). |
+| Home, Path, Profile, Leaderboard, header progress bar                                                 | PPR: static shell plus per-user parts rendered on the server per request, streamed inside `<Suspense>`              | The shell paints at once. Only the user's own numbers wait on the database.                                         |
+| Game runtime, Arena runs, Sandbox builder, Keys panel, mode switch, replays                           | CSR: client components                                                                                              | They depend on in-memory keys, timers and animation. Replays run in the browser at recorded latency (R7).           |
+| Shared result                                                                                         | On-demand cached SSR (ISR-like): `'use cache'` + `cacheTag(shareId)`, expired with `updateTag` on delete, `noindex` | A snapshot never changes, so the first render is cached. Deleting it takes effect at once (R87).                    |
 
 A single strategy loses: full SSR re-renders unchanging content on every request and is slower for distant users, and a full SPA shows a blank screen on phones until the bundle loads. `proxy.ts` gates every page except shared results with an optimistic session check. Every read or write of user data re-checks the session and ownership on the server (`docs/rules/auth.md`).
 
