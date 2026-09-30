@@ -109,3 +109,31 @@ Next: Step-0.5 (check agent logs, and that ROADMAP.md, CLAUDE.md and spec.md are
 - Gates: `check:standards` 24/24, `format:check` and `check:secrets` pass.
 
 Next: Step-1 (tech stack and rendering strategy in `TECH-STACK.md`, using brainstorming and writing-plans). Wait for approval before Step-2.
+
+## Step-1 - tech stack (2026-10-01) - done, approved by user
+
+- `TECH-STACK.md` is rewritten: a 5-line summary, the constraints, an architecture sketch, one row per layer with its reason, the rendering strategy, the recording cost estimate and Vercel readiness.
+- The user's rule for this and later steps: choose tools on the merits of spec, ROADMAP and CLAUDE.md, never because the template ships them. The user also added ROADMAP Rule-9: localhost now, but build everything to deploy on Vercel later from a personal repo. So:
+  - the database is hosted;
+  - nothing writes files at runtime;
+  - no state lives in one process's memory.
+- User decisions:
+  - Supabase free for Postgres and for Auth (Neon's free compute cap would run out under public traffic).
+  - Password reset is out of v1; Resend becomes Supabase's email sender at the Vercel launch.
+- Recommendations approved with the doc:
+  - Prisma 7, Recordings as versioned JSON under `content/`, and plain `fetch` + Zod per provider (no SDKs, for honest latency).
+  - Motion, dnd-kit, hand-built SVG charts, canvas-confetti and next-themes.
+  - Vitest for app tests, k6 for the load test.
+  - Rendering mix: SSG for content, PPR for per-user pages, CSR for games and runs, cached SSR for shared results. This needs `cacheComponents: true`.
+- Recording cost estimate: $5-10 per full run (prices checked 2026-09-25). Opus 5.5 can't turn thinking off, so it records at low effort.
+- Doc sync (user-approved): spec R95 and section 17 (the two Step-1 items are settled), and `docs/rules/deployment.md` (never deploy from this repo, but stay Vercel-ready).
+- For Step-2 (CLAUDE.md):
+  - "Local only" still says "Never deploy"; reword it to Rule-9.
+  - Add the Commands table, the one-line stack summary and the Next.js 16 Cache Components rules.
+  - `docs/rules/state-management.md` and `components.md` may need the new libraries named.
+- For Step-5:
+  - Upgrade Prisma 6.19 to 7 (`@prisma/adapter-pg`, `prisma.config.ts`, pooled `DATABASE_URL` on port 6543 and `DIRECT_URL` on 5432).
+  - Switch `proxy.ts` from `supabase.auth.getUser()` to `getClaims()`, which Supabase's current guide uses for local JWT checks.
+  - Add Vitest next to the template's `node:test` script tests.
+
+Next: Step-2 (revisit CLAUDE.md against ROADMAP.md, spec.md and TECH-STACK.md).

@@ -39,6 +39,9 @@ If you come across any other feasible rules that we shall add here to make the s
 ### Rule-8:
 Never store API keys/secrets in browser's local storage, local storage is highly vulnerable, even a small injection by a hacker can steal those keys.
 
+### Rule-9:
+localhost only for now, build everything for shipping it as a robust system one day (I would probably deploy it at Vercel later on by pushing the project to a personal repo of mine, and then connecting that to a Vercel domain and deploying it from there), hackathon does not requires it, but I am planning to do it in future, to let the amazing app available to users across the globe.
+
 <hr style="height:4px; background-color:Grey; border:none;">
 
 ## Steps:
@@ -62,10 +65,10 @@ Discard the items under @to-discard.md with user's permission, and also delete t
 double check that agents log are working, and we are good to go for step-1, and that ROADMAP.md, CLAUDE.md, spec.md are solid for this project.
 
 ### Step-1:
-Use /superpowers:brainstorming writing-plans skill to append/edit the TECH-STACK.md file to propose and approve the feasible tech stack for this app from me, also suggest the feasible web app rendering strategy that we should use after doing an anlysis ( example SSR/CSR/ISR/SSG or a mix of these if feasible) along with precise explanation for reasons to support your choice. The proposed tech stack shall cover the complete app: backend, frontend, database, every api. Don't make this doc too long, also summarize the tech stack in 4-5 lines at one place, where you just name the proposed componants e.g Next.js for Frontend, backend, Supabase for Db and so on. Please note that we have to make it as a local project for now, no deployment on vercel needed (as access is restricted as the github repo is owned by 8x). Wait for approval from my side before proceeding to step-2
+Use /superpowers:brainstorming writing-plans skill to append/edit the TECH-STACK.md file on the basis of @spec.md, @ROADMAP.md, @CLAUDE.md files to propose and approve the feasible tech stack for this app from me, also suggest the feasible web app rendering strategy that we should use after doing an anlysis ( example SSR/CSR/ISR/SSG or a mix of these if feasible) along with precise explanation for reasons to support your choice. The proposed tech stack shall cover the complete app: backend, frontend, database, every api. Don't make this doc too long, also summarize the tech stack in 4-5 lines at one place, where you just name the proposed componants e.g Next.js for Frontend, backend, Supabase for Db and so on. Please note that we have to make it as a local project for now, no deployment on vercel needed (as access is restricted as the github repo is owned by 8x). Wait for approval from my side before proceeding to step-2
 
 ### Step-2: 
-Revisit the Claude.md file and edit it for this project if there are any feasible additions based on the files: ROADMAP.md, spec.md, @TECH-STACK.md.
+Revisit the Claude.md & ROADMAP.md files and edit it for this project if there are any feasible additions based on the files: @spec.md, @TECH-STACK.md.
 
 ### Step-3: 
 Use /superpowers:brainstorming writing-plans skill to create a design.md document for this app that has all the details of how each feature shall be built, it shall cover frontend + backend both. Create Design.md doc on the basis of ROADMAP.md, CLAUDE.md, @spec.md, @TECH-STACK.md files. Please do not invent requirements by yourself, the design.md shall be a guide on how to build this app into a fully working system. The design.md shall also list the list of screens/pop-ups/tabs/flows that our web app shall have. It shall end with an ordered slice plan for building the whole app. Save it as DESIGN.md (Windows treats design.md and DESIGN.md as the same file), and fold in the template's design-token conventions from the current DESIGN.md.

@@ -322,7 +322,7 @@ Level status, quiz attempts, XP, badges and leaderboard entries are saved to the
 ## 14. Constraints [R94-R98]
 
 - Built and shipped within the 8x Playmakers sprint: 4 days. [R94]
-- Runs locally on localhost for now. 8x provides only the GitHub repo. The template ships with Supabase Auth and Prisma, and any database or service we use is our own free account, confirmed in Step-1. No Vercel deployment for now. [R95]
+- Runs locally on localhost for now. 8x provides only the GitHub repo. Every service is our own free account: Supabase (Postgres and Auth), Sentry and PostHog (`TECH-STACK.md`). No deployment from this repo; the code is built to deploy on Vercel later from the owner's personal repo (ROADMAP Rule-9). [R95]
 - Jev accepts text only and performs best in English. [R96]
 - Jev's rate and context limits apply to Developer mode Jev calls. [R97]
 - AI coding-agent logs are kept in `.claude-logs/` during development (8x evaluates them). [R98]
@@ -357,6 +357,5 @@ The Step-3 slice plan builds every P0 item before any P1 item.
 
 ## 17. Open items for later steps
 
-- **Step-1 (tech stack):** password reset needs email sending; Supabase's built-in sender is rate-limited. Decide whether to add an email provider or leave password reset out of v1.
-- **Step-1:** the cost estimate for one full recording run across Jev plus the three Claude models, checked against the $50 budget.
+- Settled in Step-1 (`TECH-STACK.md`): password reset is out of v1, and Resend is added as Supabase's email sender at the Vercel launch; a full recording run is estimated at $5-10.
 - **Step-3 (design):** the exact preset items per level, game and quiz; the XP values and badge list; the Jev and LLM colors in both themes.
