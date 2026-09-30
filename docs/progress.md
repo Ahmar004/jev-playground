@@ -23,3 +23,25 @@ Next: Step-0.1 (brainstorming -> spec.md).
   - The fix, when we turn CI back on: run `pnpm prettier --write` on those docs, or add them to `.prettierignore`. Step-0.2 should decide which and when CI comes back on.
 
 Next: Step-0.2 (template analysis -> to-discard.md). Read `spec.md` first; it replaces `docs/requirements.md`.
+
+## Step-0.2 - template analysis (2026-10-01) - done, edits approved by user
+
+- `to-discard.md` at root lists 10 groups for Step-0.4 to remove, each with its follow-up edits: admin RBAC, DB feature flags, the AI usage ledger (MOAD), next-intl, Slack and cron, the analytics demo, Vercel/remote-CI files and skills, the Codex/Gemini/Qwen/Cursor files, one-time template tooling, and the 7 unapplied template migrations. Nothing is deleted yet.
+- User decisions:
+  - Recording is a local CLI (`pnpm record`), checked by playing in Beginner mode on localhost, so there's no admin web page and no RBAC.
+  - Our database and services are the user's own free accounts; 8x provides only the GitHub repo (Step-1 confirms Supabase).
+  - Keep Sentry and PostHog. Drop next-intl.
+  - CI stays disabled and `local-review` is the gate.
+  - Claude Code is the only agent.
+  - Reset the template migrations; 8x confirmed migrations are generated and applied locally.
+  - DESIGN.md merges into the Step-3 doc.
+  - `docs/requirements.md` stays as an archive.
+- Approved edits made:
+  - TECH-STACK.md: "Carried over from the 8x template" section.
+  - CLAUDE.md: trimmed Skills list, new "Local only" section, /cicd Commands section removed.
+  - ROADMAP.md: the intro points to spec.md; Step-0.4, Step-3, Step-5 and Step-6 got one sentence each.
+  - spec.md: §3.3 recording CLI and shared runner, §4 key scrubbing in Sentry/PostHog/logs, §14 R95 wording.
+- Pitfall for later: Gemini accepts `?key=` in the URL, and Sentry breadcrumbs record URLs, so Google keys must go in the `x-goog-api-key` header.
+- Pitfall for later: CLAUDE.md and AGENTS.md still mention the discarded parts (AGENTS.md rule bullets, per-tool list, CI_CD_SETUP). Step-0.4 removes those references together with the files.
+
+Next: Step-0.3 (CLAUDE.md review against spec.md, ROADMAP.md, TECH-STACK.md and inspiration-Claude.md).

@@ -92,7 +92,9 @@ A Beginner/Developer switch sits in the header on every page. Anyone can switch 
 
 - An owner-only recording tool runs every built-in item against Jev and the three Claude models and stores the results as data: inputs, raw outputs, parsed answers, parse success or failure, latency, input and output tokens, cost, the price used, model ID and date.
 - The owner can re-record all content when a model version changes, without code changes. [R8]
-- Owner keys live on the server only, only while recording, and never reach the browser. When recording is done, the owner removes them from the server. [R22]
+- The recording tool is a local CLI the owner runs. The owner checks the results by playing them in Beginner mode on localhost. Owner keys live only in the owner's `.env.local`, only while recording, and never reach the browser or the repo. When recording is done, the owner removes them. [R22]
+- Recording and Developer mode share one runner (the same tasks, provider calls and scoring), so recorded and live results come from the same code. [R92]
+- Each recording run prints its total cost against the budget.
 - A full recording run must fit in the project budget (ROADMAP Rule-0.1, $50 total).
 
 ### 3.4 Developer mode [R9-R14]
@@ -113,6 +115,7 @@ A Beginner/Developer switch sits in the header on every page. Anyone can switch 
 - TypeSafe-key Jev calls go through our server, which forwards the request and returns the answer without storing or logging the key or the request body. The Keys screen says so plainly. [R18]
 - The Keys screen explains, per provider, in plain language: what happens to the key, where it is sent, and how to revoke it at the provider (with a link to that provider's key page). [R19]
 - One click removes all keys; each key can also be removed on its own. [R20]
+- Error tracking, analytics and logs never see keys. Key fields are excluded from analytics capture and session replay, error reports are scrubbed of auth headers and key parameters, and the server logger redacts them. Google keys are sent in a header, never in the URL. [R15]
 - Invalid keys, missing permissions, rate limits (429), overload (529) and malformed requests are shown as clear, friendly messages with a retry. [R21, R82]
 - If a provider is down, the affected Developer mode feature says so and offers the Beginner mode version of the same thing. [R81]
 
@@ -319,7 +322,7 @@ Level status, quiz attempts, XP, badges and leaderboard entries are saved to the
 ## 14. Constraints [R94-R98]
 
 - Built and shipped within the 8x Playmakers sprint: 4 days. [R94]
-- Runs locally on localhost for now, with Supabase as provided by 8x. No Vercel deployment for now. [R95]
+- Runs locally on localhost for now. 8x provides only the GitHub repo. The template ships with Supabase Auth and Prisma, and any database or service we use is our own free account, confirmed in Step-1. No Vercel deployment for now. [R95]
 - Jev accepts text only and performs best in English. [R96]
 - Jev's rate and context limits apply to Developer mode Jev calls. [R97]
 - AI coding-agent logs are kept in `.claude-logs/` during development (8x evaluates them). [R98]

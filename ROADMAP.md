@@ -4,7 +4,7 @@
 
 A playground to learn System 1 models like Jev through games, experiements, quizzes built directly into the website, and it also lets the user let Jev and a frontier LLM do the same job (any game/task) directly on the website so user can learn where Jev breaks where Jev works tremendously well, so to grasp a stronger understanding on the use cases of System One models of Jev. We have to make the site really interactive, playful and so much interesting plus easier to navigate and awesome to spend time in.
 
-Checkout @requirements.md under @/docs/ for more details.
+Checkout @spec.md at root for the full product spec (it replaces docs/requirements.md, which stays as the verbatim brief).
 
 
 ## Rules:
@@ -53,10 +53,10 @@ Use /superpowers:brainstorming skill to analyze the requirements under @docs\req
 Analyse the currrent project in depth, its a template shared by 8x, for web projects. Based on the spec we created, cater all things we need to maintain from this template and what are things to be discarded, considering everything that this template has analyzing which things are to be kept and which to be discarded. This template has things that had helped so many web app projects in past, so we have to check each thing that this template delivers to us. We have to build on top of this template, but first discarding irrelevant things is needed. Ensure that all things that we need to maintain are incorporated at feasible places under @ROADMAP.md, @CLAUDE.md, TECH-STACK.md and spec.md. Take approval before editing these files and share exactly what you need to add, and ask open questions from user whenever needed, during this step. create a to-discard.md file at root which lists everything that is better to be discarded based on the @spec (based on the app we are building.) just add feasible things in TECH-Stack during this step, we are gonna decide the tech stack in a later step.
 
 ### Step-0.3:
-Analyse the @CLAUDE.md in root and analyse if we need any changes in it based on @spec.md, @roadmap.md, the current few items at @TECH-STACK.md and @inspiration-Claude.md. @inspiration-Claude.md is only for inspiration, I had used it for the 24 hour assessment at 8x prior to this, and the project turned out really great and entered me into this hackathon. Take inspiration from it, and make sure to add things from it which could be relevant, helpful for this project. Ask open-questions from user while doing this step and don't devide, assume anything by yourself.
+Analyse the @CLAUDE.md in root and analyse if we need any changes in it based on @spec.md, @roadmap.md, the current few items at @TECH-STACK.md and @inspiration-Claude.md. @inspiration-Claude.md is only for inspiration, I had used it for the 24 hour assessment at 8x prior to this, and the project turned out really great and entered me into this hackathon where I am building Jev's Playground. Take inspiration from @inspiration-Claude.md, and make sure to add things from it which could be relevant, helpful for this project. Ask open-questions from user while doing this step and don't devide, assume anything by yourself.
 
 ### Step-0.4:
-Discard the items under @to-discard.md with user's permission, and also delete the @inspiration-Claude.md
+Discard the items under @to-discard.md with user's permission, and also delete the @inspiration-Claude.md. Also apply the follow-up edits listed under each group in @to-discard.md, so the app still builds and `pnpm check:standards` still passes.
 
 ### Step-0.5:
 double check that agents log are working, and we are good to go for step-1, and that ROADMAP.md, CLAUDE.md, spec.md are solid for this project.
@@ -68,16 +68,16 @@ Use /superpowers:brainstorming writing-plans skill to append/edit the TECH-STACK
 Revisit the Claude.md file and edit it for this project if there are any feasible additions based on the files: ROADMAP.md, spec.md, @TECH-STACK.md.
 
 ### Step-3: 
-Use /superpowers:brainstorming writing-plans skill to create a design.md document for this app that has all the details of how each feature shall be built, it shall cover frontend + backend both. Create Design.md doc on the basis of ROADMAP.md, CLAUDE.md, @spec.md, @TECH-STACK.md files. Please do not invent requirements by yourself, the design.md shall be a guide on how to build this app into a fully working system. The design.md shall also list the list of screens/pop-ups/tabs/flows that our web app shall have. It shall end with an ordered slice plan for building the whole app. 
+Use /superpowers:brainstorming writing-plans skill to create a design.md document for this app that has all the details of how each feature shall be built, it shall cover frontend + backend both. Create Design.md doc on the basis of ROADMAP.md, CLAUDE.md, @spec.md, @TECH-STACK.md files. Please do not invent requirements by yourself, the design.md shall be a guide on how to build this app into a fully working system. The design.md shall also list the list of screens/pop-ups/tabs/flows that our web app shall have. It shall end with an ordered slice plan for building the whole app. Save it as DESIGN.md (Windows treats design.md and DESIGN.md as the same file), and fold in the template's design-token conventions from the current DESIGN.md.
 
 ### Step-4:
 Use /superpowers:brainstorming skill to re-analyze Design.md, @spec.md, @tech-stack.md, ROADMAP.md & CLAUDE.md files  and validate that we are ready to build a solid app that is beneficial for beginners, really interactive and super cool to play with. Ask any open-questions from user related to confusions or conflicts in between the docs, and ensure that our next step could be starting the code implementation (meaning that the plan and design is solid and smooth, having no conflicts/confusion and no weaknesses)
 
 ### Step-5:
-Foundation (git and GitHub already set up): scaffold the project, set up the database and external services under .env.local along with an env.example file, finish any other foundational work needed after approval from me.
+Foundation (git and GitHub already set up): scaffold the project, set up the database and external services under .env.local along with an env.example file, finish any other foundational work needed after approval from me. This includes renaming the template placeholders (package name, app title, .env.example header), creating the free Sentry and PostHog projects, and generating and applying the baseline Prisma migration plus the enable-RLS migration locally.
 
 ### Step-6:
-Use subagent-driven-development skill to build the app slice by slice in the order of the slice plan in Design.md, on the basis of Design.md, @spec.md and @tech-stack.md files. For every slice: write tests first (test-driven-development), build it, test it, then commit and push to gitHub before starting the next slice. Use Opus 5.5 for the main agent and Sonnet 5.5 for the subagents to avoid hitting token limits. Use maximum one agent under the sub agnts to avoid hitting token limits.
+Use subagent-driven-development skill to build the app slice by slice in the order of the slice plan in Design.md, on the basis of Design.md, @spec.md and @tech-stack.md files. For every slice: write tests first (test-driven-development), build it, test it, then commit and push to gitHub before starting the next slice. Use Opus 5.5 for the main agent and Sonnet 5.5 for the subagents to avoid hitting token limits. Use maximum one agent under the sub agnts to avoid hitting token limits. GitHub CI is disabled, so run the local-review skill before every commit and push. It is the only gate.
 
 ### Step-7:
 Hardening: use systematic-debugging skill and end-to-end tests for testing all workflows and functionalities to find and fix bugs across the whole system
