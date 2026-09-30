@@ -56,7 +56,7 @@ Analyse the currrent project in depth, its a template shared by 8x, for web proj
 Analyse the @CLAUDE.md in root and analyse if we need any changes in it based on @spec.md, @roadmap.md, the current few items at @TECH-STACK.md and @inspiration-Claude.md. @inspiration-Claude.md is only for inspiration, I had used it for the 24 hour assessment at 8x prior to this, and the project turned out really great and entered me into this hackathon where I am building Jev's Playground. Take inspiration from @inspiration-Claude.md, and make sure to add things from it which could be relevant, helpful for this project. Ask open-questions from user while doing this step and don't devide, assume anything by yourself.
 
 ### Step-0.4:
-Discard the items under @to-discard.md with user's permission, and also delete the @inspiration-Claude.md. Also apply the follow-up edits listed under each group in @to-discard.md, so the app still builds and `pnpm check:standards` still passes.
+Discard the items under @to-discard.md with user's permission, and also delete the @inspiration-Claude.md. Also apply the follow-up edits listed under each group in @to-discard.md, so the app still builds and `pnpm check:standards` still passes. Once everything in it is removed, delete @to-discard.md too; git history keeps it, and @docs/progress.md summarises what was removed.
 
 ### Step-0.5:
 double check that agents log are working, and we are good to go for step-1, and that ROADMAP.md, CLAUDE.md, spec.md are solid for this project.

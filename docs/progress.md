@@ -45,3 +45,24 @@ Next: Step-0.2 (template analysis -> to-discard.md). Read `spec.md` first; it re
 - Pitfall for later: CLAUDE.md and AGENTS.md still mention the discarded parts (AGENTS.md rule bullets, per-tool list, CI_CD_SETUP). Step-0.4 removes those references together with the files.
 
 Next: Step-0.3 (CLAUDE.md review against spec.md, ROADMAP.md, TECH-STACK.md and inspiration-Claude.md).
+
+## Step-0.3 - CLAUDE.md review (2026-10-01) - done, approved by user
+
+- `CLAUDE.md` is rewritten as the home for this project's rules. Claude Code is the only agent, so new project rules go there, not in `AGENTS.md`; a conflict with `docs/rules/` means ask the user. It keeps `@AGENTS.md` on line 1, which `check:standards` requires.
+- New sections, adapted from `inspiration-Claude.md`:
+  - Source of truth (which doc answers what, and which docs sit at the root).
+  - Time budget and right-sizing (the user's rule: a simple solution when it fully solves the problem, never a simple one that leaves the problem unsolved).
+  - Writing rules: no emojis, no long dashes, lean docs, spec vocabulary.
+  - Product guardrails: keys, honesty, one runner, plain text.
+  - UI rules and Architecture.
+  - Workflow: AskUserQuestion loops, the testing split, git, and where the superpowers skills live.
+- User decisions:
+  - DRY stays with the Rule of Three.
+  - Testing: TDD for logic, screenshots in both themes at desktop and phone widths for presentational UI, and a Playwright e2e test per flow.
+  - Logs: a separate `chore(logs)` commit in the same push as the code.
+  - Layout: desktop-first fluid, with a phone UI that is just as polished.
+- Handed to Step-2: the Commands table, the one-line stack summary and the Next.js 16 caching rules (these wait until TECH-STACK.md is approved).
+- ROADMAP Step-0.4 now also deletes `to-discard.md` once its items are removed (user-approved).
+- Environment: `pnpm` isn't installed and `node_modules/` is missing, so no `pnpm` gate can run yet (not even Prettier). Step-0.4 needs them to prove the app still builds and passes `check:standards`, so install first (`corepack enable`, then `pnpm install`).
+
+Next: Step-0.4 (discard the items in `to-discard.md` and delete `inspiration-Claude.md`).
