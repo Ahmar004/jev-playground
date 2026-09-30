@@ -36,6 +36,9 @@ Shorter and focused sessions: @docs/progress.md is for saving progress and shari
 ### Rule-7:
 If you come across any other feasible rules that we shall add here to make the system more better, ask from me, and feel free to add here after approval.
 
+### Rule-8:
+Never store API keys/secrets in browser's local storage, local storage is highly vulnerable, even a small injection by a hacker can steal those keys.
+
 <hr style="height:4px; background-color:Grey; border:none;">
 
 ## Steps:
