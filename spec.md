@@ -123,23 +123,23 @@ A Beginner/Developer switch sits in the header on every page. Anyone can switch 
 
 ### 5.1 Pages
 
-| Page          | Purpose                                                                                                                      |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Sign-in       | Separate first page. Email and password sign-up and sign-in. No other page can be reached without signing in. [R55]          |
-| Home          | Welcome, path progress, one-click "Play level 1: Speed Race", optional start quiz.                                           |
-| Path          | The 8 levels with status (not started, in progress, done, skipped).                                                          |
-| Level         | One level's Learn, Predict, Play, Reveal and Check steps.                                                                    |
-| Games         | The VS games.                                                                                                                |
-| Game          | One VS game.                                                                                                                 |
-| Arena         | Side-by-side comparisons.                                                                                                    |
-| Sandbox       | Jev state and question builder.                                                                                              |
-| Quizzes       | Start quiz and end quiz, with results and solutions.                                                                         |
-| Leaderboard   | The user's own model results in timed games.                                                                                 |
-| Profile       | XP, badges, quiz improvement, completion card, sign out.                                                                     |
-| Keys          | Paste, test and remove keys; plain-language safety info. Opens as a panel from the header.                                   |
-| Glossary      | Plain-English definitions of every technical term. [R74]                                                                     |
-| Methodology   | How every comparison is made and recorded, public. [R93] Also hosts the published load-test results. [R78]                   |
-| Shared result | Public read-only view of a shared comparison (the one page reachable without signing in, so a link can be opened by anyone). |
+| Page          | Purpose                                                                                                                          |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Sign-in       | Separate first page. Email and password sign-up and sign-in. No other page can be reached without signing in. [R55]              |
+| Home          | Welcome, path progress, one-click "Play level 1: Speed Race", optional start quiz.                                               |
+| Path          | The 8 levels with status (not started, in progress, done, skipped).                                                              |
+| Level         | One level's Learn, Predict, Play, Reveal and Check steps.                                                                        |
+| Games         | The VS games.                                                                                                                    |
+| Game          | One VS game.                                                                                                                     |
+| Arena         | Side-by-side comparisons.                                                                                                        |
+| Sandbox       | Jev state and question builder.                                                                                                  |
+| Quizzes       | Start quiz and end quiz, with results and solutions.                                                                             |
+| Leaderboard   | The user's own model results in timed games.                                                                                     |
+| Profile       | XP, badges, quiz improvement, completion card, sign out.                                                                         |
+| Keys          | Paste, test and remove keys; plain-language safety info. Opens as a panel from the header.                                       |
+| Glossary      | Plain-English definitions of every technical term. [R74]                                                                         |
+| Methodology   | How every comparison is made and recorded, open to every signed-in user. [R93] Also hosts the published load-test results. [R78] |
+| Shared result | Public read-only view of a shared comparison (the one page reachable without signing in, so a link can be opened by anyone).     |
 
 Note on sign-in vs sharing: R55 requires sign-in for every page, and R46 requires sharing by link. A shared result is useless if the recipient can't open it, so the shared result page is the single public exception. It is read-only and shows a "Sign in to try it yourself" button. Confirmed by the user in Step-0.1.
 
@@ -258,7 +258,7 @@ Level status, quiz attempts, XP, badges and leaderboard entries are saved to the
 
 - Users earn XP (for finishing levels, checks, quizzes and games) and badges (for milestones).
 - Finishing the path gives a completion card.
-- The exact XP values and badge list are defined in `design.md` (Step-3).
+- The exact XP values and badge list are defined in `DESIGN.md` (Step-3).
 
 ### 10.5 Leaderboard [R64]
 
@@ -303,7 +303,7 @@ Level status, quiz attempts, XP, badges and leaderboard entries are saved to the
 ### 12.4 Honesty
 
 - Comparisons use the same inputs and the same expected output format for both models. [R92]
-- The method behind every comparison is described publicly on the Methodology page. [R93]
+- The method behind every comparison is described openly on the Methodology page, which needs sign-in like every page except shared results. [R93]
 - Recorded results are never invented or edited. [R5]
 - Rule-5 (ROADMAP): no dummy data anywhere.
 

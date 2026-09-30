@@ -22,6 +22,7 @@ final response to `.claude-logs/`, and nothing else.
 4. **Uses the hook's `session_id` and `transcript_path`.** The guide takes the newest transcript. The canaries showed that this puts a new session's first prompt into another session's log, because the new session's transcript does not exist yet at that point.
 5. **Prompt taken from the hook input on `UserPromptSubmit`.** Claude Code writes the prompt to the transcript only after this hook returns. Waiting for it added about 10 seconds to every prompt.
 6. **Short re-read on `Stop` (up to 5 seconds).** `Stop` can fire a few hundred milliseconds before the final reply reaches the transcript, which left the log without its response (canary B).
+7. **Final reply taken from the hook input on `Stop` (Step-0.5).** Fix 6 stopped waiting as soon as the transcript held any reply text, so a turn with mid-turn narration logged that narration instead of the final reply (3 of 10 sessions). `Stop` now uses the hook's `last_assistant_message`, which Claude Code documents for exactly this; fix 6 remains as the fallback for versions without the field. The backup of the previous script is `~/.claude/extract-log.py.bak-step0.5`.
 
 Output format, file naming and the prompt-and-reply-only filtering are unchanged from the guide.
 
@@ -37,11 +38,20 @@ Session A is this interactive setup session. Sessions B to C are separate headle
 | B3 - `CANARY-B3`                                                       | `2026-09-30_20-50-58_c4aede5d-...md` | Prompt and reply captured. Its first prompt also leaked into session A's log (fix 4); A's log was regenerated clean      |
 | C - `CANARY-C`                                                         | `2026-09-30_20-51-28_2dcc1d83-...md` | Pass: log created at prompt time, reply added at stop, `session_status: complete`, 4 s total, no leak into any other log |
 
+### Step-0.5 re-check (2026-10-01)
+
+Every log was compared with its transcript. Three had a narration line as the final reply (fix 7): `2026-09-30_23-34-39_d393e2e9`, `2026-09-30_23-47-08_278308ca` and `2026-10-01_02-26-48_16c66f16`. With the user's approval they were rebuilt from their untouched transcripts by the fixed script, keeping their original `date`. After that, every finished session's log matches its transcript.
+
+| Session        | Log file (`.claude-logs/`)           | Result                                                                                                               |
+| -------------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| D - `CANARY-D` | `2026-10-01_03-16-57_0a11d37c-...md` | Pass: the turn had narration, then a tool call, then the final reply; the log holds only the final reply, `complete` |
+
 ## How to re-check
 
 1. Start a new Claude Code session in the repo and send any prompt.
 2. A new `.claude-logs/<today>_<session-id>.md` appears right away with a `[CLAUDE_LOG_ENTRY type=PROMPT ...]` block. After the reply it also has a `type=RESPONSE` block and `session_status: complete`.
 3. The file contains no tool calls, tool output or file contents.
+4. In a turn that narrates before its tool calls, the `type=RESPONSE` block holds the final reply, not the narration.
 
 ## GitHub attribution
 

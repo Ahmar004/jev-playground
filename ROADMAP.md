@@ -82,7 +82,7 @@ Use subagent-driven-development skill to build the app slice by slice in the ord
 ### Step-7:
 Hardening: use systematic-debugging skill and end-to-end tests for testing all workflows and functionalities to find and fix bugs across the whole system
 
-### Step-9:
-Write the README at root for submission: what is built, how to run it, the live URL, the trade-offs made, and how AI was used to build it, and a talking-point outline for me for the Loom walkthrough video of this project at the end of the readme.
+### Step-8:
+Write the README at root for submission: what is built, how to run it locally, the trade-offs made, and how AI was used to build it, and a talking-point outline for me for the Loom walkthrough video of this project at the end of the readme.
 
 <hr style="height:4px; background-color:Grey; border:none;">
