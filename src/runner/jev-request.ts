@@ -16,8 +16,10 @@ export function lineKey(lineNumber: number): string {
 
 export function lineNumberFromKey(key: string): number | null {
 	if (!key.startsWith(LINE_KEY_PREFIX)) return null
-	const lineNumber = Number(key.slice(LINE_KEY_PREFIX.length))
-	return Number.isInteger(lineNumber) && lineNumber > 0 ? lineNumber : null
+	const digits = key.slice(LINE_KEY_PREFIX.length)
+	if (!/^\d+$/.test(digits)) return null
+	const lineNumber = Number(digits)
+	return lineNumber > 0 ? lineNumber : null
 }
 
 /** The questions Jev gets for this item: raw, one Noul per line, the item's own, or the task's. */

@@ -2,6 +2,8 @@ import {
 	answerQuestion,
 	isQuestion,
 	linesOf,
+	noulQuestionSchema,
+	type NoulQuestion,
 	type Question,
 	type Structured,
 	type Task,
@@ -30,6 +32,15 @@ function stateSection(task: Task, item: TaskItem): string {
 
 function format(answer: string): string {
 	return `${FORMAT_LEAD}\n{"${ANSWER_KEY}": ${answer}}`
+}
+
+type NoulCriteria = NoulQuestion['criteria']
+
+function noulCriteriaLines(criteria: NoulCriteria): string[] {
+	const lines: string[] = []
+	if (criteria?.true !== undefined) lines.push(`true means: ${text(criteria.true)}`)
+	if (criteria?.false !== undefined) lines.push(`false means: ${text(criteria.false)}`)
+	return lines
 }
 
 function questionSections(question: Question): string[] {
@@ -67,7 +78,11 @@ function bodySections(task: Task, item: TaskItem): string[] {
 	switch (task.kind) {
 		case TASK_KINDS.fanOut: {
 			const questions = Object.entries(jevQuestions(task, item))
-			const list = questions.map(([key, question]) => `- ${key}: ${text(question.instructions)}`)
+			const list = questions.flatMap(([key, question]) => {
+				const noul = noulQuestionSchema.safeParse(question)
+				const criteria = noul.success ? noulCriteriaLines(noul.data.criteria) : []
+				return [`- ${key}: ${text(question.instructions)}`, ...criteria.map((line) => `  ${line}`)]
+			})
 			const fields = questions.map(([key]) => `"${key}": <true or false>`).join(', ')
 			return [`Answer each question with true or false:\n${list.join('\n')}`, format(`{${fields}}`)]
 		}
@@ -75,6 +90,7 @@ function bodySections(task: Task, item: TaskItem): string[] {
 			if (!('perLine' in task.jev)) throw new Error(`${task.id} has no perLine question`)
 			return [
 				`Question:\n${text(task.jev.perLine.instructions)}`,
+				...noulCriteriaLines(task.jev.perLine.criteria),
 				'The lines are numbered from 1. List the number of every line where the answer is yes.',
 				format('[<line numbers>]')
 			]

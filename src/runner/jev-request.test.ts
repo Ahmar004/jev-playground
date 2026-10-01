@@ -41,5 +41,8 @@ describe('line keys', () => {
 	it('round-trips a line number', () => {
 		expect(lineNumberFromKey(lineKey(12))).toBe(12)
 		expect(lineNumberFromKey('answer')).toBeNull()
+		expect(lineNumberFromKey('line_1e1')).toBeNull()
+		expect(lineNumberFromKey('line_0x1')).toBeNull()
+		expect(lineNumberFromKey('line_0')).toBeNull()
 	})
 })

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { taskSchema } from '@/content/task-schema'
 import { buildLlmPrompt } from './llm-prompt'
 import {
 	choiceTask,
@@ -65,5 +66,46 @@ describe('buildLlmPrompt', () => {
 		expect(buildLlmPrompt(task, { id: 'j', state: { subject: 'Refund' } })).toContain(
 			'"subject": "Refund"'
 		)
+	})
+
+	it('shows the per-line criteria on a find_lines task', () => {
+		const task = taskSchema.parse({
+			id: 'x-lines',
+			kind: 'find_lines',
+			version: 1,
+			jev: {
+				perLine: {
+					instructions: 'Does `line` mention a deadline?',
+					criteria: { true: 'A date or time limit', false: 'No deadline' }
+				}
+			},
+			items: [{ id: 'd', state: ['a', 'b'], label: [1] }]
+		})
+		const prompt = buildLlmPrompt(task, item(task, 'd'))
+		expect(prompt).toContain('true means: A date or time limit')
+		expect(prompt).toContain('false means: No deadline')
+	})
+
+	it('shows each fan_out question criteria', () => {
+		const task = taskSchema.parse({
+			id: 'x-fan',
+			kind: 'fan_out',
+			version: 1,
+			jev: {
+				questions: {
+					urgent: {
+						type: 'noul',
+						instructions: 'Is it urgent?',
+						criteria: { true: 'Needs action today', false: 'Can wait' }
+					},
+					refund: { type: 'noul', instructions: 'Asks for a refund?' }
+				}
+			},
+			items: [{ id: 'f', state: 'Help', label: { urgent: true, refund: false } }]
+		})
+		const prompt = buildLlmPrompt(task, item(task, 'f'))
+		expect(prompt).toContain('- urgent: Is it urgent?\n  true means: Needs action today')
+		expect(prompt).toContain('  false means: Can wait')
+		expect(prompt).toContain('- refund: Asks for a refund?\n\nReply')
 	})
 })
