@@ -85,6 +85,24 @@ export function scrubEvent<T extends ErrorEvent>(event: T): T {
 		scrubbed.request = request
 	}
 
+	// Integrations copy URLs into contexts too: @sentry/nextjs stores the
+	// request path with its query in contexts.nextjs.request_path.
+	if (event.contexts != null) {
+		scrubbed.contexts = Object.fromEntries(
+			Object.entries(event.contexts).map(([name, context]) => [
+				name,
+				context == null
+					? context
+					: Object.fromEntries(
+							Object.entries(context).map(([field, value]) => [
+								field,
+								typeof value === 'string' ? stripKeyParam(value) : value
+							])
+						)
+			])
+		)
+	}
+
 	if (event.breadcrumbs != null) {
 		scrubbed.breadcrumbs = event.breadcrumbs
 			.map(scrubBreadcrumb)

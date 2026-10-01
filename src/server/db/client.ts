@@ -1,6 +1,7 @@
 import 'server-only'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from './generated/client'
+import { databaseSsl } from './tls'
 
 // Re-exported from the one file allowed to import the generated client, so
 // callers that need the Prisma namespace at runtime (Prisma.DbNull to clear a
@@ -11,8 +12,9 @@ export { Prisma } from './generated/client'
 function createClient(): PrismaClient {
 	// Prisma 7 connects through a driver adapter. DATABASE_URL is the Supavisor
 	// transaction pooler (port 6543), so serverless functions share a small
-	// pool instead of each opening its own Postgres connections.
-	const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
+	// pool instead of each opening its own Postgres connections. TLS is
+	// verified against the Supabase CA (src/server/db/tls.ts).
+	const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL, ssl: databaseSsl() })
 	return new PrismaClient({ adapter })
 }
 

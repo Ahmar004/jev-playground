@@ -15,8 +15,11 @@ This doc is not allowed to be edited without the approval user to maintain the w
 ### Rule-0.1:
 We have to stay within the current remaining budget for this project: 50 usd (13, 570 pkr). Only the GitHub repo is by 8x, rest all tools and apis are upon us to manage, we can utilize this payment for this project. Claude Code is already there, I have one week of Claude Code with me already. Lesser cost would be better for this project, unless it impacts the quality of the project (then we can even utilize all the 50usd to make it as best as possible)
 
+### Rule-0.2:
+Ask questions from user with clarity, don't be brief when asking questions, otherwise user ends up understanding the qs in the wrong way.
+
 ### Rule-1:
-We have to ship fast. Hard deadline: 2026-10-03; aim to ship sooner.
+We have to ship fast, Remaining days in deadline: 2
 
 ### Rule-2:
 Maintain .claude-logs setup throughout the project.
@@ -44,6 +47,9 @@ localhost only for now, build everything for shipping it as a robust system one 
 
 ### Rule-10:
 Write clear, step-by-step setup instructions for every API and external service used in this project under @docs/api-setup-guide.md: creating the account and project, the settings to change, and which values go into .env.local. Add a service's section in the same step that adds the service.
+
+### Rule-11:
+Use Claude-in-chrome extension for checking out anything on the localhost, if you want to double check/debug or verify anything.
 
 <hr style="height:4px; background-color:Grey; border:none;">
 
@@ -77,7 +83,7 @@ Revisit the Claude.md & ROADMAP.md files and edit it for this project if there a
 Use /superpowers:brainstorming writing-plans skill to edit/alter @DESIGN.md document for this app that has all the details of how each feature shall be built, it shall cover frontend + backend both. Create DESIGN.md doc on the basis of ROADMAP.md, CLAUDE.md, @spec.md, @TECH-STACK.md files. Please do not invent requirements by yourself, the design.md shall be a guide on how to build this app into a fully working system. The design.md shall also list the list of screens/pop-ups/tabs/flows that our web app shall have. It shall end with an ordered slice plan for building the whole app. Save it as DESIGN.md (Windows treats design.md and DESIGN.md as the same file), and fold in the template's design-token conventions from the current DESIGN.md.
 
 ### Step-4:
-Use /superpowers:brainstorming skill to re-analyze Design.md, @spec.md, @tech-stack.md, ROADMAP.md & CLAUDE.md files  and validate that we are ready to build a solid app that is beneficial for beginners, really interactive and super cool to play with. Ask any open-questions from user related to confusions or conflicts in between the docs, and ensure that our next step could be starting the code implementation (meaning that the plan and design is solid and smooth, having no conflicts/confusion and no weaknesses)
+Use /superpowers:brainstorming skill to re-analyze @DESIGN.md, @spec.md, @tech-stack.md, ROADMAP.md & CLAUDE.md files  and validate that we are ready to build a solid app that is beneficial for beginners, really interactive and super cool to play with. Ask any open-questions from user related to confusions or conflicts in between the docs, and ensure that our next step could be starting the code implementation (meaning that the plan and design is solid and smooth, having no conflicts/confusion and no weaknesses)
 
 ### Step-5:
 Foundation (git and GitHub already set up): scaffold the project, set up the database and external services under .env.local along with an env.example file, finish any other foundational work needed after approval from me. This includes renaming the template placeholders (package name, app title, .env.example header), creating the free Sentry and PostHog projects, and generating and applying the baseline Prisma migration plus the enable-RLS migration locally. Also apply the Step-5 items from TECH-STACK.md and docs/progress.md: upgrade Prisma to 7 (the pg driver adapter and `prisma.config.ts`), switch `proxy.ts` to `getClaims()`, add Vitest, turn on `cacheComponents`, and install the UI libraries TECH-STACK.md names.

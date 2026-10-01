@@ -19,6 +19,7 @@ import { PrismaPg } from '@prisma/adapter-pg'
 import { existsSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import { PrismaClient } from '../src/server/db/generated/client'
+import { databaseSsl } from '../src/server/db/tls'
 
 // Tables this project deliberately leaves without RLS. Ships empty — the rule
 // is every table — and is the one place an exception is recorded, with a
@@ -90,7 +91,7 @@ async function main() {
 	}
 
 	const db = new PrismaClient({
-		adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+		adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL, ssl: databaseSsl() })
 	})
 	let tables
 	try {

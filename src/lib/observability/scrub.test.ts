@@ -60,6 +60,17 @@ describe('scrubEvent', () => {
 		expect(JSON.stringify(event.request?.query_string)).not.toContain(KEY)
 	})
 
+	it('removes a key query parameter from URLs in the event contexts', () => {
+		// @sentry/nextjs records the request path, query included, here.
+		const event = scrubEvent({
+			type: undefined,
+			contexts: { nextjs: { request_path: `/api/jev?key=${KEY}&page=2`, route_type: 'route' } }
+		})
+
+		expect(event.contexts?.nextjs?.request_path).toBe('/api/jev?page=2')
+		expect(event.contexts?.nextjs?.route_type).toBe('route')
+	})
+
 	it('scrubs the breadcrumbs the event carries', () => {
 		const event = scrubEvent(
 			eventWith({ url: 'http://localhost:3000/' }, [

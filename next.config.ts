@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
 	// 'use cache', and a page can mix a prerendered shell with per-request
 	// parts streamed inside <Suspense> (TECH-STACK.md > Rendering strategy).
 	cacheComponents: true,
+	// The Supabase CA is read from disk at runtime (src/server/db/tls.ts), so
+	// file tracing must ship it with every server function on Vercel.
+	outputFileTracingIncludes: { '/**': ['./prisma/prod-ca-2021.crt'] },
 	// Top-level as of Next.js 16, not under `experimental`. Strictest
 	// setting: any Compiler bailout fails the build instead of silently
 	// skipping optimization for that component. Matches 8x-core and

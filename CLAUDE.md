@@ -106,6 +106,8 @@ These restate spec rules that code can break silently. The spec section holds th
 - Subagents (Step-6): Opus 5.5 for the main agent, Sonnet 5.5 for subagents, at most one subagent at a time.
 - Git: one commit per finished slice, with a Conventional Commits message (`docs/rules/commits.md`). Run the `local-review` skill before every commit and push; GitHub CI is disabled, so it is the only gate. Never commit `.env.local` or any secret.
 - Use current docs, not memory. Next.js 16 ships its docs in `node_modules/next/dist/docs/`; for any other library or API, fetch its current docs.
+- To check, debug or verify anything on localhost, use the Claude-in-Chrome extension (ROADMAP Rule-11).
+- Ask questions with full context, never briefly: say exactly where to look (our app on localhost, or an external site such as sentry.io or posthog.com, with the URL and the click path), what to look for, and what each answer means (ROADMAP Rule-0.2).
 - On this Windows machine, use `python`, not `python3`.
 
 ## Session logs

@@ -22,8 +22,10 @@
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { existsSync, readFileSync } from 'node:fs'
+import { pathToFileURL } from 'node:url'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '../src/server/db/generated/client'
+import { databaseSsl } from '../src/server/db/tls'
 
 const DEFAULT_FILE = 'prisma/run-once.sql'
 const LEDGER_TABLE = '_run_once_sql'
@@ -85,7 +87,9 @@ export function buildScript({ hash, sqlText }) {
 }
 
 async function findApplied({ url, hash }) {
-	const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) })
+	const prisma = new PrismaClient({
+		adapter: new PrismaPg({ connectionString: url, ssl: databaseSsl() })
+	})
 	try {
 		return await prisma.runOnceSql.findUnique({ where: { hash }, select: { appliedAt: true } })
 	} finally {
@@ -169,7 +173,9 @@ async function main() {
 	console.log(`Applied ${file} and recorded version ${version} in ${LEDGER_TABLE}.`)
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// pathToFileURL, not `file://${argv[1]}`: a Windows path needs the extra
+// slash and forward slashes, or main() silently never runs.
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
 	main().catch((error) => {
 		console.error(error)
 		process.exit(1)

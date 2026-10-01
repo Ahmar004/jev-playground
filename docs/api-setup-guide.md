@@ -48,6 +48,15 @@ Free plan. One project for development now; a second one for production at the V
    - If it shows the legacy JWT secret, click **Migrate JWT secret**, then **Rotate keys**, so the new asymmetric key signs new sessions.
 5. Email sign-in without confirmation (TECH-STACK > Auth): open **Authentication > Sign In / Providers**. Keep **Allow new users to sign up** on and the **Email** provider enabled, turn **Confirm email** off, and click **Save**.
 
+### Secure the database connection
+
+Without this, the database password crosses the internet in plain text. RLS doesn't help there: it limits which rows a role can read, after the connection is made.
+
+- Open **Project Settings > Database > SSL Configuration**.
+- Click **Download certificate**. You get a file like `prod-ca-2021.crt`, Supabase's public CA certificate. It is not a secret.
+- Move it, keeping its name, to `prisma/prod-ca-2021.crt` in the repo. The app, the scripts and the Prisma CLI read it from there, to check that they are really talking to Supabase.
+- Switch **Enforce SSL on incoming connections** on, so the database refuses any unencrypted connection.
+
 ### Copy the database URLs
 
 You copy **one** string from Supabase, the **Session pooler** string, and use it for both database lines. Only the port differs:
@@ -93,7 +102,7 @@ Free Developer plan.
 
 1. Sign up at https://sentry.io. Choose the **US** data region if asked, and create an organization.
 2. Open **Projects > Create Project**. Platform: **Next.js**. Alert frequency: **Alert me on every new issue**. Project name: `jevs-playground`. Click **Create Project**, then skip the setup wizard; the SDK is already set up in this repo.
-3. **`NEXT_PUBLIC_SENTRY_DSN`:** open **Settings > Projects > jevs-playground > Client Keys (DSN)**. Copy the **DSN** and put it on the `NEXT_PUBLIC_SENTRY_DSN` line.
+3. **`NEXT_PUBLIC_SENTRY_DSN`:** open **Settings > Projects > jevs-playground**, then under **SDK Setup** click **Client Keys (DSN)**. Copy the value labelled **DSN** and put it on the `NEXT_PUBLIC_SENTRY_DSN` line. It starts with `https://`, contains `@o<numbers>.ingest`, and ends in `/<numbers>`. The **Security Token** setting elsewhere in Sentry is something else; ignore it.
    Result: `NEXT_PUBLIC_SENTRY_DSN="https://abc123def456@o1234567.ingest.us.sentry.io/7654321"`
 4. **`SENTRY_ORG`:** your organization slug: the part before `.sentry.io` in the address bar, also at **Settings > Organization > General > Organization Slug**. Put it on the `SENTRY_ORG` line.
    Result: `SENTRY_ORG="my-org"`
@@ -106,7 +115,7 @@ Free Developer plan.
 
 Free plan, US Cloud.
 
-1. Sign up at https://us.posthog.com/signup and choose **US Cloud**. Create an organization and a project named `jevs-playground`.
+1. Sign up at https://us.posthog.com/signup and choose **US Cloud**. Create an organization. PostHog creates a first project called **Default project**; that one is fine, or rename it to `jevs-playground` in **Settings > Project**. Events show up in whichever project the key in step 3 comes from, so check the project selector at the top-left when looking for them.
 2. Skip the install wizard; the SDK is already set up in this repo.
 3. **`NEXT_PUBLIC_POSTHOG_KEY`:** open **Settings** (left sidebar) **> Project > General** and copy the **Project API key** (it starts with `phc_`). Put it on the `NEXT_PUBLIC_POSTHOG_KEY` line. It is a public, write-only key, safe in the browser.
    Result: `NEXT_PUBLIC_POSTHOG_KEY="phc_AbCdEf123..."`
@@ -119,3 +128,5 @@ Run these from the repo root:
 
 1. `corepack pnpm check:env`: every variable is documented.
 2. `corepack pnpm dev`, then open http://localhost:3000. It boots without an "Invalid environment variables" error.
+3. `corepack pnpm check:rls`: connects over verified TLS and prints "RLS enabled with no policies".
+4. Sentry and PostHog are dashboards on their own sites, not pages in our app. After opening http://localhost:3000, PostHog's **Activity** page (us.posthog.com, the project the key belongs to) lists `$pageview` and `app_opened` from `localhost:3000` within a minute or two. Sentry's **Issues** page (sentry.io) lists an error only after the app actually crashes.
