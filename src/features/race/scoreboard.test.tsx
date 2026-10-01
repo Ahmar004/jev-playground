@@ -24,11 +24,12 @@ describe('Scoreboard', () => {
 		expect(opus).toHaveTextContent('50% (1 of 2)')
 		expect(opus).toHaveTextContent('1.1 s')
 		expect(opus).toHaveTextContent('$0.0024')
-		expect(opus).toHaveTextContent('1')
+		expect(within(opus).getAllByRole('cell').at(-1)).toHaveTextContent(/^1$/)
 		expect(opus).toHaveTextContent('Beginner mode - recorded 2026-10-02 - claude-opus-5-5')
 		const jev = within(table).getByRole('row', { name: /Jev/ })
 		expect(jev).toHaveTextContent('100% (2 of 2)')
 		expect(jev).toHaveTextContent('120 ms')
+		expect(within(jev).getAllByRole('cell').at(-1)).toHaveTextContent(/^0$/)
 	})
 
 	it('says price unknown and not scored instead of inventing numbers', () => {

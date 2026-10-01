@@ -44,6 +44,7 @@ export function RaceTrack({
 				aria-valuemin={0}
 				aria-valuemax={state.itemsTotal}
 				aria-valuenow={done}
+				aria-valuetext={`${done} of ${state.itemsTotal} items`}
 				className="bg-surface-hover h-3 overflow-hidden rounded-full"
 			>
 				<m.div
