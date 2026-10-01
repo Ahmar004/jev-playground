@@ -9,6 +9,18 @@ function freshEmail(): string {
 	return `e2e+${Date.now()}-${Math.floor(Math.random() * 1e6)}@example.com`
 }
 
+// One shared account for the screenshot tests keeps real sign-ups at two per
+// run, under Supabase's rate limit; the file runs serially in one worker.
+const SHARED_EMAIL = freshEmail()
+
+test.describe.configure({ mode: 'serial' })
+
+test.beforeAll(async ({ browser }) => {
+	const page = await browser.newPage()
+	await signUp(page, SHARED_EMAIL)
+	await page.close()
+})
+
 async function signUp(page: Page, email: string) {
 	await page.goto('/sign-in')
 	await page.getByRole('tab', { name: 'Create account' }).click()
@@ -17,6 +29,22 @@ async function signUp(page: Page, email: string) {
 	await panel.getByLabel('Password').fill(PASSWORD)
 	await panel.getByRole('button', { name: 'Create account' }).click()
 	await expect(page).toHaveURL('/')
+}
+
+async function signIn(page: Page, email: string) {
+	await page.goto('/sign-in')
+	await page.getByLabel('Email').fill(email)
+	await page.getByLabel('Password').fill(PASSWORD)
+	await page.getByRole('button', { name: 'Sign in' }).click()
+	await expect(page).toHaveURL('/')
+}
+
+// No horizontal scroll at phone width (R73).
+async function expectNoHorizontalScroll(page: Page) {
+	const overflow = await page.evaluate(
+		() => document.documentElement.scrollWidth > window.innerWidth
+	)
+	expect(overflow).toBe(false)
 }
 
 test('a signed-out visitor is sent to sign-in', async ({ page }) => {
@@ -43,10 +71,7 @@ test('sign up, browse, sign out and sign back in', async ({ page }) => {
 	await page.goto('/')
 	await expect(page).toHaveURL('/sign-in')
 
-	await page.getByLabel('Email').fill(email)
-	await page.getByLabel('Password').fill(PASSWORD)
-	await page.getByRole('button', { name: 'Sign in' }).click()
-	await expect(page).toHaveURL('/')
+	await signIn(page, email)
 })
 
 test('wrong password shows a plain-English error', async ({ page }) => {
@@ -54,6 +79,7 @@ test('wrong password shows a plain-English error', async ({ page }) => {
 	await page.getByLabel('Email').fill(freshEmail())
 	await page.getByLabel('Password').fill('not-the-password')
 	await page.getByRole('button', { name: 'Sign in' }).click()
+	// Next's route announcer is an empty role="alert"; skip it.
 	await expect(page.getByRole('alert').filter({ hasText: /\S/ })).toHaveText(
 		'That email and password do not match an account.'
 	)
@@ -86,25 +112,23 @@ for (const [name, viewport] of Object.entries(VIEWPORTS)) {
 			await page.setViewportSize(viewport)
 			await page.emulateMedia({ colorScheme: scheme })
 			await page.goto('/sign-in')
+			await expectNoHorizontalScroll(page)
 			await page.screenshot({
 				path: `${SCREENSHOT_DIR}/sign-in-${name}-${scheme}.png`,
 				fullPage: true
 			})
-			await signUp(page, freshEmail())
+			await signIn(page, SHARED_EMAIL)
+			await expectNoHorizontalScroll(page)
 			await page.screenshot({
 				path: `${SCREENSHOT_DIR}/home-${name}-${scheme}.png`,
 				fullPage: true
 			})
 			await page.goto('/glossary')
+			await expectNoHorizontalScroll(page)
 			await page.screenshot({
 				path: `${SCREENSHOT_DIR}/glossary-${name}-${scheme}.png`,
 				fullPage: true
 			})
-			// No horizontal scroll at phone width (R73).
-			const overflow = await page.evaluate(
-				() => document.documentElement.scrollWidth > window.innerWidth
-			)
-			expect(overflow).toBe(false)
 		})
 	}
 }
