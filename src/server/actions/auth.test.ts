@@ -51,6 +51,19 @@ describe('signIn', () => {
 		expect(redirectTarget(error)).toBe('/')
 	})
 
+	it('trims and lowercases the email before calling Supabase', async () => {
+		auth.signInWithPassword.mockResolvedValue({ data: { user: USER }, error: null })
+
+		await signIn({ email: '  Ada@Example.COM ', password: 'correct-horse-9' }).catch(
+			(e: unknown) => e
+		)
+
+		expect(auth.signInWithPassword).toHaveBeenCalledWith({
+			email: 'ada@example.com',
+			password: 'correct-horse-9'
+		})
+	})
+
 	it('explains wrong credentials in plain English', async () => {
 		auth.signInWithPassword.mockResolvedValue({
 			data: { user: null },
