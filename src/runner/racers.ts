@@ -116,21 +116,9 @@ export function codeRacer(task: Task): ItemRunner {
 	const fn = CODE_FNS[code]
 	return async (item) => {
 		const start = performance.now()
+		let answer: ReturnType<typeof fn>
 		try {
-			const answer = fn(item.state)
-			const latencyMs = performance.now() - start
-			const credit = scoreAnswer(task, item, RACERS.code, answer)
-			return {
-				itemId: item.id,
-				ok: true,
-				raw: JSON.stringify(answer),
-				parsed: answer,
-				credit,
-				correct: toCorrect(credit),
-				latencyMs,
-				usage: NO_USAGE,
-				costUsd: NO_COST
-			}
+			answer = fn(item.state)
 		} catch {
 			// The state doesn't fit the function: a miss, never hidden.
 			const credit = missCredit(task, item, RACERS.code)
@@ -145,6 +133,19 @@ export function codeRacer(task: Task): ItemRunner {
 				usage: NO_USAGE,
 				costUsd: NO_COST
 			}
+		}
+		const latencyMs = performance.now() - start
+		const credit = scoreAnswer(task, item, RACERS.code, answer)
+		return {
+			itemId: item.id,
+			ok: true,
+			raw: JSON.stringify(answer),
+			parsed: answer,
+			credit,
+			correct: toCorrect(credit),
+			latencyMs,
+			usage: NO_USAGE,
+			costUsd: NO_COST
 		}
 	}
 }

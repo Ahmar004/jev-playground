@@ -23,17 +23,25 @@ export async function runItems(
 	options: RunOptions
 ): Promise<RunTotals | null> {
 	const { lanes = RACE_LANES, onEvent, now = () => performance.now() } = options
-	const signal = options.signal ?? new AbortController().signal
+	// Internal signal: aborts when the caller aborts or when any lane fails, so
+	// sibling lanes stop making paid calls and emitting events.
+	const internal = new AbortController()
+	const signal = internal.signal
+	const callerSignal = options.signal
+	const onCallerAbort = () => internal.abort()
+	if (callerSignal?.aborted) internal.abort()
+	else callerSignal?.addEventListener('abort', onCallerAbort, { once: true })
 	const origin = now()
 	const elapsed = () => now() - origin
-	const results: ItemResult[] = []
+	const results: (ItemResult | undefined)[] = []
 	let next = 0
 	let firstStart: number | null = null
 	let lastEnd = 0
 
 	async function lane(laneIndex: number): Promise<void> {
 		while (!signal.aborted) {
-			const item = task.items[next]
+			const index = next
+			const item = task.items[index]
 			if (!item) return
 			next += 1
 			const startedAt = elapsed()
@@ -49,21 +57,33 @@ export async function runItems(
 			if (signal.aborted) return
 			const finishedAt = elapsed()
 			lastEnd = Math.max(lastEnd, finishedAt)
-			results.push(result)
+			results[index] = result
 			onEvent({ type: RUN_EVENTS.itemFinished, racer, lane: laneIndex, atMs: finishedAt, result })
 		}
 	}
 
-	const laneCount = Math.min(lanes, task.items.length)
+	const laneCount = Math.max(1, Math.min(lanes, task.items.length))
 	try {
-		await Promise.all(Array.from({ length: laneCount }, (_, laneIndex) => lane(laneIndex)))
+		await Promise.all(
+			Array.from({ length: laneCount }, (_, laneIndex) =>
+				lane(laneIndex).catch((error: unknown) => {
+					internal.abort()
+					throw error
+				})
+			)
+		)
 	} catch (error) {
-		if (signal.aborted) return null
+		if (callerSignal?.aborted) return null
 		throw error
+	} finally {
+		callerSignal?.removeEventListener('abort', onCallerAbort)
 	}
 	if (signal.aborted) return null
 
-	const totals = computeTotals(results, lastEnd - (firstStart ?? 0))
+	const totals = computeTotals(
+		results.filter((result): result is ItemResult => result !== undefined),
+		lastEnd - (firstStart ?? 0)
+	)
 	onEvent({ type: RUN_EVENTS.runFinished, racer, atMs: lastEnd, totals })
 	return totals
 }

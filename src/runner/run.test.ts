@@ -102,4 +102,30 @@ describe('runItems', () => {
 		const finished = events.at(-1)
 		expect(finished?.type === 'run_finished' && finished.totals.wallMs).toBe(300)
 	})
+
+	it('stops sibling lanes when a call fails with a non-abort error', async () => {
+		const events: RunEvent[] = []
+		const runner = deferredRunner()
+		const failing = (taskItem: { id: string }, signal: AbortSignal) =>
+			taskItem.id === 'i0' ? Promise.reject(new Error('boom')) : runner.runItem(taskItem, signal)
+		const done = runItems(task, 'jev', failing, {
+			lanes: 2,
+			onEvent: (event) => events.push(event)
+		})
+		await expect(done).rejects.toThrow('boom')
+		runner.pending.get('i1')?.()
+		await flush()
+		const started = events.filter((event) => event.type === 'item_started')
+		expect(started).toHaveLength(2)
+		expect(events.some((event) => event.type === 'run_finished')).toBe(false)
+	})
+
+	it('finishes when lanes exceed the item count', async () => {
+		const events: RunEvent[] = []
+		const totals = await runItems(task, 'jev', async (taskItem) => okResult(taskItem.id), {
+			lanes: 10,
+			onEvent: (event) => events.push(event)
+		})
+		expect(totals?.items).toBe(6)
+	})
 })
