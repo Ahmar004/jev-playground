@@ -57,7 +57,8 @@ type ItemResult = {
 	ok: boolean // the call succeeded and the output parsed
 	raw: string // provider body text, shown when parsing fails (R44)
 	parsed: unknown | null
-	correct: boolean | null // a parse failure or an error is a miss; null = no stored answer, "not scored"
+	correct: boolean | null // credit === 1; a parse failure or an error is a miss; null = "not scored"
+	credit: number | null // 1 or 0, or the share right for fan_out; null = not scored
 	latencyMs: number
 	usage: { inputTokens: number; outputTokens: number }
 	costUsd: number | null // null means "price unknown"
@@ -66,8 +67,8 @@ type ItemResult = {
 type RunTotals = {
 	items: number
 	scored: number // items with a stored answer
-	correct: number
-	accuracy: number | null // correct / scored; null when nothing is scored
+	correct: number // items with full credit
+	accuracy: number | null // total credit / scored; null when nothing is scored
 	wallMs: number // first start to last finish
 	costUsd: number | null
 	inputTokens: number
@@ -75,8 +76,8 @@ type RunTotals = {
 	parseFailures: number
 }
 type RunEvent =
-	| { type: 'item_started'; racer: RacerId; itemId: string; atMs: number }
-	| { type: 'item_finished'; racer: RacerId; atMs: number; result: ItemResult }
+	| { type: 'item_started'; racer: RacerId; itemId: string; lane: number; atMs: number }
+	| { type: 'item_finished'; racer: RacerId; lane: number; atMs: number; result: ItemResult }
 	| { type: 'run_finished'; racer: RacerId; atMs: number; totals: RunTotals }
 ```
 
@@ -91,7 +92,7 @@ type RunEvent =
   - Noul `{ type: 'noul', instructions, criteria?: { true, false } }` returns `{ noul }`.
   - Choice `{ type: 'choice', instructions, criteria: { option: description } }` returns `{ choice, probabilities, confidence }`.
   - Score `{ type: 'score', instructions, criteria: [level0, level1, ...] }` returns `{ score, probabilities, legend, confidence }`.
-- **`llm-prompt.ts`**: builds one prompt from the same item: the same state, the same instructions, the same option or level set, and a fixed JSON answer format (R92). Every LLM runs at its provider's default settings. Opus 5.5 can't turn thinking off, so it runs at low effort. Methodology states both.
+- **`llm-prompt.ts`**: builds one prompt from the same item: the same state, the same instructions, the same option or level set, and a fixed JSON answer format (R92). Every LLM runs at its provider's default settings. Opus 5.5 can't turn thinking off, so it runs at low effort. Methodology states both. When a task leaves `llm` out, the LLM's question is derived from Jev's, so the two can't drift.
 - **`parse.ts`**: Jev answers go through Zod. LLM text has code fences stripped, then `JSON.parse`, then Zod. Any failure becomes `{ ok: false, parsed: null, raw }`, which counts as a miss and is shown with a "couldn't parse" note (R44).
 - **`score.ts`**: correctness per task kind:
 
@@ -106,10 +107,10 @@ type RunEvent =
 
 - **`cost.ts`**: `inputTokens x inputPrice + outputTokens x outputPrice`. The price comes from `content/prices.json` (dated, with source URLs), from OpenRouter's model list, or from OpenRouter's `usage.cost`. Otherwise it is `null` ("price unknown"). The price used is saved with each result. Jev output tokens are free.
 - **`code/*.ts`**: the Code racer. Deterministic functions (count items, sum, compare dates), timed, $0.
-- **`combine`**: a task may set `combine: codeFnId`. The runner applies that Code function to Jev's parsed answer and scores the result as the `jev_code` racer, shown as "Jev + Code". Its latency is Jev's latency plus the function's time, and its cost is Jev's cost. Recordings store only Jev's own results, and the runner derives `jev_code` from them in both modes. Level 3's fix and level 5's weighted composite use it. Level 5 passes the user's slider weights in as arguments, so views never compute a score.
+- **`combine`**: a task may set `combine: codeFnId`. The runner applies that Code function to Jev's parsed answer and scores the result as the `jev_code` racer, shown as "Jev + Code". Its latency is Jev's latency plus the function's time, and its cost is Jev's cost. Recordings store only Jev's own results, and the runner derives `jev_code` from them in both modes. Level 3's fix and level 5's weighted composite use it. Level 5 passes the user's slider weights in as arguments, so views never compute a score. On a combine task the item's label is the combined answer's label: Jev alone is not scored there, and the LLM answers the task's `llm` question.
 - **Unscored items**: an item with no stored answer (an Arena custom task) gets `correct: null`, shows "not scored", and is left out of accuracy. In level 8 Developer mode, the answer the user states is the item's answer.
-- **`run.ts`**: `runItems(task, racer, { lanes, signal, onEvent })`. It runs items in order over `lanes` parallel slots (`RACE_LANES = 4` for every racer). Abort through `signal`.
-- **`replay.ts`**: `replaySource(recording, { onEvent, signal })` fires each recorded event at its recorded offset, so replays play at real speed (R7). `skip()` emits all remaining events at once.
+- **`run.ts`**: `runItems(task, racer, runItem, { lanes, signal, onEvent })`, where `runItem` is the racer's `ItemRunner` (`jevRacer`, `llmRacer` or `codeRacer`, in `racers.ts`). Provider calls are passed in with the key bound, so the runner never holds a key. It runs items in order over `lanes` parallel slots (`RACE_LANES = 4` for every racer). Abort through `signal`. A non-abort error in one lane stops the other lanes.
+- **`replay.ts`**: `replaySource(recording, { onEvent, signal })` fires each recorded event at its recorded offset, so replays play at real speed (R7). It returns `{ skip, done }`: `skip()` emits all remaining events at once, and `done` resolves when the last event fires, after `skip`, or on abort.
 
 ### 3.3 `useRace` (`src/features/race/use-race.ts`)
 
@@ -124,19 +125,19 @@ type RunEvent =
 
 ### 4.1 Files
 
-| File                                           | Shape (Zod schema in `src/content/`)                                                                                                           |
-| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `content/tasks/<taskId>.json`                  | `{ id, kind, version, jev: questionTemplate, llm: promptTemplate, code?: codeFnId, combine?: codeFnId, items: [{ id, state, label, note? }] }` |
-| `content/levels/<levelId>.json`                | `{ id, order, title, learn, predict, taskIds, reveal, docs: [path], check: [question] }`                                                       |
-| `content/games/<gameId>.json`                  | `{ id, priority, title, useCase, taskId, lesson, docs }`                                                                                       |
-| `content/arena/presets.json`                   | `[{ id, title, taskId, itemId, batchTaskId? }]`                                                                                                |
-| `content/sandbox/templates.json`               | `[{ id, title, state, questions }]`                                                                                                            |
-| `content/quizzes/{start,end}.json`             | `[{ id, prompt, options, answer, explanation, topic }]`                                                                                        |
-| `content/glossary.json`                        | `[{ term, definition }]`                                                                                                                       |
-| `content/prices.json`                          | `{ checkedOn, models: { [modelId]: { inputPerM, outputPerM, source } } }`                                                                      |
-| `content/recordings/<taskId>/<modelSlug>.json` | `{ taskId, taskHash, modelId, recordedAt, price, lanes, events: [{ itemId, lane, startMs, endMs, ...ItemResult }], totals }`                   |
+| File                                           | Shape (Zod schema in `src/content/`)                                                                                                                                                              |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `content/tasks/<taskId>.json`                  | `{ id, kind, version, jev: { questions } \| { perLine } \| { raw }, llm?: question \| { instructions }, code?: codeFnId, combine?: codeFnId, items: [{ id, state, label?, note?, questions? }] }` |
+| `content/levels/<levelId>.json`                | `{ id, order, title, learn, predict, taskIds, reveal, docs: [path], check: [question] }`                                                                                                          |
+| `content/games/<gameId>.json`                  | `{ id, priority, title, useCase, taskId, lesson, docs }`                                                                                                                                          |
+| `content/arena/presets.json`                   | `[{ id, title, taskId, itemId, batchTaskId? }]`                                                                                                                                                   |
+| `content/sandbox/templates.json`               | `[{ id, title, state, questions }]`                                                                                                                                                               |
+| `content/quizzes/{start,end}.json`             | `[{ id, prompt, options, answer, explanation, topic }]`                                                                                                                                           |
+| `content/glossary.json`                        | `[{ term, definition }]`                                                                                                                                                                          |
+| `content/prices.json`                          | `{ checkedOn, models: { [modelId]: { inputPerM, outputPerM, source } } }`                                                                                                                         |
+| `content/recordings/<taskId>/<modelSlug>.json` | `{ taskId, taskHash, racer, modelId, recordedAt, price, lanes, events: [{ itemId, lane, startMs, endMs, ...ItemResult }], totals }`                                                               |
 
-Content is imported, not fetched, so it renders at build time and Beginner mode never touches the database or a model API (R76). A Vitest test parses every file, and a bad file also fails `next build` at prerender. `taskHash` is a hash of the task file. The UI shows a recording only when its hash matches the current task, so edited content can never show stale results. A Vitest test fails when any task lacks a hash-matching recording for Jev and all three Claude models (Jev only for Sandbox templates), so Beginner mode never has a gap.
+Content is imported, not fetched, so it renders at build time and Beginner mode never touches the database or a model API (R76). `src/content/tasks.ts` and the server-only `src/content/recordings.ts` import every file by name; a Vitest test fails when a file on disk is missing from them. A Vitest test parses every file, and a bad file also fails `next build` at prerender. `taskHash` is a hash of the task file. The UI shows a recording only when its hash matches the current task, so edited content can never show stale results. A Vitest test fails when any task lacks a hash-matching recording for Jev and all three Claude models (Jev only for Sandbox templates), so Beginner mode never has a gap.
 
 Recordings ship per page, not in a shared bundle (R79). A page's server component loads only that page's recordings and passes them to its client components as props. No client module imports `content/recordings/`.
 
