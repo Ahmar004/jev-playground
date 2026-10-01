@@ -327,3 +327,76 @@ Next: Step-6, slice 2 (Runner core). Write its plan with writing-plans, then run
 - Gates: lint, typecheck, format:check, check:env, check:secrets, check:standards 24/24, test (202 Vitest plus node:test), check:rls and build all pass.
 
 Next: Step-6, slice 3 (Recording CLI + level 1 content). It writes the Speed Race task, needs the user's spot-check of the 40 tickets, and asks before any paid recording run, showing the dry-run cost first.
+
+## Step-6 - slice 3: Recording CLI + level 1 content (2026-10-01) - in progress, paused for the paid recording
+
+- Skills: writing-plans for `docs/superpowers/plans/2026-10-01-slice-03-recording-cli.md`, then subagent-driven-development (Sonnet implementer and reviewer per task, one at a time; an Opus final whole-slice review). The SDD ledger is `.superpowers/sdd/2026-10-01-slice-03-recording-cli/progress.md` (git-ignored); it lists every ruling and deferred minor.
+- User decisions:
+  - Speed Race categories: `billing`, `technical`, `account`, `shipping`, `feature_request`, 8 tickets each, fictional online shop. The 40 tickets were spot-checked and approved as is.
+  - The Methodology link sits in the footer next to Glossary.
+  - `tsx` added as a devDependency.
+  - Keys are never shared through the chat, not even as an attached file (it would reach `.claude-logs/`). The user adds them to `.env.local` at the PC.
+- Built and committed locally (not pushed):
+  - Task 1 `62b5bb4`: `scripts/record/targets.ts` (args, which task and model pairs to run, skip when the recording's `taskHash` is current) and `estimate.ts` (dry run: characters / 4 input, 500 output tokens per LLM call). `pnpm record` script; Vitest now also runs `scripts/**/*.test.ts`.
+  - Task 2 `bf8291b`, `eb282a7`: `record-target.ts` (runs one racer through the shared runner and builds the Recording), `files.ts` (Prettier-formatted writes, stored hash, spend on disk against the $50 budget), `keys.ts` (owner keys, read only here), entry `scripts/record.ts`. A run is refused, with nothing written, when an LLM answers as a model other than the one requested, when every call failed, or when one run sees two model versions.
+  - Task 3 `bdd6d7c`: the `/methodology` page (sections: same inputs, how a race runs, model settings, parsing and scoring, cost with the price table, how items are chosen, recordings table), the footer link, e2e test and screenshots, `.env.example` owner keys, `docs/api-setup-guide.md` section 4, the `record` row in `CLAUDE.md`, and wording fixes in `TECH-STACK.md` and `DESIGN.md` 4.2.
+- Final whole-slice review (Opus): ready after fixes. Fix wave `3db0bc7`, `be4efae`, re-reviewed clean:
+  - User-approved DESIGN 4.2 change: a provider-side failure (rate limit, overload, network) stops that model's run and writes nothing; unparseable or malformed answers are still stored as they happened. Methodology says so.
+  - The answering model is checked on every reply, so a wrong model id costs at most 4 or 5 calls, not 40.
+  - The run summary (files written, cost, budget) always prints, even when a later model fails.
+  - Methodology names the 16,000-token output cap and says "a call that returns an error costs $0".
+- Known gap to close by the end of slice 4: Methodology already describes replays at recorded latency, the "couldn't parse" note and "price unknown", which the race view (slice 4) and Developer mode (slice 8) build.
+- Deferred minors: `jevPriceKeys` sorts version strings lexicographically (dry run only); pnpm's "esbuild build script ignored" warning (tsx works); no mid-run abort test; Methodology table row headers differ.
+- Not committed yet (Task 4): `content/tasks/speed-race.json` and its import in `src/content/tasks.ts`. `registry.test.ts` fails until the four recordings exist, so they must land together.
+- Dry run (spent nothing): Jev ~$0.0003, Haiku 4.5 ~$0.11, Sonnet 5.5 ~$0.22, Opus 5.5 ~$0.43, total ~$0.76 (output side overestimated on purpose).
+
+- User decision (2026-10-01): the user is away from the PC, so slice 4's key-independent work starts in the next session, before slice 3 is pushed. Slice 3's Task 4 (the paid recording) finishes when the user is back at the PC.
+
+Next: part A (slice 4's key-independent work) is done; see the slice 4 section below. Resume there.
+
+## Step-6 - slice 4: Level loop + race view (2026-10-01) - in progress, key-independent part done
+
+- Skills: writing-plans for `docs/superpowers/plans/2026-10-01-slice-04-level-loop.md`, then subagent-driven-development (Sonnet implementer and reviewer per task, one at a time; an Opus final whole-slice review, one fix wave, a scoped re-review). The ledger is `.superpowers/sdd/2026-10-01-slice-04-level-loop/progress.md` (git-ignored); it lists every ruling and deferred minor. Keep it until slice 4 is done.
+- User decisions:
+  - Level 1 Predict asks three two-way picks (Jev or the LLM): who finishes first, who costs less, who gets more right. Reveal marks each right, wrong, tie or "can't tell".
+  - Home gets "Play level 1: Speed Race" now, in the same commit as level 1's content.
+- Built and committed locally (not pushed), `84bb387..d2de8de`, 14 commits:
+  - `src/features/race/`: `useRace` (replays at recorded speed, `skip`, `cancel`, live counters from the runner's `computeTotals`, final numbers from the recorded totals), `RacerTag`, `ModeLabel`, `Scoreboard`, the race view (tracks, busy lanes, Skip to result), the opponent picker popover (arrow keys move, Enter, Space or a click picks, Esc cancels), `RaceStage` (remounted by `key` to switch opponents).
+  - `src/content/level-schema.ts` and `levels.ts` (registry, empty in the committed tree), `src/features/levels/`: `judgePrediction`, the stepper (`?step=`, every step open, focus moves to the new step's heading), Learn, Predict, Play, Reveal (prediction results, every recorded model's numbers, why, docs link, every item with "Couldn't parse" plus raw text, confetti on a right prediction).
+  - Constants `RACE_STATUS`, `LEVEL_STEPS`, `PREDICTION_METRICS`, `PREDICTION_OUTCOMES`, `ITEM_OUTCOMES`; `typesafeDocsUrl` in `links.ts`; DESIGN 3.3 and 4.1 match the code.
+  - `HEAD` alone passes typecheck, lint, format and 309 Vitest tests (checked in a clean worktree). The build was checked with the uncommitted level route in the tree, which bundles all of this code.
+- Written but not committed (Task 7, lands with the recordings): `content/levels/speed-race.json`, its import in `src/content/levels.ts`, `src/app/(app)/levels/[levelId]/page.tsx`, `ROUTES.level` in `src/lib/links.ts`, and the Home button in `src/app/(app)/page.tsx`. Reason: under Cache Components, `generateStaticParams` must return at least one param, so the route can't be committed while the level registry is empty.
+- Checked in Chrome and Playwright: the gate redirect; Home's button opens level 1; Learn and Predict in both themes at 1280 and 390 px with no horizontal overflow; Enter locks in the prediction; back returns to Predict with the picks kept; Play and Reveal show their "not recorded yet" states. The Chrome extension's screenshots timed out, so screenshots were taken with a scratch Playwright script. A test account `e2e+slice4-check@example.com` now exists in the Supabase dev project.
+- Methodology is now true for "replays at recorded latency" and the "couldn't parse" note (`price unknown` stays for slice 8).
+- For slice 5: confetti fires on every visit to Reveal (gate it on the first reveal); the prediction and opponent live in stepper state and are lost on reload (store the prediction); `prediction_made` and `level_started` analytics.
+- For slice 6: Reveal and the judge read recordings only, so a combine task (level 3) needs runner-derived Jev + Code totals there; add a `useRace` test with a combining task.
+- Deferred to slice 13 (accessibility pass): a screen reader's browse-mode click on a picker option moves the highlight without picking (Tab and Enter work).
+
+## Step-6 - slice 3: finished (2026-10-01)
+
+- ROADMAP Rule-A (user-added): all Anthropic spend for the whole build, recordings included, stays within the $20 credit; the remaining project budget is 7000 PKR. Rule-0.1, CLAUDE.md, spec, DESIGN 4.2 and TECH-STACK say so (user-approved). Commit `56d3ede`.
+- The recording CLI counts only LLM recordings against `ANTHROPIC_CREDIT_USD = 20` (`scripts/record/files.ts`) and refuses a run whose dry-run estimate would pass it (`creditShortfall` in `estimate.ts`, tested). Commit `7293cdf`.
+- Recorded with approval (Haiku first, then the rest), commit `851829e`:
+
+  | Racer      | Correct | Wall time | Cost    |
+  | ---------- | ------- | --------- | ------- |
+  | jev-1.13.0 | 39/40   | 4.2 s     | $0.0007 |
+  | Haiku 4.5  | 40/40   | 7.6 s     | $0.0108 |
+  | Sonnet 5.5 | 39/40   | 13.1 s    | $0.0284 |
+  | Opus 5.5   | 39/40   | 22.5 s    | $0.0561 |
+  - Anthropic spend on disk: $0.0953 of $20. The dry run overestimates LLM output about 10x (500 tokens allowed, about 14 real), so later estimates are safe upper bounds.
+  - Misses: Jev picked `billing` for t35 (PayPal request, 0.69 vs 0.31 `feature_request`). Sonnet (t35) and Opus (t11) wrote a sentence of reasoning before the JSON, against "Reply with only this JSON object", so they are parse misses with the right answer inside (R44). Level 1's Reveal shows them as "Couldn't parse"; worth a line in its copy.
+  - The lesson holds against all three Claude models: Jev is fastest and cheapest. On accuracy Haiku wins and Sonnet and Opus tie Jev.
+
+- `/methodology` in Chrome lists the 4 recordings. Chrome screenshots still time out; use a scratch Playwright script for screenshots.
+- Both keys stay in `.env.local` (gitignored) because later slices record more content; the user removes them when recording is done (R22).
+
+Next (resume here): finish slice 4.
+
+Finish slice 4 (the level files from Task 7 are still uncommitted in the tree):
+
+- Play level 1 from the real recording at recorded speed through Reveal, with every racer labelled (slice 4's done-when). Try all three opponents.
+- Recheck level 1's copy against the real numbers of all three recordings (Learn points, Reveal "why"); the user spot-checks it.
+- In Chrome, pick an opponent with a real mouse click on the option's text, and with arrow keys plus Enter (the picker commits a click only when `event.detail > 0`).
+- The Playwright e2e for the level 1 flow, and screenshots of every step (including the race and Reveal) in both themes at 1280 and 390 px.
+- Commit Task 7's files with the e2e as `feat(levels): add level 1 speed race`, run `local-review`, push, then `chore(logs)`. Then delete the SDD workspace for this plan.
