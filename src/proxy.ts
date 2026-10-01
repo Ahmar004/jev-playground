@@ -1,18 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
+import { gateRedirect } from '@/lib/auth-gate'
 import type { AuthOnlySupabaseClient } from '@/lib/supabase/auth-only'
 
-// Refreshes the Supabase session cookie on every page request.
+// Refreshes the Supabase session cookie on every page request, then gates
+// the page: signed-out visitors go to /sign-in (DESIGN 11.5). This check is
+// optimistic; every read and write re-checks the session on the server.
 export default async function proxy(request: NextRequest) {
 	let supabaseResponse = NextResponse.next({ request })
+	let signedIn = false
 
 	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 	const supabasePublishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 
 	if (supabaseUrl && supabasePublishableKey) {
-		// Typed to the auth surface like the wrappers in src/lib/supabase/ —
-		// this is the one other place the SDK is constructed, and it exists
-		// only to refresh the session cookie.
+		// Typed to the auth surface like the wrappers in src/lib/supabase/.
 		const supabase: AuthOnlySupabaseClient = createServerClient(
 			supabaseUrl,
 			supabasePublishableKey,
@@ -32,23 +34,28 @@ export default async function proxy(request: NextRequest) {
 			}
 		)
 
-		// getClaims() verifies the session JWT locally against the project's
-		// published signing keys (asymmetric keys, docs/api-setup-guide.md), and
-		// refreshes an expired session, which may call Supabase. Never let that
-		// take the site down: if Supabase is briefly unreachable the page still
-		// serves, only without a refreshed session on this request.
+		// getClaims() verifies the JWT locally against the project's signing
+		// keys and refreshes an expired session. If Supabase is unreachable the
+		// visitor counts as signed out: sign-in is public, so this can't loop.
 		try {
-			await supabase.auth.getClaims()
+			const { data } = await supabase.auth.getClaims()
+			signedIn = Boolean(data?.claims.sub)
 		} catch {
-			// Fail open — see comment above.
+			signedIn = false
 		}
 	}
 
-	return supabaseResponse
+	const target = gateRedirect(request.nextUrl.pathname, signedIn)
+	if (!target) return supabaseResponse
+
+	// Carry any refreshed session cookies onto the redirect.
+	const redirect = NextResponse.redirect(new URL(target, request.url))
+	supabaseResponse.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie))
+	return redirect
 }
 
 export const config = {
-	// Skip API routes, static files, and Next internals: only pages need the
-	// session refreshed here.
+	// Skip API routes (each handler returns its own JSON 401), static files
+	// and Next internals.
 	matcher: ['/((?!api|_next|_vercel|.*\\..*).*)']
 }

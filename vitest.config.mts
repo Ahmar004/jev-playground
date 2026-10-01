@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 
@@ -7,7 +8,10 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
 	plugins: [react()],
 	// Resolves the `@/` alias from tsconfig.json, like the app does.
-	resolve: { tsconfigPaths: true },
+	resolve: {
+		tsconfigPaths: true,
+		alias: { 'server-only': fileURLToPath(new URL('./vitest.server-only.ts', import.meta.url)) }
+	},
 	test: {
 		environment: 'jsdom',
 		include: ['src/**/*.test.{ts,tsx}'],
