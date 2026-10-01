@@ -16,6 +16,7 @@
 		"format:check": "prettier --check .",
 		"test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --import ./scripts/register-ts.mjs --test \"scripts/*.test.mjs\" \"src/**/*.test.mts\" && vitest run",
 		"test:e2e": "playwright test",
+		"record": "tsx --env-file-if-exists=.env.local scripts/record.ts",
 		"prisma:generate": "prisma generate",
 		"prisma:migrate:generate:check": "node scripts/generate-migration.mjs --check",
 		"db:run-once": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --import ./scripts/register-ts.mjs scripts/run-once-sql.mjs",
@@ -79,6 +80,7 @@
 		"prettier-plugin-tailwindcss": "^0.8.1",
 		"prisma": "^7.10.0",
 		"tailwindcss": "^4.3.3",
+		"tsx": "^4.23.15",
 		"typescript": "^5.8.3",
 		"vitest": "^5.0.3"
 	},
