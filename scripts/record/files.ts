@@ -4,9 +4,10 @@ import { fileURLToPath } from 'node:url'
 import { format, resolveConfig } from 'prettier'
 import { z } from 'zod'
 import { recordingSlug, type Recording } from '@/content/recording-schema'
+import { RACERS } from '@/lib/constants'
 
-// The total spend allowed for the whole project (ROADMAP Rule-0.1).
-export const BUDGET_USD = 50
+// The Anthropic credit that every recording must fit in (ROADMAP Rule-A).
+export const ANTHROPIC_CREDIT_USD = 20
 
 export const RECORDINGS_DIR = ['content', 'recordings']
 const JSON_EXT = '.json'
@@ -16,7 +17,10 @@ export function recordingPath(root: string, taskId: string, slug: string): strin
 }
 
 const hashOnlySchema = z.object({ taskHash: z.string() })
-const costOnlySchema = z.object({ totals: z.object({ costUsd: z.number().nullable() }) })
+const costOnlySchema = z.object({
+	racer: z.string(),
+	totals: z.object({ costUsd: z.number().nullable() })
+})
 
 export function readRecordedHash(root: string, taskId: string, slug: string): string | null {
 	const path = recordingPath(root, taskId, slug)
@@ -35,7 +39,7 @@ export async function writeRecording(root: string, recording: Recording): Promis
 	return path
 }
 
-/** What every recording on disk cost, against BUDGET_USD. */
+/** What every LLM recording on disk cost, against ANTHROPIC_CREDIT_USD. Jev is billed by TypeSafe. */
 export function recordedSpend(root: string): { costUsd: number; unknownPriceFiles: number } {
 	const dir = join(root, ...RECORDINGS_DIR)
 	if (!existsSync(dir)) return { costUsd: 0, unknownPriceFiles: 0 }
@@ -45,7 +49,10 @@ export function recordedSpend(root: string): { costUsd: number; unknownPriceFile
 		file.endsWith(JSON_EXT)
 	)
 	for (const file of files) {
-		const { totals } = costOnlySchema.parse(JSON.parse(readFileSync(join(dir, file), 'utf8')))
+		const { racer, totals } = costOnlySchema.parse(
+			JSON.parse(readFileSync(join(dir, file), 'utf8'))
+		)
+		if (racer !== RACERS.llm) continue
 		if (totals.costUsd === null) unknownPriceFiles += 1
 		else costUsd += totals.costUsd
 	}

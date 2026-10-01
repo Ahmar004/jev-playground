@@ -9,9 +9,9 @@ import { RACERS, RUN_EVENTS } from '@/lib/constants'
 import { buildAnthropicBody, callAnthropic } from '@/runner/providers/anthropic'
 import { callTypeSafe } from '@/runner/providers/typesafe'
 import type { RunEvent } from '@/runner/types'
-import { estimateTarget, LLM_OUTPUT_ALLOWANCE_TOKENS } from './record/estimate'
+import { creditShortfall, estimateTarget, LLM_OUTPUT_ALLOWANCE_TOKENS } from './record/estimate'
 import {
-	BUDGET_USD,
+	ANTHROPIC_CREDIT_USD,
 	RECORDINGS_DIR,
 	readRecordedHash,
 	recordedSpend,
@@ -61,7 +61,25 @@ function dryRun(targets: Target[]): void {
 	)
 }
 
+// Sums the LLM targets' dry-run estimates; null when any price is unknown.
+function llmEstimate(targets: Target[]): number | null {
+	let total = 0
+	for (const target of targets) {
+		if (target.racer !== RACERS.llm) continue
+		const { costUsd } = estimateTarget(getTask(target.taskId), target, PRICES)
+		if (costUsd === null) return null
+		total += costUsd
+	}
+	return total
+}
+
 async function record(targets: Target[]): Promise<void> {
+	const refusal = creditShortfall({
+		spentUsd: recordedSpend(ROOT).costUsd,
+		estimateUsd: llmEstimate(targets),
+		creditUsd: ANTHROPIC_CREDIT_USD
+	})
+	if (refusal) throw new Error(refusal)
 	const keys = ownerKeys(process.env, {
 		jev: targets.some((target) => target.racer === RACERS.jev),
 		llm: targets.some((target) => target.racer === RACERS.llm)
@@ -109,7 +127,7 @@ async function record(targets: Target[]): Promise<void> {
 		const spend = recordedSpend(ROOT)
 		console.log(`\nThis run: ${usd(runCost)}.`)
 		console.log(
-			`All recordings on disk: ${usd(spend.costUsd)} of the $${BUDGET_USD} budget${spend.unknownPriceFiles ? ` (${spend.unknownPriceFiles} with unknown price)` : ''}.`
+			`All recordings on disk: ${usd(spend.costUsd)} of the $${ANTHROPIC_CREDIT_USD} Anthropic credit${spend.unknownPriceFiles ? ` (${spend.unknownPriceFiles} with unknown price)` : ''}.`
 		)
 		if (written.length > 0) {
 			console.log('\nAdd any new file to src/content/recordings.ts (registry.test.ts checks):')

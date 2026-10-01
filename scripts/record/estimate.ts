@@ -51,3 +51,22 @@ export function estimateTarget(task: Task, target: Target, prices: PriceTable): 
 		costUsd: costUsd({ inputTokens, outputTokens }, price)
 	}
 }
+
+const USD_DIGITS = 4
+
+/**
+ * Why a run must not start, or null when it fits. Rule-A: all Anthropic spend
+ * stays within the owner's credit, and the estimate overcounts output on purpose.
+ */
+export function creditShortfall(input: {
+	spentUsd: number
+	estimateUsd: number | null
+	creditUsd: number
+}): string | null {
+	const { spentUsd, estimateUsd, creditUsd } = input
+	if (estimateUsd === null) {
+		return 'Refused: a model in this run has price unknown, so its cost cannot be checked against the credit.'
+	}
+	if (spentUsd + estimateUsd <= creditUsd) return null
+	return `Refused: this run is estimated at $${estimateUsd.toFixed(USD_DIGITS)}, and recordings on disk already cost $${spentUsd.toFixed(USD_DIGITS)} of the $${creditUsd} Anthropic credit (ROADMAP Rule-A).`
+}

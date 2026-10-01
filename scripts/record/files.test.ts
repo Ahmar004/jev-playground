@@ -72,8 +72,9 @@ describe('recording files', () => {
 		expect(readRecordedHash(root, 'demo', 'claude-opus-5-5')).toBe(HASH)
 	})
 
-	it('sums the cost of every recording on disk', async () => {
+	it('sums the cost of every LLM recording on disk, leaving Jev out', async () => {
 		await writeRecording(root, recording())
+		await writeRecording(root, recording({ racer: 'jev', modelId: 'jev-1.13.0' }))
 		await writeRecording(root, recording({ taskId: 'other' }))
 		await writeRecording(
 			root,

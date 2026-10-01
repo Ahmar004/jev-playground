@@ -4,7 +4,12 @@ import type { PriceTable } from '@/content/prices'
 import { buildJevRequest } from '@/runner/jev-request'
 import { buildLlmPrompt } from '@/runner/llm-prompt'
 import { choiceTask } from '@/runner/testing/tasks'
-import { CHARS_PER_TOKEN, estimateTarget, LLM_OUTPUT_ALLOWANCE_TOKENS } from './estimate'
+import {
+	CHARS_PER_TOKEN,
+	creditShortfall,
+	estimateTarget,
+	LLM_OUTPUT_ALLOWANCE_TOKENS
+} from './estimate'
 
 const prices: PriceTable = {
 	checkedOn: '2026-10-01',
@@ -67,5 +72,24 @@ describe('estimateTarget', () => {
 			slug: 'claude-sonnet-5-5'
 		}
 		expect(estimateTarget(choiceTask, target, prices).costUsd).toBeNull()
+	})
+})
+
+describe('creditShortfall', () => {
+	it('allows a run that fits in the credit left', () => {
+		expect(creditShortfall({ spentUsd: 5, estimateUsd: 10, creditUsd: 20 })).toBeNull()
+		expect(creditShortfall({ spentUsd: 10, estimateUsd: 10, creditUsd: 20 })).toBeNull()
+	})
+
+	it('refuses a run whose estimate would pass the credit', () => {
+		expect(creditShortfall({ spentUsd: 15, estimateUsd: 6, creditUsd: 20 })).toMatch(
+			/\$6\.0000.*\$15\.0000.*\$20/
+		)
+	})
+
+	it('refuses a run with an unknown price, since its cost cannot be checked', () => {
+		expect(creditShortfall({ spentUsd: 0, estimateUsd: null, creditUsd: 20 })).toMatch(
+			/price unknown/
+		)
 	})
 })
