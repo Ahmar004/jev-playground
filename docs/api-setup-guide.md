@@ -122,7 +122,19 @@ Free plan, US Cloud.
 4. **`NEXT_PUBLIC_POSTHOG_HOST`:** leave the line as `NEXT_PUBLIC_POSTHOG_HOST="https://us.i.posthog.com"`.
 5. Session replay: in **Settings > Project > Session replay**, if you turn replay on, keep **Mask all inputs** on. The app also masks every input and skips fields marked `ph-no-capture` (DESIGN 12).
 
-## 4. Check the setup
+## 4. Recording keys (owner only)
+
+These two keys are for the recording CLI (`corepack pnpm record`) and nothing else. The app never reads them, and they never go to Vercel.
+
+1. **`TYPESAFE_API_KEY`:** create it in the TypeSafe dashboard, as described at docs.typesafe.ai. It lets the CLI call Jev.
+2. **`ANTHROPIC_API_KEY`:** create it at https://platform.claude.com/settings/keys. It lets the CLI call Claude Opus 5.5, Sonnet 5.5 and Haiku 4.5.
+3. Paste them into `.env.local` as `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY`.
+4. Run `corepack pnpm record --dry-run` first. It prints the estimated cost and spends nothing.
+5. When recording is done, delete both values from `.env.local` (spec R22).
+
+Never paste a key into a chat: `.claude-logs/` commits every prompt.
+
+## 5. Check the setup
 
 Run these from the repo root:
 

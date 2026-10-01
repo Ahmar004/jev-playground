@@ -1,0 +1,205 @@
+import type { Metadata } from 'next'
+import { PRICES } from '@/content/prices'
+import { currentRecordings } from '@/content/recordings'
+import { TASKS } from '@/content/tasks'
+import { priceRows, recordingRows } from '@/features/methodology/methodology-data'
+import { CLAUDE_MODELS, NOUL_THRESHOLD, RACE_LANES } from '@/lib/constants'
+import { FIND_LINES_F1_BAR, SCORE_TOLERANCE } from '@/runner/score'
+
+export const metadata: Metadata = { title: "Methodology - Jev's Playground" }
+
+// Only TypeSafe docs may be linked from this site (CLAUDE.md > UI rules).
+const TYPESAFE_DOCS_PREFIX = 'https://docs.typesafe.ai/'
+
+const SECTION = 'bg-surface border-border flex flex-col gap-2 rounded-lg border p-4'
+const SECTION_TITLE = 'text-text text-xl font-bold'
+const BODY = 'text-text-muted'
+const TABLE_WRAPPER = 'overflow-x-auto'
+const TABLE = 'w-full text-left text-sm'
+const CAPTION = 'text-text-muted pb-2 text-left text-sm'
+const HEAD_CELL = 'text-text border-border border-b py-2 pr-4 font-bold'
+const CELL = 'border-border text-text-muted border-b py-2 pr-4'
+
+const SCORING_RULES: { term: string; rule: string }[] = [
+	{ term: 'Choice', rule: 'Correct when the answer equals the correct option.' },
+	{
+		term: 'Noul',
+		rule: `Jev's probability at or above ${NOUL_THRESHOLD} counts as yes. Correct when that matches the right answer.`
+	},
+	{
+		term: 'Score',
+		rule: `Jev is correct when it is within ${SCORE_TOLERANCE} of the correct level. An LLM is correct when its level equals the correct level.`
+	},
+	{
+		term: 'Several questions in one request',
+		rule: 'Accuracy is the share of questions answered right.'
+	},
+	{
+		term: 'Finding lines',
+		rule: `The F1 of the lines found against the correct lines. Correct at ${FIND_LINES_F1_BAR} or more.`
+	},
+	{ term: 'Text writing', rule: 'Shown to you, not scored.' }
+]
+
+export default function MethodologyPage() {
+	const prices = priceRows(PRICES)
+	const recordings = recordingRows([...TASKS.keys()].flatMap(currentRecordings))
+
+	return (
+		<main className="flex max-w-3xl flex-col gap-6">
+			<div className="flex flex-col gap-2">
+				<h1 className="text-text text-3xl font-extrabold">Methodology</h1>
+				<p className={BODY}>
+					How every race is run, scored and priced, so you can judge the results yourself.
+				</p>
+			</div>
+
+			<section className={SECTION}>
+				<h2 className={SECTION_TITLE}>Same inputs, same format</h2>
+				<p className={BODY}>
+					Jev and every LLM get the same state, the same instructions and the same options or levels
+					for every item. The LLM is asked to reply with a fixed JSON object. Jev returns typed
+					answers by design.
+				</p>
+			</section>
+
+			<section className={SECTION}>
+				<h2 className={SECTION_TITLE}>How a race runs</h2>
+				<p className={BODY}>
+					Each item is one call. Every racer gets {RACE_LANES} parallel lanes. Each call is sent
+					once, with no retries. Latency is timed from sending the request to receiving the full
+					response. Replays in Beginner mode play at the recorded latency.
+				</p>
+			</section>
+
+			<section className={SECTION}>
+				<h2 className={SECTION_TITLE}>Model settings</h2>
+				<p className={BODY}>
+					Every LLM runs at its provider&apos;s default settings. Claude Opus 5.5 cannot turn its
+					thinking off, so it runs at low effort, and its thinking tokens are counted in its cost.
+					The Claude models are {CLAUDE_MODELS.opus}, {CLAUDE_MODELS.sonnet} and{' '}
+					{CLAUDE_MODELS.haiku}.
+				</p>
+			</section>
+
+			<section className={SECTION}>
+				<h2 className={SECTION_TITLE}>Parsing and scoring</h2>
+				<p className={BODY}>
+					An answer that cannot be parsed counts as a miss and is shown with a &quot;couldn&apos;t
+					parse&quot; note, never hidden.
+				</p>
+				<dl className="mt-1 flex flex-col gap-2">
+					{SCORING_RULES.map(({ term, rule }) => (
+						<div key={term}>
+							<dt className="text-text font-bold">{term}</dt>
+							<dd className={BODY}>{rule}</dd>
+						</div>
+					))}
+				</dl>
+			</section>
+
+			<section className={SECTION}>
+				<h2 className={SECTION_TITLE}>Cost</h2>
+				<p className={BODY}>
+					Cost is tokens times the stored price per million tokens. Jev&apos;s output tokens are
+					free. A failed call costs $0. A model with no stored price shows &quot;price unknown&quot;
+					and is never estimated.
+				</p>
+				<div className={TABLE_WRAPPER}>
+					<table className={TABLE}>
+						<caption className={CAPTION}>Prices checked on {PRICES.checkedOn}.</caption>
+						<thead>
+							<tr>
+								<th scope="col" className={HEAD_CELL}>
+									Model
+								</th>
+								<th scope="col" className={HEAD_CELL}>
+									Input $/M
+								</th>
+								<th scope="col" className={HEAD_CELL}>
+									Output $/M
+								</th>
+								<th scope="col" className={HEAD_CELL}>
+									Source
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							{prices.map((row) => (
+								<tr key={row.modelId}>
+									<th scope="row" className={`${CELL} font-medium break-all`}>
+										{row.modelId}
+									</th>
+									<td className={CELL}>{row.inputPerM}</td>
+									<td className={CELL}>{row.outputPerM}</td>
+									<td className={`${CELL} break-all`}>
+										{row.source.startsWith(TYPESAFE_DOCS_PREFIX) ? (
+											<a
+												href={row.source}
+												className="text-accent focus-visible:outline-accent rounded underline underline-offset-4 focus-visible:outline focus-visible:outline-2"
+											>
+												{row.source}
+											</a>
+										) : (
+											row.source
+										)}
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
+			</section>
+
+			<section className={SECTION}>
+				<h2 className={SECTION_TITLE}>How items are chosen</h2>
+				<p className={BODY}>
+					Items and their correct answers are written for this site and checked by hand before
+					recording. Some items are written to show a weakness TypeSafe documents. The same items
+					are never re-run to get a different result. When content changes, it is recorded again and
+					old recordings stop showing.
+				</p>
+			</section>
+
+			<section className={SECTION}>
+				<h2 className={SECTION_TITLE}>Recordings</h2>
+				<p className={BODY}>Recordings are real outputs and are never edited.</p>
+				{recordings.length === 0 ? (
+					<p className="text-text">No recordings yet.</p>
+				) : (
+					<div className={TABLE_WRAPPER}>
+						<table className={TABLE}>
+							<caption className={CAPTION}>Every recording currently shown on this site.</caption>
+							<thead>
+								<tr>
+									<th scope="col" className={HEAD_CELL}>
+										Task
+									</th>
+									<th scope="col" className={HEAD_CELL}>
+										Model
+									</th>
+									<th scope="col" className={HEAD_CELL}>
+										Recorded on
+									</th>
+									<th scope="col" className={HEAD_CELL}>
+										Items
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								{recordings.map((row) => (
+									<tr key={`${row.taskId}-${row.modelId}`}>
+										<td className={CELL}>{row.taskId}</td>
+										<td className={`${CELL} break-all`}>{row.modelId}</td>
+										<td className={CELL}>{row.recordedOn}</td>
+										<td className={CELL}>{row.items}</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				)}
+			</section>
+		</main>
+	)
+}

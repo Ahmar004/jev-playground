@@ -74,6 +74,15 @@ test('sign up, browse, sign out and sign back in', async ({ page }) => {
 	await signIn(page, email)
 })
 
+test('the footer links to the Methodology page', async ({ page }) => {
+	await signIn(page, SHARED_EMAIL)
+	await page.getByRole('contentinfo').getByRole('link', { name: 'Methodology' }).click()
+	await expect(page).toHaveURL('/methodology')
+	await expect(page.getByRole('heading', { name: 'Methodology', level: 1 })).toBeVisible()
+	await expect(page.getByRole('heading', { name: 'Same inputs, same format' })).toBeVisible()
+	await expect(page.getByRole('heading', { name: 'Cost' })).toBeVisible()
+})
+
 test('wrong password shows a plain-English error', async ({ page }) => {
 	await page.goto('/sign-in')
 	await page.getByLabel('Email').fill(freshEmail())
@@ -127,6 +136,12 @@ for (const [name, viewport] of Object.entries(VIEWPORTS)) {
 			await expectNoHorizontalScroll(page)
 			await page.screenshot({
 				path: `${SCREENSHOT_DIR}/glossary-${name}-${scheme}.png`,
+				fullPage: true
+			})
+			await page.goto('/methodology')
+			await expectNoHorizontalScroll(page)
+			await page.screenshot({
+				path: `${SCREENSHOT_DIR}/methodology-${name}-${scheme}.png`,
 				fullPage: true
 			})
 		})

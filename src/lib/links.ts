@@ -3,7 +3,8 @@
 export const ROUTES = {
 	home: '/',
 	signIn: '/sign-in',
-	glossary: '/glossary'
+	glossary: '/glossary',
+	methodology: '/methodology'
 } as const
 
 // Shared results (/s/<id>) are the only pages reachable without signing in

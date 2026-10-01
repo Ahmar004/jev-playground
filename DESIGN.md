@@ -148,8 +148,8 @@ Recordings ship per page, not in a shared bundle (R79). A page's server componen
 - Flags: `--task <id>`, `--model <id>`, `--dry-run`.
 - It reads `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY` from `.env.local`. These are owner-only, documented in `.env.example`, and never read by app code.
 - It records Jev plus Haiku 4.5, Sonnet 5.5 and Opus 5.5 for every item, at 4 lanes, skipping tasks whose `taskHash` is unchanged.
-- `--dry-run` estimates tokens (characters / 4) times price and spends nothing.
-- A real run prints each call and the total cost against the $50 budget.
+- `--dry-run` estimates input tokens (characters / 4) times price, plus an output allowance of 500 tokens per LLM call, and spends nothing.
+- A real run prints each call, then this run's cost and the cost of every recording on disk against the $50 budget.
 - A run never edits a result: a failed or unparseable call is stored as it happened.
 - The owner removes the keys from `.env.local` when recording is done (R22).
 - Every recording run costs money, so Step-6 asks the user before each one and shows the dry-run cost first.
