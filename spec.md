@@ -174,7 +174,7 @@ After the first sign-in, Home shows one button that starts level 1 (Speed Race) 
 | #   | Level                                      | What happens                                                                                                                                                                                                                       | The user learns                                      | Winner                          | Docs                                                               |
 | --- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------ |
 | 1   | Speed Race [R30]                           | Jev and the LLM classify the same big batch of items (Choice) and race; counters show items done, time and cost.                                                                                                                   | Jev is built for fast, cheap judgments at scale.     | Jev (speed, cost)               | `/concepts/system-one`                                             |
-| 2   | Write Me a Haiku [R31]                     | Both are asked to write a haiku. The LLM writes one; Jev cannot, since it only returns typed answers.                                                                                                                              | Jev does not generate text; that is System Two work. | LLM                             | jaggedness#generation                                              |
+| 2   | Write Me a Poem [R31]                      | Both are asked to write a short 4-line poem. The LLM writes one; Jev cannot, since it only returns typed answers.                                                                                                                  | Jev does not generate text; that is System Two work. | LLM                             | jaggedness#generation                                              |
 | 3   | Count the Fruits / Which Date First? [R32] | Jev is asked to count fruits in a list and to say which of two dates is first, and struggles. The user then applies the fix: one Noul per item with the count done in code, and date parts extracted by Jev then compared in code. | Keep counting, math and dates in code.               | Code (with Jev as helper)       | jaggedness#math-and-numbers, `/cookbooks/date_extraction_cookbook` |
 | 4   | How Sure Are You? [R33]                    | The user rates their own confidence on items, then sees Jev's confidence on the same items and how often each was right at each confidence level.                                                                                  | What calibrated confidence is and why it matters.    | Jev (calibration)               | `/confidence`                                                      |
 | 5   | Break It Down [R34]                        | One broad question ("is this a good product review?") is split into small atomic questions, and the answers are combined in code with weights.                                                                                     | Atomic questions combined in code.                   | Jev plus code                   | `/patterns/composite-scoring`                                      |
@@ -305,6 +305,7 @@ Level status, quiz attempts, XP, badges and leaderboard entries are saved to the
 - Comparisons use the same inputs and the same expected output format for both models. [R92]
 - The method behind every comparison is described openly on the Methodology page, which needs sign-in like every page except shared results. [R93]
 - Recorded results are never invented or edited. [R5]
+- Items may be written or replaced to show a weakness TypeSafe documents (R29), and Methodology says so. The same items are never re-run to get a different result.
 - Rule-5 (ROADMAP): no dummy data anywhere.
 
 ## 13. What we store and what we never store
@@ -321,7 +322,7 @@ Level status, quiz attempts, XP, badges and leaderboard entries are saved to the
 
 ## 14. Constraints [R94-R98]
 
-- Built and shipped within the 8x Playmakers sprint: 4 days. [R94]
+- Built and shipped within the 8x Playmakers sprint, hard deadline 2026-10-03. [R94]
 - Runs locally on localhost for now. 8x provides only the GitHub repo. Every service is our own free account: Supabase (Postgres and Auth), Sentry and PostHog (`TECH-STACK.md`). No deployment from this repo; the code is built to deploy on Vercel later from the owner's personal repo (ROADMAP Rule-9). [R95]
 - Jev accepts text only and performs best in English. [R96]
 - Jev's rate and context limits apply to Developer mode Jev calls. [R97]
@@ -359,3 +360,4 @@ The Step-3 slice plan builds every P0 item before any P1 item.
 
 - Settled in Step-1 (`TECH-STACK.md`): password reset is out of v1, and Resend is added as Supabase's email sender at the Vercel launch; a full recording run is estimated at $5-10.
 - Settled in Step-3 (`DESIGN.md`): content items and counts (sections 7-9), XP and badges (10), colors (13).
+- Settled in Step-4: level 2 is "Write Me a Poem", so it doesn't clash with the Haiku 4.5 model name; the honesty rule for replaced items (12.4).

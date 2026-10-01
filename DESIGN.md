@@ -1,6 +1,6 @@
 # Design - Jev's Playground
 
-Status: approved in Step-3 (2026-10-01). This file says how each feature in `spec.md` is built, front end and back end, and ends with the ordered slice plan Step-6 follows. `spec.md` says what we build, `TECH-STACK.md` what we build it with. If this file disagrees with either, stop and ask the user.
+Status: approved in Step-3 and revised in Step-4 (2026-10-01). This file says how each feature in `spec.md` is built, front end and back end, and ends with the ordered slice plan Step-6 follows. `spec.md` says what we build, `TECH-STACK.md` what we build it with. If this file disagrees with either, stop and ask the user.
 
 ## 1. Decisions made in Step-3
 
@@ -11,6 +11,12 @@ Status: approved in Step-3 (2026-10-01). This file says how each feature in `spe
 - Developer mode models without a stored price show real token counts and "price unknown". Cost is never estimated.
 - The Leaderboard keeps one row per game, model and mode: the model's best result plus a run count.
 - DESIGN.md holds the slice plan. At the start of each slice, Step-6 writes that slice's detailed plan with the writing-plans skill in `docs/superpowers/plans/`, based on the code as it stands then.
+
+Added in Step-4:
+
+- If a recording doesn't show a level's lesson, the items are rewritten to target the weakness TypeSafe documents and recorded once more. Methodology says items were chosen this way. The same items are never re-run to get a different result (spec 12.4).
+- Level 2 is "Write Me a Poem", not "Write Me a Haiku", so it can't be confused with the Haiku 4.5 model. It has no Jev judging step.
+- If P0 slices fall behind, the user decides what to cut at that slice. Nothing is cut in advance.
 
 ## 2. Architecture
 
@@ -45,13 +51,13 @@ Components stay pure: data in through props, actions out through callbacks. Time
 ### 3.1 Types
 
 ```ts
-type RacerId = 'jev' | 'llm' | 'code'
+type RacerId = 'jev' | 'llm' | 'code' | 'jev_code' // jev_code: Jev's answer passed through a Code function
 type ItemResult = {
 	itemId: string
 	ok: boolean // the call succeeded and the output parsed
 	raw: string // provider body text, shown when parsing fails (R44)
 	parsed: unknown | null
-	correct: boolean // a parse failure or an error is a miss
+	correct: boolean | null // a parse failure or an error is a miss; null = no stored answer, "not scored"
 	latencyMs: number
 	usage: { inputTokens: number; outputTokens: number }
 	costUsd: number | null // null means "price unknown"
@@ -59,8 +65,9 @@ type ItemResult = {
 }
 type RunTotals = {
 	items: number
+	scored: number // items with a stored answer
 	correct: number
-	accuracy: number
+	accuracy: number | null // correct / scored; null when nothing is scored
 	wallMs: number // first start to last finish
 	costUsd: number | null
 	inputTokens: number
@@ -99,6 +106,8 @@ type RunEvent =
 
 - **`cost.ts`**: `inputTokens x inputPrice + outputTokens x outputPrice`. The price comes from `content/prices.json` (dated, with source URLs), from OpenRouter's model list, or from OpenRouter's `usage.cost`. Otherwise it is `null` ("price unknown"). The price used is saved with each result. Jev output tokens are free.
 - **`code/*.ts`**: the Code racer. Deterministic functions (count items, sum, compare dates), timed, $0.
+- **`combine`**: a task may set `combine: codeFnId`. The runner applies that Code function to Jev's parsed answer and scores the result as the `jev_code` racer, shown as "Jev + Code". Its latency is Jev's latency plus the function's time, and its cost is Jev's cost. Recordings store only Jev's own results, and the runner derives `jev_code` from them in both modes. Level 3's fix and level 5's weighted composite use it. Level 5 passes the user's slider weights in as arguments, so views never compute a score.
+- **Unscored items**: an item with no stored answer (an Arena custom task) gets `correct: null`, shows "not scored", and is left out of accuracy. In level 8 Developer mode, the answer the user states is the item's answer.
 - **`run.ts`**: `runItems(task, racer, { lanes, signal, onEvent })`. It runs items in order over `lanes` parallel slots (`RACE_LANES = 4` for every racer). Abort through `signal`.
 - **`replay.ts`**: `replaySource(recording, { onEvent, signal })` fires each recorded event at its recorded offset, so replays play at real speed (R7). `skip()` emits all remaining events at once.
 
@@ -115,19 +124,21 @@ type RunEvent =
 
 ### 4.1 Files
 
-| File                                           | Shape (Zod schema in `src/content/`)                                                                                         |
-| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `content/tasks/<taskId>.json`                  | `{ id, kind, version, jev: questionTemplate, llm: promptTemplate, code?: codeFnId, items: [{ id, state, label, note? }] }`   |
-| `content/levels/<levelId>.json`                | `{ id, order, title, learn, predict, taskIds, reveal, docs: [path], check: [question] }`                                     |
-| `content/games/<gameId>.json`                  | `{ id, priority, title, useCase, taskId, lesson, docs }`                                                                     |
-| `content/arena/presets.json`                   | `[{ id, title, taskId, itemId, batchTaskId? }]`                                                                              |
-| `content/sandbox/templates.json`               | `[{ id, title, state, questions }]`                                                                                          |
-| `content/quizzes/{start,end}.json`             | `[{ id, prompt, options, answer, explanation, topic }]`                                                                      |
-| `content/glossary.json`                        | `[{ term, definition }]`                                                                                                     |
-| `content/prices.json`                          | `{ checkedOn, models: { [modelId]: { inputPerM, outputPerM, source } } }`                                                    |
-| `content/recordings/<taskId>/<modelSlug>.json` | `{ taskId, taskHash, modelId, recordedAt, price, lanes, events: [{ itemId, lane, startMs, endMs, ...ItemResult }], totals }` |
+| File                                           | Shape (Zod schema in `src/content/`)                                                                                                           |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `content/tasks/<taskId>.json`                  | `{ id, kind, version, jev: questionTemplate, llm: promptTemplate, code?: codeFnId, combine?: codeFnId, items: [{ id, state, label, note? }] }` |
+| `content/levels/<levelId>.json`                | `{ id, order, title, learn, predict, taskIds, reveal, docs: [path], check: [question] }`                                                       |
+| `content/games/<gameId>.json`                  | `{ id, priority, title, useCase, taskId, lesson, docs }`                                                                                       |
+| `content/arena/presets.json`                   | `[{ id, title, taskId, itemId, batchTaskId? }]`                                                                                                |
+| `content/sandbox/templates.json`               | `[{ id, title, state, questions }]`                                                                                                            |
+| `content/quizzes/{start,end}.json`             | `[{ id, prompt, options, answer, explanation, topic }]`                                                                                        |
+| `content/glossary.json`                        | `[{ term, definition }]`                                                                                                                       |
+| `content/prices.json`                          | `{ checkedOn, models: { [modelId]: { inputPerM, outputPerM, source } } }`                                                                      |
+| `content/recordings/<taskId>/<modelSlug>.json` | `{ taskId, taskHash, modelId, recordedAt, price, lanes, events: [{ itemId, lane, startMs, endMs, ...ItemResult }], totals }`                   |
 
-Content is imported, not fetched, so it renders at build time and Beginner mode never touches the database or a model API (R76). A Vitest test parses every file, and a bad file also fails `next build` at prerender. `taskHash` is a hash of the task file. The UI shows a recording only when its hash matches the current task, so edited content can never show stale results.
+Content is imported, not fetched, so it renders at build time and Beginner mode never touches the database or a model API (R76). A Vitest test parses every file, and a bad file also fails `next build` at prerender. `taskHash` is a hash of the task file. The UI shows a recording only when its hash matches the current task, so edited content can never show stale results. A Vitest test fails when any task lacks a hash-matching recording for Jev and all three Claude models (Jev only for Sandbox templates), so Beginner mode never has a gap.
+
+Recordings ship per page, not in a shared bundle (R79). A page's server component loads only that page's recordings and passes them to its client components as props. No client module imports `content/recordings/`.
 
 ### 4.2 Recording CLI (`pnpm record`)
 
@@ -172,28 +183,28 @@ The mode lives in a React context and is not saved. Every page load starts in Be
 
 ### 5.4 Browser hardening
 
-- A Content-Security-Policy `connect-src` allowlist: `'self'`, OpenRouter, Anthropic, OpenAI, Google Generative Language, the Supabase project URL, PostHog and Sentry ingest. If a script were ever injected, the browser still refuses to send a key to any other host.
+- A Content-Security-Policy `connect-src` allowlist: `'self'`, OpenRouter, Anthropic, OpenAI, Google Generative Language, the Supabase project URL, PostHog and Sentry ingest. If a script were ever injected, the browser still refuses to send a key to any other host. `next dev` also needs `ws:` (hot reload) and `'unsafe-eval'`, so those are added in development only; the production policy stays strict.
 - User text and model output render only as plain text. `dangerouslySetInnerHTML` is banned (R86).
 
 ## 6. Screens
 
 Every route below is in `src/lib/links.ts`. A header link is added only in the slice that builds its page. Rendering follows `TECH-STACK.md` > Rendering strategy.
 
-| Route                           | Screen        | Render              | Contents                                                                                                                             |
-| ------------------------------- | ------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `/sign-in`                      | Sign-in       | SSG                 | Tabs: Sign in / Create account. Email and password. No password-reset link (out of v1).                                              |
-| `/`                             | Home          | PPR                 | Welcome, path progress, "Play level 1: Speed Race" (R65), optional start-quiz card (R57).                                            |
-| `/path`                         | Path          | PPR                 | 8 level cards with status and Skip / Revisit (R28).                                                                                  |
-| `/levels/[levelId]`             | Level         | SSG shell + CSR     | Stepper Learn > Predict > Play > Reveal > Check, with `?step=` in the URL.                                                           |
-| `/games`, `/games/[gameId]`     | Games, Game   | SSG + CSR           | Setup (opponent picker) > Race (scoreboard, Skip to result) > Summary (winner, why, numbers, docs link).                             |
-| `/arena`                        | Arena         | SSG + CSR           | Preset list (`?preset=`), side-by-side result, Share. Developer mode adds editable inputs, a "Custom task" tab and the model picker. |
-| `/sandbox`                      | Sandbox       | SSG + CSR           | Templates, Form and JSON tabs kept in sync, weakness warnings, limit check, answer bars and gauges, Copy as code.                    |
-| `/quizzes`, `/quizzes/[quizId]` | Quizzes       | SSG + PPR           | Start and end quiz, one question per screen, results with explanations, solutions, improvement.                                      |
-| `/leaderboard`                  | Leaderboard   | PPR                 | Best per game, model and mode, sortable. Empty state: "Begin playing and testing out Jev and LLMs to fill up this leaderboard here." |
-| `/profile`                      | Profile       | PPR                 | XP, badges, quiz improvement, completion card, my shares (with delete), sign out.                                                    |
-| `/glossary`                     | Glossary      | SSG                 | Every technical term in plain English (R74).                                                                                         |
-| `/methodology`                  | Methodology   | SSG                 | Same inputs and format, lanes, default settings, parse and scoring rules, price dates, recording dates; load-test results (P1, R78). |
-| `/s/[shareId]`                  | Shared result | cached SSR, noindex | Read-only snapshot with its mode label and "Sign in to try it yourself". The only page reachable without signing in.                 |
+| Route                           | Screen        | Render              | Contents                                                                                                                                                |
+| ------------------------------- | ------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/sign-in`                      | Sign-in       | SSG                 | Tabs: Sign in / Create account. Email and password. No password-reset link (out of v1).                                                                 |
+| `/`                             | Home          | PPR                 | Welcome, path progress, "Play level 1: Speed Race" (R65), optional start-quiz card (R57).                                                               |
+| `/path`                         | Path          | PPR                 | 8 level cards with status and Skip / Revisit (R28).                                                                                                     |
+| `/levels/[levelId]`             | Level         | SSG shell + CSR     | Stepper Learn > Predict > Play > Reveal > Check, with `?step=` in the URL.                                                                              |
+| `/games`, `/games/[gameId]`     | Games, Game   | SSG + CSR           | Setup (opponent picker) > Race (scoreboard, Skip to result) > Summary (winner, why, numbers, docs link).                                                |
+| `/arena`                        | Arena         | SSG + CSR           | Preset list (`?preset=`), side-by-side result, Share. Developer mode adds editable inputs, a "Custom task" tab and the model picker.                    |
+| `/sandbox`                      | Sandbox       | SSG + CSR           | Templates, Form and JSON tabs kept in sync, weakness warnings, limit check, answer bars and gauges, Copy as code.                                       |
+| `/quizzes`, `/quizzes/[quizId]` | Quizzes       | SSG + PPR           | Start and end quiz, one question per screen, results with explanations, solutions, improvement.                                                         |
+| `/leaderboard`                  | Leaderboard   | PPR                 | Best per game, model and mode, sortable. Empty state: "Begin playing and testing out Jev and LLMs to fill up this leaderboard here."                    |
+| `/profile`                      | Profile       | PPR                 | XP, badges, quiz improvement, completion card, my shares (with delete), sign out.                                                                       |
+| `/glossary`                     | Glossary      | SSG                 | Every technical term in plain English (R74).                                                                                                            |
+| `/methodology`                  | Methodology   | SSG                 | Same inputs and format, lanes, default settings, parse and scoring rules, how items are chosen, price and recording dates; load-test results (P1, R78). |
+| `/s/[shareId]`                  | Shared result | cached SSR, noindex | Read-only snapshot with its mode label and "Sign in to try it yourself". The only page reachable without signing in.                                    |
 
 **Header (every signed-in page):** logo, links to Path, Games, Arena, Sandbox, Quizzes, Leaderboard and Profile (R66), the path progress bar n/8 (R67), the Beginner/Developer switch, the theme switch, and a Keys button showing how many keys are loaded. On phones, the links go into a menu one tap away.
 
@@ -213,16 +224,16 @@ Every route below is in `src/lib/links.ts`. A header link is added only in the s
 
 Each level is a content file (section 4.1) plus, where needed, one level-specific widget. Every level has 2 Check questions, scored on the server. Reveal compares the prediction with the result (R25), shows speed, cost and accuracy for every model involved (R26), and links to its TypeSafe docs page (R27).
 
-| #   | Items                                             | Jev                                                                                                                                                                                                   | LLM / Code                                                                                                                      | Widget                             |
-| --- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| 1   | 40 support tickets                                | Choice from 5 categories                                                                                                                                                                              | LLM picks from the same 5                                                                                                       | race lanes and counters            |
-| 2   | 3 haiku topics                                    | A real request with a free-text question type. Whatever TypeSafe returns (a 422 is expected, confirmed at recording) is recorded and shown. Then a Noul "is this a haiku about X?" on the LLM's haiku | LLM writes the haiku (`generate`)                                                                                               | API response side by side          |
-| 3   | 4 fruit lists, 4 tricky date pairs                | Naive: Choice of a count, or first/second. Fix: one Noul per list item (fan-out), or Choice extraction of day, month and year                                                                         | LLM answers the naive form. Code sums the Nouls or compares the extracted dates.                                                | before/after fix toggle            |
-| 4   | 10 true/false statements                          | Noul probability                                                                                                                                                                                      | The user answers each with a confidence slider (50-100%)                                                                        | calibration chart, user vs Jev     |
-| 5   | 6 product reviews                                 | 1 broad Noul vs 5 atomic Nouls, combined in code with weights the user can adjust                                                                                                                     | LLM broad judgment                                                                                                              | weight sliders and composite score |
-| 6   | 8 task cards, each with a small sample input      | Recorded for every card Jev can do; "Jev returns typed answers only" otherwise                                                                                                                        | LLM for every card; Code where a deterministic function exists, "Code can't do this" otherwise                                  | dnd-kit sorting with tap buttons   |
-| 7   | 3 emails x 10 phishing signals                    | 10 Nouls in one request (fan-out)                                                                                                                                                                     | LLM returns 10 booleans                                                                                                         | signals light up with probability  |
-| 8   | 6 recorded trick pairs (plain vs tricked wording) | Noul or Choice                                                                                                                                                                                        | LLM on the same pair. Developer mode: the user writes the text and states the right answer; if Jev disagrees, "you fooled Jev". | trick picker / free text           |
+| #   | Items                                             | Jev                                                                                                                                         | LLM / Code                                                                                                                      | Widget                             |
+| --- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| 1   | 40 support tickets                                | Choice from 5 categories                                                                                                                    | LLM picks from the same 5                                                                                                       | race lanes and counters            |
+| 2   | 3 poem topics                                     | A real request with a free-text question type. Whatever TypeSafe returns (a 422 is expected, confirmed at recording) is recorded and shown. | LLM writes a 4-line poem (`generate`)                                                                                           | API response side by side          |
+| 3   | 4 fruit lists, 4 tricky date pairs                | Naive: Choice of a count, or first/second. Fix: one Noul per list item (fan-out), or Choice extraction of day, month and year               | LLM answers the naive form. Code sums the Nouls or compares the extracted dates (`combine`, section 3.2).                       | before/after fix toggle            |
+| 4   | 10 true/false statements                          | Noul probability                                                                                                                            | The user answers each with a confidence slider (50-100%)                                                                        | calibration chart, user vs Jev     |
+| 5   | 6 product reviews                                 | 1 broad Noul vs 5 atomic Nouls, combined in code (`combine`) with weights the user can adjust                                               | LLM broad judgment                                                                                                              | weight sliders and composite score |
+| 6   | 8 task cards, each with a small sample input      | Recorded for every card Jev can do; "Jev returns typed answers only" otherwise                                                              | LLM for every card; Code where a deterministic function exists, "Code can't do this" otherwise                                  | dnd-kit sorting with tap buttons   |
+| 7   | 3 emails x 10 phishing signals                    | 10 Nouls in one request (fan-out)                                                                                                           | LLM returns 10 booleans                                                                                                         | signals light up with probability  |
+| 8   | 6 recorded trick pairs (plain vs tricked wording) | Noul or Choice                                                                                                                              | LLM on the same pair. Developer mode: the user writes the text and states the right answer; if Jev disagrees, "you fooled Jev". | trick picker / free text           |
 
 Across the path, Jev wins levels 1, 4 and 7, the LLM wins level 2, and Code wins level 3 (R29).
 
@@ -247,7 +258,7 @@ Level 1 (Speed Race) is also timed, so it writes Leaderboard entries under the g
 
 **Arena (R39-R46):**
 
-- 8 single-item presets: ticket triage, prompt-injection check, review rating, product match, citation check, intent routing, date extraction and phishing fan-out.
+- 8 single-item presets: ticket triage, prompt-injection check, review rating, product match, citation check, intent routing, date extraction and phishing fan-out. Product match, citation check and intent routing come from P1 games, so slice 10 writes and records those three tasks, and slice 13's games reuse them.
 - A result shows each answer, Jev's probabilities and confidence, latency, cost and the mode label. An unparseable LLM output shows the raw text with a "couldn't parse" note.
 - Developer mode can edit the preset inputs, or write a custom task (state plus one question), and pick the LLM.
 - P1 batch mode runs one preset over its 25-item batch task through the race view (R45).
@@ -328,13 +339,14 @@ The server never trusts a client-computed result it can check itself:
 
 ### 11.3 Server Actions
 
-Every action is a `validatedAction` and calls `requireUser()` first. Every write scopes by the session's user ID, never by a client-given ID.
+Every action is a `validatedAction`. Every action except `signIn` and `signUp` calls `requireUser()` first. Every write scopes by the session's user ID, never by a client-given ID.
 
 | Action                                              | Does                                                                                                                                                                                                          |
 | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `setLevelStatus`, `submitPrediction`, `submitCheck` | Progress plus XP and badges.                                                                                                                                                                                  |
 | `submitQuiz`                                        | Scores on the server, stores the attempt, awards XP.                                                                                                                                                          |
-| `recordGameRun`, `recordArenaRun`, `recordDevRun`   | Leaderboard upsert, XP and badges.                                                                                                                                                                            |
+| `recordGameRun`                                     | Leaderboard upsert, XP and badges (VS games and Speed Race).                                                                                                                                                  |
+| `recordArenaRun`, `recordDevRun`                    | XP and badges only. The Leaderboard covers timed games only (spec 10.5).                                                                                                                                      |
 | `createShare`                                       | Validates the snapshot with Zod. Requires a consent flag when it holds user text. Caps it at 32 KB. Allows 20 shares per user per 24 hours, counted from `Share` rows (no in-memory counter). Returns the ID. |
 | `deleteShare`                                       | Checks ownership, deletes, then calls `updateTag('share:' + id)`, so the link stops working at once (R87).                                                                                                    |
 | `signIn`, `signUp`, `signOut`                       | Supabase Auth through `src/lib/supabase/`. `provisionUser` runs on first sign-in.                                                                                                                             |
@@ -347,7 +359,7 @@ After a write, the action calls `updateTag` on the user's progress tag, so the h
 
 ### 11.5 Auth and the gate
 
-- `proxy.ts` calls `getClaims()`. With no valid claims, it redirects to `/sign-in`, except for `/sign-in`, `/s/*` and static assets.
+- `proxy.ts` calls `getClaims()`. With no valid claims, it redirects to `/sign-in`, except for `/sign-in`, `/s/*`, `/api/*` and static assets. A `fetch` can't use an HTML redirect, so each `/api/*` handler checks the session itself and returns a JSON 401.
 - `getSession()` (wrapped in React `cache`) is the one session object for every signed-in UI decision. `requireUser()` throws an `AppError` (401) without one.
 - The proxy check is optimistic. Every read and write re-checks the session.
 
@@ -416,11 +428,12 @@ The icons come from `@/components/ui/icons`. A `RacerTag` component is the only 
   - providers against mocked `fetch` (every error status, header rules, no key in URLs);
   - parse, score and cost;
   - the lane scheduler and `replaySource` with fake timers;
-  - content validation and `taskHash` matching;
+  - content validation, `taskHash` matching, and a hash-matching recording for every task and model (section 4.1);
+  - `combine` and unscored items;
   - every Server Action (validation, ownership, XP idempotency, share limits);
   - `useRace`, `useKeys` (a key never reaches any storage API).
 - **Playwright:** one test per flow in section 15. Developer mode tests intercept the provider URLs, so no real key ever enters a test. Screenshots of every screen in both themes at 1280 px and 390 px.
-- **Gates:** `local-review` before every commit (lint, typecheck, format, check:env, check:secrets, check:standards, test, build).
+- **Gates:** `local-review` before every commit (lint, typecheck, format, check:env, check:secrets, check:standards, test, build). `pnpm test` runs the template's `node:test` suites (script tests and logger contracts, which `check:standards` requires) and then `vitest run`.
 
 ## 15. Flows
 
@@ -450,15 +463,15 @@ A slice that adds content has its items spot-checked by the user and a recording
 | #   | Slice                           | Builds                                                                                                                                                                                   | Done when                                                                                                                   |
 | --- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | 1   | Shell                           | Tokens and themes (next-themes, `.dark`), Nunito, `constants.ts`, `links.ts`, `LazyMotion` setup, sign-in and sign-up, `proxy.ts` gate, signed-in layout with the header, Glossary.      | Sign up, sign in and sign out work; the gate redirects; both themes pass the screenshot check; flow 9 passes for the shell. |
-| 2   | Runner core                     | Task schema, `prices.json`, TypeSafe and Anthropic providers, `jev-request`, `llm-prompt`, parse, score, cost, `run.ts` lanes, Code racer, `replaySource`, content loaders.              | Unit tests cover every module in section 3; no UI.                                                                          |
+| 2   | Runner core                     | Task schema, `prices.json`, TypeSafe and Anthropic providers, `jev-request`, `llm-prompt`, parse, score, cost, `run.ts` lanes, Code racer, `combine`, `replaySource`, content loaders.   | Unit tests cover every module in section 3; no UI.                                                                          |
 | 3   | Recording CLI + level 1 content | `pnpm record` with `--dry-run`, the Speed Race task (40 tickets), its first real recording, the Methodology page, the Commands-table row in `CLAUDE.md`.                                 | The recording file validates; the dry-run and real costs are printed; Methodology renders.                                  |
-| 4   | Level loop + race view          | `useRace`, the race view and scoreboard, Skip, `ModeLabel`, `RacerTag`, the opponent picker, the level stepper with Learn, Predict, Play, Reveal and Check for level 1 in Beginner mode. | Level 1 plays end to end from the recording at recorded speed, with every racer labelled.                                   |
-| 5   | Progress                        | Prisma models and migrations (with RLS), progress, check and prediction actions, the XP and badge engine, Home, Path, the header progress bar.                                           | Flows 1 and 2 pass; replays award XP once.                                                                                  |
-| 6   | Levels 2-4                      | Content, recordings and widgets for Haiku, Count / Dates and How Sure (calibration chart).                                                                                               | Each level plays its full loop in Beginner mode.                                                                            |
+| 4   | Level loop + race view          | `useRace`, the race view and scoreboard, Skip, `ModeLabel`, `RacerTag`, the opponent picker, the level stepper with Learn, Predict, Play and Reveal for level 1 in Beginner mode.        | Level 1 plays from the recording at recorded speed, through Reveal, with every racer labelled.                              |
+| 5   | Progress                        | Prisma models and migrations (with RLS), progress, check and prediction actions, the Check step, the XP and badge engine, Home, Path, the header progress bar.                           | Flows 1 and 2 pass, including level 1's Check; replays award XP once.                                                       |
+| 6   | Levels 2-4                      | Content, recordings and widgets for Write Me a Poem, Count / Dates and How Sure (calibration chart).                                                                                     | Each level plays its full loop in Beginner mode.                                                                            |
 | 7   | Levels 5-8                      | Content, recordings and widgets for Break It Down, Router (dnd-kit plus tap), Spot the Phish and Trick Jev.                                                                              | All 8 levels play; the Router works by keyboard and touch.                                                                  |
 | 8   | Developer mode                  | `KeysProvider`, the Keys panel, the OpenRouter, OpenAI and Google providers, `useModelList`, `/api/jev`, CSP, `ProviderError` copy, the live source in `useRace`, the Beginner fallback. | Flows 4 and 8 pass; levels 1-8 run live against intercepted providers; the key-storage test passes.                         |
 | 9   | VS games (P0) + Leaderboard     | The 4 P0 games (content, recordings, animations), `recordGameRun`, the Leaderboard page.                                                                                                 | Flow 3 passes in both modes.                                                                                                |
-| 10  | Arena + Share                   | The 8 presets, custom task, model picker, share consent, `createShare` and `deleteShare`, `/s/[shareId]`.                                                                                | Flow 5 passes, including the dead link after delete.                                                                        |
+| 10  | Arena + Share                   | The 8 presets (with the 3 tasks slice 13 reuses), custom task, model picker, share consent, `createShare` and `deleteShare`, `/s/[shareId]`.                                             | Flow 5 passes, including the dead link after delete.                                                                        |
 | 11  | Sandbox                         | Templates and recordings, Form and JSON sync, warnings, limit check, visual answers, Copy as code.                                                                                       | Flow 6 passes.                                                                                                              |
 | 12  | Quizzes + Profile               | Both quizzes, `submitQuiz`, improvement, solutions, Profile with the badges grid, completion card and my shares.                                                                         | Flow 7 passes; every P0 row in spec 15 is built.                                                                            |
 | 13  | VS games (P1)                   | Smart Home Dash, Twin Finder, Confidence Catch, Citation Cop.                                                                                                                            | Each plays in both modes and writes Leaderboard entries.                                                                    |

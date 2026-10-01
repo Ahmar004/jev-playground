@@ -16,7 +16,7 @@ This doc is not allowed to be edited without the approval user to maintain the w
 We have to stay within the current remaining budget for this project: 50 usd (13, 570 pkr). Only the GitHub repo is by 8x, rest all tools and apis are upon us to manage, we can utilize this payment for this project. Claude Code is already there, I have one week of Claude Code with me already. Lesser cost would be better for this project, unless it impacts the quality of the project (then we can even utilize all the 50usd to make it as best as possible)
 
 ### Rule-1:
-We have to ship fast, Remaining days in deadline: 4
+We have to ship fast. Hard deadline: 2026-10-03; aim to ship sooner.
 
 ### Rule-2:
 Maintain .claude-logs setup throughout the project.

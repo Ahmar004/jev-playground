@@ -25,7 +25,7 @@ Next.js 16 App Router (React 19, TypeScript strict) for frontend and backend; Su
 | `check:env` / `check:secrets` / `check:standards` / `check:rls` | Env vars documented; no secrets in source or logs; 8x standards wired; RLS on with no policies. |
 | `prisma:generate` / `db:run-once`                               | Regenerate the Prisma client; apply `prisma/run-once.sql` once per database.                    |
 
-Step-5 moves `test` to Vitest and Step-6 adds `pnpm record` (the recording CLI). Add their rows here when they exist.
+Step-5 makes `test` run the template's `node:test` suites first (`check:standards` requires them, for the logger contract tests) and then `vitest run`. Step-6 adds `pnpm record` (the recording CLI). Add their rows here when they exist.
 
 ## Source of truth
 
@@ -41,7 +41,7 @@ Step-5 moves `test` to Vitest and Step-6 adds `pnpm record` (the recording CLI).
 
 ## Time budget and right-sizing
 
-- The deadline is 4 days (Rule-1) and total spend is $50 (Rule-0.1). Build complete, working flows before polish, and every P0 item before any P1 (spec 15). Flag early any requirement that puts the deadline or the budget at risk.
+- The hard deadline is 2026-10-03 (Rule-1) and total spend is $50 (Rule-0.1). Build complete, working flows before polish, and every P0 item before any P1 (spec 15). Flag early any requirement that puts the deadline or the budget at risk.
 - Size each solution to its problem. When a simple solution fully solves the problem, use it, and don't build for needs we only foresee (YAGNI, `docs/rules/feature-approach.md`). When no simple solution solves it, build what the problem actually needs. A simple fix that leaves the problem unsolved, or solves it the wrong way, is not simpler.
 - Every dependency and service must be free or fit the $50 budget. Ask before adding anything that needs a paid plan or billing details.
 
@@ -99,7 +99,7 @@ These restate spec rules that code can break silently. The spec section holds th
 
 - Ask, don't assume. On any confusion or important decision, ask through the AskUserQuestion tool and keep asking follow-up rounds until every open point is resolved. Don't end a turn with questions asked only in prose.
 - Invoke the skill a ROADMAP step names before starting that step, and say which skill is in use. The superpowers skills (brainstorming, writing-plans, test-driven-development, subagent-driven-development, systematic-debugging) are installed but not listed in the session, so read `~/.claude/plugins/cache/claude-plugins-official/superpowers/<version>/skills/<name>/SKILL.md` and follow it by hand.
-- Testing: write tests first (TDD) for the runner, parsing, scoring, cost math, key handling, API routes, server actions and hooks. Check presentational components with screenshots in both themes at desktop and phone widths. Every user flow gets a Playwright e2e test. App tests run in Vitest; the template's `node:test` stays only for its `scripts/` tests.
+- Testing: write tests first (TDD) for the runner, parsing, scoring, cost math, key handling, API routes, server actions and hooks. Check presentational components with screenshots in both themes at desktop and phone widths. Every user flow gets a Playwright e2e test. App tests run in Vitest; the template's `node:test` stays only for its `scripts/*.test.mjs` and `src/**/*.test.mts` tests, and `pnpm test` runs both.
 - Subagents (Step-6): Opus 5.5 for the main agent, Sonnet 5.5 for subagents, at most one subagent at a time.
 - Git: one commit per finished slice, with a Conventional Commits message (`docs/rules/commits.md`). Run the `local-review` skill before every commit and push; GitHub CI is disabled, so it is the only gate. Never commit `.env.local` or any secret.
 - Use current docs, not memory. Next.js 16 ships its docs in `node_modules/next/dist/docs/`; for any other library or API, fetch its current docs.
