@@ -11,7 +11,11 @@ export const choiceTask: Task = taskSchema.parse({
 			answer: {
 				type: 'choice',
 				instructions: 'Which team should handle this ticket?',
-				criteria: { billing: 'Payments, invoices, refunds', technical: 'Bugs and outages', sales: null }
+				criteria: {
+					billing: 'Payments, invoices, refunds',
+					technical: 'Bugs and outages',
+					sales: null
+				}
 			}
 		}
 	},
@@ -144,11 +148,31 @@ export const datesTask: Task = taskSchema.parse({
 	jev: {
 		questions: {
 			first_day: { type: 'choice', instructions: 'Day of the first date?', criteria: DAY_OPTIONS },
-			first_month: { type: 'choice', instructions: 'Month of the first date?', criteria: MONTH_OPTIONS },
-			first_year: { type: 'choice', instructions: 'Year of the first date?', criteria: YEAR_OPTIONS },
-			second_day: { type: 'choice', instructions: 'Day of the second date?', criteria: DAY_OPTIONS },
-			second_month: { type: 'choice', instructions: 'Month of the second date?', criteria: MONTH_OPTIONS },
-			second_year: { type: 'choice', instructions: 'Year of the second date?', criteria: YEAR_OPTIONS }
+			first_month: {
+				type: 'choice',
+				instructions: 'Month of the first date?',
+				criteria: MONTH_OPTIONS
+			},
+			first_year: {
+				type: 'choice',
+				instructions: 'Year of the first date?',
+				criteria: YEAR_OPTIONS
+			},
+			second_day: {
+				type: 'choice',
+				instructions: 'Day of the second date?',
+				criteria: DAY_OPTIONS
+			},
+			second_month: {
+				type: 'choice',
+				instructions: 'Month of the second date?',
+				criteria: MONTH_OPTIONS
+			},
+			second_year: {
+				type: 'choice',
+				instructions: 'Year of the second date?',
+				criteria: YEAR_OPTIONS
+			}
 		}
 	},
 	llm: {
@@ -156,7 +180,9 @@ export const datesTask: Task = taskSchema.parse({
 		instructions: 'Which date comes first?',
 		criteria: { first: null, second: null, same: null }
 	},
-	items: [{ id: 'x1', state: { first: '03/04/2025, day first', second: '4 March 2025' }, label: 'same' }]
+	items: [
+		{ id: 'x1', state: { first: '03/04/2025, day first', second: '4 March 2025' }, label: 'same' }
+	]
 })
 
 export const compositeTask: Task = taskSchema.parse({

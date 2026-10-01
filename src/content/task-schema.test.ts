@@ -58,14 +58,18 @@ describe('taskSchema', () => {
 
 	it('rejects a single-question task whose Jev question is not named "answer"', () => {
 		const task = choiceJson()
-		task.jev = { questions: { team: { type: 'choice', instructions: 'Team?', criteria: { a: null, b: null } } } }
+		task.jev = {
+			questions: { team: { type: 'choice', instructions: 'Team?', criteria: { a: null, b: null } } }
+		}
 		task.items = [{ id: 't1', state: 'x' }]
 		expect(messages(task).join()).toMatch(/"answer"/)
 	})
 
 	it('rejects a Choice with fewer than 2 options', () => {
 		const task = choiceJson()
-		task.jev = { questions: { answer: { type: 'choice', instructions: 'Team?', criteria: { a: null } } } }
+		task.jev = {
+			questions: { answer: { type: 'choice', instructions: 'Team?', criteria: { a: null } } }
+		}
 		task.items = [{ id: 't1', state: 'x' }]
 		expect(messages(task).join()).toMatch(/2 to 255 options/)
 	})

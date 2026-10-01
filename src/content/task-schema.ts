@@ -35,12 +35,10 @@ export type NoulQuestion = z.infer<typeof noulQuestionSchema>
 export const choiceQuestionSchema = z.object({
 	type: z.literal(QUESTION_KINDS.choice),
 	instructions: structuredSchema,
-	criteria: z
-		.record(z.string().min(1), structuredSchema.nullable())
-		.refine((criteria) => {
-			const count = Object.keys(criteria).length
-			return count >= MIN_CHOICE_OPTIONS && count <= MAX_CHOICE_OPTIONS
-		}, `A Choice needs ${MIN_CHOICE_OPTIONS} to ${MAX_CHOICE_OPTIONS} options`)
+	criteria: z.record(z.string().min(1), structuredSchema.nullable()).refine((criteria) => {
+		const count = Object.keys(criteria).length
+		return count >= MIN_CHOICE_OPTIONS && count <= MAX_CHOICE_OPTIONS
+	}, `A Choice needs ${MIN_CHOICE_OPTIONS} to ${MAX_CHOICE_OPTIONS} options`)
 })
 
 export const scoreQuestionSchema = z.object({
@@ -244,7 +242,8 @@ export function taskProblems(task: Task): Problem[] {
 		return problems
 	}
 	if ('raw' in jev) add('Only a generate task may send raw questions', 'jev')
-	if (llm && !llmQuestion) add('llm instructions without a question are only for generate tasks', 'llm')
+	if (llm && !llmQuestion)
+		add('llm instructions without a question are only for generate tasks', 'llm')
 	if (llmQuestion && llmQuestion.type !== task.kind) {
 		add('The llm question type must match the task kind', 'llm', 'type')
 	}
