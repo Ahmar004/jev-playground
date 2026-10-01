@@ -51,7 +51,7 @@ export function RevealStep({
 	const recordings = [jev, opponent, ...others]
 	return (
 		<section aria-labelledby="reveal-heading" className="flex flex-col gap-6">
-			<h2 id="reveal-heading" className="text-text text-2xl font-bold">
+			<h2 id="reveal-heading" tabIndex={-1} className="text-text text-2xl font-bold">
 				What happened
 			</h2>
 			<PredictionResults
@@ -87,7 +87,7 @@ export function RevealStep({
 								rel="noreferrer"
 								className="text-accent focus-visible:outline-accent inline-flex items-center gap-1 rounded underline underline-offset-4 focus-visible:outline focus-visible:outline-2"
 							>
-								{doc.title} on TypeSafe docs
+								{doc.title} on TypeSafe docs<span className="sr-only"> (opens in a new tab)</span>
 								<ExternalLinkIcon />
 							</a>
 						</li>
