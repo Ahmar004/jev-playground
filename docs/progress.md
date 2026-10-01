@@ -290,3 +290,40 @@ Next: Step-6, slice 1 (Shell), with the subagent-driven-development and writing-
   - Tests for `/s/` paths (slice 10).
 
 Next: Step-6, slice 2 (Runner core). Write its plan with writing-plans, then run subagent-driven-development.
+
+## Step-6 - slice 2: Runner core (2026-10-01) - done
+
+- Skills: writing-plans for `docs/superpowers/plans/2026-10-01-slice-02-runner-core.md`, then subagent-driven-development (Sonnet implementer and reviewer per task, one at a time; a final whole-slice review and one fix wave).
+- User decisions:
+  - `ItemResult` has `credit` (0 to 1; the share right for `fan_out`). `correct` is `credit === 1`, and accuracy is total credit over scored items.
+  - Code racer scope: the machinery plus `count_true`, `compare_dates` (combine and Code racer) and `weighted_composite`. Content-specific Code functions arrive with their content slice.
+  - Content loads through explicit import registries (`src/content/tasks.ts`, server-only `src/content/recordings.ts`). `registry.test.ts` fails when a file on disk is missing from them.
+  - The `/api/jev` pass-through and its `Server-Timing` latency stay in slice 8.
+- Built (no UI):
+  - `src/content/task-schema.ts`: the Task schema with every kind and its rules (`taskProblems`).
+  - `content/prices.json`: Jev, Opus 5.5, Sonnet 5.5 and Haiku 4.5, checked 2026-10-01 with source URLs.
+  - `src/runner/`: types, the TypeSafe and Anthropic providers (one timed fetch, no retries, `ProviderError`), `jev-request`, `llm-prompt` (R92), parse, score, cost, totals, `racers.ts` (`jevRacer`, `llmRacer`, `codeRacer`), `run.ts` (`runItems`), `combine.ts` (`createCombineTap`), `replay.ts` (`replaySource`), plus the Code functions.
+  - `src/content/`: `recording-schema.ts`, `task-hash.ts`, `tasks.ts`, `recordings.ts`.
+  - DESIGN.md 3.1, 3.2 and 4.1 were updated to match.
+- Verified API facts, used verbatim in the code:
+  - TypeSafe response shapes are from `docs.typesafe.ai/api`.
+  - Opus 5.5 can't turn thinking off, so it runs with `output_config: { effort: 'low' }`. Sonnet 5.5 and Haiku 4.5 run at defaults.
+  - Anthropic's thinking tokens are billed inside `output_tokens`.
+- For slice 3 (recording CLI):
+  - Wire a run like this: `runItems(task, racer, jevRacer({ task, call: (body, signal) => callTypeSafe(body, key, signal), prices: PRICES }), { onEvent })`.
+  - For the LLM, use `llmRacer` with `(prompt, signal) => callAnthropic(buildAnthropicBody(modelId, prompt), key, signal)`.
+  - Recording events need `lane`, `startMs` and `endMs` from the `RunEvent`s.
+  - `taskHash(task)` comes from `src/content/task-hash.ts`.
+  - The recording file path is `content/recordings/<taskId>/<recordingSlug(...)>.json`. Sanitize ids that contain "/" when OpenRouter models arrive.
+  - Import each new task and recording JSON into its registry.
+  - Add `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY` to `.env.example` and `env.ts` as owner-only.
+  - `buildLlmPrompt` gives the dry-run character count.
+- Rulings and deferred minors (kept as known edges):
+  - An Anthropic `stop_reason` of refusal or max_tokens becomes a parse miss (R44).
+  - Failed calls are priced $0.
+  - A combine misfit shows as "couldn't parse" with Jev's raw text, because `error` is a provider-error kind only.
+  - The replay tie-break at equal timestamps relies on the recorded event order.
+  - `find_lines` labels are not de-duplicated.
+- Gates: lint, typecheck, format:check, check:env, check:secrets, check:standards 24/24, test (202 Vitest plus node:test), check:rls and build all pass.
+
+Next: Step-6, slice 3 (Recording CLI + level 1 content). It writes the Speed Race task, needs the user's spot-check of the 40 tickets, and asks before any paid recording run, showing the dry-run cost first.
