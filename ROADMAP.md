@@ -6,14 +6,19 @@ A playground to learn System 1 models like Jev through games, experiements, quiz
 
 Checkout @spec.md at root for the full product spec (it replaces docs/requirements.md, which stays as the verbatim brief).
 
+Current Reamining Budget for this project: 7000 pkr
+
 
 ## Rules:
+
+### Rule-A:
+Paid Anthrpoic API with 20 usd credits has been added in the .env.local, we have to make sure and ensure that we build the whole app without utilizing more than 20 usd, work in a way that we do all our work of recording for beginners and still the usage does not finish, so we don't have to buy more usage. Funds are limited...
 
 ### Rule-0:
 This doc is not allowed to be edited without the approval user to maintain the well planned strategies that I had devised, feel free to ask questions and give proposals for any edits and then edit if approved by myself. Goal is just to make this app loved by millions across the globe one day I.A.
 
 ### Rule-0.1:
-We have to stay within the current remaining budget for this project: 50 usd (13, 570 pkr). Only the GitHub repo is by 8x, rest all tools and apis are upon us to manage, we can utilize this payment for this project. Claude Code is already there, I have one week of Claude Code with me already. Lesser cost would be better for this project, unless it impacts the quality of the project (then we can even utilize all the 50usd to make it as best as possible)
+We have to stay within the current remaining budget for this project: 7000 pkr (about 25 usd, see the top of this doc), and Anthropic spend stays within the 20 usd credit (Rule-A). Only the GitHub repo is by 8x, rest all tools and apis are upon us to manage, we can utilize this payment for this project. Claude Code is already there, I have one week of Claude Code with me already. Lesser cost would be better for this project, unless it impacts the quality of the project (then we can even utilize all the remaining budget to make it as best as possible)
 
 ### Rule-0.2:
 Ask questions from user with clarity, don't be brief when asking questions, otherwise user ends up understanding the qs in the wrong way.

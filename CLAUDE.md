@@ -45,9 +45,9 @@ Prisma 7 reads its CLI settings from `prisma.config.ts`, which loads `.env.local
 
 ## Time budget and right-sizing
 
-- The hard deadline is 2026-10-03 (Rule-1) and total spend is $50 (Rule-0.1). Build complete, working flows before polish, and every P0 item before any P1 (spec 15). Flag early any requirement that puts the deadline or the budget at risk.
+- The hard deadline is 2026-10-03 (Rule-1). The remaining project budget is 7000 PKR, about $25 (Rule-0.1), and all Anthropic spend for the whole build, every Recording included, stays within the $20 credit on the owner key (Rule-A). There is no top-up, so dry-run every recording first and record only what changed. Build complete, working flows before polish, and every P0 item before any P1 (spec 15). Flag early any requirement that puts the deadline or the budget at risk.
 - Size each solution to its problem. When a simple solution fully solves the problem, use it, and don't build for needs we only foresee (YAGNI, `docs/rules/feature-approach.md`). When no simple solution solves it, build what the problem actually needs. A simple fix that leaves the problem unsolved, or solves it the wrong way, is not simpler.
-- Every dependency and service must be free or fit the $50 budget. Ask before adding anything that needs a paid plan or billing details.
+- Every dependency and service must be free or fit the remaining 7000 PKR budget. Ask before adding anything that needs a paid plan or billing details.
 
 ## Writing rules (code, UI copy, commits and docs)
 

@@ -15,7 +15,7 @@ Status: approved in Step-1 (2026-10-01). Every choice below was weighed against 
 - **Localhost now, Vercel later (Rule-9).** Code must run unchanged on serverless functions. So the database is hosted (Vercel can't reach a laptop), nothing writes files at runtime, and no state lives in one process's memory: rate limits, sessions and share counts live in Postgres.
 - **1,000+ users and a 2-second phone load (R75, R79).** Whatever is the same for every user is prerendered and served from the CDN. Functions only handle per-user data and the TypeSafe pass-through.
 - **Keys (Rule-8, spec 4).** Keys live in React memory. Four providers are called straight from the browser. Only TypeSafe-key calls touch our server, and the pass-through never logs or stores the key or the body.
-- **$50 and a 2026-10-03 deadline (Rule-0.1, Rule-1).** Every service is on a free tier. Libraries are picked for low wiring time.
+- **7000 PKR left, a $20 Anthropic credit and a 2026-10-03 deadline (Rule-0.1, Rule-A, Rule-1).** Every service is on a free tier. Libraries are picked for low wiring time.
 
 ## Architecture
 

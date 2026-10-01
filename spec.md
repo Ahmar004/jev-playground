@@ -95,7 +95,7 @@ A Beginner/Developer switch sits in the header on every page. Anyone can switch 
 - The recording tool is a local CLI the owner runs. The owner checks the results by playing them in Beginner mode on localhost. Owner keys live only in the owner's `.env.local`, only while recording, and never reach the browser or the repo. When recording is done, the owner removes them. [R22]
 - Recording and Developer mode share one runner (the same tasks, provider calls and scoring), so recorded and live results come from the same code. [R92]
 - Each recording run prints its total cost against the budget.
-- A full recording run must fit in the project budget (ROADMAP Rule-0.1, $50 total).
+- Every recording run, together, must fit in the $20 Anthropic credit (ROADMAP Rule-A).
 
 ### 3.4 Developer mode [R9-R14]
 
@@ -327,7 +327,7 @@ Level status, quiz attempts, XP, badges and leaderboard entries are saved to the
 - Jev accepts text only and performs best in English. [R96]
 - Jev's rate and context limits apply to Developer mode Jev calls. [R97]
 - AI coding-agent logs are kept in `.claude-logs/` during development (8x evaluates them). [R98]
-- Total project spend stays within $50 (ROADMAP Rule-0.1).
+- Total project spend stays within the remaining 7000 PKR, about $25 (ROADMAP Rule-0.1), and Anthropic spend within the $20 credit (Rule-A).
 - Keys never go to browser storage (ROADMAP Rule-8).
 
 ## 15. Priorities
