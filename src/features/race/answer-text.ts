@@ -17,7 +17,7 @@ export function valueText(value: unknown): string {
 	if (typeof value === 'string') return value
 	if (typeof value === 'boolean') return value ? 'yes' : 'no'
 	if (typeof value === 'number') return String(value)
-	return JSON.stringify(value)
+	return JSON.stringify(value) ?? String(value)
 }
 
 /** What a racer answered, as plain text; null when the call failed or the output did not parse (R44). */

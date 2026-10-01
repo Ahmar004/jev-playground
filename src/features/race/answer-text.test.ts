@@ -34,4 +34,8 @@ describe('valueText', () => {
 		expect(valueText(2)).toBe('2')
 		expect(valueText([1, 3])).toBe('[1,3]')
 	})
+
+	it('always returns a string, even for undefined', () => {
+		expect(valueText(undefined)).toBe('undefined')
+	})
 })
