@@ -391,12 +391,17 @@ Next: part A (slice 4's key-independent work) is done; see the slice 4 section b
 - `/methodology` in Chrome lists the 4 recordings. Chrome screenshots still time out; use a scratch Playwright script for screenshots.
 - Both keys stay in `.env.local` (gitignored) because later slices record more content; the user removes them when recording is done (R22).
 
-Next (resume here): finish slice 4.
+## Step-6 - slice 4: finished (2026-10-01)
 
-Finish slice 4 (the level files from Task 7 are still uncommitted in the tree):
+- Level 1 plays end to end from the real recordings: Learn, Predict, a race at recorded speed (or Skip to result) against any of the three Claude models, and Reveal. Commits `aee9c70` (fix) and `e44b80d` (feature), after `local-review` passed (lint, typecheck, format, check:env, check:secrets, check:standards 24/24, test 313 Vitest plus node:test, check:rls, build with `/levels/speed-race` prerendered, e2e 17/17).
+- User decision: Reveal's "why" now has an accuracy paragraph (the race is close and depends on the opponent; text around the JSON counts as a miss). Content stays free of numbers; the recordings supply them.
+- Bugs found and fixed:
+  - The opponent picker opened with focus on the first option, not the current pick, so arrow keys started from the wrong model. Radix's `onOpenAutoFocus` now focuses the checked option (unit and e2e tests).
+  - `ModeLabel` used `break-all` and split words on phones ("Beginner mo de"); it now uses `wrap-anywhere`.
+- Checked in Chrome: a real mouse click on an option's text picks it. The Chrome tab's renderer gets throttled (screenshots time out, and a reloaded page can sit with a zero-size layout), so the keyboard pick and the rest of the flow are verified by `e2e/level-1.spec.ts` in real Chromium.
+- `e2e/helpers.ts` now holds the shared sign-up, sign-in, viewport and no-horizontal-scroll helpers. `level-1.spec.ts` makes one real sign-up per run and writes 20 screenshots (every step, both themes, 1280 and 390 px).
+- The dev server on port 3000 left from an earlier session had a crashed static-params worker (blank level page). If a page renders blank in dev, restart `corepack pnpm dev` first.
+- `.superpowers/speed-race.draft.json` is a slice 3 scratch draft, untracked; delete it when convenient.
+- Carried to slice 5: confetti on every Reveal visit, the prediction lost on reload, `prediction_made`/`level_started` analytics. To slice 6: Jev + Code totals in Reveal and the judge, and a `useRace` test with a combining task. To slice 8: "price unknown". To slice 13: the screen-reader browse-mode click in the picker, the skip link.
 
-- Play level 1 from the real recording at recorded speed through Reveal, with every racer labelled (slice 4's done-when). Try all three opponents.
-- Recheck level 1's copy against the real numbers of all three recordings (Learn points, Reveal "why"); the user spot-checks it.
-- In Chrome, pick an opponent with a real mouse click on the option's text, and with arrow keys plus Enter (the picker commits a click only when `event.detail > 0`).
-- The Playwright e2e for the level 1 flow, and screenshots of every step (including the race and Reveal) in both themes at 1280 and 390 px.
-- Commit Task 7's files with the e2e as `feat(levels): add level 1 speed race`, run `local-review`, push, then `chore(logs)`. Then delete the SDD workspace for this plan.
+Next: Step-6, slice 5 (Progress: Prisma models, the Check step, XP and badges, Home, Path). Write its plan with writing-plans, then run subagent-driven-development.
