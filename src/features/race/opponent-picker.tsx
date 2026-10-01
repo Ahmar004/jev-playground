@@ -19,8 +19,20 @@ export function OpponentPicker({
 	onChange: (modelId: string) => void
 }) {
 	const [open, setOpen] = useState(false)
+	// Arrow keys move the highlight only; a click, Enter or Space commits the pick.
+	const [highlighted, setHighlighted] = useState(value)
+	const commit = (modelId: string) => {
+		onChange(modelId)
+		setOpen(false)
+	}
 	return (
-		<Popover open={open} onOpenChange={setOpen}>
+		<Popover
+			open={open}
+			onOpenChange={(next) => {
+				if (next) setHighlighted(value)
+				setOpen(next)
+			}}
+		>
 			<PopoverTrigger asChild>
 				<Button type="button" variant="outline">
 					Opponent: {racerName(RACERS.llm, value)}
@@ -39,10 +51,16 @@ export function OpponentPicker({
 								type="radio"
 								name="opponent"
 								value={modelId}
-								checked={modelId === value}
-								onChange={() => {
-									onChange(modelId)
-									setOpen(false)
+								checked={modelId === highlighted}
+								onChange={() => setHighlighted(modelId)}
+								onClick={(event) => {
+									if (event.detail > 0) commit(modelId)
+								}}
+								onKeyDown={(event) => {
+									if (event.key === 'Enter' || event.key === ' ') {
+										event.preventDefault()
+										commit(modelId)
+									}
 								}}
 								className="accent-accent"
 							/>

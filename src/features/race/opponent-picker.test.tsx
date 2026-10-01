@@ -14,4 +14,36 @@ describe('OpponentPicker', () => {
 		await userEvent.click(screen.getByRole('radio', { name: 'Claude Haiku 4.5' }))
 		expect(onChange).toHaveBeenCalledWith('claude-haiku-4-5-20251001')
 	})
+
+	it('moves between options with the arrow keys without closing or picking', async () => {
+		const onChange = vi.fn()
+		render(<OpponentPicker value="claude-opus-5-5" options={OPTIONS} onChange={onChange} />)
+		await userEvent.click(screen.getByRole('button', { name: /Opponent: Claude Opus 5.5/ }))
+		screen.getByRole('radio', { name: 'Claude Opus 5.5' }).focus()
+		await userEvent.keyboard('{ArrowDown}')
+		expect(screen.getByRole('radio', { name: 'Claude Sonnet 5.5' })).toHaveFocus()
+		expect(onChange).not.toHaveBeenCalled()
+		await userEvent.keyboard('{Enter}')
+		expect(onChange).toHaveBeenCalledWith('claude-sonnet-5-5')
+		expect(screen.queryByRole('radio')).not.toBeInTheDocument()
+	})
+
+	it('picks with a click and closes', async () => {
+		const onChange = vi.fn()
+		render(<OpponentPicker value="claude-opus-5-5" options={OPTIONS} onChange={onChange} />)
+		await userEvent.click(screen.getByRole('button', { name: /Opponent: Claude Opus 5.5/ }))
+		await userEvent.click(screen.getByRole('radio', { name: 'Claude Sonnet 5.5' }))
+		expect(onChange).toHaveBeenCalledWith('claude-sonnet-5-5')
+		expect(screen.queryByRole('radio')).not.toBeInTheDocument()
+	})
+
+	it('closes on Escape without changing the opponent', async () => {
+		const onChange = vi.fn()
+		render(<OpponentPicker value="claude-opus-5-5" options={OPTIONS} onChange={onChange} />)
+		await userEvent.click(screen.getByRole('button', { name: /Opponent: Claude Opus 5.5/ }))
+		screen.getByRole('radio', { name: 'Claude Opus 5.5' }).focus()
+		await userEvent.keyboard('{ArrowDown}{Escape}')
+		expect(screen.queryByRole('radio')).not.toBeInTheDocument()
+		expect(onChange).not.toHaveBeenCalled()
+	})
 })
