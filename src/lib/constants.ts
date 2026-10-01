@@ -97,3 +97,7 @@ export const RACE_LANES = 4
 
 // A Noul at or above this counts as yes (DESIGN 3.2).
 export const NOUL_THRESHOLD = 0.5
+
+// A race's lifecycle in useRace (DESIGN 3.3).
+export const RACE_STATUS = { idle: 'idle', running: 'running', finished: 'finished' } as const
+export type RaceStatus = (typeof RACE_STATUS)[keyof typeof RACE_STATUS]
