@@ -4,7 +4,8 @@ export const ROUTES = {
 	home: '/',
 	signIn: '/sign-in',
 	glossary: '/glossary',
-	methodology: '/methodology'
+	methodology: '/methodology',
+	level: (levelId: string) => `/levels/${levelId}`
 } as const
 
 // Shared results (/s/<id>) are the only pages reachable without signing in

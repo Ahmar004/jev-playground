@@ -1,10 +1,10 @@
+import speedRace from '../../content/levels/speed-race.json'
 import { levelSchema, type Level } from './level-schema'
 import { TASKS } from './tasks'
 
 // Every file in content/levels/ is imported here, so content renders at build
-// time (DESIGN 4.1). registry.test.ts fails when a file is missing. Level 1
-// lands with the Speed Race recordings.
-const RAW_LEVELS: unknown[] = []
+// time (DESIGN 4.1). registry.test.ts fails when a file is missing.
+const RAW_LEVELS: unknown[] = [speedRace]
 
 /** Parses levels, checks ids, orders and task ids, and keys them by id in path order. */
 export function buildLevelMap(

@@ -1,0 +1,44 @@
+{
+	"id": "speed-race",
+	"order": 1,
+	"title": "Speed Race",
+	"learn": {
+		"intro": "Some jobs need the same quick judgment thousands of times: which team should handle this support ticket? Jev and an LLM both read the ticket and pick one of the same five teams.",
+		"compare": [
+			{
+				"racer": "jev",
+				"title": "Jev, a System One model",
+				"points": [
+					"Answers a typed question: here, a choice of one team",
+					"Returns the answer as data, with no text to write",
+					"Charges only for the tokens it reads"
+				]
+			},
+			{
+				"racer": "llm",
+				"title": "An LLM, a System Two model",
+				"points": [
+					"Reads the same ticket and the same five teams",
+					"Writes its answer as text, in a fixed JSON format",
+					"Charges for the tokens it reads and the tokens it writes"
+				]
+			}
+		]
+	},
+	"predict": {
+		"questions": [
+			{ "metric": "fastest", "prompt": "Who sorts all the tickets first?" },
+			{ "metric": "cheapest", "prompt": "Who costs less?" },
+			{ "metric": "most_accurate", "prompt": "Who sorts more tickets correctly?" }
+		]
+	},
+	"taskIds": ["speed-race"],
+	"reveal": {
+		"why": [
+			"Jev returns a typed answer with no text to write, and pays only for the tokens it reads. The LLM writes its answer as text and pays for every token it writes, on every ticket.",
+			"On accuracy the race is close, and it depends on the opponent: check the Accuracy column above. An LLM that writes anything around its JSON can't be parsed, so that answer counts as a miss even when the right team is inside it.",
+			"One ticket makes little difference. Thousands of tickets a day is where speed and cost add up."
+		]
+	},
+	"docs": [{ "path": "/concepts/system-one", "title": "System One models" }]
+}
