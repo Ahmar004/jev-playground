@@ -153,3 +153,35 @@ Next: Step-2 (revisit CLAUDE.md against ROADMAP.md, spec.md and TECH-STACK.md).
 - When Step-5 adds Vitest and Step-6 adds `pnpm record`, add their rows to the Commands table in `CLAUDE.md`.
 
 Next: Step-3 (DESIGN.md with brainstorming and writing-plans).
+
+## Step-3 - DESIGN.md (2026-10-01) - done, approved by user
+
+- `DESIGN.md` is rewritten as the build guide. It covers:
+  - architecture and the runner (one RunEvent stream for replay and live);
+  - content and Recording files, and the recording CLI;
+  - modes, keys and the `/api/jev` pass-through;
+  - screens, levels, games, Arena, Sandbox and quizzes;
+  - XP, badges and the Leaderboard;
+  - Prisma models and Server Actions, errors and observability;
+  - design tokens, tests, flows, and a 14-slice plan.
+    The template's token conventions are folded into section 13.
+- Skills: brainstorming and writing-plans, read from `~/.claude/plugins/cache/claude-plugins-official/superpowers/6.3.0/skills/` and followed by hand. Each of the 5 design sections was approved in turn.
+- User decisions (DESIGN.md section 1):
+  - Claude writes the content items and their answers, and the user spot-checks them.
+  - Races use 4 equal lanes plus Skip to result.
+  - Opus 5.5 is the default Beginner opponent everywhere.
+  - Colors: teal / violet / slate.
+  - Unpriced Developer mode models show "price unknown".
+  - The Leaderboard keeps the best result per game, model and mode.
+- Slice plans: DESIGN.md holds the ordered slice list. Step-6 writes each slice's detailed plan with writing-plans in `docs/superpowers/plans/` at the start of that slice.
+- Doc sync (user-approved): spec 17 marks the Step-3 items settled; TECH-STACK adds Radix Popover (the opponent picker).
+- Things to verify later, not assumed:
+  - Level 2 expects TypeSafe to return 422 for a free-text question type; the recording shows whatever it really returns.
+  - Jev question shapes were checked against docs.typesafe.ai on 2026-10-01.
+- For Step-4: check DESIGN.md against spec, TECH-STACK, ROADMAP and CLAUDE.md. Points worth a second look:
+  - about 215 LLM items x 3 models against the $5-10 recording estimate;
+  - the Sandbox token estimate (characters / 4) is labelled as an estimate;
+  - the CSP `connect-src` allowlist must also cover anything Step-5 adds.
+- Gates: `format:check` passes.
+
+Next: Step-4 (validate the docs with brainstorming before coding).

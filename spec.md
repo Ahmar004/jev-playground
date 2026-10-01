@@ -358,4 +358,4 @@ The Step-3 slice plan builds every P0 item before any P1 item.
 ## 17. Open items for later steps
 
 - Settled in Step-1 (`TECH-STACK.md`): password reset is out of v1, and Resend is added as Supabase's email sender at the Vercel launch; a full recording run is estimated at $5-10.
-- **Step-3 (design):** the exact preset items per level, game and quiz; the XP values and badge list; the Jev and LLM colors in both themes.
+- Settled in Step-3 (`DESIGN.md`): content items and counts (sections 7-9), XP and badges (10), colors (13).
