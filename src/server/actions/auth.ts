@@ -9,10 +9,11 @@ import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { provisionUser } from '@/server/auth/provision-user'
 import { validatedAction } from './validated-action'
 
-const credentials = z.object({
-	email: z.string().trim().toLowerCase().email(),
-	password: z.string().min(PASSWORD_MIN_LENGTH)
-})
+const email = z.string().trim().toLowerCase().email()
+
+// Sign-up enforces the minimum; sign-in accepts any existing password.
+const signUpCredentials = z.object({ email, password: z.string().min(PASSWORD_MIN_LENGTH) })
+const signInCredentials = z.object({ email, password: z.string().min(1) })
 
 type AuthFailure = { code?: string; message: string }
 
@@ -32,7 +33,12 @@ const KNOWN_FAILURES: Record<string, { message: string; status: number }> = {
 	over_request_rate_limit: {
 		message: 'Too many attempts. Wait a minute and try again.',
 		status: 429
-	}
+	},
+	over_email_send_rate_limit: {
+		message: 'Too many attempts. Wait a minute and try again.',
+		status: 429
+	},
+	email_address_invalid: { message: 'Enter a valid email address.', status: 422 }
 }
 
 function toAppError(failure: AuthFailure): Error {
@@ -42,7 +48,7 @@ function toAppError(failure: AuthFailure): Error {
 }
 
 export const signIn = validatedAction({
-	input: credentials,
+	input: signInCredentials,
 	handler: async (input): Promise<never> => {
 		const supabase = await createServerSupabaseClient()
 		const { data, error } = await supabase.auth.signInWithPassword(input)
@@ -53,7 +59,7 @@ export const signIn = validatedAction({
 })
 
 export const signUp = validatedAction({
-	input: credentials,
+	input: signUpCredentials,
 	handler: async (input): Promise<never> => {
 		const supabase = await createServerSupabaseClient()
 		const { data, error } = await supabase.auth.signUp(input)

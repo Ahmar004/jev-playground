@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Sign in - Jev's Playground" }
 
 export default function SignInPage() {
 	return (
-		<main className="flex min-h-screen flex-col items-center justify-center gap-8 px-4 py-12">
+		<main className="relative flex min-h-screen flex-col items-center justify-center gap-8 px-4 py-12">
 			<div className="absolute top-4 right-4">
 				<ThemeToggle />
 			</div>

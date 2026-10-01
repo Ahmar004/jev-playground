@@ -80,6 +80,17 @@ describe('signIn', () => {
 		expect(provisionUser).not.toHaveBeenCalled()
 	})
 
+	it('does not enforce the sign-up minimum on sign-in', async () => {
+		auth.signInWithPassword.mockResolvedValue({ data: { user: USER }, error: null })
+
+		await signIn({ email: 'ada@example.com', password: 'short' }).catch((e: unknown) => e)
+
+		expect(auth.signInWithPassword).toHaveBeenCalledWith({
+			email: 'ada@example.com',
+			password: 'short'
+		})
+	})
+
 	it('rejects a malformed email before calling Supabase', async () => {
 		const result = await signIn({ email: 'not-an-email', password: 'correct-horse-9' })
 
@@ -134,6 +145,19 @@ describe('signUp', () => {
 			error: 'Too many attempts. Wait a minute and try again.',
 			status: 429
 		})
+	})
+})
+
+describe('signUp failures', () => {
+	it('says when the email is invalid', async () => {
+		auth.signUp.mockResolvedValue({
+			data: { user: null, session: null },
+			error: { code: 'email_address_invalid', message: 'Email address is invalid' }
+		})
+
+		const result = await signUp(GOOD)
+
+		expect(result).toEqual({ ok: false, error: 'Enter a valid email address.', status: 422 })
 	})
 })
 

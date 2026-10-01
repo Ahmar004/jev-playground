@@ -47,7 +47,7 @@ export function AuthForm({ mode, pending, error, onSubmit }: AuthFormProps) {
 					type="password"
 					autoComplete={isSignUp ? 'new-password' : 'current-password'}
 					required
-					minLength={PASSWORD_MIN_LENGTH}
+					minLength={isSignUp ? PASSWORD_MIN_LENGTH : undefined}
 					value={password}
 					onChange={(event) => setPassword(event.target.value)}
 				/>

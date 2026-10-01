@@ -19,9 +19,9 @@ export function SiteHeader() {
 					<span className="bg-jev text-accent-ink flex size-8 items-center justify-center rounded">
 						<LightningIcon size={18} />
 					</span>
-					Jev&apos;s Playground
+					<span className="whitespace-nowrap">Jev&apos;s Playground</span>
 				</Link>
-				<div className="flex items-center gap-1">
+				<div className="flex shrink-0 items-center gap-1">
 					<ThemeToggle />
 					<Suspense
 						fallback={

@@ -22,6 +22,12 @@ describe('AuthForm', () => {
 		expect(screen.getByLabelText('Password')).toHaveAttribute('autocomplete', 'new-password')
 	})
 
+	it('does not set a minimum length on the sign-in password', () => {
+		render(<AuthForm mode="sign-in" pending={false} error={null} onSubmit={vi.fn()} />)
+
+		expect(screen.getByLabelText('Password')).not.toHaveAttribute('minlength')
+	})
+
 	it('shows the error and disables the button while pending', () => {
 		render(
 			<AuthForm
