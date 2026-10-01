@@ -253,3 +253,40 @@ Next: Step-5 (foundation). Start by asking the user for the Supabase, Sentry and
   - The CSP `connect-src` (slice 8) must allow `us.i.posthog.com`, `us-assets.i.posthog.com` and the Sentry ingest host `*.ingest.us.sentry.io`.
 
 Next: Step-6, slice 1 (Shell), with the subagent-driven-development and writing-plans skills.
+
+## Step-6 - slice 1: Shell (2026-10-01) - done
+
+- Skills: writing-plans for `docs/superpowers/plans/2026-10-01-slice-01-shell.md`, then subagent-driven-development.
+  - The skills were read by hand from `~/.claude/plugins/cache/claude-plugins-official/superpowers/6.3.0/skills/`; the path has a space, so quote it.
+  - The SDD helper scripts (`sdd-workspace`, `task-brief`, `review-package`) run with `bash "<skill dir>/scripts/<name>"`.
+  - Every task got a Sonnet implementer and a Sonnet task reviewer, one subagent at a time, then a final whole-slice review, one fix wave and a scoped re-review.
+  - The scratch workspace `.superpowers/` is git-ignored and now also Prettier-ignored.
+- User decisions:
+  - Commit straight to `main`.
+  - Real e2e test accounts in the Supabase dev project are OK.
+  - Passwords have at least 8 characters, enforced on sign-up only, so sign-in accepts any length.
+  - The Glossary link sits in the footer and on Home, not in the header.
+  - Header links, the progress bar, the mode switch and the Keys button arrive in the slices that build their pages.
+- Built:
+  - Design tokens (DESIGN 13.1) for both themes, with an AA contrast test.
+  - next-themes (class-based `.dark`), Nunito and `LazyMotion strict` with `MotionConfig reducedMotion="user"`. Use `m.*`, not `motion.*`.
+  - `src/lib/constants.ts`, `src/lib/links.ts` (`ROUTES`) and `src/lib/auth-gate.ts` (`gateRedirect`).
+  - `src/server/auth/session.ts` (`getSession`, `requireUser`) and `src/server/actions/auth.ts` (`signIn`, `signUp`, `signOut`). Supabase codes map to plain English; network failures show a message instead of the error page.
+  - `proxy.ts` gates every page except `/sign-in` and `/s/*`.
+  - `/sign-in` with tabs; the `(app)` layout with the header (logo, theme switch, email, Sign out) and a footer Glossary link.
+  - Home (a placeholder until slice 5) and Glossary (28 terms from `content/glossary.json`, Zod-validated).
+- Tests: 69 Vitest tests, 9 Playwright tests in `e2e/shell.spec.ts`. The e2e file runs serially, makes 2 real sign-ups per run and writes 12 screenshots to the gitignored `e2e/screenshots/`. All gates pass, and Chrome confirmed the gate redirect.
+- For later slices:
+  - Every page or action that reads user data must call `getSession`/`requireUser`; the proxy is only the optimistic check.
+  - `signOut` is called as `signOut(undefined)`, because `validatedAction`'s parameter is required.
+  - Vitest aliases `server-only` to `vitest.server-only.ts`.
+  - If Supabase email confirmation is ever turned on, `signUp` would provision and redirect without a session. Add a "check your email" path then.
+  - E2E accounts (`e2e+*@example.com`) pile up in the dev project; a purge script is deferred.
+- Deferred minors:
+  - Skip link (slice 13 accessibility pass).
+  - Keep the typed email when switching sign-in tabs.
+  - Copy Cache-Control onto proxy redirects (at the Vercel launch).
+  - `min-h-dvh`.
+  - Tests for `/s/` paths (slice 10).
+
+Next: Step-6, slice 2 (Runner core). Write its plan with writing-plans, then run subagent-driven-development.

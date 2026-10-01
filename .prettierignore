@@ -11,3 +11,6 @@ pnpm-lock.yaml
 docs/requirements.md
 docs/agent-session-logs-setup.md
 ROADMAP.md
+
+# Subagent-driven-development scratch workspace (git-ignored by its own .gitignore)
+.superpowers/
