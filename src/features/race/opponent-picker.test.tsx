@@ -28,6 +28,14 @@ describe('OpponentPicker', () => {
 		expect(screen.queryByRole('radio')).not.toBeInTheDocument()
 	})
 
+	it('opens with focus on the current opponent, not the first option', async () => {
+		render(
+			<OpponentPicker value="claude-haiku-4-5-20251001" options={OPTIONS} onChange={vi.fn()} />
+		)
+		await userEvent.click(screen.getByRole('button', { name: /Opponent: Claude Haiku 4.5/ }))
+		expect(screen.getByRole('radio', { name: 'Claude Haiku 4.5' })).toHaveFocus()
+	})
+
 	it('picks with a click and closes', async () => {
 		const onChange = vi.fn()
 		render(<OpponentPicker value="claude-opus-5-5" options={OPTIONS} onChange={onChange} />)

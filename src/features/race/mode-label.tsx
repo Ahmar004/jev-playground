@@ -12,7 +12,7 @@ export function ModeLabel({
 	className?: string
 }) {
 	return (
-		<p className={cn('text-text-muted text-xs break-all', className)}>
+		<p className={cn('text-text-muted text-xs wrap-anywhere', className)}>
 			Beginner mode - recorded {recordedOn(recordedAt)} - {modelId}
 		</p>
 	)

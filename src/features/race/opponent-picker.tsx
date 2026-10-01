@@ -39,7 +39,18 @@ export function OpponentPicker({
 					<ChevronDownIcon />
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent>
+			<PopoverContent
+				onOpenAutoFocus={(event) => {
+					// Start from the current opponent, so arrow keys move from it (Radix focuses the first option).
+					const checked =
+						event.currentTarget instanceof HTMLElement
+							? event.currentTarget.querySelector<HTMLInputElement>('input:checked')
+							: null
+					if (!checked) return
+					event.preventDefault()
+					checked.focus()
+				}}
+			>
 				<fieldset className="flex flex-col gap-2">
 					<legend className="text-text-muted mb-1 text-sm">Pick Jev&apos;s opponent</legend>
 					{options.map((modelId) => (
