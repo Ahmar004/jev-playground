@@ -14,6 +14,7 @@ import { PredictStep } from './predict-step'
 import { RevealStep } from './reveal-step'
 import { StepperNav } from './stepper-nav'
 import { useLevelStep } from './use-level-step'
+import { useStepFocus } from './use-step-focus'
 
 /**
  * One level's loop: Learn, Predict, Play, Reveal (spec 6.1). The prediction
@@ -30,6 +31,7 @@ export function LevelStepper({
 	recordings: Recording[]
 }) {
 	const { step, goTo } = useLevelStep()
+	useStepFocus(step)
 	const lineup = raceLineup(recordings)
 	const [prediction, setPrediction] = useState<Prediction>({})
 	const [opponentId, setOpponentId] = useState(() => defaultOpponentId(lineup.opponents))

@@ -41,7 +41,7 @@ export function PlayStep({
 	return (
 		<section aria-labelledby="play-heading" className="flex flex-col gap-4">
 			<div className="flex flex-wrap items-center justify-between gap-3">
-				<h2 id="play-heading" className="text-text text-2xl font-bold">
+				<h2 id="play-heading" tabIndex={-1} className="text-text text-2xl font-bold">
 					Race
 				</h2>
 				<OpponentPicker

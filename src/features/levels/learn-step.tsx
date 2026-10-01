@@ -7,7 +7,7 @@ import { RacerTag } from '@/features/race/racer-tag'
 export function LearnStep({ learn, onNext }: { learn: Level['learn']; onNext: () => void }) {
 	return (
 		<section aria-labelledby="learn-heading" className="flex flex-col gap-4">
-			<h2 id="learn-heading" className="text-text text-2xl font-bold">
+			<h2 id="learn-heading" tabIndex={-1} className="text-text text-2xl font-bold">
 				Learn
 			</h2>
 			<p className="text-text-muted text-lg">{learn.intro}</p>

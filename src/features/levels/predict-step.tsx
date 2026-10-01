@@ -27,7 +27,7 @@ export function PredictStep({
 				if (complete) onSubmit(picks)
 			}}
 		>
-			<h2 id="predict-heading" className="text-text text-2xl font-bold">
+			<h2 id="predict-heading" tabIndex={-1} className="text-text text-2xl font-bold">
 				Predict
 			</h2>
 			{questions.map((question) => (

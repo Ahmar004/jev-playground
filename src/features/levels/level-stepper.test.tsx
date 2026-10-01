@@ -74,4 +74,14 @@ describe('LevelStepper', () => {
 		)
 		expect(screen.getByRole('list', { name: 'Your prediction' })).toHaveTextContent('You got it')
 	})
+
+	it('moves focus to the new step heading, but not on first load', () => {
+		const { rerender } = renderStepper()
+		expect(document.body).toHaveFocus()
+		search = new URLSearchParams('step=predict')
+		rerender(
+			<LevelStepper level={level} task={choiceTask} recordings={[jevRecording, opusRecording]} />
+		)
+		expect(screen.getByRole('heading', { level: 2, name: 'Predict' })).toHaveFocus()
+	})
 })
