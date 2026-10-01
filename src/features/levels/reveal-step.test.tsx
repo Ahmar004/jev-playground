@@ -56,7 +56,9 @@ describe('RevealStep', () => {
 		renderReveal()
 		const summary = screen.getByText('See every item')
 		await userEvent.click(summary)
-		const items = within(summary.closest('details') as HTMLElement)
+		const details = summary.closest('details')
+		if (!details) throw new Error('details missing')
+		const items = within(details)
 		// Opus and Sonnet (a copy of Opus's events) both failed to parse t2. The scoreboard
 		// column header also reads "Couldn't parse", so the items are scoped out.
 		expect(items.getAllByText("Couldn't parse")).toHaveLength(2)
