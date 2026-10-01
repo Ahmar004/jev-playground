@@ -20,6 +20,8 @@
 import {
 	ArrowRight,
 	ArrowSquareOut,
+	BracketsCurly,
+	Brain,
 	Calendar,
 	CaretDown,
 	CaretLeft,
@@ -31,6 +33,7 @@ import {
 	Copy,
 	DotsThreeVertical,
 	DownloadSimple,
+	FastForward,
 	FunnelSimple,
 	Gear,
 	Info,
@@ -40,13 +43,15 @@ import {
 	Minus,
 	Moon,
 	PencilSimple,
+	Play,
 	Plus,
 	SignOut,
 	Sun,
 	Trash,
 	User,
 	Warning,
-	X
+	X,
+	XCircle
 } from '@phosphor-icons/react/ssr'
 import type { Icon } from '@phosphor-icons/react'
 import { cn } from '@/lib/cn'
@@ -96,6 +101,7 @@ function Glyph({ source: Source, size = DEFAULT_SIZE, className }: IconProps & {
 // provider's whole catalog here. Keep the list alphabetical.
 export const AlertIcon = (props: IconProps) => <Glyph source={Warning} {...props} />
 export const ArrowRightIcon = (props: IconProps) => <Glyph source={ArrowRight} {...props} />
+export const BrainIcon = (props: IconProps) => <Glyph source={Brain} {...props} />
 export const CalendarIcon = (props: IconProps) => <Glyph source={Calendar} {...props} />
 export const CheckIcon = (props: IconProps) => <Glyph source={Check} {...props} />
 export const ChevronDownIcon = (props: IconProps) => <Glyph source={CaretDown} {...props} />
@@ -103,6 +109,7 @@ export const ChevronLeftIcon = (props: IconProps) => <Glyph source={CaretLeft} {
 export const ChevronRightIcon = (props: IconProps) => <Glyph source={CaretRight} {...props} />
 export const ChevronUpIcon = (props: IconProps) => <Glyph source={CaretUp} {...props} />
 export const CloseIcon = (props: IconProps) => <Glyph source={X} {...props} />
+export const CodeIcon = (props: IconProps) => <Glyph source={BracketsCurly} {...props} />
 export const CopyIcon = (props: IconProps) => <Glyph source={Copy} {...props} />
 export const DownloadIcon = (props: IconProps) => <Glyph source={DownloadSimple} {...props} />
 export const EditIcon = (props: IconProps) => <Glyph source={PencilSimple} {...props} />
@@ -114,14 +121,17 @@ export const MenuIcon = (props: IconProps) => <Glyph source={List} {...props} />
 export const MinusIcon = (props: IconProps) => <Glyph source={Minus} {...props} />
 export const MoonIcon = (props: IconProps) => <Glyph source={Moon} {...props} />
 export const MoreIcon = (props: IconProps) => <Glyph source={DotsThreeVertical} {...props} />
+export const PlayIcon = (props: IconProps) => <Glyph source={Play} {...props} />
 export const PlusIcon = (props: IconProps) => <Glyph source={Plus} {...props} />
 export const SearchIcon = (props: IconProps) => <Glyph source={MagnifyingGlass} {...props} />
 export const SettingsIcon = (props: IconProps) => <Glyph source={Gear} {...props} />
 export const SignOutIcon = (props: IconProps) => <Glyph source={SignOut} {...props} />
+export const SkipIcon = (props: IconProps) => <Glyph source={FastForward} {...props} />
 export const SuccessIcon = (props: IconProps) => <Glyph source={CheckCircle} {...props} />
 export const SunIcon = (props: IconProps) => <Glyph source={Sun} {...props} />
 export const TrashIcon = (props: IconProps) => <Glyph source={Trash} {...props} />
 export const UserIcon = (props: IconProps) => <Glyph source={User} {...props} />
+export const WrongIcon = (props: IconProps) => <Glyph source={XCircle} {...props} />
 
 // The spinner is the one icon that carries its own behaviour — every call
 // site was animating it by hand, so it does it here instead. `motion-reduce`
