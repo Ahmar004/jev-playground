@@ -19,11 +19,14 @@
 // this script only diffs from there, it does not replay history itself.
 
 import { execSync } from 'node:child_process'
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 const SCHEMA_DIR = 'prisma/schema'
 const MIGRATIONS_DIR = join(SCHEMA_DIR, 'migrations')
+// The CLI through node, not a `pnpm` or `.bin` shim: pnpm may not be on PATH
+// (it runs through corepack here), and the shims need a shell on Windows.
+const PRISMA = 'node node_modules/prisma/build/index.js'
 
 // Patterns that indicate `prisma migrate diff` chose a destructive rewrite
 // (usually because it can't tell a rename from a drop-and-add). Any match
@@ -49,7 +52,7 @@ function parseArgs() {
 	return {
 		check: args.includes('--check'),
 		name: get('--name') ?? 'unnamed_migration',
-		dbUrl: get('--db-url') ?? process.env.DATABASE_URL
+		dbUrl: get('--db-url') ?? process.env.DIRECT_URL ?? process.env.DATABASE_URL
 	}
 }
 
@@ -70,6 +73,8 @@ function findDestructivePattern(sql) {
 }
 
 function main() {
+	// A variable already set in the shell wins over .env.local.
+	if (existsSync('.env.local')) process.loadEnvFile('.env.local')
 	const { check, name, dbUrl } = parseArgs()
 
 	if (!dbUrl) {
@@ -77,9 +82,13 @@ function main() {
 		process.exit(1)
 	}
 
+	// Prisma 7 dropped --from-url: the CLI reads its database from
+	// prisma.config.ts, which takes DIRECT_URL from the environment first.
+	const prismaEnv = { ...process.env, DIRECT_URL: dbUrl }
+
 	const diff = execSync(
-		`pnpm prisma migrate diff --from-url "${dbUrl}" --to-schema-datamodel ${SCHEMA_DIR} --script`,
-		{ encoding: 'utf-8' }
+		`${PRISMA} migrate diff --from-config-datasource --to-schema ${SCHEMA_DIR} --script`,
+		{ encoding: 'utf-8', env: prismaEnv }
 	).trim()
 
 	const isEmptyDiff = diff.split('\n').every((line) => line.startsWith('--') || line.trim() === '')
@@ -114,10 +123,7 @@ function main() {
 
 	// Replay the migration we just wrote, proving it applies — not just
 	// that it was syntactically generated.
-	execSync(`pnpm prisma migrate deploy`, {
-		stdio: 'inherit',
-		env: { ...process.env, DATABASE_URL: dbUrl }
-	})
+	execSync(`${PRISMA} migrate deploy`, { stdio: 'inherit', env: prismaEnv })
 	console.log('Replayed successfully.')
 }
 

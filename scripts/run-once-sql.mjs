@@ -21,8 +21,9 @@
 
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { readFileSync } from 'node:fs'
-import { PrismaClient } from '@prisma/client'
+import { existsSync, readFileSync } from 'node:fs'
+import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaClient } from '../src/server/db/generated/client'
 
 const DEFAULT_FILE = 'prisma/run-once.sql'
 const LEDGER_TABLE = '_run_once_sql'
@@ -84,7 +85,7 @@ export function buildScript({ hash, sqlText }) {
 }
 
 async function findApplied({ url, hash }) {
-	const prisma = new PrismaClient({ datasourceUrl: url })
+	const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) })
 	try {
 		return await prisma.runOnceSql.findUnique({ where: { hash }, select: { appliedAt: true } })
 	} finally {
@@ -94,6 +95,8 @@ async function findApplied({ url, hash }) {
 
 async function main() {
 	const { dbUrl, file } = parseArgs(process.argv.slice(2))
+	// A variable already set in the shell wins over .env.local.
+	if (existsSync('.env.local')) process.loadEnvFile('.env.local')
 
 	const url = resolveDatabaseUrl({ dbUrl, env: process.env })
 	if (url == null) {
@@ -139,9 +142,12 @@ async function main() {
 	console.log(`Applying ${file} (version ${version}) to ${target} ...`)
 	try {
 		const output = execFileSync(
-			'pnpm',
-			['exec', 'prisma', 'db', 'execute', '--stdin', '--url', url],
+			process.execPath,
+			// Prisma 7 dropped `db execute --url`: the CLI reads its database from
+			// prisma.config.ts, which takes DIRECT_URL from the environment first.
+			['node_modules/prisma/build/index.js', 'db', 'execute', '--stdin'],
 			{
+				env: { ...process.env, DIRECT_URL: url },
 				input: buildScript({ hash, sqlText }),
 				encoding: 'utf-8',
 				stdio: ['pipe', 'pipe', 'pipe']

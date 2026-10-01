@@ -25,7 +25,8 @@ const envSchema = z.object({
 	// `process.env.LOG_LEVEL` directly (not `env.LOG_LEVEL`) so it can report a
 	// bad boot before this schema has run. Defaults to `info`, or `silent`
 	// under NODE_ENV=test.
-	LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error', 'silent']).optional(),
+	// An empty value (the .env.example default) means the default level.
+	LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error', 'silent']).optional().or(z.literal('')),
 
 	NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional().or(z.literal('')),
 	SENTRY_ORG: z.string().optional(),

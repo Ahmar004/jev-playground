@@ -32,13 +32,13 @@ export default async function proxy(request: NextRequest) {
 			}
 		)
 
-		// Talking to Supabase here is a real network call — never let it take
-		// the whole site down. A landing-page clone with placeholder
-		// Supabase env vars, or Supabase itself being briefly unreachable,
-		// should still serve pages; it just means the session isn't refreshed
-		// on this request.
+		// getClaims() verifies the session JWT locally against the project's
+		// published signing keys (asymmetric keys, docs/api-setup-guide.md), and
+		// refreshes an expired session, which may call Supabase. Never let that
+		// take the site down: if Supabase is briefly unreachable the page still
+		// serves, only without a refreshed session on this request.
 		try {
-			await supabase.auth.getUser()
+			await supabase.auth.getClaims()
 		} catch {
 			// Fail open — see comment above.
 		}

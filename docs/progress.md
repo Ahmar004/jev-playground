@@ -208,3 +208,32 @@ Next: Step-4 (validate the docs with brainstorming before coding).
 - Gates: `format:check` and `check:standards` pass.
 
 Next: Step-5 (foundation). Start by asking the user for the Supabase, Sentry and PostHog accounts and keys it needs.
+
+## Step-5 - foundation (2026-10-01) - in progress: code done, database items wait on the user's env values
+
+- No ROADMAP skill names this step; it followed the Step-5 item list and `docs/rules/migrations.md`. The user approved the plan plus two extras: Sentry/PostHog scrubbing and installing Playwright Chromium.
+- New ROADMAP Rule-10 (user-approved): every external service gets step-by-step setup in `docs/api-setup-guide.md`, written in the step that adds it. `CLAUDE.md` > Source of truth points to it.
+- Done:
+  - Renames: package `jevs-playground`, app title and description, the home page text, the `.env.example` header. `README.md` waits for Step-8.
+  - Prisma 7.10:
+    - The `prisma-client` generator outputs to `src/server/db/generated/` (gitignored, rebuilt by postinstall), with `importFileExtension = ""` so the node:test loader can import it.
+    - `prisma.config.ts` loads `.env.local` with `process.loadEnvFile` and migrates over `DIRECT_URL`.
+    - `src/server/db/client.ts` uses `PrismaPg` on `DATABASE_URL`.
+    - Scripts: `generate-migration.mjs` uses `--from-config-datasource`, and `run-once-sql.mjs` uses `db execute` without `--url`; both pass their `--db-url` to the CLI as `DIRECT_URL`. `check-rls.mjs` uses the adapter. `check:rls` and `db:run-once` run through `scripts/register-ts.mjs`, and all three load `.env.local`.
+    - ESLint bans the generated client and `@prisma/adapter-pg` outside `client.ts`. `ci.yml` (disabled) uses the Prisma 7 flags.
+  - `src/proxy.ts` calls `getClaims()`. The sign-in redirect gate is slice 1.
+  - Vitest 5 + Testing Library + jsdom (`vitest.config.mts`, `vitest.setup.ts`, `resolve.tsconfigPaths`). `pnpm test` runs node:test and then `vitest run`.
+  - `cacheComponents: true` is on; the build passes.
+  - UI libraries installed, not yet wired: Radix Dialog/Tabs/Slider/Switch/Tooltip/Popover, `motion`, `@dnd-kit/core`, `canvas-confetti`, `next-themes`. `@types/node` is now ^22, a Vitest peer requirement.
+  - `src/lib/observability/scrub.ts` (10 tests) drops the `authorization`, `x-api-key` and `x-goog-api-key` headers, provider and `/api/jev` bodies, and `?key=` params from Sentry events and breadcrumbs, in all three Sentry inits. PostHog sets `maskAllInputs`. Nothing mounts `PosthogIdentify`; keep it that way, since analytics stay anonymous (R85).
+  - Playwright Chromium is installed, and `webServer` runs `corepack pnpm dev`. The smoke e2e passes.
+  - Fixes found on the way: `env.ts` rejected the empty `LOG_LEVEL=""` that `.env.example` ships, so the app couldn't boot from a fresh copy. AGENTS.md had lost its `BEGIN:nextjs-agent-rules` marker, so `next dev` appended a duplicate block on every run.
+- User decisions: PostHog US cloud. Supabase "Enable automatic RLS" stays off, because it would hide a migration missing its RLS line. Don't buy the IPv4 add-on: the user's dialog shows Direct and Transaction pooler as IPv6, so both URLs come from the Session pooler string, with port 6543 plus `?pgbouncer=true` for `DATABASE_URL`.
+- Gates: lint, typecheck, format:check, check:env, check:secrets, check:standards 24/24, test (114 node:test pass + 1 skipped, 12 Vitest), build, e2e smoke.
+- Remaining Step-5 work, next session:
+  1. The user fills `.env.local` from `docs/api-setup-guide.md`. Check which variables are set without printing values.
+  2. `corepack pnpm exec prisma migrate deploy` (nothing to replay yet), then `node scripts/generate-migration.mjs --name baseline` for `users` and `_run_once_sql`.
+  3. The hand-written enable-RLS migration: `ALTER TABLE "users" ENABLE ROW LEVEL SECURITY;` and the same for `"_run_once_sql"`, in its own migration folder. Apply it with `migrate deploy`, then run `corepack pnpm db:run-once` and `corepack pnpm check:rls`.
+  4. Watch for: Prisma 7's pg adapter changed SSL defaults. If the pooler connection fails on certificates, check the Supabase SSL docs before touching `rejectUnauthorized`.
+  5. Boot `corepack pnpm dev` with the real values; confirm a Sentry test event arrives with no key headers, and that PostHog receives a pageview.
+  6. Run local-review, commit, then the `chore(logs)` commit, and mark Step-5 done.

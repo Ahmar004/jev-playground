@@ -42,6 +42,9 @@ Never store API keys/secrets in browser's local storage, local storage is highly
 ### Rule-9:
 localhost only for now, build everything for shipping it as a robust system one day (I would probably deploy it at Vercel later on by pushing the project to a personal repo of mine, and then connecting that to a Vercel domain and deploying it from there), hackathon does not requires it, but I am planning to do it in future, to let the amazing app available to users across the globe.
 
+### Rule-10:
+Write clear, step-by-step setup instructions for every API and external service used in this project under @docs/api-setup-guide.md: creating the account and project, the settings to change, and which values go into .env.local. Add a service's section in the same step that adds the service.
+
 <hr style="height:4px; background-color:Grey; border:none;">
 
 ## Steps:

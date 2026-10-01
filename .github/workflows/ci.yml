@@ -85,13 +85,8 @@ jobs:
     permissions:
       contents: write
     env:
-      # DIRECT_URL required here even though it's optional for the running
-      # app (see src/lib/env.ts) — the schema declares directUrl =
-      # env("DIRECT_URL") unconditionally, so Prisma's schema validation
-      # fails on ANY CLI command (migrate deploy, migrate diff) if it isn't
-      # set, regardless of whether that specific command uses it. `prisma
-      # generate` alone doesn't hit this, which is why build/e2e don't need
-      # it — only this job, which actually runs migrate commands, does.
+      # The Prisma CLI reads its database from prisma.config.ts, which takes
+      # DIRECT_URL first. The running app only reads DATABASE_URL.
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
       DIRECT_URL: postgresql://postgres:postgres@localhost:5432/postgres
     services:
@@ -169,9 +164,9 @@ jobs:
       # before the drift check so anything it creates that Prisma tracks fails
       # that check too.
       - name: Apply run-once SQL
-        run: node scripts/run-once-sql.mjs --db-url "$DATABASE_URL"
+        run: pnpm db:run-once --db-url "$DATABASE_URL"
       - name: Check for drift (guard on main, hard gate on PRs)
-        run: pnpm exec prisma migrate diff --from-url "$DATABASE_URL" --to-schema-datamodel prisma/schema --exit-code
+        run: pnpm exec prisma migrate diff --from-config-datasource --to-schema prisma/schema --exit-code
       # RLS is not in the Prisma schema, so the drift check above cannot see
       # it. This reads pg_class on the replayed database instead: every table
       # enabled, no policies, never forced. A new table goes red here until

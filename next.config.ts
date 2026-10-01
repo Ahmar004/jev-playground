@@ -3,6 +3,10 @@ import { withSentryConfig } from '@sentry/nextjs'
 
 const nextConfig: NextConfig = {
 	reactStrictMode: true,
+	// Next.js 16 Cache Components: nothing is cached unless code opts in with
+	// 'use cache', and a page can mix a prerendered shell with per-request
+	// parts streamed inside <Suspense> (TECH-STACK.md > Rendering strategy).
+	cacheComponents: true,
 	// Top-level as of Next.js 16, not under `experimental`. Strictest
 	// setting: any Compiler bailout fails the build instead of silently
 	// skipping optimization for that component. Matches 8x-core and

@@ -14,8 +14,10 @@ and a dropped column silently broke one of them in production. A typed ORM
 with zero stored procedures structurally removes that failure class.
 
 Enforced by `eslint.config.mjs`'s `no-restricted-imports`, the same shape as
-the icon and AI-SDK rules: `@prisma/client` may be imported as a value only
-in `src/server/db/client.ts` (type imports are fine anywhere), and `pg`,
+the icon rule: the generated client (`src/server/db/generated/`, Prisma 7's
+`prisma-client` generator, gitignored and rebuilt by `prisma generate`) and
+`@prisma/adapter-pg` may be imported as values only in
+`src/server/db/client.ts` (type imports are fine anywhere), and `pg`,
 `postgres`, and the other drivers and ORMs have no importer at all. Supabase's
 own client can't reach data either — see `docs/rules/auth.md`.
 `pnpm check:standards` confirms the rule is in effect.

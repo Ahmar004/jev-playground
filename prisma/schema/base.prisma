@@ -1,9 +1,14 @@
+// Prisma 7: the connection URLs live in prisma.config.ts (CLI) and
+// src/server/db/client.ts (app, through the pg driver adapter), not here.
 generator client {
-	provider = "prisma-client-js"
+	provider            = "prisma-client"
+	output              = "../../src/server/db/generated"
+	moduleFormat        = "esm"
+	// Extensionless relative imports, so the node:test loader
+	// (scripts/ts-resolve-hooks.mjs) can resolve the generated .ts files.
+	importFileExtension = ""
 }
 
 datasource db {
-	provider  = "postgresql"
-	url       = env("DATABASE_URL")
-	directUrl = env("DIRECT_URL")
+	provider = "postgresql"
 }

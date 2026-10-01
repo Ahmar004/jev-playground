@@ -21,11 +21,13 @@ Next.js 16 App Router (React 19, TypeScript strict) for frontend and backend; Su
 | `dev` / `build` / `start`                                       | Dev server; production build; serve the build on localhost.                                     |
 | `lint` / `typecheck`                                            | ESLint with zero warnings; `tsc --noEmit`.                                                      |
 | `format` / `format:check`                                       | Prettier write / check.                                                                         |
-| `test` / `test:e2e`                                             | Unit tests; Playwright e2e.                                                                     |
+| `test` / `test:e2e`                                             | `node:test` suites, then Vitest; Playwright e2e.                                                |
 | `check:env` / `check:secrets` / `check:standards` / `check:rls` | Env vars documented; no secrets in source or logs; 8x standards wired; RLS on with no policies. |
 | `prisma:generate` / `db:run-once`                               | Regenerate the Prisma client; apply `prisma/run-once.sql` once per database.                    |
 
-Step-5 makes `test` run the template's `node:test` suites first (`check:standards` requires them, for the logger contract tests) and then `vitest run`. Step-6 adds `pnpm record` (the recording CLI). Add their rows here when they exist.
+`test` runs the template's `node:test` suites first (`check:standards` requires them, for the logger contract tests) and then `vitest run`. For Vitest alone, run `corepack pnpm exec vitest`. Step-6 adds `pnpm record` (the recording CLI); add its row here when it exists.
+
+Prisma 7 reads its CLI settings from `prisma.config.ts`, which loads `.env.local` and migrates over `DIRECT_URL`. The generated client lives in `src/server/db/generated/`, which is gitignored and rebuilt by `prisma:generate` (postinstall runs it).
 
 ## Source of truth
 
@@ -35,6 +37,7 @@ Step-5 makes `test` run the template's `node:test` suites first (`check:standard
   - `TECH-STACK.md`: what we build it with (Step-1).
   - `DESIGN.md`: how each feature is built, the screens, and the slice plan (Step-3).
   - `docs/progress.md`: what is done, and the hand-off to the next step.
+  - `docs/api-setup-guide.md`: how to set up each external API and service, and which `.env.local` values it gives. Add a service's section in the same step that adds the service (Rule-10).
 - Don't invent requirements. A decision these docs don't settle is an open question for the user. Where they are silent on how something looks or behaves, follow the existing screens and design tokens.
 - Keep `ROADMAP.md`, this file, `spec.md`, `TECH-STACK.md` and `DESIGN.md` consistent (Rule-3). When one changes, check the others.
 - Docs at the repo root: `ROADMAP.md`, `CLAUDE.md`, `AGENTS.md`, `spec.md`, `TECH-STACK.md`, `DESIGN.md`, `README.md` and `CAPTURE-TEST.md` (required by 8x). Every other doc goes in `docs/`.

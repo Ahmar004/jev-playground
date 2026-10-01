@@ -15,10 +15,10 @@
 //
 // Exit codes: 0 every table locked, 1 a table is not (or there are none).
 
-import prismaClientModule from '@prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
+import { existsSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
-
-const { PrismaClient } = prismaClientModule
+import { PrismaClient } from '../src/server/db/generated/client'
 
 // Tables this project deliberately leaves without RLS. Ships empty — the rule
 // is every table — and is the one place an exception is recorded, with a
@@ -80,6 +80,8 @@ async function fetchTables(db) {
 }
 
 async function main() {
+	// A variable already set in the shell wins over .env.local.
+	if (existsSync('.env.local')) process.loadEnvFile('.env.local')
 	if (!process.env.DATABASE_URL) {
 		console.error(
 			'DATABASE_URL is not set. This check reads a database — point it at one with the migrations applied.'
@@ -87,7 +89,9 @@ async function main() {
 		process.exit(1)
 	}
 
-	const db = new PrismaClient()
+	const db = new PrismaClient({
+		adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+	})
 	let tables
 	try {
 		tables = await fetchTables(db)

@@ -1,12 +1,10 @@
-import { cn } from '@/lib/cn'
-
 export default function HomePage() {
 	return (
 		<main className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center gap-4 px-6">
-			<h1 className="text-text text-3xl font-semibold">8x web template</h1>
-			<p className={cn('text-text-muted', 'text-base')}>
-				This page renders — pnpm dev to confirm the App Router and Tailwind v4 wiring work before
-				you start replacing it.
+			<h1 className="text-text text-3xl font-semibold">Jev&apos;s Playground</h1>
+			<p className="text-text-muted text-base">
+				Learn where System One models like Jev work well, where they break, and when an LLM or plain
+				code is the better tool.
 			</p>
 		</main>
 	)

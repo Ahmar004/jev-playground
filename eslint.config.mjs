@@ -31,6 +31,10 @@ const DATA_ACCESS_IMPORTS = {
 		'@/generated/prisma',
 		'@/generated/prisma/**',
 		'**/generated/prisma/**',
+		'@/server/db/generated',
+		'@/server/db/generated/**',
+		'**/db/generated/**',
+		'@prisma/adapter-pg',
 		'pg',
 		'pg/**',
 		'postgres',
@@ -69,7 +73,14 @@ const LOGGER_IMPORTS = {
 const eslintConfig = defineConfig([
 	...nextVitals,
 	...nextTypescript,
-	globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts', 'src/generated/**']),
+	globalIgnores([
+		'.next/**',
+		'out/**',
+		'build/**',
+		'next-env.d.ts',
+		'src/generated/**',
+		'src/server/db/generated/**'
+	]),
 	{
 		// See docs/rules/code-quality.md for the rationale behind both rules.
 		rules: {
