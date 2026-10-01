@@ -1,9 +1,9 @@
+import speedRace from '../../content/tasks/speed-race.json'
 import { taskSchema, type Task } from './task-schema'
 
 // Every file in content/tasks/ is imported here, so content renders at build
 // time (DESIGN 4.1). registry.test.ts fails when a file is missing.
-// Slice 3 adds the first task.
-const RAW_TASKS: unknown[] = []
+const RAW_TASKS: unknown[] = [speedRace]
 
 // Parsed at import, so a malformed file fails the build at prerender.
 export function buildTaskMap(raw: unknown[]): ReadonlyMap<string, Task> {
