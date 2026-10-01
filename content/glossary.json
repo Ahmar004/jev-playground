@@ -1,0 +1,114 @@
+[
+	{
+		"term": "Accuracy",
+		"definition": "The share of items a racer answered correctly. Items with no stored correct answer are left out of the count."
+	},
+	{
+		"term": "API key",
+		"definition": "A secret password that lets a program call a model provider on your account. In Developer mode your keys stay only in this browser tab and vanish when you close or reload it."
+	},
+	{
+		"term": "Arena",
+		"definition": "The page where Jev and an LLM do the same task side by side, so you can compare their answers, speed and cost."
+	},
+	{
+		"term": "Beginner mode",
+		"definition": "Plays back real results recorded earlier with the owner's keys. You need no keys, and nothing is called live."
+	},
+	{
+		"term": "Calibration",
+		"definition": "How well a model's stated confidence matches how often it is right. A well-calibrated model that says 80% is right about 8 times in 10."
+	},
+	{
+		"term": "Choice",
+		"definition": "A Jev question that picks one option from a list of up to 255. Jev returns the option, a probability for every option, and its Confidence."
+	},
+	{
+		"term": "Code",
+		"definition": "Plain, ordinary program logic, such as counting, math or comparing dates. It is always exact and almost free, so it beats both Jev and an LLM at jobs it can do."
+	},
+	{
+		"term": "Confidence",
+		"definition": "A number from 0 to 1 on Choice and Score answers that says how sure Jev is. You use it to decide whether to act on an answer or hand it to a person."
+	},
+	{
+		"term": "Cost",
+		"definition": "What a run costs in US dollars: the tokens used, times the provider's price per million tokens. The price used is saved with each result."
+	},
+	{
+		"term": "Developer mode",
+		"definition": "Runs live calls with your own API keys, so you can try your own inputs. Every result shows the model and the time it ran."
+	},
+	{
+		"term": "Jev",
+		"definition": "TypeSafe's System One model. It makes fast, typed judgments about a State, such as yes or no, pick one, or rate on a scale. It does not write text."
+	},
+	{
+		"term": "JSON",
+		"definition": "A plain text format for structured data, made of named fields and lists. Jev's States and Questions can be written in it."
+	},
+	{
+		"term": "Latency",
+		"definition": "How long one call takes, from sending the request to getting the full answer back, in milliseconds."
+	},
+	{
+		"term": "Level",
+		"definition": "One lesson on the learning path. Each Level teaches one idea through Learn, Predict, Play, Reveal and Check steps."
+	},
+	{
+		"term": "LLM",
+		"definition": "A large language model, such as Claude, GPT or Gemini. It writes free text and can reason step by step, which makes it slower and more expensive than Jev. This is the System Two side."
+	},
+	{
+		"term": "Noul",
+		"definition": "A yes or no Jev question. The answer is the probability that the answer is yes, from 0 to 1."
+	},
+	{
+		"term": "Parse",
+		"definition": "Reading a model's raw output and turning it into a usable answer. An LLM output that cannot be parsed counts as a miss, and it is shown, never hidden."
+	},
+	{
+		"term": "Prompt",
+		"definition": "The instructions and input text sent to an LLM. Jev takes a State and typed Questions instead."
+	},
+	{
+		"term": "Question",
+		"definition": "One typed question you ask Jev about a State: a Noul, a Choice or a Score."
+	},
+	{
+		"term": "Racer",
+		"definition": "Jev, the LLM or Code inside a race. Each one always has the same color and icon, and always a text label."
+	},
+	{
+		"term": "Recording",
+		"definition": "One stored, real result from an earlier run with the owner's keys. Beginner mode replays Recordings at the speed they really took."
+	},
+	{
+		"term": "Sandbox",
+		"definition": "A hands-on builder where you write your own State and Questions for Jev and see how it answers."
+	},
+	{
+		"term": "Score",
+		"definition": "A Jev question that rates a State on 2 to 10 ordered levels. Jev returns a probability-weighted score, a probability for every level, and its Confidence."
+	},
+	{
+		"term": "State",
+		"definition": "The input text or JSON that Jev judges, such as an email, a support ticket or a product listing."
+	},
+	{
+		"term": "System One",
+		"definition": "Fast, intuitive thinking that makes quick judgments. Jev is a System One model."
+	},
+	{
+		"term": "System Two",
+		"definition": "Slow, careful thinking that works through a problem step by step. LLMs play this role."
+	},
+	{
+		"term": "Token",
+		"definition": "A small piece of text, about four characters of English on average. Providers count and charge for tokens."
+	},
+	{
+		"term": "VS game",
+		"definition": "An animated race where Jev and an LLM do the same job, so you can see which is faster, cheaper and more accurate."
+	}
+]
