@@ -81,36 +81,40 @@ async function record(targets: Target[]): Promise<void> {
 
 	let runCost = 0
 	const written: string[] = []
-	for (const target of targets) {
-		console.log(`\nRecording ${label(target)}`)
-		const recording = await recordTarget(getTask(target.taskId), target, {
-			calls,
-			prices: PRICES,
-			recordedAt: new Date(),
-			signal: controller.signal,
-			onEvent: (event) => printCall(target, event)
-		})
-		const path = await writeRecording(ROOT, recording)
-		written.push(
-			relative(join(ROOT, ...RECORDINGS_DIR), path)
-				.split(sep)
-				.join('/')
-		)
-		runCost += recording.totals.costUsd ?? 0
-		const { totals } = recording
+	try {
+		for (const target of targets) {
+			console.log(`\nRecording ${label(target)}`)
+			const recording = await recordTarget(getTask(target.taskId), target, {
+				calls,
+				prices: PRICES,
+				recordedAt: new Date(),
+				signal: controller.signal,
+				onEvent: (event) => printCall(target, event)
+			})
+			const path = await writeRecording(ROOT, recording)
+			written.push(
+				relative(join(ROOT, ...RECORDINGS_DIR), path)
+					.split(sep)
+					.join('/')
+			)
+			runCost += recording.totals.costUsd ?? 0
+			const { totals } = recording
+			console.log(
+				`Wrote ${path}: ${recording.modelId}, ${totals.correct}/${totals.scored} correct, ${Math.round(totals.wallMs)} ms, ${usd(totals.costUsd)}`
+			)
+		}
+	} finally {
+		// Files already written are still real spend, so the summary prints even
+		// when a later target fails; the error then reaches main's catch.
+		const spend = recordedSpend(ROOT)
+		console.log(`\nThis run: ${usd(runCost)}.`)
 		console.log(
-			`Wrote ${path}: ${recording.modelId}, ${totals.correct}/${totals.scored} correct, ${Math.round(totals.wallMs)} ms, ${usd(totals.costUsd)}`
+			`All recordings on disk: ${usd(spend.costUsd)} of the $${BUDGET_USD} budget${spend.unknownPriceFiles ? ` (${spend.unknownPriceFiles} with unknown price)` : ''}.`
 		)
-	}
-
-	const spend = recordedSpend(ROOT)
-	console.log(`\nThis run: ${usd(runCost)}.`)
-	console.log(
-		`All recordings on disk: ${usd(spend.costUsd)} of the $${BUDGET_USD} budget${spend.unknownPriceFiles ? ` (${spend.unknownPriceFiles} with unknown price)` : ''}.`
-	)
-	if (written.length > 0) {
-		console.log('\nAdd any new file to src/content/recordings.ts (registry.test.ts checks):')
-		for (const file of written) console.log(`  content/recordings/${file}`)
+		if (written.length > 0) {
+			console.log('\nAdd any new file to src/content/recordings.ts (registry.test.ts checks):')
+			for (const file of written) console.log(`  content/recordings/${file}`)
+		}
 	}
 }
 

@@ -2,8 +2,15 @@ import type { PriceTable } from '@/content/prices'
 import { recordingSchema, type Recording } from '@/content/recording-schema'
 import { taskHash } from '@/content/task-hash'
 import type { Task } from '@/content/task-schema'
-import { RACE_LANES, RACERS, RUN_EVENTS } from '@/lib/constants'
+import {
+	PROVIDER_ERROR_KINDS,
+	RACE_LANES,
+	RACERS,
+	RUN_EVENTS,
+	type ProviderErrorKind
+} from '@/lib/constants'
 import { priceFor } from '@/runner/cost'
+import { ProviderError } from '@/runner/providers/provider-error'
 import { jevRacer, llmRacer } from '@/runner/racers'
 import { runItems } from '@/runner/run'
 import type { JevRequestBody, ProviderResult, RunEvent } from '@/runner/types'
@@ -26,6 +33,13 @@ type RecordOptions = {
 
 type RecordedEvent = Recording['events'][number]
 
+// Provider-side failures that stop a model's run instead of being stored.
+const ABORTING_KINDS: ReadonlySet<ProviderErrorKind> = new Set([
+	PROVIDER_ERROR_KINDS.rateLimited,
+	PROVIDER_ERROR_KINDS.overloaded,
+	PROVIDER_ERROR_KINDS.network
+])
+
 /**
  * Runs one racer over a task through the shared runner (R92) and returns the
  * Recording. Every result is stored as it happened: failed and unparseable
@@ -39,20 +53,45 @@ export async function recordTarget(
 	const { calls, prices, recordedAt, signal, onEvent, now } = options
 	// The model each response says answered: the recording names that one.
 	const answeredBy = new Set<string>()
-	const noteModel = async (call: Promise<ProviderResult>) => {
-		const result = await call
+	// Throws on the first reply that would make the recording untrustworthy, so
+	// the runner aborts the sibling lanes and few paid calls are lost.
+	const noteModel = (result: ProviderResult): ProviderResult => {
+		if (target.racer === RACERS.llm && result.modelId !== target.modelId) {
+			throw new Error(
+				`Asked ${target.modelId} but ${result.modelId} answered; nothing was written. Use the answering id as the model id.`
+			)
+		}
 		answeredBy.add(result.modelId)
+		if (answeredBy.size > 1) {
+			throw new Error(
+				`One run was answered by more than one model (${[...answeredBy].join(', ')}); nothing was written`
+			)
+		}
 		return result
+	}
+	// A rate limit, overload or network failure measures the account, not the
+	// model: it stops the run (a plain Error is not stored as a result).
+	const guard = async (call: Promise<ProviderResult>): Promise<ProviderResult> => {
+		try {
+			return noteModel(await call)
+		} catch (error) {
+			if (error instanceof ProviderError && ABORTING_KINDS.has(error.kind)) {
+				throw new Error(
+					`${error.kind} while recording ${target.taskId} / ${target.slug}; nothing was written. Wait a while or check the account's rate limits, then run it again.`
+				)
+			}
+			throw error
+		}
 	}
 
 	const runItem =
 		target.racer === RACERS.jev
-			? jevRacer({ task, prices, call: (body, s) => noteModel(calls.jev(body, s)) })
+			? jevRacer({ task, prices, call: (body, s) => guard(calls.jev(body, s)) })
 			: llmRacer({
 					task,
 					prices,
 					modelId: target.modelId,
-					call: (prompt, s) => noteModel(calls.llm(target.modelId, prompt, s))
+					call: (prompt, s) => guard(calls.llm(target.modelId, prompt, s))
 				})
 
 	const startedAt = new Map<string, number>()

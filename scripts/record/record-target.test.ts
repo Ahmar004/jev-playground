@@ -3,7 +3,8 @@ import { describe, expect, it } from 'vitest'
 import type { PriceTable } from '@/content/prices'
 import { recordingSchema } from '@/content/recording-schema'
 import { taskHash } from '@/content/task-hash'
-import { PROVIDER_ERROR_KINDS } from '@/lib/constants'
+import { taskSchema } from '@/content/task-schema'
+import { PROVIDER_ERROR_KINDS, RACE_LANES } from '@/lib/constants'
 import { ProviderError } from '@/runner/providers/provider-error'
 import { choiceTask } from '@/runner/testing/tasks'
 import type { ProviderResult } from '@/runner/types'
@@ -172,6 +173,101 @@ describe('recordTarget', () => {
 		)
 	})
 
+	it('stops at the first reply from a different model, losing at most one call per lane', async () => {
+		const items = Array.from({ length: 12 }, (_, index) => ({
+			id: `m${index}`,
+			state: `ticket ${index}`
+		}))
+		const longTask = taskSchema.parse({ ...choiceTask, items })
+		let made = 0
+		const drifted = calls({
+			llm: async () => {
+				made += 1
+				return {
+					text: '{"answer": "billing"}',
+					latencyMs: 1,
+					usage: { inputTokens: 1, outputTokens: 1 },
+					modelId: 'claude-opus-5-5-20260101'
+				}
+			}
+		})
+		await expect(
+			recordTarget(longTask, opusTarget, { calls: drifted, prices, recordedAt })
+		).rejects.toThrow(/claude-opus-5-5-20260101/)
+		expect(made).toBeLessThanOrEqual(RACE_LANES)
+	})
+
+	it('stops as soon as a second model id appears, losing only a few calls', async () => {
+		const items = Array.from({ length: 12 }, (_, index) => ({
+			id: `m${index}`,
+			state: `ticket ${index}`
+		}))
+		const longTask = taskSchema.parse({ ...choiceTask, items })
+		let made = 0
+		const mixed = calls({
+			jev: async () => {
+				made += 1
+				return jevReply('billing', made === 1 ? 'jev-1.13.0' : 'jev-1.14.0')
+			}
+		})
+		await expect(
+			recordTarget(longTask, jevTarget, { calls: mixed, prices, recordedAt })
+		).rejects.toThrow(/more than one model/)
+		// The first lane to finish (a match) may start one more call before the mismatch lands.
+		expect(made).toBeLessThanOrEqual(RACE_LANES + 1)
+	})
+
+	it.each([
+		PROVIDER_ERROR_KINDS.rateLimited,
+		PROVIDER_ERROR_KINDS.overloaded,
+		PROVIDER_ERROR_KINDS.network
+	])('aborts the run on a %s failure, writing nothing', async (kind) => {
+		let n = 0
+		const limited = calls({
+			jev: async (body) => {
+				n += 1
+				if (n === 2) throw new ProviderError(kind, 429, 'secret body', 5)
+				return jevReply(JSON.stringify(body).length > 0 ? 'billing' : 'none')
+			}
+		})
+		const failure = recordTarget(choiceTask, jevTarget, { calls: limited, prices, recordedAt })
+		await expect(failure).rejects.toThrow(
+			new RegExp(`${kind}.*${choiceTask.id} / ${jevTarget.slug}.*nothing was written`)
+		)
+		await expect(failure).rejects.not.toBeInstanceOf(ProviderError)
+		await expect(failure).rejects.not.toThrow(/secret body/)
+	})
+
+	it('aborts an LLM run on a rate limit too', async () => {
+		const limited = calls({
+			llm: async () => {
+				throw new ProviderError(PROVIDER_ERROR_KINDS.rateLimited, 429, '', 5)
+			}
+		})
+		await expect(
+			recordTarget(choiceTask, opusTarget, { calls: limited, prices, recordedAt })
+		).rejects.toThrow(new RegExp(`${PROVIDER_ERROR_KINDS.rateLimited}.*claude-opus-5-5`))
+	})
+
+	it('still records a malformed error among successes, as it happened (R44)', async () => {
+		let n = 0
+		const odd = calls({
+			jev: async (body) => {
+				n += 1
+				if (n === 2) throw new ProviderError(PROVIDER_ERROR_KINDS.malformed, 422, '{"x":1}', 5)
+				return jevReply(JSON.stringify(body).length > 0 ? 'billing' : 'none')
+			}
+		})
+		const recording = await recordTarget(choiceTask, jevTarget, {
+			calls: odd,
+			prices,
+			recordedAt
+		})
+		const failed = recording.events.filter((event) => event.error)
+		expect(failed).toHaveLength(1)
+		expect(failed[0]?.error).toBe(PROVIDER_ERROR_KINDS.malformed)
+	})
+
 	it('refuses a run where every call failed, naming the error kinds', async () => {
 		const failing = calls({
 			jev: async () => {
@@ -188,7 +284,7 @@ describe('recordTarget', () => {
 		const flaky = calls({
 			jev: async (body) => {
 				n += 1
-				if (n === 1) throw new ProviderError(PROVIDER_ERROR_KINDS.overloaded, 529, '', 5)
+				if (n === 1) throw new ProviderError(PROVIDER_ERROR_KINDS.unknown, 500, '', 5)
 				return jevReply(JSON.stringify(body).length > 0 ? 'billing' : 'none')
 			}
 		})
@@ -199,7 +295,7 @@ describe('recordTarget', () => {
 		})
 		const failed = recording.events.filter((event) => event.error)
 		expect(failed).toHaveLength(1)
-		expect(failed[0]?.error).toBe(PROVIDER_ERROR_KINDS.overloaded)
+		expect(failed[0]?.error).toBe(PROVIDER_ERROR_KINDS.unknown)
 		expect(recording.events).toHaveLength(choiceTask.items.length)
 	})
 })
