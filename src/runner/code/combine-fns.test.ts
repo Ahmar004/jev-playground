@@ -29,6 +29,33 @@ describe('COMBINE_FNS', () => {
 		expect(() => COMBINE_FNS.compare_dates({ first_day: choice('3') })).toThrow()
 	})
 
+	it('compare_dates throws on an empty or non-digit Choice', () => {
+		const base = {
+			first_day: choice('3'),
+			first_month: choice('4'),
+			first_year: choice('2025'),
+			second_day: choice('4'),
+			second_month: choice('3'),
+			second_year: choice('2025')
+		}
+		for (const bad of ['', '  ', '3x', '-3', '1.5']) {
+			expect(() => COMBINE_FNS.compare_dates({ ...base, first_day: choice(bad) })).toThrow()
+			expect(() => COMBINE_FNS.compare_dates({ ...base, first_year: choice(bad) })).toThrow()
+		}
+	})
+
+	it('weighted_composite throws on a bad weight', () => {
+		const answers = { quality: noul(0.75), price: noul(0.25) }
+		expect(() => COMBINE_FNS.weighted_composite(answers, { weights: { quality: NaN } })).toThrow()
+		expect(() => COMBINE_FNS.weighted_composite(answers, { weights: { quality: -1 } })).toThrow()
+		expect(() =>
+			COMBINE_FNS.weighted_composite(answers, { weights: { quality: Infinity } })
+		).toThrow()
+		expect(() =>
+			COMBINE_FNS.weighted_composite(answers, { weights: { quality: 0, price: 0 } })
+		).toThrow()
+	})
+
 	it('weighted_composite averages the Nouls by weight and reports the composite', () => {
 		const answers = { quality: noul(0.75), price: noul(0.25) }
 		expect(COMBINE_FNS.weighted_composite(answers)).toEqual({

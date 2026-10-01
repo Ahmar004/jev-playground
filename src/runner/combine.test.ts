@@ -1,9 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import { combineResult, createCombineTap } from './combine'
-import { choiceTask, countTask, item } from './testing/tasks'
+import { choiceTask, countTask, datesTask, item } from './testing/tasks'
 import type { ItemResult, RunEvent } from './types'
 
 const noul = (value: number) => ({ type: 'noul', noul: value })
+
+const choiceAnswer = (picked: string) => ({
+	type: 'choice',
+	choice: picked,
+	probabilities: {},
+	confidence: 1
+})
 
 function jevResult(overrides: Partial<ItemResult> = {}): ItemResult {
 	return {
@@ -28,6 +35,15 @@ describe('combineResult', () => {
 		expect(result.correct).toBe(true)
 		expect(result.costUsd).toBe(0.0000126)
 		expect(result.latencyMs).toBeGreaterThanOrEqual(120)
+	})
+
+	it("is a miss, with Jev's raw text, when the combine function throws", () => {
+		const result = combineResult(
+			datesTask,
+			item(datesTask, 'x1'),
+			jevResult({ itemId: 'x1', raw: 'jev raw', parsed: { first_day: choiceAnswer('3') } })
+		)
+		expect(result).toMatchObject({ ok: false, credit: 0, correct: false, raw: 'jev raw' })
 	})
 
 	it("is a miss when Jev's call failed", () => {

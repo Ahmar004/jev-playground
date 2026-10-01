@@ -83,7 +83,10 @@ function pickAnswer(kind: TaskKind, value: unknown): LlmAnswer | null {
 		case TASK_KINDS.findLines:
 			return answerOf(value, z.array(z.number().int().positive()))
 		case TASK_KINDS.generate:
-			return answerOf(value, z.string().trim().min(1))
+			return answerOf(
+				value,
+				z.string().refine((text) => text.trim() !== '')
+			)
 	}
 }
 

@@ -6,12 +6,17 @@ import { taskSchema, type Task } from './task-schema'
 const RAW_TASKS: unknown[] = []
 
 // Parsed at import, so a malformed file fails the build at prerender.
-export const TASKS: ReadonlyMap<string, Task> = new Map(
-	RAW_TASKS.map((raw) => {
-		const task = taskSchema.parse(raw)
-		return [task.id, task]
-	})
-)
+export function buildTaskMap(raw: unknown[]): ReadonlyMap<string, Task> {
+	const map = new Map<string, Task>()
+	for (const entry of raw) {
+		const task = taskSchema.parse(entry)
+		if (map.has(task.id)) throw new Error(`Duplicate task id: ${task.id}`)
+		map.set(task.id, task)
+	}
+	return map
+}
+
+export const TASKS: ReadonlyMap<string, Task> = buildTaskMap(RAW_TASKS)
 
 export function getTask(id: string): Task {
 	const task = TASKS.get(id)

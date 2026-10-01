@@ -43,6 +43,12 @@ describe('recordingSchema', () => {
 		expect(recordingSchema.safeParse(RECORDING).success).toBe(true)
 	})
 
+	it('rejects an event that ends before it starts', () => {
+		const [event] = RECORDING.events
+		const events = [{ ...event, startMs: 200, endMs: 100 }]
+		expect(recordingSchema.safeParse({ ...RECORDING, events }).success).toBe(false)
+	})
+
 	it('rejects a recording with a malformed hash or racer', () => {
 		expect(recordingSchema.safeParse({ ...RECORDING, taskHash: 'abc' }).success).toBe(false)
 		expect(recordingSchema.safeParse({ ...RECORDING, racer: 'code' }).success).toBe(false)

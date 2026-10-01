@@ -6,11 +6,13 @@ import { priceEntrySchema } from './prices'
 const SHA256_HEX = /^[0-9a-f]{64}$/
 
 // One recorded call: its result plus when and in which lane it ran.
-export const recordingEventSchema = itemResultSchema.extend({
-	lane: z.number().int().nonnegative(),
-	startMs: z.number().nonnegative(),
-	endMs: z.number().nonnegative()
-})
+export const recordingEventSchema = itemResultSchema
+	.extend({
+		lane: z.number().int().nonnegative(),
+		startMs: z.number().nonnegative(),
+		endMs: z.number().nonnegative()
+	})
+	.refine((event) => event.endMs >= event.startMs, 'An event cannot end before it starts')
 
 // content/recordings/<taskId>/<slug>.json (DESIGN 4.1). Only the recording
 // CLI writes these; jev_code is derived from Jev's recording, never stored.

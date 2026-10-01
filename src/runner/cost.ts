@@ -17,8 +17,7 @@ export function costUsd(usage: Usage, price: Price | null): number | null {
 /** The price of the first model id the table knows (the answering model first, then the requested one). */
 export function priceFor(table: PriceTable, modelIds: string[]): PriceEntry | null {
 	for (const modelId of modelIds) {
-		const entry = table.models[modelId]
-		if (entry) return entry
+		if (Object.hasOwn(table.models, modelId)) return table.models[modelId] ?? null
 	}
 	return null
 }

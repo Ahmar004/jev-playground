@@ -68,6 +68,13 @@ describe('parseLlmAnswer', () => {
 		expect(parseLlmAnswer(kind, text)).toEqual({ ok: true, parsed: expected })
 	})
 
+	it('keeps generate text exactly as the model wrote it', () => {
+		expect(parseLlmAnswer('generate', '{"answer": "  A poem \\n"}')).toEqual({
+			ok: true,
+			parsed: '  A poem \n'
+		})
+	})
+
 	it.each([
 		['choice', 'billing'],
 		['noul', '{"answer": "yes"}'],

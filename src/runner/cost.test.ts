@@ -32,4 +32,8 @@ describe('priceFor', () => {
 		expect(priceFor(TABLE, ['jev-9.9.9', 'jev-1.13.0'])?.inputPerM).toBe(0.042)
 		expect(priceFor(TABLE, ['gpt-x'])).toBeNull()
 	})
+
+	it('ignores inherited object keys', () => {
+		expect(priceFor(TABLE, ['constructor', 'toString'])).toBeNull()
+	})
 })

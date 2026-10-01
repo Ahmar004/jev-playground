@@ -16,9 +16,8 @@ type DateSide = (typeof DATE_SIDES)[keyof typeof DATE_SIDES]
 function choiceNumber(answers: JevAnswers, key: string): number {
 	const answer = answers[key]
 	if (answer?.type !== QUESTION_KINDS.choice) throw new Error(`No Choice answer for ${key}`)
-	const value = Number(answer.choice)
-	if (!Number.isInteger(value)) throw new Error(`${key} is not a number: ${answer.choice}`)
-	return value
+	if (!/^[0-9]+$/.test(answer.choice)) throw new Error(`${key} is not a number: ${answer.choice}`)
+	return Number(answer.choice)
 }
 
 function datePartsOf(answers: JevAnswers, side: DateSide): DateParts {
@@ -54,6 +53,10 @@ export const COMBINE_FNS: Record<
 	[COMBINE_FN_IDS.weightedComposite]: (answers, args) => {
 		const entries = nouls(answers)
 		const weightOf = (key: string) => args?.weights?.[key] ?? DEFAULT_WEIGHT
+		for (const [key] of entries) {
+			const weight = weightOf(key)
+			if (!Number.isFinite(weight) || weight < 0) throw new Error(`Bad weight for ${key}`)
+		}
 		const totalWeight = entries.reduce((sum, [key]) => sum + weightOf(key), 0)
 		if (totalWeight <= 0) throw new Error('The weights add up to nothing')
 		const composite =

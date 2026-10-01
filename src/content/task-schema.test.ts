@@ -47,6 +47,12 @@ describe('taskSchema', () => {
 		expect(messages(task).join()).toMatch(/option/i)
 	})
 
+	it('rejects an inherited key as a choice label', () => {
+		const task = choiceJson()
+		task.items = [{ id: 't1', state: 'x', label: 'constructor' }]
+		expect(messages(task).join()).toMatch(/not an option/i)
+	})
+
 	it('rejects duplicate item ids', () => {
 		const task = choiceJson()
 		task.items = [

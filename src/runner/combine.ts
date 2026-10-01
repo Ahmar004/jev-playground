@@ -50,6 +50,10 @@ export function combineResult(
  * Wraps a RunEvent listener so every Jev event is followed by the matching
  * jev_code event. Works on live runs and replays alike. A task without
  * combine gets the listener back unchanged.
+ *
+ * Create one tap per run: its results accumulate for the run_finished totals.
+ * A jev_code result's `parsed` is the CombineOutput `{ answer, detail? }`, not
+ * the bare answer.
  */
 export function createCombineTap(
 	task: Task,

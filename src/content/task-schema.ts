@@ -171,7 +171,10 @@ function itemProblems(task: Task, item: TaskItem): string[] {
 		case TASK_KINDS.choice: {
 			if (label === undefined) break
 			if (typeof label !== 'string') problems.push('A choice label is an option key')
-			else if (question?.type === QUESTION_KINDS.choice && !(label in question.criteria)) {
+			else if (
+				question?.type === QUESTION_KINDS.choice &&
+				!Object.hasOwn(question.criteria, label)
+			) {
 				problems.push(`Label "${label}" is not an option`)
 			}
 			break
