@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest'
 import type { PriceTable } from '@/content/prices'
 import { recordingSchema } from '@/content/recording-schema'
 import { taskHash } from '@/content/task-hash'
+import { PROVIDER_ERROR_KINDS } from '@/lib/constants'
+import { ProviderError } from '@/runner/providers/provider-error'
 import { choiceTask } from '@/runner/testing/tasks'
 import type { ProviderResult } from '@/runner/types'
 import { recordTarget, type ProviderCalls } from './record-target'
@@ -152,5 +154,52 @@ describe('recordTarget', () => {
 				signal: controller.signal
 			})
 		).rejects.toThrow(/aborted/i)
+	})
+
+	it('refuses an LLM run answered by a model other than the requested one', async () => {
+		const drifted = calls({
+			llm: async () => ({
+				text: '{"answer": "billing"}',
+				latencyMs: 1,
+				usage: { inputTokens: 1, outputTokens: 1 },
+				modelId: 'claude-opus-5-5-20260101'
+			})
+		})
+		await expect(
+			recordTarget(choiceTask, opusTarget, { calls: drifted, prices, recordedAt })
+		).rejects.toThrow(
+			/claude-opus-5-5-20260101.*claude-opus-5-5|claude-opus-5-5.*claude-opus-5-5-20260101/
+		)
+	})
+
+	it('refuses a run where every call failed, naming the error kinds', async () => {
+		const failing = calls({
+			jev: async () => {
+				throw new ProviderError(PROVIDER_ERROR_KINDS.invalidKey, 401, '', 5)
+			}
+		})
+		await expect(
+			recordTarget(choiceTask, jevTarget, { calls: failing, prices, recordedAt })
+		).rejects.toThrow(new RegExp(`${PROVIDER_ERROR_KINDS.invalidKey}.*nothing was written`))
+	})
+
+	it('records a run with one failed call among successes, as it happened (R44)', async () => {
+		let n = 0
+		const flaky = calls({
+			jev: async (body) => {
+				n += 1
+				if (n === 1) throw new ProviderError(PROVIDER_ERROR_KINDS.overloaded, 529, '', 5)
+				return jevReply(JSON.stringify(body).length > 0 ? 'billing' : 'none')
+			}
+		})
+		const recording = await recordTarget(choiceTask, jevTarget, {
+			calls: flaky,
+			prices,
+			recordedAt
+		})
+		const failed = recording.events.filter((event) => event.error)
+		expect(failed).toHaveLength(1)
+		expect(failed[0]?.error).toBe(PROVIDER_ERROR_KINDS.overloaded)
+		expect(recording.events).toHaveLength(choiceTask.items.length)
 	})
 })

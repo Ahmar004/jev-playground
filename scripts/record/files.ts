@@ -8,7 +8,7 @@ import { recordingSlug, type Recording } from '@/content/recording-schema'
 // The total spend allowed for the whole project (ROADMAP Rule-0.1).
 export const BUDGET_USD = 50
 
-const RECORDINGS_DIR = ['content', 'recordings']
+export const RECORDINGS_DIR = ['content', 'recordings']
 const JSON_EXT = '.json'
 
 export function recordingPath(root: string, taskId: string, slug: string): string {

@@ -1,6 +1,7 @@
 // The recording CLI (DESIGN 4.2): `corepack pnpm record [--task <id>] [--model <id>] [--dry-run]`.
 // Runs Jev and the Claude models through the shared runner and writes
 // content/recordings/<taskId>/<slug>.json. Every real run costs money.
+import { join, relative, sep } from 'node:path'
 import { PRICES } from '@/content/prices'
 import { taskHash } from '@/content/task-hash'
 import { TASKS, getTask } from '@/content/tasks'
@@ -9,7 +10,13 @@ import { buildAnthropicBody, callAnthropic } from '@/runner/providers/anthropic'
 import { callTypeSafe } from '@/runner/providers/typesafe'
 import type { RunEvent } from '@/runner/types'
 import { estimateTarget, LLM_OUTPUT_ALLOWANCE_TOKENS } from './record/estimate'
-import { BUDGET_USD, readRecordedHash, recordedSpend, writeRecording } from './record/files'
+import {
+	BUDGET_USD,
+	RECORDINGS_DIR,
+	readRecordedHash,
+	recordedSpend,
+	writeRecording
+} from './record/files'
 import { ownerKeys } from './record/keys'
 import { recordTarget, type ProviderCalls } from './record/record-target'
 import { parseCliArgs, selectTargets, type Target } from './record/targets'
@@ -84,7 +91,11 @@ async function record(targets: Target[]): Promise<void> {
 			onEvent: (event) => printCall(target, event)
 		})
 		const path = await writeRecording(ROOT, recording)
-		written.push(`${recording.taskId}/${target.slug}.json`)
+		written.push(
+			relative(join(ROOT, ...RECORDINGS_DIR), path)
+				.split(sep)
+				.join('/')
+		)
 		runCost += recording.totals.costUsd ?? 0
 		const { totals } = recording
 		console.log(

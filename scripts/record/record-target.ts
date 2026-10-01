@@ -78,6 +78,20 @@ export async function recordTarget(
 		)
 	}
 	const modelId = [...answeredBy][0] ?? target.modelId
+	// An LLM recording is filed under the requested id; a different answering id
+	// would never match the skip lookup and would be re-recorded (and re-paid).
+	if (target.racer === RACERS.llm && modelId !== target.modelId) {
+		throw new Error(
+			`Asked ${target.modelId} but ${modelId} answered; nothing was written. Use the answering id as the model id.`
+		)
+	}
+	// Every call failing is a setup problem (key, network), not a model result.
+	if (events.length > 0 && events.every((event) => event.error)) {
+		const kinds = new Set(events.map((event) => event.error))
+		throw new Error(
+			`Every call failed (${[...kinds].join(', ')}); nothing was written. Check the key and network.`
+		)
+	}
 	const order = new Map(task.items.map((item, index) => [item.id, index]))
 	events.sort((a, b) => (order.get(a.itemId) ?? 0) - (order.get(b.itemId) ?? 0))
 
