@@ -101,3 +101,46 @@ export const NOUL_THRESHOLD = 0.5
 // A race's lifecycle in useRace (DESIGN 3.3).
 export const RACE_STATUS = { idle: 'idle', running: 'running', finished: 'finished' } as const
 export type RaceStatus = (typeof RACE_STATUS)[keyof typeof RACE_STATUS]
+
+// The level loop (spec 6.1, R24). Slice 5 adds the Check step.
+export const LEVEL_STEPS = {
+	learn: 'learn',
+	predict: 'predict',
+	play: 'play',
+	reveal: 'reveal'
+} as const
+export type LevelStep = (typeof LEVEL_STEPS)[keyof typeof LEVEL_STEPS]
+export const LEVEL_STEP_ORDER: readonly LevelStep[] = [
+	LEVEL_STEPS.learn,
+	LEVEL_STEPS.predict,
+	LEVEL_STEPS.play,
+	LEVEL_STEPS.reveal
+]
+
+// What a race prediction asks: who finishes first, costs less, gets more right.
+export const PREDICTION_METRICS = {
+	fastest: 'fastest',
+	cheapest: 'cheapest',
+	mostAccurate: 'most_accurate'
+} as const
+export type PredictionMetric = (typeof PREDICTION_METRICS)[keyof typeof PREDICTION_METRICS]
+
+// How Reveal marks one prediction (R25). unknown: a number needed is missing.
+export const PREDICTION_OUTCOMES = {
+	right: 'right',
+	wrong: 'wrong',
+	tie: 'tie',
+	unknown: 'unknown',
+	skipped: 'skipped'
+} as const
+export type PredictionOutcome = (typeof PREDICTION_OUTCOMES)[keyof typeof PREDICTION_OUTCOMES]
+
+// How one item's result reads in Reveal. unparsed and failed are misses shown with raw text (R44).
+export const ITEM_OUTCOMES = {
+	right: 'right',
+	wrong: 'wrong',
+	unparsed: 'unparsed',
+	failed: 'failed',
+	unscored: 'unscored'
+} as const
+export type ItemOutcome = (typeof ITEM_OUTCOMES)[keyof typeof ITEM_OUTCOMES]

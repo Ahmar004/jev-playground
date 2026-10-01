@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
 import { CLAUDE_MODELS, RACERS } from '@/lib/constants'
+import { LEVELS } from './levels'
 import { recordingSlug } from './recording-schema'
 import { currentRecordings, RECORDINGS } from './recordings'
 import { TASKS } from './tasks'
@@ -10,6 +11,7 @@ import { TASKS } from './tasks'
 const CONTENT = join(process.cwd(), 'content')
 const TASKS_DIR = join(CONTENT, 'tasks')
 const RECORDINGS_DIR = join(CONTENT, 'recordings')
+const LEVELS_DIR = join(CONTENT, 'levels')
 
 function jsonFiles(dir: string): string[] {
 	if (!existsSync(dir)) return []
@@ -27,6 +29,16 @@ describe('content registries', () => {
 			return id
 		})
 		expect([...TASKS.keys()].sort()).toEqual(ids.sort())
+	})
+
+	it('imports every level file, keyed by its id', () => {
+		const ids = jsonFiles(LEVELS_DIR).map((file) => {
+			const parsed: unknown = JSON.parse(readFileSync(join(LEVELS_DIR, file), 'utf8'))
+			const id = z.object({ id: z.string() }).parse(parsed).id
+			expect(file).toBe(`${id}.json`)
+			return id
+		})
+		expect([...LEVELS.keys()].sort()).toEqual(ids.sort())
 	})
 
 	it('imports every recording file at content/recordings/<taskId>/<slug>.json', () => {

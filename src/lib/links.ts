@@ -10,3 +10,10 @@ export const ROUTES = {
 // Shared results (/s/<id>) are the only pages reachable without signing in
 // (spec 5.1, R87).
 export const SHARE_PATH_PREFIX = '/s/'
+
+// The only external site levels link to for reading (R27, CLAUDE.md > UI rules).
+export const TYPESAFE_DOCS_URL = 'https://docs.typesafe.ai'
+
+export function typesafeDocsUrl(path: string): string {
+	return `${TYPESAFE_DOCS_URL}${path}`
+}
