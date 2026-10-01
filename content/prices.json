@@ -1,0 +1,25 @@
+{
+	"checkedOn": "2026-10-01",
+	"models": {
+		"jev-1.13.0": {
+			"inputPerM": 0.042,
+			"outputPerM": 0,
+			"source": "https://docs.typesafe.ai/models"
+		},
+		"claude-opus-5-5": {
+			"inputPerM": 4,
+			"outputPerM": 20,
+			"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+		},
+		"claude-sonnet-5-5": {
+			"inputPerM": 2,
+			"outputPerM": 10,
+			"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+		},
+		"claude-haiku-4-5-20251001": {
+			"inputPerM": 1,
+			"outputPerM": 5,
+			"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+		}
+	}
+}

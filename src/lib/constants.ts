@@ -13,7 +13,8 @@ export const PROVIDERS = {
 } as const
 export type Provider = (typeof PROVIDERS)[keyof typeof PROVIDERS]
 
-export const RACERS = { jev: 'jev', llm: 'llm', code: 'code' } as const
+// jev_code: Jev's answer passed through a Code function, shown as "Jev + Code" (DESIGN 3.2).
+export const RACERS = { jev: 'jev', llm: 'llm', code: 'code', jevCode: 'jev_code' } as const
 export type Racer = (typeof RACERS)[keyof typeof RACERS]
 
 export const QUESTION_KINDS = { noul: 'noul', choice: 'choice', score: 'score' } as const
@@ -38,3 +39,61 @@ export const DEFAULT_OPPONENT = CLAUDE_MODELS.opus
 
 // Checked in the sign-up form and again by the signUp action.
 export const PASSWORD_MIN_LENGTH = 8
+
+// What a Task asks and how its answers are scored (DESIGN 3.2).
+export const TASK_KINDS = {
+	choice: 'choice',
+	noul: 'noul',
+	score: 'score',
+	fanOut: 'fan_out',
+	findLines: 'find_lines',
+	generate: 'generate'
+} as const
+export type TaskKind = (typeof TASK_KINDS)[keyof typeof TASK_KINDS]
+
+// Every provider failure maps to one of these (DESIGN 12).
+export const PROVIDER_ERROR_KINDS = {
+	invalidKey: 'invalid_key',
+	forbidden: 'forbidden',
+	rateLimited: 'rate_limited',
+	overloaded: 'overloaded',
+	malformed: 'malformed',
+	network: 'network',
+	unknown: 'unknown'
+} as const
+export type ProviderErrorKind = (typeof PROVIDER_ERROR_KINDS)[keyof typeof PROVIDER_ERROR_KINDS]
+
+export const RUN_EVENTS = {
+	itemStarted: 'item_started',
+	itemFinished: 'item_finished',
+	runFinished: 'run_finished'
+} as const
+
+// Code racer functions: item state in, answer out.
+export const CODE_FN_IDS = { compareDates: 'compare_dates' } as const
+export type CodeFnId = (typeof CODE_FN_IDS)[keyof typeof CODE_FN_IDS]
+
+// combine functions: Jev's answers in, answer out (DESIGN 3.2).
+export const COMBINE_FN_IDS = {
+	countTrue: 'count_true',
+	compareDates: 'compare_dates',
+	weightedComposite: 'weighted_composite'
+} as const
+export type CombineFnId = (typeof COMBINE_FN_IDS)[keyof typeof COMBINE_FN_IDS]
+
+// Option keys for "which date comes first?" tasks.
+export const DATE_ORDER = { first: 'first', second: 'second', same: 'same' } as const
+export type DateOrder = (typeof DATE_ORDER)[keyof typeof DATE_ORDER]
+
+// The key of the one question in a choice, noul or score task, and of the
+// answer field in the LLM's JSON reply.
+export const ANSWER_KEY = 'answer'
+
+// The alias every Jev request sends; the response names the version that answered.
+export const JEV_MODEL_ALIAS = 'jev-latest'
+
+// Every racer gets the same number of parallel lanes (DESIGN 1).
+export const RACE_LANES = 4
+
+// A Noul at or above this counts as yes (DESIGN 3.2).
+export const NOUL_THRESHOLD = 0.5
