@@ -8,7 +8,7 @@ export const ANTHROPIC_VERSION = '2023-06-01'
 
 // Room for Opus 5.5's thinking at low effort plus the short JSON answer.
 // Only tokens actually produced are billed.
-const ANTHROPIC_MAX_TOKENS = 16000
+export const ANTHROPIC_MAX_TOKENS = 16000
 
 // Opus 5.5 can't turn thinking off, so it runs at low effort (DESIGN 3.2).
 // Every other model runs at its defaults. Methodology states both.

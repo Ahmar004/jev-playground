@@ -4,6 +4,7 @@ import { currentRecordings } from '@/content/recordings'
 import { TASKS } from '@/content/tasks'
 import { priceRows, recordingRows } from '@/features/methodology/methodology-data'
 import { CLAUDE_MODELS, NOUL_THRESHOLD, RACE_LANES } from '@/lib/constants'
+import { ANTHROPIC_MAX_TOKENS } from '@/runner/providers/anthropic'
 import { FIND_LINES_F1_BAR, SCORE_TOLERANCE } from '@/runner/score'
 
 export const metadata: Metadata = { title: "Methodology - Jev's Playground" }
@@ -78,7 +79,9 @@ export default function MethodologyPage() {
 					Every LLM runs at its provider&apos;s default settings. Claude Opus 5.5 cannot turn its
 					thinking off, so it runs at low effort, and its thinking tokens are counted in its cost.
 					The Claude models are {CLAUDE_MODELS.opus}, {CLAUDE_MODELS.sonnet} and{' '}
-					{CLAUDE_MODELS.haiku}.
+					{CLAUDE_MODELS.haiku}. Every Claude call has a{' '}
+					{ANTHROPIC_MAX_TOKENS.toLocaleString('en-US')}-token output cap, and a reply cut off by
+					the cap counts as a miss.
 				</p>
 			</section>
 
@@ -102,8 +105,8 @@ export default function MethodologyPage() {
 				<h2 className={SECTION_TITLE}>Cost</h2>
 				<p className={BODY}>
 					Cost is tokens times the stored price per million tokens. Jev&apos;s output tokens are
-					free. A failed call costs $0. A model with no stored price shows &quot;price unknown&quot;
-					and is never estimated.
+					free. A call that returns an error costs $0. A model with no stored price shows
+					&quot;price unknown&quot; and is never estimated.
 				</p>
 				<div className={TABLE_WRAPPER}>
 					<table className={TABLE}>
@@ -156,8 +159,10 @@ export default function MethodologyPage() {
 				<p className={BODY}>
 					Items and their correct answers are written for this site and checked by hand before
 					recording. Some items are written to show a weakness TypeSafe documents. The same items
-					are never re-run to get a different result. When content changes, it is recorded again and
-					old recordings stop showing.
+					are never re-run to get a different result. A recording interrupted by a rate limit,
+					overload or network failure is discarded and recorded again, because that measures the
+					account, not the model. When content changes, it is recorded again and old recordings stop
+					showing.
 				</p>
 			</section>
 
