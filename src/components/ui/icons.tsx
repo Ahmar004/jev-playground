@@ -34,12 +34,15 @@ import {
 	FunnelSimple,
 	Gear,
 	Info,
+	Lightning,
 	List,
 	MagnifyingGlass,
 	Minus,
+	Moon,
 	PencilSimple,
 	Plus,
 	SignOut,
+	Sun,
 	Trash,
 	User,
 	Warning,
@@ -106,14 +109,17 @@ export const EditIcon = (props: IconProps) => <Glyph source={PencilSimple} {...p
 export const ExternalLinkIcon = (props: IconProps) => <Glyph source={ArrowSquareOut} {...props} />
 export const FilterIcon = (props: IconProps) => <Glyph source={FunnelSimple} {...props} />
 export const InfoIcon = (props: IconProps) => <Glyph source={Info} {...props} />
+export const LightningIcon = (props: IconProps) => <Glyph source={Lightning} {...props} />
 export const MenuIcon = (props: IconProps) => <Glyph source={List} {...props} />
 export const MinusIcon = (props: IconProps) => <Glyph source={Minus} {...props} />
+export const MoonIcon = (props: IconProps) => <Glyph source={Moon} {...props} />
 export const MoreIcon = (props: IconProps) => <Glyph source={DotsThreeVertical} {...props} />
 export const PlusIcon = (props: IconProps) => <Glyph source={Plus} {...props} />
 export const SearchIcon = (props: IconProps) => <Glyph source={MagnifyingGlass} {...props} />
 export const SettingsIcon = (props: IconProps) => <Glyph source={Gear} {...props} />
 export const SignOutIcon = (props: IconProps) => <Glyph source={SignOut} {...props} />
 export const SuccessIcon = (props: IconProps) => <Glyph source={CheckCircle} {...props} />
+export const SunIcon = (props: IconProps) => <Glyph source={Sun} {...props} />
 export const TrashIcon = (props: IconProps) => <Glyph source={Trash} {...props} />
 export const UserIcon = (props: IconProps) => <Glyph source={User} {...props} />
 
