@@ -19,6 +19,10 @@
 //     here, common user attributes in attribution.ts / identify.ts.
 
 export const ANALYTICS_EVENTS = {
+	// Learning loop
+	LEVEL_STARTED: 'level_started',
+	LEVEL_COMPLETED: 'level_completed',
+	PREDICTION_MADE: 'prediction_made',
 	// Session / navigation
 	APP_OPENED: 'app_opened',
 	PAGE_VIEWED: 'page_viewed',
@@ -115,6 +119,9 @@ export type CommonPageAttributes = {
 // ---------------------------------------------------------------------------
 
 export type EventProps = {
+	level_started: { level_id: string }
+	level_completed: { level_id: string }
+	prediction_made: { level_id: string }
 	app_opened: Record<string, never>
 	page_viewed: { page_name: string }
 	element_viewed: { element_type: ElementType; element_name: string }

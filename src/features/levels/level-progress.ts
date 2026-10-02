@@ -1,4 +1,4 @@
-import type { LevelStatus } from '@/lib/constants'
+import type { BadgeId, LevelStatus } from '@/lib/constants'
 import type { Prediction } from './judge'
 
 /** One user's saved state on one Level, as the level page and its hooks read it. */
@@ -12,3 +12,6 @@ export type LevelProgressView = {
 	// By question id: the first answer, which decided the XP.
 	answers: Record<string, { optionId: string; correct: boolean }>
 }
+
+/** What one write newly earned, as the client announces it. */
+export type Awards = { xp: number; badges: BadgeId[] }

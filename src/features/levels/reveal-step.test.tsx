@@ -1,17 +1,25 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { levelSchema } from '@/content/level-schema'
 import { testLevel } from '@/content/testing/levels'
 import { jevRecording, opusRecording, sonnetRecording } from '@/features/race/testing/recordings'
 import { choiceTask } from '@/runner/testing/tasks'
 import { RevealStep } from './reveal-step'
 
-vi.mock('canvas-confetti', () => ({ default: vi.fn() }))
+const confetti = vi.fn()
+vi.mock('canvas-confetti', () => ({ default: (options: unknown) => confetti(options) }))
 
 const level = levelSchema.parse(testLevel)
 
-function renderReveal(prediction = {}) {
+beforeEach(() => {
+	confetti.mockReset()
+})
+
+function renderReveal(
+	prediction = {},
+	extra: { celebrate?: boolean; scoredAgainst?: string | null; onCheck?: () => void } = {}
+) {
 	return render(
 		<RevealStep
 			level={level}
@@ -20,6 +28,10 @@ function renderReveal(prediction = {}) {
 			opponent={opusRecording}
 			others={[sonnetRecording]}
 			prediction={prediction}
+			celebrate={extra.celebrate ?? false}
+			scoredAgainst={extra.scoredAgainst ?? null}
+			onReveal={() => undefined}
+			onCheck={extra.onCheck ?? (() => undefined)}
 			onRaceAgain={() => undefined}
 		/>
 	)
@@ -74,9 +86,43 @@ describe('RevealStep', () => {
 				opponent={undefined}
 				others={[]}
 				prediction={{}}
+				celebrate={false}
+				scoredAgainst={null}
+				onReveal={() => undefined}
+				onCheck={() => undefined}
 				onRaceAgain={() => undefined}
 			/>
 		)
 		expect(screen.getByText(/once this race is recorded/)).toBeInTheDocument()
+	})
+
+	it('fires confetti only when told to celebrate', async () => {
+		renderReveal({ fastest: 'jev' }, { celebrate: false })
+		await new Promise((resolve) => setTimeout(resolve, 20))
+		expect(confetti).not.toHaveBeenCalled()
+	})
+
+	it('fires confetti once for a celebrated first Reveal', async () => {
+		renderReveal({ fastest: 'jev' }, { celebrate: true })
+		await waitFor(() => expect(confetti).toHaveBeenCalledTimes(1))
+	})
+
+	it('opens the Check step from the primary button', async () => {
+		const onCheck = vi.fn()
+		renderReveal({}, { onCheck })
+		await userEvent.click(screen.getByRole('button', { name: 'Check what you learned' }))
+		expect(onCheck).toHaveBeenCalled()
+	})
+
+	it('notes when the first Reveal was scored against a different model', () => {
+		renderReveal({}, { scoredAgainst: sonnetRecording.modelId })
+		expect(
+			screen.getByText('Your prediction was scored against Claude Sonnet 5.5 on your first Reveal.')
+		).toBeInTheDocument()
+	})
+
+	it('says nothing extra when scored against the model shown', () => {
+		renderReveal({}, { scoredAgainst: opusRecording.modelId })
+		expect(screen.queryByText(/on your first Reveal/)).not.toBeInTheDocument()
 	})
 })

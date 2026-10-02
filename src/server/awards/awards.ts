@@ -1,12 +1,12 @@
 import 'server-only'
 import { LEVELS } from '@/content/levels'
+import type { Awards } from '@/features/levels/level-progress'
 import { LEVEL_STATUS, XP_AMOUNTS, type BadgeId, type XpSource } from '@/lib/constants'
 import type { Prisma } from '@/server/db/client'
 import { earnedBadges } from '@/server/progress/rules'
 
 export type Tx = Prisma.TransactionClient
-/** What one write newly earned. */
-export type Awards = { xp: number; badges: BadgeId[] }
+export type { Awards }
 
 /** Awards XP once per (user, source, sourceId); a repeat returns 0. */
 export async function awardXp(

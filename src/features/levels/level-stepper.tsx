@@ -1,39 +1,49 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import type { Level } from '@/content/level-schema'
 import type { Recording } from '@/content/recording-schema'
 import type { Task } from '@/content/task-schema'
-import { LEVEL_STEPS } from '@/lib/constants'
+import { ROUTES } from '@/lib/links'
+import { LEVEL_STATUS, LEVEL_STEPS } from '@/lib/constants'
 import { BeginnerBanner } from './beginner-banner'
-import type { Prediction } from './judge'
+import { CheckStep } from './check-step'
 import { LearnStep } from './learn-step'
+import type { LevelProgressView } from './level-progress'
 import { defaultOpponentId, raceLineup } from './lineup'
 import { PlayStep } from './play-step'
 import { PredictStep } from './predict-step'
 import { RevealStep } from './reveal-step'
 import { StepperNav } from './stepper-nav'
+import { useLevelProgress } from './use-level-progress'
 import { useLevelStep } from './use-level-step'
 import { useStepFocus } from './use-step-focus'
 
 /**
- * One level's loop: Learn, Predict, Play, Reveal (spec 6.1). The prediction
- * and opponent live here until slice 5 stores them. Level 3 (slice 6) races
- * two tasks; levels with one task pass it here.
+ * One level's loop: Learn, Predict, Play, Reveal, Check (spec 6.1). Saved
+ * progress comes from the server and is updated through useLevelProgress.
+ * Level 3 (slice 6) races two tasks; levels with one task pass it here.
  */
 export function LevelStepper({
 	level,
 	task,
-	recordings
+	recordings,
+	initialProgress
 }: {
 	level: Level
 	task: Task
 	recordings: Recording[]
+	initialProgress: LevelProgressView
 }) {
 	const { step, goTo } = useLevelStep()
+	const router = useRouter()
+	const { progress, celebrate, pendingQuestionId, lockIn, reveal, answer } = useLevelProgress(
+		level.id,
+		initialProgress
+	)
 	useStepFocus(step)
 	const lineup = raceLineup(recordings)
-	const [prediction, setPrediction] = useState<Prediction>({})
 	const [opponentId, setOpponentId] = useState(() => defaultOpponentId(lineup.opponents))
 	const opponent = lineup.opponents.find((recording) => recording.modelId === opponentId)
 
@@ -51,9 +61,9 @@ export function LevelStepper({
 			{step === LEVEL_STEPS.predict && (
 				<PredictStep
 					questions={level.predict.questions}
-					initial={prediction}
+					initial={progress.prediction}
 					onSubmit={(next) => {
-						setPrediction(next)
+						lockIn(next)
 						goTo(LEVEL_STEPS.play)
 					}}
 				/>
@@ -75,8 +85,22 @@ export function LevelStepper({
 					jev={lineup.jev}
 					opponent={opponent}
 					others={lineup.opponents.filter((recording) => recording !== opponent)}
-					prediction={prediction}
+					prediction={progress.prediction}
+					celebrate={celebrate}
+					scoredAgainst={progress.revealed ? progress.opponentModelId : null}
+					onReveal={reveal}
+					onCheck={() => goTo(LEVEL_STEPS.check)}
 					onRaceAgain={() => goTo(LEVEL_STEPS.play)}
+				/>
+			)}
+			{step === LEVEL_STEPS.check && (
+				<CheckStep
+					questions={level.check.questions}
+					answers={progress.answers}
+					pendingQuestionId={pendingQuestionId}
+					levelDone={progress.status === LEVEL_STATUS.done}
+					onAnswer={answer}
+					onBackToPath={() => router.push(ROUTES.path)}
 				/>
 			)}
 		</main>

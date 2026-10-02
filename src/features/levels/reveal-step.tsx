@@ -1,12 +1,14 @@
 'use client'
 
+import { useEffect, useEffectEvent } from 'react'
 import { Button } from '@/components/ui/button'
 import { ExternalLinkIcon } from '@/components/ui/icons'
 import type { Level } from '@/content/level-schema'
 import type { Recording } from '@/content/recording-schema'
 import type { Task } from '@/content/task-schema'
+import { racerName } from '@/features/race/racer-names'
 import { Scoreboard } from '@/features/race/scoreboard'
-import { PREDICTION_OUTCOMES } from '@/lib/constants'
+import { RACERS } from '@/lib/constants'
 import { typesafeDocsUrl } from '@/lib/links'
 import { ItemResults } from './item-results'
 import { judgeAll, type Prediction } from './judge'
@@ -24,6 +26,10 @@ export function RevealStep({
 	opponent,
 	others,
 	prediction,
+	celebrate,
+	scoredAgainst,
+	onReveal,
+	onCheck,
 	onRaceAgain
 }: {
 	level: Level
@@ -32,10 +38,22 @@ export function RevealStep({
 	opponent: Recording | undefined
 	others: Recording[]
 	prediction: Prediction
+	// True only right after a correct first Reveal (the page's progress hook decides).
+	celebrate: boolean
+	// The opponent the first Reveal was scored against, once it happened.
+	scoredAgainst: string | null
+	// Called with the opponent shown, once per mount and per opponent change.
+	onReveal: (opponentModelId: string) => void
+	onCheck: () => void
 	onRaceAgain: () => void
 }) {
 	const verdicts = jev && opponent ? judgeAll(level, prediction, jev.totals, opponent.totals) : []
-	useCelebration(verdicts.some((verdict) => verdict.outcome === PREDICTION_OUTCOMES.right))
+	useCelebration(celebrate)
+	const reveal = useEffectEvent(onReveal)
+	const shownModelId = jev && opponent ? opponent.modelId : null
+	useEffect(() => {
+		if (shownModelId) reveal(shownModelId)
+	}, [shownModelId])
 
 	if (!jev || !opponent) {
 		return <NotRecorded>The results appear here once this race is recorded.</NotRecorded>
@@ -51,6 +69,12 @@ export function RevealStep({
 				verdicts={verdicts}
 				opponentModelId={opponent.modelId}
 			/>
+			{scoredAgainst && scoredAgainst !== opponent.modelId && (
+				<p className="text-text-muted text-sm">
+					Your prediction was scored against {racerName(RACERS.llm, scoredAgainst)} on your first
+					Reveal.
+				</p>
+			)}
 			<Scoreboard
 				caption={`Every recorded model on the same ${task.items.length} items`}
 				rows={recordings.map((recording) => ({
@@ -87,7 +111,10 @@ export function RevealStep({
 				</ul>
 			</div>
 			<ItemResults task={task} recordings={recordings} />
-			<div>
+			<div className="flex flex-wrap gap-3">
+				<Button type="button" onClick={onCheck}>
+					Check what you learned
+				</Button>
 				<Button type="button" variant="outline" onClick={onRaceAgain}>
 					Race again
 				</Button>

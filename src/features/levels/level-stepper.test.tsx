@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -5,6 +6,7 @@ import { levelSchema } from '@/content/level-schema'
 import { testLevel } from '@/content/testing/levels'
 import { jevRecording, opusRecording } from '@/features/race/testing/recordings'
 import { choiceTask } from '@/runner/testing/tasks'
+import type { LevelProgressView } from './level-progress'
 
 const push = vi.fn()
 let search = new URLSearchParams()
@@ -15,6 +17,21 @@ vi.mock('next/navigation', () => ({
 	useSearchParams: () => search
 }))
 vi.mock('canvas-confetti', () => ({ default: vi.fn() }))
+vi.mock('@/lib/toast', () => ({ toast: vi.fn() }))
+vi.mock('@/lib/analytics/track', () => ({ track: vi.fn() }))
+vi.mock('@/server/actions/progress', () => ({
+	submitPrediction: vi.fn().mockResolvedValue({ ok: true, data: { saved: true } }),
+	submitCheck: vi.fn(),
+	revealPrediction: vi.fn().mockResolvedValue({
+		ok: true,
+		data: {
+			firstReveal: true,
+			predictionCorrect: true,
+			awards: { xp: 0, badges: [] },
+			levelDone: false
+		}
+	})
+}))
 
 const { LevelStepper } = await import('./level-stepper')
 const level = levelSchema.parse(testLevel)
@@ -25,10 +42,32 @@ function radioAt(name: string, index: number): HTMLElement {
 	return radio
 }
 
-function renderStepper() {
-	return render(
-		<LevelStepper level={level} task={choiceTask} recordings={[jevRecording, opusRecording]} />
+const freshProgress: LevelProgressView = {
+	status: null,
+	prediction: {},
+	revealed: false,
+	opponentModelId: null,
+	predictionCorrect: null,
+	answers: {}
+}
+
+const client = new QueryClient()
+
+function stepper(initialProgress: LevelProgressView = freshProgress) {
+	return (
+		<QueryClientProvider client={client}>
+			<LevelStepper
+				level={level}
+				task={choiceTask}
+				recordings={[jevRecording, opusRecording]}
+				initialProgress={initialProgress}
+			/>
+		</QueryClientProvider>
 	)
+}
+
+function renderStepper(initialProgress?: LevelProgressView) {
+	return render(stepper(initialProgress))
 }
 
 beforeEach(() => {
@@ -69,19 +108,35 @@ describe('LevelStepper', () => {
 		expect(push).toHaveBeenCalledWith('/levels/test-level?step=play')
 
 		search = new URLSearchParams('step=reveal')
-		rerender(
-			<LevelStepper level={level} task={choiceTask} recordings={[jevRecording, opusRecording]} />
-		)
+		rerender(stepper())
 		expect(screen.getByRole('list', { name: 'Your prediction' })).toHaveTextContent('You got it')
+	})
+
+	it('lists all five steps', () => {
+		renderStepper()
+		const nav = screen.getByRole('navigation', { name: 'Level steps' })
+		expect(nav).toHaveTextContent('5. Check')
+		expect(screen.getAllByRole('button', { name: /^\d\. / })).toHaveLength(5)
+	})
+
+	it('starts Predict from the saved prediction', () => {
+		search = new URLSearchParams('step=predict')
+		renderStepper({ ...freshProgress, prediction: { fastest: 'jev' } })
+		expect(radioAt('Jev', 0)).toBeChecked()
+	})
+
+	it('shows the Check step from ?step=check', () => {
+		search = new URLSearchParams('step=check')
+		renderStepper()
+		expect(screen.getByRole('heading', { level: 2, name: 'Check' })).toBeInTheDocument()
+		expect(screen.getAllByRole('button', { name: 'Check answer' })).toHaveLength(2)
 	})
 
 	it('moves focus to the new step heading, but not on first load', () => {
 		const { rerender } = renderStepper()
 		expect(document.body).toHaveFocus()
 		search = new URLSearchParams('step=predict')
-		rerender(
-			<LevelStepper level={level} task={choiceTask} recordings={[jevRecording, opusRecording]} />
-		)
+		rerender(stepper())
 		expect(screen.getByRole('heading', { level: 2, name: 'Predict' })).toHaveFocus()
 	})
 })
