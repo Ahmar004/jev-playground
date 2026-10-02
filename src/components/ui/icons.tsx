@@ -37,6 +37,7 @@ import {
 	FunnelSimple,
 	Gear,
 	Info,
+	Key,
 	Lightning,
 	List,
 	MagnifyingGlass,
@@ -116,6 +117,7 @@ export const EditIcon = (props: IconProps) => <Glyph source={PencilSimple} {...p
 export const ExternalLinkIcon = (props: IconProps) => <Glyph source={ArrowSquareOut} {...props} />
 export const FilterIcon = (props: IconProps) => <Glyph source={FunnelSimple} {...props} />
 export const InfoIcon = (props: IconProps) => <Glyph source={Info} {...props} />
+export const KeyIcon = (props: IconProps) => <Glyph source={Key} {...props} />
 export const LightningIcon = (props: IconProps) => <Glyph source={Lightning} {...props} />
 export const MenuIcon = (props: IconProps) => <Glyph source={List} {...props} />
 export const MinusIcon = (props: IconProps) => <Glyph source={Minus} {...props} />

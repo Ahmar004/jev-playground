@@ -1,0 +1,65 @@
+'use client'
+
+import { Button } from '@/components/ui/button'
+import { KeyIcon } from '@/components/ui/icons'
+import { cn } from '@/lib/cn'
+import { MODES, type Mode } from '@/lib/constants'
+import { useKeys } from '@/features/keys/keys-context'
+import { useMode } from './mode-context'
+
+const MODE_OPTIONS: { mode: Mode; label: string }[] = [
+	{ mode: MODES.beginner, label: 'Beginner' },
+	{ mode: MODES.developer, label: 'Developer' }
+]
+
+/**
+ * The header's Beginner / Developer switch and the Keys button (spec 3.1).
+ * Switching to Developer mode with no keys opens the Keys panel.
+ */
+export function ModeSwitch() {
+	const { mode, setMode } = useMode()
+	const { keys, setPanelOpen } = useKeys()
+
+	function choose(next: Mode): void {
+		setMode(next)
+		if (next === MODES.developer && Object.keys(keys).length === 0) setPanelOpen(true)
+	}
+
+	return (
+		<div className="flex items-center gap-1">
+			<div
+				role="radiogroup"
+				aria-label="Mode"
+				className="border-border flex rounded border p-0.5 text-sm"
+			>
+				{MODE_OPTIONS.map((option) => (
+					<button
+						key={option.mode}
+						type="button"
+						role="radio"
+						aria-checked={mode === option.mode}
+						onClick={() => choose(option.mode)}
+						className={cn(
+							'focus-visible:outline-accent rounded px-2 py-1 font-medium focus-visible:outline focus-visible:outline-2',
+							mode === option.mode
+								? 'bg-accent text-accent-ink'
+								: 'text-text hover:bg-surface-hover'
+						)}
+					>
+						{option.label}
+					</button>
+				))}
+			</div>
+			<Button
+				type="button"
+				variant="ghost"
+				size="sm"
+				aria-label="API keys"
+				onClick={() => setPanelOpen(true)}
+			>
+				<KeyIcon />
+				<span className="hidden sm:inline">Keys</span>
+			</Button>
+		</div>
+	)
+}

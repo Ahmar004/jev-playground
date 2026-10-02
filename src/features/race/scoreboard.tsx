@@ -1,10 +1,16 @@
-import type { Racer } from '@/lib/constants'
+import type { Mode, Racer } from '@/lib/constants'
 import type { RunTotals } from '@/runner/types'
 import { formatAccuracy, formatCost, formatDuration } from './format'
 import { ModeLabel } from './mode-label'
 import { RacerTag } from './racer-tag'
 
-export type ScoreboardRow = { racer: Racer; modelId: string; recordedAt: string; totals: RunTotals }
+export type ScoreboardRow = {
+	racer: Racer
+	modelId: string
+	recordedAt: string
+	mode?: Mode
+	totals: RunTotals
+}
 
 const HEAD_CELL = 'text-text border-border border-b py-2 pr-4 font-bold'
 const CELL = 'border-border text-text border-b py-2 pr-4 tabular-nums'
@@ -35,11 +41,11 @@ export function Scoreboard({ rows, caption }: { rows: ScoreboardRow[]; caption: 
 					</tr>
 				</thead>
 				<tbody>
-					{rows.map(({ racer, modelId, recordedAt, totals }) => (
+					{rows.map(({ racer, modelId, recordedAt, mode, totals }) => (
 						<tr key={`${racer}-${modelId}`}>
 							<th scope="row" className={`${CELL} font-normal`}>
 								<RacerTag racer={racer} modelId={modelId} />
-								<ModeLabel modelId={modelId} recordedAt={recordedAt} />
+								<ModeLabel modelId={modelId} recordedAt={recordedAt} mode={mode} />
 							</th>
 							<td className={CELL}>
 								{totals.accuracy === null

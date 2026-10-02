@@ -85,7 +85,7 @@ test('the opponent picker works by mouse and by keyboard', async ({ page }) => {
 	await opponentButton(page).click()
 	await page.getByRole('dialog').getByText('Claude Haiku 4.5').click()
 	await expect(opponentButton(page)).toHaveText(/Claude Haiku 4\.5/)
-	await expect(page.getByRole('radio')).toHaveCount(0)
+	await expect(page.getByRole('dialog').getByRole('radio')).toHaveCount(0)
 
 	// Reopened, focus starts on the current pick; arrows move, Enter picks.
 	await opponentButton(page).click()
@@ -100,7 +100,7 @@ test('the opponent picker works by mouse and by keyboard', async ({ page }) => {
 	await opponentButton(page).click()
 	await page.keyboard.press('ArrowDown')
 	await page.keyboard.press('Escape')
-	await expect(page.getByRole('radio')).toHaveCount(0)
+	await expect(page.getByRole('dialog').getByRole('radio')).toHaveCount(0)
 	await expect(opponentButton(page)).toHaveText(/Claude Sonnet 5\.5/)
 })
 

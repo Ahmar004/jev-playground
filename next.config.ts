@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next'
 import { withSentryConfig } from '@sentry/nextjs'
+import { connectSrc } from './src/lib/csp'
 
 const nextConfig: NextConfig = {
 	reactStrictMode: true,
@@ -17,6 +18,15 @@ const nextConfig: NextConfig = {
 	// silent perf regression in prod.
 	reactCompiler: {
 		panicThreshold: 'all_errors'
+	},
+	// A key can only be sent to the hosts in connect-src (DESIGN 5.4, Rule-8).
+	async headers() {
+		const policy = connectSrc({
+			supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+			posthogHost: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+			development: process.env.NODE_ENV === 'development'
+		})
+		return [{ source: '/:path*', headers: [{ key: 'Content-Security-Policy', value: policy }] }]
 	}
 }
 

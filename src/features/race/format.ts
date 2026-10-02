@@ -28,6 +28,11 @@ export function formatAccuracy(accuracy: number | null): string {
 	return accuracy === null ? NOT_SCORED : `${Math.round(accuracy * PERCENT)}%`
 }
 
+/** The local time a live run started, like 14:02 (R13). */
+export function runTime(iso: string): string {
+	return new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+}
+
 export function recordedOn(iso: string): string {
 	return iso.slice(0, DATE_LENGTH)
 }

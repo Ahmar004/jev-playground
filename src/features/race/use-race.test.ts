@@ -1,5 +1,8 @@
 import { act, renderHook } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { PROVIDER_ERROR_KINDS } from '@/lib/constants'
+import { stopOnProviderFailure } from '@/runner/live'
+import type { ItemResult, ItemRunner } from '@/runner/types'
 import { choiceTask } from '@/runner/testing/tasks'
 import { jevRecording, opusRecording } from './testing/recordings'
 import { useRace, type RaceEntry } from './use-race'
@@ -100,5 +103,72 @@ describe('useRace', () => {
 		await advance(50)
 		unmount()
 		expect(vi.getTimerCount()).toBe(0)
+	})
+})
+
+function liveResult(itemId: string, extra: Partial<ItemResult> = {}): ItemResult {
+	return {
+		itemId,
+		ok: true,
+		raw: '',
+		parsed: null,
+		credit: 1,
+		correct: true,
+		latencyMs: 10,
+		usage: { inputTokens: 5, outputTokens: 1 },
+		costUsd: 0.001,
+		...extra
+	}
+}
+
+describe('useRace with a live source', () => {
+	const ok: ItemRunner = async (item) => liveResult(item.id)
+
+	it('runs real calls instead of replaying, and reports when it started', async () => {
+		const { result } = renderHook(() =>
+			useRace({ task: choiceTask, entries, live: { jev: ok, llm: ok } })
+		)
+		expect(result.current.startedAt).toBeNull()
+		act(() => result.current.start())
+		await advance(10)
+		expect(result.current.status).toBe('finished')
+		expect(result.current.startedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/)
+		expect(result.current.perRacer.jev?.totals?.items).toBe(3)
+		expect(result.current.perRacer.llm?.totals?.costUsd).toBeCloseTo(0.003)
+		expect(result.current.failure).toBeNull()
+	})
+
+	it('stops on a repeating failure, keeps the results so far, and names the racer', async () => {
+		const failing: ItemRunner = async (item) =>
+			liveResult(item.id, {
+				ok: false,
+				credit: 0,
+				correct: false,
+				error: PROVIDER_ERROR_KINDS.invalidKey
+			})
+		const { result } = renderHook(() =>
+			useRace({
+				task: choiceTask,
+				entries,
+				live: { jev: ok, llm: stopOnProviderFailure(failing) }
+			})
+		)
+		act(() => result.current.start())
+		await advance(10)
+		expect(result.current.status).toBe('finished')
+		expect(result.current.failure).toEqual({ kind: 'invalid_key', racer: 'llm' })
+	})
+
+	it('clears a failure when the race starts again', async () => {
+		const failing: ItemRunner = async (item) =>
+			liveResult(item.id, { ok: false, error: PROVIDER_ERROR_KINDS.rateLimited })
+		const { result } = renderHook(() =>
+			useRace({ task: choiceTask, entries, live: { jev: ok, llm: stopOnProviderFailure(failing) } })
+		)
+		act(() => result.current.start())
+		await advance(10)
+		expect(result.current.failure?.kind).toBe('rate_limited')
+		act(() => result.current.start())
+		expect(result.current.failure).toBeNull()
 	})
 })

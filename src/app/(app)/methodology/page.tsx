@@ -108,6 +108,13 @@ export default function MethodologyPage() {
 					free. A call that returns an error costs $0. A model with no stored price shows
 					&quot;price unknown&quot; and is never estimated.
 				</p>
+				<p className={BODY}>
+					Developer mode uses the same runner and the same math, with your own keys. A model from
+					OpenRouter is priced from OpenRouter&apos;s published list; Anthropic models use the table
+					below; any other model shows &quot;price unknown&quot;. Jev&apos;s time in Developer mode
+					is the time our server measured for its call to TypeSafe, so the hop from your browser to
+					our server is not counted.
+				</p>
 				<div className={TABLE_WRAPPER}>
 					<table className={TABLE}>
 						<caption className={CAPTION}>Prices checked on {PRICES.checkedOn}.</caption>

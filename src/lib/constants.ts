@@ -236,3 +236,40 @@ export const BADGE_LABELS: Record<BadgeId, { name: string; description: string }
 	[BADGES.liveWire]: { name: 'Live Wire', description: 'Run a live call in Developer mode.' },
 	[BADGES.sharer]: { name: 'Sharer', description: 'Share a result.' }
 }
+
+// Developer mode (spec 3.4, 4). The LLM providers a user can race Jev against.
+export const LLM_PROVIDERS = [
+	PROVIDERS.anthropic,
+	PROVIDERS.openai,
+	PROVIDERS.google,
+	PROVIDERS.openrouter
+] as const
+export type LlmProvider = (typeof LLM_PROVIDERS)[number]
+
+export const PROVIDER_LABELS: Record<Provider, string> = {
+	typesafe: 'TypeSafe (Jev)',
+	openrouter: 'OpenRouter',
+	anthropic: 'Anthropic',
+	openai: 'OpenAI',
+	google: 'Google'
+}
+
+// Where a user creates and revokes a key (R19). TypeSafe's keys are covered in its docs (R27).
+export const PROVIDER_KEY_PAGES: Record<Provider, string> = {
+	typesafe: 'https://docs.typesafe.ai',
+	openrouter: 'https://openrouter.ai/keys',
+	anthropic: 'https://platform.claude.com/settings/keys',
+	openai: 'https://platform.openai.com/api-keys',
+	google: 'https://aistudio.google.com/app/apikey'
+}
+
+// A failure that would repeat on every remaining call, so a live run stops there
+// instead of spending the user's calls on it. A malformed answer to one item
+// (level 2's rejection) is a result, not a stop.
+export const RUN_STOPPING_ERRORS: readonly ProviderErrorKind[] = [
+	PROVIDER_ERROR_KINDS.invalidKey,
+	PROVIDER_ERROR_KINDS.forbidden,
+	PROVIDER_ERROR_KINDS.rateLimited,
+	PROVIDER_ERROR_KINDS.overloaded,
+	PROVIDER_ERROR_KINDS.network
+]

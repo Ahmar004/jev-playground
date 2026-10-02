@@ -114,10 +114,10 @@ type RunEvent =
 
 ### 3.3 `useRace` (`src/features/race/use-race.ts`)
 
-`useRace({ task, entries })` replays each entry's recording (Beginner mode only for now; slice 8 adds the live source and mode), collects events into per-racer state, and returns `{ status, racers, perRacer, elapsedMs, start, skip, cancel }`.
+`useRace({ task, entries, combineArgs, live })` replays each entry's recording, or with `live` (one `ItemRunner` per racer, wrapped in `stopOnProviderFailure`) runs real calls through `runItems`, collects events into per-racer state, and returns `{ status, racers, perRacer, elapsedMs, startedAt, failure, start, skip, cancel }`. A live run stops on a failure that would repeat on every call (bad key, 403, rate limit, overload, network): `failure` names the kind and the racer, the results so far stay, and the view offers Retry and "Use Beginner mode instead" (R81). A malformed answer to one item is a result, not a stop.
 
 - Beginner mode: `skip` jumps to the recorded totals.
-- Developer mode: `skip` turns off the animation, and results still land as calls finish.
+- Developer mode: there is nothing to skip, because results land as calls finish, so the Skip button is hidden.
 - Before a live run starts, the view shows how many calls each racer will make.
 - The race view animates from this state with Motion, and the scoreboard shows accuracy, time and cost per racer.
 
@@ -171,7 +171,8 @@ The mode lives in a React context and is not saved. Every page load starts in Be
   - a revoke link to the provider's key page (R19).
     The panel also has "Remove all" (R20).
 - `useModelList(provider)` fetches the provider's model list with TanStack Query, keyed on `[provider, keyId]` (R10, R42).
-- Jev provider: TypeSafe or OpenRouter, whichever key is present. If both are, a picker defaults to OpenRouter, the direct browser path with no extra hop.
+- Jev provider: a TypeSafe key only, through `/api/jev`. OpenRouter serves Jev too (it allows browser calls to `/api/v1/systemone`), but its response shape could not be verified without a real key, so it is not built (user decision, slice 8). OpenRouter is an LLM provider here (chat completions, with prices from its model list).
+- Slice 8 built the live path for the races on the Play step. Level 6's router cards and level 8's trick writing still use recorded results in Developer mode, and the Play step says so.
 
 ### 5.3 TypeSafe pass-through (`POST /api/jev`, Node runtime)
 
@@ -180,11 +181,12 @@ The mode lives in a React context and is not saved. Every page load starts in Be
 - Body cap: 256 KB.
 - It copies the `Authorization` header through and returns TypeSafe's status and body, plus `Server-Timing: upstream;dur=<ms>`.
 - It logs only status and duration. It never logs, stores or sends to Sentry the key or the body (R18).
-- It is a hand-written handler, not `createApiRoute`, because the factory's error path reads the body.
+- It is a hand-written handler, not `createApiRoute`, because the factory's error path reads the body. It runs on Node, the default: `export const runtime` is not allowed with `cacheComponents`.
+- `GET /api/jev` forwards to `https://api.typesafe.ai/v1/models` for the Keys panel's Test.
 
 ### 5.4 Browser hardening
 
-- A Content-Security-Policy `connect-src` allowlist: `'self'`, OpenRouter, Anthropic, OpenAI, Google Generative Language, the Supabase project URL, PostHog and Sentry ingest. If a script were ever injected, the browser still refuses to send a key to any other host. `next dev` also needs `ws:` (hot reload) and `'unsafe-eval'`, so those are added in development only; the production policy stays strict.
+- A Content-Security-Policy with only a `connect-src` allowlist (`src/lib/csp.ts`, set in `next.config.ts`): `'self'`, OpenRouter, Anthropic, OpenAI, Google Generative Language, the Supabase project URL, PostHog and Sentry ingest. If a script were ever injected, the browser still refuses to send a key to any other host. `next dev` also needs `ws:` (hot reload), so that is added in development only; the production policy stays strict. No `script-src` is set, so `'unsafe-eval'` is not needed.
 - User text and model output render only as plain text. `dangerouslySetInnerHTML` is banned (R86).
 
 ## 6. Screens

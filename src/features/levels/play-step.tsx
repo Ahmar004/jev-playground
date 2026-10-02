@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button'
 import { ArrowRightIcon, InfoIcon } from '@/components/ui/icons'
 import { OpponentPicker } from '@/features/race/opponent-picker'
 import { RaceStage } from '@/features/race/race-stage'
+import { MODES, type Mode } from '@/lib/constants'
 import type { CombineArgs } from '@/runner/code/combine-fns'
+import { LiveRaces } from './live-races'
 import type { LevelStage } from './lineup'
 
 export function NotRecorded({ children }: { children: React.ReactNode }) {
@@ -29,6 +31,8 @@ export function PlayStep({
 	onReveal,
 	combineArgs,
 	hideRaces = false,
+	mode = MODES.beginner,
+	onUseBeginner,
 	children
 }: {
 	stages: LevelStage[]
@@ -39,13 +43,22 @@ export function PlayStep({
 	combineArgs?: CombineArgs
 	// Level 6 replaces the races with its own widget.
 	hideRaces?: boolean
+	mode?: Mode
+	// Developer mode: switch back to the recorded version of the race.
+	onUseBeginner?: () => void
 	children?: React.ReactNode
 }) {
+	const live = mode === MODES.developer
 	const ready =
-		opponentId !== undefined &&
+		(live || opponentId !== undefined) &&
 		stages.length > 0 &&
 		stages.every(
-			(stage) => stage.jev && stage.opponents.some((recording) => recording.modelId === opponentId)
+			(stage) =>
+				stage.jev &&
+				// A live race only borrows the racers' names from a recording.
+				(live
+					? stage.opponents.length > 0
+					: stage.opponents.some((recording) => recording.modelId === opponentId))
 		)
 	if (!ready) {
 		return (
@@ -58,10 +71,27 @@ export function PlayStep({
 				<h2 id="play-heading" tabIndex={-1} className="text-text text-2xl font-bold">
 					{children ? 'Play' : 'Race'}
 				</h2>
-				<OpponentPicker value={opponentId} options={opponentIds} onChange={onOpponentChange} />
+				{!live && opponentId !== undefined && (
+					<OpponentPicker value={opponentId} options={opponentIds} onChange={onOpponentChange} />
+				)}
 			</div>
 			{children}
-			{!hideRaces &&
+			{live && hideRaces && (
+				<NotRecorded>
+					This level&apos;s interactive part still uses recorded results in Developer mode. Live
+					runs are on the levels that race Jev against an LLM.
+				</NotRecorded>
+			)}
+			{live && !hideRaces && (
+				<LiveRaces
+					stages={stages}
+					combineArgs={combineArgs}
+					showHeadings={stages.length > 1 || Boolean(children)}
+					onUseBeginner={() => onUseBeginner?.()}
+				/>
+			)}
+			{!live &&
+				!hideRaces &&
 				stages.map((stage) => {
 					const opponent = stage.opponents.find((recording) => recording.modelId === opponentId)
 					if (!stage.jev || !opponent) return null

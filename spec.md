@@ -100,7 +100,7 @@ A Beginner/Developer switch sits in the header on every page. Anyone can switch 
 ### 3.4 Developer mode [R9-R14]
 
 - Users paste their own keys and run tasks live. Every response comes from the actual provider APIs. [R9]
-- Supported providers: Jev via a TypeSafe key or an OpenRouter key; LLMs via Anthropic, OpenAI, Google [R11, R12] or OpenRouter.
+- Supported providers: Jev via a TypeSafe key (Jev through an OpenRouter key is not built: its response shape could not be verified without a real key); LLMs via Anthropic, OpenAI, Google [R11, R12] or OpenRouter.
 - With an LLM key, the user picks from the models that key can reach, loaded from the provider's model list. [R10, R42]
 - Developer mode results carry a "Developer mode" label, the model ID, and the run time. [R13]
 - Every built-in game and level can be played in Developer mode once the needed keys are pasted. [R14]

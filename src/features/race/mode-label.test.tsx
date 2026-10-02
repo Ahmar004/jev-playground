@@ -9,4 +9,16 @@ describe('ModeLabel', () => {
 		)
 		expect(container).toHaveTextContent('Beginner mode - recorded 2026-10-02 - claude-opus-5-5')
 	})
+
+	it('says Developer mode with the run time and the model that answered (R13)', () => {
+		const { container } = render(
+			<ModeLabel modelId="gpt-5" recordedAt="2026-10-02T10:00:00.000Z" mode="developer" />
+		)
+		expect(container).toHaveTextContent(/^Developer mode - run \d{2}:\d{2} - gpt-5$/)
+	})
+
+	it('says a live track has not run yet before it starts', () => {
+		const { container } = render(<ModeLabel modelId="gpt-5" recordedAt="" mode="developer" />)
+		expect(container).toHaveTextContent('Developer mode - not run yet - gpt-5')
+	})
 })

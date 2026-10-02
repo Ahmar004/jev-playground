@@ -2,7 +2,7 @@
 
 import { m } from 'motion/react'
 import { cn } from '@/lib/cn'
-import type { Racer } from '@/lib/constants'
+import type { Mode, Racer } from '@/lib/constants'
 import { formatCost, formatDuration } from './format'
 import { ModeLabel } from './mode-label'
 import { racerName } from './racer-names'
@@ -10,7 +10,14 @@ import { RACER_STYLE } from './racer-style'
 import { RacerTag } from './racer-tag'
 import { racerTimeMs, type RacerState } from './race-state'
 
-export type RaceTrackData = { racer: Racer; modelId: string; recordedAt: string; state: RacerState }
+export type RaceTrackData = {
+	racer: Racer
+	modelId: string
+	// The recording date, or the start of a live run (Developer mode).
+	recordedAt: string
+	mode?: Mode
+	state: RacerState
+}
 
 const PERCENT = 100
 const STAT_LABEL = 'text-text-muted text-xs'
@@ -26,7 +33,7 @@ export function RaceTrack({
 	elapsedMs: number
 	lanes: number
 }) {
-	const { racer, modelId, recordedAt, state } = track
+	const { racer, modelId, recordedAt, mode, state } = track
 	const done = state.results.length
 	const totals = state.totals ?? state.progress
 	const name = racerName(racer, modelId)
@@ -36,7 +43,7 @@ export function RaceTrack({
 		<div className="bg-surface border-border flex flex-col gap-3 rounded-lg border p-4">
 			<div className="flex flex-wrap items-baseline justify-between gap-2">
 				<RacerTag racer={racer} modelId={modelId} />
-				<ModeLabel modelId={modelId} recordedAt={recordedAt} />
+				<ModeLabel modelId={modelId} recordedAt={recordedAt} mode={mode} />
 			</div>
 			<div
 				role="progressbar"

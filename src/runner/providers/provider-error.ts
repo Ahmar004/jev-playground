@@ -39,7 +39,7 @@ function isAbort(error: unknown, signal: AbortSignal | undefined): boolean {
 	return signal?.aborted === true || (error instanceof DOMException && error.name === 'AbortError')
 }
 
-export type TimedResponse = { text: string; latencyMs: number }
+export type TimedResponse = { text: string; latencyMs: number; serverTiming: string | null }
 
 /** One request, timed from send to the last body byte, never retried (R7). */
 export async function timedFetch(
@@ -66,7 +66,7 @@ export async function timedFetch(
 		const body = authFailure ? '' : text.slice(0, MAX_ERROR_BODY_CHARS)
 		throw new ProviderError(kind, response.status, body, latencyMs)
 	}
-	return { text, latencyMs }
+	return { text, latencyMs, serverTiming: response.headers.get('server-timing') }
 }
 
 /** Parses a 2xx body; a body that doesn't match the provider's shape is an unknown error. */

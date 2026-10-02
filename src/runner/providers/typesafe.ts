@@ -14,17 +14,27 @@ const envelopeSchema = z.object({
 	})
 })
 
-/**
- * Calls Jev directly (the recording CLI). Browser calls go through /api/jev
- * instead, because TypeSafe blocks CORS (spec 2.3); that path is slice 8.
- */
+// Browser calls go through our server, because TypeSafe blocks CORS (spec 2.3, DESIGN 5.3).
+export const JEV_PROXY_URL = '/api/jev'
+
+// The pass-through reports TypeSafe's own time, so the hop through our server isn't counted.
+const UPSTREAM_TIMING = /upstream;dur=([0-9.]+)/
+
+/** The upstream duration from a `Server-Timing` header, or null when absent. */
+export function upstreamMs(serverTiming: string | null): number | null {
+	const match = serverTiming ? UPSTREAM_TIMING.exec(serverTiming) : null
+	return match?.[1] ? Number(match[1]) : null
+}
+
+/** Calls Jev directly (the recording CLI), or through /api/jev with `url` set (the browser). */
 export async function callTypeSafe(
 	body: JevRequestBody,
 	key: string,
-	signal?: AbortSignal
+	signal?: AbortSignal,
+	url: string = TYPESAFE_URL
 ): Promise<ProviderResult> {
-	const { text, latencyMs } = await timedFetch(
-		TYPESAFE_URL,
+	const timed = await timedFetch(
+		url,
 		{
 			method: 'POST',
 			headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
@@ -32,6 +42,9 @@ export async function callTypeSafe(
 		},
 		signal
 	)
+	const { text } = timed
+	const latencyMs =
+		(url === JEV_PROXY_URL ? upstreamMs(timed.serverTiming) : null) ?? timed.latencyMs
 	const envelope = parseProviderJson(text, envelopeSchema, latencyMs)
 	return {
 		text,

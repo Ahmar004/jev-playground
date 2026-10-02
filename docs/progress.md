@@ -481,3 +481,26 @@ Next: Step-6, slice 7 (levels 5-8: Break It Down, Router, Spot the Phish, Trick 
 - Older e2e (`progress.spec.ts`) now expects 8 built levels.
 
 Next: Step-6, slice 8 (Developer mode: KeysProvider, Keys panel, OpenRouter/OpenAI/Google providers, `/api/jev`, CSP, live source in `useRace`). Level 8's Developer mode (user writes the trick) and the price-unknown display land there.
+
+## Step-6 - slice 8: Developer mode (2026-10-02) - done
+
+- Skills: no writing-plans file and no subagents (Rule-A; one connected change). Gates run by hand: lint, typecheck, format:check, check:env, check:secrets, check:standards 24/24, test (472 Vitest plus node:test), build, e2e 46/46. The manual `local-review` pass was read against the changed files; nothing blocking.
+- User decision: Jev in Developer mode uses a TypeSafe key only. OpenRouter's `/api/v1/systemone` allows browser calls (preflight checked), but its request and response shape could not be verified without a real key (a fake key gets 401, and the only public model is `typesafe/jev-router`). OpenRouter is an LLM provider (chat completions, priced from its model list). To add Jev via OpenRouter later: paste a real OpenRouter key, send one request, and build the provider from the real response. DESIGN 5.2 and spec 3.4 say so.
+- Built:
+  - Providers (`src/runner/providers/`): `openai-compat.ts` (OpenAI and OpenRouter chat completions), `google.ts` (key in `x-goog-api-key`), `model-list.ts` (`fetchModels`, the Keys panel's Test), `callTypeSafe` takes the `/api/jev` URL and reads latency from `Server-Timing`.
+  - `/api/jev` (`src/app/api/jev/route.ts`): session required, fixed upstream URLs, 256 KB cap, logs status and duration only. `export const runtime` is not allowed with `cacheComponents`; Node is the default.
+  - `KeysProvider` (React state only, `keyId` per key), `ModeProvider` (not saved), Keys side sheet (Radix Dialog, Enter submits, `ph-no-capture`, Remove and Remove all, revoke links), header mode switch and Keys button, `useModelList` (query key is provider plus `keyId`), friendly error copy.
+  - Live source: `useRace({ live })` runs `runItems` per racer, `stopOnProviderFailure` (`runner/live.ts`) stops on bad key, 403, rate limit, overload or network; the view shows the message with Retry and "Use Beginner mode instead". `useLiveSetup` picks the LLM from the user's key's model list. `ModeLabel` has the Developer form ("Developer mode - run 14:02 - model id").
+  - CSP `connect-src` allowlist (`src/lib/csp.ts`, `next.config.ts`), checked on a production build.
+  - Methodology paragraph on Developer mode costs and timing.
+- Tests: provider, route, CSP, keys panel (including the no-storage check), `useRace` live and `stopOnProviderFailure` unit tests; `e2e/developer-mode.spec.ts` (flow 4 live race of 40 calls per racer against intercepted providers, key-storage and reload check, flow 8 rejected key with the Beginner fallback, phone width).
+- Bugs found on the way: the React Compiler can't lower a computed key in a destructuring pattern (used a helper); the header overflowed on phones, so it now wraps; the level 1 e2e counted every radio on the page and caught the new mode switch.
+- Left open (not built):
+  - Level 6 router cards and level 8 "user writes the trick" still use recorded results in Developer mode; the Play step says so. Spec 3.4 says every level can run live, so decide whether to add them before Step-7.
+  - Reveal always shows the recorded runs, even after a live run (the banner says so). Live results are not saved or shared.
+  - `recordDevRun` (50 XP `dev_first_run`, `live_wire` badge) is not built; DESIGN 11.3 assigns it to a later slice.
+  - Only Anthropic and OpenRouter models get a price; OpenAI and Google models show "price unknown" (their lists carry no prices). Add stored prices to `content/prices.json` if wanted.
+  - No real provider key was used; the live paths were tested against intercepted responses. One real run per provider is worth doing at the PC (Keys panel, any level, Developer mode).
+  - The Rule-A/Rule-B relabel references in CLAUDE.md, spec, DESIGN and TECH-STACK (needs the user's OK).
+
+Next: Step-6, slice 9 (VS games P0 + Leaderboard).

@@ -6,8 +6,9 @@ import type { Level } from '@/content/level-schema'
 import type { Recording } from '@/content/recording-schema'
 import type { Task } from '@/content/task-schema'
 import { ROUTES } from '@/lib/links'
-import { LEVEL_STATUS, LEVEL_STEPS, LEVEL_WIDGETS } from '@/lib/constants'
-import { BeginnerBanner } from './beginner-banner'
+import { useMode } from '@/features/mode/mode-context'
+import { LEVEL_STATUS, LEVEL_STEPS, LEVEL_WIDGETS, MODES } from '@/lib/constants'
+import { ModeBanner } from './mode-banner'
 import { CheckStep } from './check-step'
 import { LearnStep } from './learn-step'
 import type { LevelProgressView } from './level-progress'
@@ -39,6 +40,7 @@ export function LevelStepper({
 	initialProgress: LevelProgressView
 }) {
 	const { step, goTo } = useLevelStep()
+	const { mode, setMode } = useMode()
 	const router = useRouter()
 	const { progress, celebrate, pendingQuestionId, lockIn, reveal, answer, consumeCelebration } =
 		useLevelProgress(level.id, initialProgress, level.check.questions)
@@ -64,7 +66,7 @@ export function LevelStepper({
 				<p className="text-text-muted text-sm font-bold">Level {level.order}</p>
 				<h1 className="text-text text-3xl font-extrabold">{level.title}</h1>
 			</div>
-			<BeginnerBanner />
+			<ModeBanner mode={mode} />
 			<StepperNav current={step} onSelect={goTo} />
 			{step === LEVEL_STEPS.learn && (
 				<LearnStep learn={level.learn} onNext={() => goTo(LEVEL_STEPS.predict)} />
@@ -89,6 +91,8 @@ export function LevelStepper({
 					onReveal={() => goTo(LEVEL_STEPS.reveal)}
 					combineArgs={widget.combineArgs}
 					hideRaces={level.widget === LEVEL_WIDGETS.router}
+					mode={mode}
+					onUseBeginner={() => setMode(MODES.beginner)}
 				>
 					{level.widget && <PlayWidget {...widgetProps} />}
 				</PlayStep>

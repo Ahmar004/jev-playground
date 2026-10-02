@@ -2,18 +2,17 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { LightningIcon } from '@/components/ui/icons'
+import { ModeSwitch } from '@/features/mode/mode-switch'
 import { ProgressBar } from '@/features/progress/progress-bar'
 import { ROUTES } from '@/lib/links'
 import { getSession } from '@/server/auth/session'
 import { getProgressSummary } from '@/server/data/progress'
 import { AccountMenu } from './account-menu'
 
-// The mode switch and the Keys button arrive in the slices that build them
-// (DESIGN 6): no link to a missing page.
 export function SiteHeader() {
 	return (
 		<header className="border-border bg-surface sticky top-0 z-10 border-b">
-			<div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4">
+			<div className="mx-auto flex min-h-14 max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-1">
 				<Link
 					href={ROUTES.home}
 					aria-label="Jev's Playground home"
@@ -24,7 +23,7 @@ export function SiteHeader() {
 					</span>
 					<span className="hidden whitespace-nowrap sm:inline">Jev&apos;s Playground</span>
 				</Link>
-				<div className="flex shrink-0 items-center gap-1 sm:gap-3">
+				<div className="flex flex-wrap items-center justify-end gap-1 sm:gap-3">
 					<Link
 						href={ROUTES.path}
 						className="text-text hover:bg-surface-hover focus-visible:outline-accent hidden rounded px-2 py-1 text-sm font-medium focus-visible:outline focus-visible:outline-2 sm:inline"
@@ -38,6 +37,7 @@ export function SiteHeader() {
 					>
 						<HeaderProgress />
 					</Suspense>
+					<ModeSwitch />
 					<ThemeToggle />
 					<Suspense
 						fallback={
