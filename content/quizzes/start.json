@@ -1,0 +1,63 @@
+{
+	"id": "start",
+	"title": "Start quiz",
+	"intro": "Eight jobs, one tool each. Pick Jev, an LLM or plain Code for every job. You will take a matching quiz at the end and see how much you improved.",
+	"questions": [
+		{
+			"id": "start-speed-race",
+			"prompt": "A help desk gets 20,000 messages a day, and each one must go to one of six queues. Which tool fits best?",
+			"answer": "jev",
+			"explanation": "One quick judgment repeated at scale is Jev's home ground: a typed Choice per message, fast, and billed only for the tokens it reads.",
+			"topic": "speed-race"
+		},
+		{
+			"id": "start-write",
+			"prompt": "A customer asks why their parcel is late. You need a friendly reply written for them. Which tool fits best?",
+			"answer": "llm",
+			"explanation": "Writing free text is System Two work. Jev has no question type that holds a sentence, so an LLM writes it.",
+			"topic": "write-me-a-poem"
+		},
+		{
+			"id": "start-dates",
+			"prompt": "For every order, work out exactly how many days passed between the order date and the delivery date. Which tool fits best?",
+			"answer": "code",
+			"explanation": "Date math is exact, and Jev judges rather than calculates. Plain Code gets it right every time, for free.",
+			"topic": "count-and-dates"
+		},
+		{
+			"id": "start-sure",
+			"prompt": "You want each answer to come with a number saying how sure it is, so shaky answers can go to a person. Which tool fits best?",
+			"answer": "jev",
+			"explanation": "A Noul from Jev is a probability, so its confidence is built in and can be checked. An LLM's answer is only words.",
+			"topic": "how-sure"
+		},
+		{
+			"id": "start-weights",
+			"prompt": "Five yes or no judgments about a CV must become one final score, using weights the hiring team can change. Which tool does the combining?",
+			"answer": "code",
+			"explanation": "Jev answers the small questions. Combining them with weights is plain arithmetic, so Code does it and the team can change the weights without asking Jev again.",
+			"topic": "break-it-down"
+		},
+		{
+			"id": "start-router",
+			"prompt": "Summarize a 30 page contract in plain English for a customer. Which tool fits best?",
+			"answer": "llm",
+			"explanation": "Summarizing is open-ended writing. Jev returns typed answers, not prose, and Code has no rule for it.",
+			"topic": "the-router"
+		},
+		{
+			"id": "start-phish",
+			"prompt": "Check every incoming email for ten warning signs of phishing, with how likely each sign is. Which tool fits best?",
+			"answer": "jev",
+			"explanation": "One request can carry all ten yes or no questions, and each answer is its own probability. That is cheap and fast.",
+			"topic": "spot-the-phish"
+		},
+		{
+			"id": "start-rules",
+			"prompt": "Never approve a refund above 500 dollars, whatever the customer's message says. Which tool enforces that rule?",
+			"answer": "code",
+			"explanation": "A hard rule must never bend. Text from outsiders can try to give orders to a model, but a Code check on the number cannot be talked out of it.",
+			"topic": "trick-jev"
+		}
+	]
+}

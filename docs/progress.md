@@ -549,3 +549,22 @@ Next: Step-6, slice 11 (Sandbox).
 - For slice 12 (Quizzes + Profile): reuse `MyShares` with `getMyShares`.
 
 Next: Step-6, slice 12 (Quizzes + Profile).
+
+## Step-6 - slice 12: Quizzes + Profile (2026-10-02) - done
+
+- Skills: no writing-plans file and no subagents (Rule-A; one connected change). Gates by hand: lint, typecheck, format:check, check:env, check:secrets, check:standards 24/24, check:rls (9 tables), test (Vitest plus node:test), build, e2e (against `pnpm start` with `E2E_BASE_URL`, as in slices 9-11). The manual `local-review` pass was not run as a separate step.
+- Decisions I made without asking (small, reversible; say so if you want them changed):
+  - Each quiz is scored once per user (the first submit; `QuizAttempt` is keyed by user and quiz). There is no retake, so XP, the improvement and the `quiz_climber` badge all read the same attempt.
+  - Solutions show only after a quiz is submitted, so reading them cannot spoil the quiz. The answers never reach the browser before that (the taker gets prompts only).
+  - The quiz answer is one of Jev, an LLM or Code, so a question has no `options` array (DESIGN 4.1 and 11.1 updated).
+  - Jev's wins and losses on the completion card count every metric a finished level asks (speed, cost, accuracy, or "delivers"), Jev against the opponent the user raced, from the recordings. Ties count for neither.
+- Built:
+  - Content: `content/quizzes/start.json` and `end.json`, 8 questions each, one per level topic, different items (written by Claude from each level's lesson; spot-check them). `src/content/quiz-schema.ts`, `quizzes.ts` and a test that each quiz covers every level once.
+  - Database: `QuizAttempt` (migrations `quiz`, `quiz_rls`; `check:rls` passes on 9 tables). `submitQuiz` (`src/server/actions/quiz.ts`) scores on the server (`src/server/quiz/score.ts`), stores the attempt, pays 10 XP per right answer once (`quiz:question` source ids) and syncs badges. `quiz_climber` is now awarded (end score above start score, in `rules.ts` and `syncBadges`).
+  - Pages: `/quizzes`, `/quizzes/[quizId]` (SSG shell; per-user part under Suspense: the taker when not taken, the results when taken), `/profile` (XP, badges grid with earned dates, quiz improvement, completion card, `MyShares`). `ROUTES.quizzes`, `quiz`, `profile`; header links Quizzes and Profile; Home buttons "Take the start quiz (optional)" and "Your profile". `quiz_completed` analytics event (quiz id and score only).
+  - Completion card: `src/server/progress/jev-record.ts` and `src/server/data/profile.ts`; shown once the `pathfinder` badge exists, otherwise a "finish all levels" note.
+- Tests: quiz content, scoring, `submitQuiz`, badge rule, `jevRecord`, improvement helper; `e2e/quizzes.spec.ts` (flow 7: start quiz with Enter and Back, results, reload keeps results, end quiz, improvement, Profile XP and badge, screenshots in both themes at desktop and phone width). The fake DB in `src/server/testing/fake-progress-db.ts` gained `quizAttempt`.
+- Left open: the completion card with a finished path is covered only by the `jevRecord` unit test (no e2e plays all 8 levels); sign out sits in the header only, not on Profile; the header links are still hidden below `sm` (Profile and Quizzes are reachable from Home on phones; the phone menu from DESIGN 6 is not built); `right_tool`, `trickster` and `live_wire` badges still wait for later work; the manual local-review pass; the Rule-A/Rule-B relabel references in CLAUDE.md, spec, DESIGN and TECH-STACK (needs the user's OK).
+- Every P0 row in spec 15 is now built (slice 12's exit criterion), except the open items above.
+
+Next: Step-6, slice 13 (VS games P1: Smart Home Dash, Twin Finder, Confidence Catch, Citation Cop). Their tasks `product-match`, `citation-check` and `intent-routing` are already recorded (slice 10).

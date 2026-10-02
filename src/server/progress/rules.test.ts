@@ -44,6 +44,19 @@ describe('isLevelComplete', () => {
 	})
 })
 
+describe('earnedBadges, quiz_climber', () => {
+	const base = { doneLevelIds: new Set<string>(), correctPredictions: 0 }
+	it('needs a higher end score than start score', () => {
+		expect(earnedBadges({ ...base, quizScores: { start: 3, end: 5 } })).toContain(
+			BADGES.quizClimber
+		)
+		expect(earnedBadges({ ...base, quizScores: { start: 5, end: 5 } })).not.toContain(
+			BADGES.quizClimber
+		)
+		expect(earnedBadges({ ...base, quizScores: { end: 8 } })).not.toContain(BADGES.quizClimber)
+	})
+})
+
 describe('earnedBadges', () => {
 	const ids = (count: number) => new Set(Array.from({ length: count }, (_, i) => `level-${i}`))
 	const stats = (correctPredictions: number) => ({

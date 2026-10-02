@@ -49,10 +49,22 @@ export function SiteHeader() {
 						Sandbox
 					</Link>
 					<Link
+						href={ROUTES.quizzes}
+						className="text-text hover:bg-surface-hover focus-visible:outline-accent hidden rounded px-2 py-1 text-sm font-medium focus-visible:outline focus-visible:outline-2 sm:inline"
+					>
+						Quizzes
+					</Link>
+					<Link
 						href={ROUTES.leaderboard}
 						className="text-text hover:bg-surface-hover focus-visible:outline-accent hidden rounded px-2 py-1 text-sm font-medium focus-visible:outline focus-visible:outline-2 sm:inline"
 					>
 						Leaderboard
+					</Link>
+					<Link
+						href={ROUTES.profile}
+						className="text-text hover:bg-surface-hover focus-visible:outline-accent hidden rounded px-2 py-1 text-sm font-medium focus-visible:outline focus-visible:outline-2 sm:inline"
+					>
+						Profile
 					</Link>
 					<Suspense
 						fallback={

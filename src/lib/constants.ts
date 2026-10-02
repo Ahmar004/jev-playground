@@ -309,3 +309,14 @@ export const SHARE_LIMITS = {
 	perUserPerDay: 20,
 	windowMs: 24 * 60 * 60 * 1000
 } as const
+
+// The start and end quizzes (spec 10.2). Each has one question per level topic.
+export const QUIZ_IDS = { start: 'start', end: 'end' } as const
+export type QuizId = (typeof QUIZ_IDS)[keyof typeof QUIZ_IDS]
+
+const QUIZ_ID_VALUES: readonly string[] = Object.values(QUIZ_IDS)
+
+/** Narrows a database or URL string; anything unknown is not a quiz. */
+export function isQuizId(value: string): value is QuizId {
+	return QUIZ_ID_VALUES.includes(value)
+}

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { LEVELS } from '@/content/levels'
 import { HomeProgress } from '@/features/progress/home-progress'
 import type { PathLevel } from '@/features/progress/path-view'
+import { QUIZ_IDS } from '@/lib/constants'
 import { ROUTES } from '@/lib/links'
 import { getSession } from '@/server/auth/session'
 import { getProgressSummary } from '@/server/data/progress'
@@ -46,6 +47,12 @@ export default function HomePage() {
 				</Button>
 				<Button asChild variant="secondary">
 					<Link href={ROUTES.leaderboard}>Your Leaderboard</Link>
+				</Button>
+				<Button asChild variant="secondary">
+					<Link href={ROUTES.quiz(QUIZ_IDS.start)}>Take the start quiz (optional)</Link>
+				</Button>
+				<Button asChild variant="secondary">
+					<Link href={ROUTES.profile}>Your profile</Link>
 				</Button>
 				<Button asChild variant="secondary">
 					<Link href={ROUTES.glossary}>Read the Glossary</Link>

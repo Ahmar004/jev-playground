@@ -21,6 +21,7 @@ model User {
 	badges        UserBadge[]
 	leaderboard   LeaderboardEntry[]
 	shares        Share[]
+	quizAttempts  QuizAttempt[]
 
 	@@map("users")
 }

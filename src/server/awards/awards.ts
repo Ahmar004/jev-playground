@@ -34,7 +34,7 @@ export async function grantBadge(tx: Tx, userId: string, badgeId: BadgeId): Prom
 
 /** Grants every badge the user now qualifies for and returns only the new ones. */
 export async function syncBadges(tx: Tx, userId: string): Promise<BadgeId[]> {
-	const [doneRows, correctPredictions, gameRows] = await Promise.all([
+	const [doneRows, correctPredictions, gameRows, quizRows] = await Promise.all([
 		tx.levelProgress.findMany({
 			where: { userId, status: LEVEL_STATUS.done },
 			select: { levelId: true }
@@ -44,7 +44,8 @@ export async function syncBadges(tx: Tx, userId: string): Promise<BadgeId[]> {
 			where: { userId },
 			select: { gameId: true },
 			distinct: ['gameId']
-		})
+		}),
+		tx.quizAttempt.findMany({ where: { userId }, select: { quizId: true, score: true } })
 	])
 	const finishedGameIds = new Set(
 		gameRows.map((row) => row.gameId).filter((gameId) => GAMES.get(gameId)?.priority === 'p0')
@@ -53,8 +54,14 @@ export async function syncBadges(tx: Tx, userId: string): Promise<BadgeId[]> {
 	const doneLevelIds = new Set(
 		doneRows.map((row) => row.levelId).filter((levelId) => LEVELS.has(levelId))
 	)
+	const quizScores = Object.fromEntries(quizRows.map((row) => [row.quizId, row.score]))
 	const added: BadgeId[] = []
-	for (const badgeId of earnedBadges({ doneLevelIds, correctPredictions, finishedGameIds })) {
+	for (const badgeId of earnedBadges({
+		doneLevelIds,
+		correctPredictions,
+		finishedGameIds,
+		quizScores
+	})) {
 		const { count } = await tx.userBadge.createMany({
 			data: [{ userId, badgeId }],
 			skipDuplicates: true

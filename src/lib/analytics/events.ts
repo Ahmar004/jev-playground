@@ -24,6 +24,7 @@ export const ANALYTICS_EVENTS = {
 	LEVEL_COMPLETED: 'level_completed',
 	PREDICTION_MADE: 'prediction_made',
 	SHARE_CREATED: 'share_created',
+	QUIZ_COMPLETED: 'quiz_completed',
 	// Session / navigation
 	APP_OPENED: 'app_opened',
 	PAGE_VIEWED: 'page_viewed',
@@ -125,6 +126,7 @@ export type EventProps = {
 	prediction_made: { level_id: string }
 	// preset_id is absent for a custom task; the shared text itself is never sent.
 	share_created: { mode: 'beginner' | 'developer'; preset_id?: string }
+	quiz_completed: { quiz_id: string; score: number }
 	app_opened: Record<string, never>
 	page_viewed: { page_name: string }
 	element_viewed: { element_type: ElementType; element_name: string }

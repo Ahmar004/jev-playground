@@ -13,6 +13,9 @@ export const ROUTES = {
 	arena: '/arena',
 	arenaPreset: (presetId: string) => `/arena?preset=${presetId}`,
 	sandbox: '/sandbox',
+	quizzes: '/quizzes',
+	quiz: (quizId: string) => `/quizzes/${quizId}`,
+	profile: '/profile',
 	share: (shareId: string) => `/s/${shareId}`
 } as const
 

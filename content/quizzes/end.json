@@ -1,0 +1,63 @@
+{
+	"id": "end",
+	"title": "End quiz",
+	"intro": "The same eight topics as the start quiz, with new jobs. Pick Jev, an LLM or plain Code for each one, then see how much you improved.",
+	"questions": [
+		{
+			"id": "end-speed-race",
+			"prompt": "Every night, 100,000 product reviews must be labeled positive, neutral or negative, as cheaply as possible. Which tool fits best?",
+			"answer": "jev",
+			"explanation": "A typed Choice per review is fast, and Jev pays only for the tokens it reads. An LLM would pay for every token it writes, 100,000 times.",
+			"topic": "speed-race"
+		},
+		{
+			"id": "end-write",
+			"prompt": "Draft a short apology email that sounds human and mentions the customer's order. Which tool fits best?",
+			"answer": "llm",
+			"explanation": "Jev cannot write text. Free-form writing is what an LLM is for.",
+			"topic": "write-me-a-poem"
+		},
+		{
+			"id": "end-count",
+			"prompt": "Count exactly how many of 12 listed items are fruit. Which tool should do the counting?",
+			"answer": "code",
+			"explanation": "Jev can judge each item as fruit or not, but counting is a calculation. Code counts the yes answers exactly.",
+			"topic": "count-and-dates"
+		},
+		{
+			"id": "end-sure",
+			"prompt": "A person can review only a few answers. Which tool tells you which answers are shaky enough to review?",
+			"answer": "jev",
+			"explanation": "Jev's probabilities sit near the middle when it is unsure. Review those and trust the confident ones.",
+			"topic": "how-sure"
+		},
+		{
+			"id": "end-dial",
+			"prompt": "A manager wants to turn up how much tone matters in a review score, without asking the model again. Which tool applies the new weight?",
+			"answer": "code",
+			"explanation": "The weighted sum is plain arithmetic over Jev's stored answers, so changing a weight costs nothing and never drifts.",
+			"topic": "break-it-down"
+		},
+		{
+			"id": "end-brainstorm",
+			"prompt": "Brainstorm ten names for a new coffee shop. Which tool fits best?",
+			"answer": "llm",
+			"explanation": "Open-ended ideas need free text. Jev answers typed questions about text it is given and Code has no rule for it.",
+			"topic": "the-router"
+		},
+		{
+			"id": "end-scam",
+			"prompt": "A bank wants each suspicious text message checked for urgency, a fake link and a request for money, in one fast call. Which tool fits best?",
+			"answer": "jev",
+			"explanation": "Several yes or no questions about one message fit in one Jev request, each with its own probability.",
+			"topic": "spot-the-phish"
+		},
+		{
+			"id": "end-format",
+			"prompt": "Check that a discount code is exactly three letters followed by four digits. Which tool fits best?",
+			"answer": "code",
+			"explanation": "An exact format is a rule, and Code applies a rule perfectly. A model could be fooled by wording; a pattern check cannot.",
+			"topic": "trick-jev"
+		}
+	]
+}
