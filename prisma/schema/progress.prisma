@@ -1,0 +1,61 @@
+// Per-user progress (DESIGN 10, 11.1). Every table here is user-scoped, so its
+// migration is followed by a hand-written ENABLE ROW LEVEL SECURITY (no
+// policy, no FORCE) - see docs/rules/auth.md.
+
+// No row means "not started". prediction holds the picks saved at Lock in;
+// revealedAt, opponentModelId and predictionCorrect are set once, at the
+// first Reveal, and never change (user decision, slice 5).
+model LevelProgress {
+	userId            String    @map("user_id") @db.Uuid
+	levelId           String    @map("level_id")
+	status            String
+	prediction        Json?
+	opponentModelId   String?   @map("opponent_model_id")
+	predictionCorrect Boolean?  @map("prediction_correct")
+	revealedAt        DateTime? @map("revealed_at") @db.Timestamptz(6)
+	updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+	user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+	@@id([userId, levelId])
+	@@map("level_progress")
+}
+
+// The first answer to each Check question; later tries stay in the browser.
+model CheckAnswer {
+	userId     String   @map("user_id") @db.Uuid
+	questionId String   @map("question_id")
+	levelId    String   @map("level_id")
+	optionId   String   @map("option_id")
+	correct    Boolean
+	answeredAt DateTime @default(now()) @map("answered_at") @db.Timestamptz(6)
+	user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+	@@id([userId, questionId])
+	@@index([userId, levelId])
+	@@map("check_answers")
+}
+
+// One row per award; the unique key makes every award idempotent, so a
+// replay can never award twice (DESIGN 10).
+model XpEvent {
+	id        String   @id @default(uuid()) @db.Uuid
+	userId    String   @map("user_id") @db.Uuid
+	source    String
+	sourceId  String   @map("source_id")
+	xp        Int
+	createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+	user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+	@@unique([userId, source, sourceId])
+	@@map("xp_events")
+}
+
+model UserBadge {
+	userId   String   @map("user_id") @db.Uuid
+	badgeId  String   @map("badge_id")
+	earnedAt DateTime @default(now()) @map("earned_at") @db.Timestamptz(6)
+	user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+	@@id([userId, badgeId])
+	@@map("user_badges")
+}
