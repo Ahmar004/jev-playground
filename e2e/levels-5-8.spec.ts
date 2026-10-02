@@ -71,6 +71,8 @@ test('level 6: sort the cards by tap, run the pipeline, see every tool', async (
 	await expect(page.getByText('6 of 6 sorted')).toBeVisible()
 	await expect(run).toBeEnabled()
 	await run.click()
+	// A right first sort is checked on the server and earns Right Tool (DESIGN 10).
+	await expect(page.getByText('Badge earned: Right Tool', { exact: true })).toBeVisible()
 	const results = page.getByRole('list', { name: 'Results for each card' })
 	await expect(results.getByText(/^Right tool:/)).toHaveCount(6)
 	// Code has no rule for a poem, and Jev's real rejection is shown (R44).
@@ -121,7 +123,10 @@ test('level 8: guess which tricks fool Jev, then see what happened', async ({ pa
 	for (const radio of await page.getByRole('radio', { name: 'Jev sees through it' }).all()) {
 		await radio.check()
 	}
+	// Recorded: only pair 4's trick fooled Jev, so these six guesses are all right.
+	await page.getByRole('radio', { name: 'Jev gets fooled' }).nth(3).check()
 	await page.getByRole('button', { name: 'See the result' }).click()
+	await expect(page.getByText('Badge earned: Trickster', { exact: true })).toBeVisible()
 	await expect(
 		page.getByRole('heading', { name: 'Your guesses against what happened' })
 	).toBeVisible()

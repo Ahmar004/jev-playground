@@ -1,10 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { getCheckQuestion } from '@/content/levels'
+import { getCheckQuestion, getLevel } from '@/content/levels'
 import { AppError } from '@/lib/errors/app-error'
 import {
 	BADGES,
 	CLAUDE_MODELS,
 	LEVEL_STATUS,
+	LEVEL_WIDGETS,
 	PREDICTION_METRICS,
 	RACERS,
 	XP_AMOUNTS,
@@ -25,7 +26,8 @@ const state = vi.hoisted(() => ({
 	refresh: vi.fn()
 }))
 vi.mock('@/server/db/client', () => ({
-	db: new Proxy({}, { get: (_target, key) => (state.fake as Record<PropertyKey, unknown>)[key] })
+	db: new Proxy({}, { get: (_target, key) => (state.fake as Record<PropertyKey, unknown>)[key] }),
+	Prisma: { DbNull: null }
 }))
 vi.mock('@/server/auth/session', () => ({
 	requireUser: async () => {
@@ -64,8 +66,14 @@ vi.mock('@/lib/observability/capture-error', () => ({
 	})
 }))
 
-const { revealPrediction, setLevelStatus, submitCheck, submitPrediction } =
-	await import('./progress')
+const {
+	recordDevRun,
+	revealPrediction,
+	setLevelStatus,
+	submitCheck,
+	submitFirstPlay,
+	submitPrediction
+} = await import('./progress')
 
 let fake: ReturnType<typeof createFakeProgressDb>
 
@@ -358,5 +366,82 @@ describe('scoping and refresh', () => {
 		const failed = await submitPrediction({ levelId: LEVEL, prediction: RIGHT_PICKS })
 		expect(failed).toMatchObject({ ok: false })
 		expect(state.refresh).toHaveBeenCalledTimes(1)
+	})
+})
+
+describe('submitFirstPlay', () => {
+	const ROUTER = 'the-router'
+	const TRICKS = 'trick-jev'
+	const router = getLevel(ROUTER)?.router ?? []
+	const rightSort = Object.fromEntries(router.map((card) => [card.taskId, card.best]))
+	const sortPlay = { kind: LEVEL_WIDGETS.router, assignments: rightSort }
+
+	it('grants right_tool for a right first sort, once', async () => {
+		const first = await submitFirstPlay({ levelId: ROUTER, play: sortPlay })
+		expect(first).toEqual({
+			ok: true,
+			data: { counted: true, awards: { xp: 0, badges: [BADGES.rightTool] } }
+		})
+		expect(fake.tx.levelProgress.rows[0]).toMatchObject({
+			userId: USER_ID,
+			levelId: ROUTER,
+			status: LEVEL_STATUS.inProgress,
+			firstPlay: sortPlay
+		})
+		const again = await submitFirstPlay({ levelId: ROUTER, play: sortPlay })
+		expect(again).toEqual({ ok: true, data: { counted: false, awards: { xp: 0, badges: [] } } })
+	})
+
+	it('ignores a later right sort once the first one was wrong', async () => {
+		const [card] = router
+		if (!card) throw new Error('no cards')
+		const wrongPlay = {
+			kind: LEVEL_WIDGETS.router,
+			assignments: { ...rightSort, [card.taskId]: card.best === 'jev' ? 'llm' : 'jev' }
+		}
+		const first = await submitFirstPlay({ levelId: ROUTER, play: wrongPlay })
+		expect(first).toMatchObject({ ok: true, data: { counted: true, awards: { badges: [] } } })
+		const second = await submitFirstPlay({ levelId: ROUTER, play: sortPlay })
+		expect(second).toMatchObject({ ok: true, data: { counted: false } })
+		expect(fake.tx.userBadge.rows).toHaveLength(0)
+	})
+
+	it('counts nothing after Reveal, when the answers are known', async () => {
+		fake.tx.levelProgress.rows.push({
+			userId: USER_ID,
+			levelId: ROUTER,
+			status: LEVEL_STATUS.inProgress,
+			revealedAt: new Date()
+		})
+		const result = await submitFirstPlay({ levelId: ROUTER, play: sortPlay })
+		expect(result).toMatchObject({ ok: true, data: { counted: false } })
+		expect(fake.tx.userBadge.rows).toHaveLength(0)
+	})
+
+	it('rejects a play that does not fit the level', async () => {
+		const result = await submitFirstPlay({ levelId: TRICKS, play: sortPlay })
+		expect(result).toEqual({ ok: false, error: 'That play does not fit this level.', status: 400 })
+		expect(fake.tx.levelProgress.rows).toHaveLength(0)
+	})
+
+	it('needs a session', async () => {
+		state.signedIn = false
+		const result = await submitFirstPlay({ levelId: ROUTER, play: sortPlay })
+		expect(result).toMatchObject({ ok: false, status: 401 })
+	})
+})
+
+describe('recordDevRun', () => {
+	it('pays 50 XP and live_wire on the first live run only', async () => {
+		const first = await recordDevRun({})
+		expect(first).toEqual({
+			ok: true,
+			data: {
+				awards: { xp: XP_AMOUNTS[XP_SOURCES.devFirstRun], badges: [BADGES.liveWire] }
+			}
+		})
+		const again = await recordDevRun({})
+		expect(again).toEqual({ ok: true, data: { awards: { xp: 0, badges: [] } } })
+		expect(fake.tx.xpEvent.rows).toHaveLength(1)
 	})
 })

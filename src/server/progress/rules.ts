@@ -42,7 +42,8 @@ export function isLevelComplete(input: {
 	)
 }
 
-// Badges later slices award (right_tool, trickster, ...) join this table in their slice.
+// Badges earned from stored progress. right_tool and trickster are checked
+// once, from the first play (first-play.ts); live_wire comes from recordDevRun.
 const BADGE_RULES: { id: BadgeId; earned: (stats: BadgeStats) => boolean }[] = [
 	{ id: BADGES.firstRace, earned: (stats) => stats.doneLevelIds.has(FIRST_LEVEL_ID) },
 	{ id: BADGES.phishSpotter, earned: (stats) => stats.doneLevelIds.has(PHISH_LEVEL_ID) },

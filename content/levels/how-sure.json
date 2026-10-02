@@ -26,6 +26,7 @@
 		]
 	},
 	"predict": {
+		"intro": "On the Play step, Jev and an LLM each judge the same 10 statements as true or false. You rate them too, then Reveal checks how often each of you was right. Guess who wins the race between the two models.",
 		"questions": [
 			{
 				"metric": "fastest",
@@ -33,7 +34,7 @@
 			},
 			{
 				"metric": "cheapest",
-				"prompt": "Who costs less?"
+				"prompt": "Who costs less for all 10 statements?"
 			},
 			{
 				"metric": "most_accurate",
@@ -65,7 +66,7 @@
 		"questions": [
 			{
 				"id": "sure-what-calibrated",
-				"prompt": "What does it mean for a racer to be well calibrated?",
+				"prompt": "What does it mean for Jev to be well calibrated?",
 				"options": [
 					{
 						"id": "match",

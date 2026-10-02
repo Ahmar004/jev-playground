@@ -13,8 +13,16 @@ function flatten(where: Where): Where {
 	return flat
 }
 
+/** A filter is a plain value, or Prisma's { equals } (tests mock Prisma.DbNull as null). */
+function fieldMatches(actual: unknown, filter: unknown): boolean {
+	if (filter && typeof filter === 'object' && 'equals' in filter) {
+		return (actual ?? null) === filter.equals
+	}
+	return (actual ?? null) === filter
+}
+
 function matches(row: Row, where: Where): boolean {
-	return Object.entries(flatten(where)).every(([key, value]) => (row[key] ?? null) === value)
+	return Object.entries(flatten(where)).every(([key, value]) => fieldMatches(row[key], value))
 }
 
 function table(uniqueKeys: string[]) {

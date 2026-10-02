@@ -14,6 +14,7 @@ import type { LiveConfig } from './live-config'
 import { RaceView, type RaceTrackData } from './race-view'
 import type { RaceState } from './race-state'
 import { useRace, type LiveRace, type RaceFinish } from './use-race'
+import { useRecordDevRun } from './use-record-dev-run'
 
 function liveRunners(task: Task, live: LiveConfig): LiveRace {
 	return {
@@ -73,12 +74,16 @@ export function RaceStage({
 	onFinished?: (results: RaceResult[]) => void
 }) {
 	const recordings = [jev, opponent]
+	const devRun = useRecordDevRun()
 	const race = useRace({
 		task,
 		entries: recordings.map((recording) => ({ racer: recording.racer, recording })),
 		combineArgs,
 		live: live ? liveRunners(task, live) : undefined,
-		onFinished: (finish) => onFinished?.(raceResults(finish, jev, opponent, live))
+		onFinished: (finish) => {
+			if (live) devRun.record()
+			onFinished?.(raceResults(finish, jev, opponent, live))
+		}
 	})
 	// Jev + Code (a combine task) shows Jev's model and recording date.
 	const tracks: RaceTrackData[] = race.racers.flatMap((racer) => {

@@ -22,7 +22,7 @@ import { CheckStep } from './check-step'
 import { LearnStep } from './learn-step'
 import type { LevelProgressView } from './level-progress'
 import { defaultOpponentId, levelStages, sharedOpponentIds } from './lineup'
-import { PlayWidget, RevealWidget, useWidgetState } from './level-widgets'
+import { PlayWidget, RevealWidget, tricksFirstPlay, useWidgetState } from './level-widgets'
 import { PlayStep } from './play-step'
 import { PredictStep } from './predict-step'
 import { RevealStep } from './reveal-step'
@@ -88,6 +88,7 @@ export function LevelStepper({
 			)}
 			{step === LEVEL_STEPS.predict && (
 				<PredictStep
+					intro={level.predict.intro}
 					questions={level.predict.questions}
 					initial={progress.prediction}
 					locked={progress.revealed}
@@ -122,7 +123,14 @@ export function LevelStepper({
 					celebrate={celebrate}
 					onCelebrated={consumeCelebration}
 					scoredAgainst={progress.revealed ? progress.opponentModelId : null}
-					onReveal={reveal}
+					onReveal={(id) =>
+						reveal(
+							id,
+							level.widget === LEVEL_WIDGETS.tricks
+								? tricksFirstPlay(stages, widget.guesses)
+								: undefined
+						)
+					}
 					onCheck={() => goTo(LEVEL_STEPS.check)}
 					onRaceAgain={() => goTo(LEVEL_STEPS.play)}
 					combineArgs={widget.combineArgs}

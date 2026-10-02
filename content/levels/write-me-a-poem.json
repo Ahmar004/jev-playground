@@ -26,6 +26,7 @@
 		]
 	},
 	"predict": {
+		"intro": "On the Play step, Jev and an LLM each get the same job: write a 4-line poem for each of 3 topics. Guess who hands in a finished poem for every topic.",
 		"questions": [
 			{
 				"metric": "delivers",

@@ -4,7 +4,13 @@ import { choiceTask } from '@/runner/testing/tasks'
 import { RaceStage } from './race-stage'
 import { jevRecording, opusRecording } from './testing/recordings'
 
-beforeEach(() => vi.useFakeTimers())
+const devRun = vi.hoisted(() => ({ record: vi.fn() }))
+vi.mock('./use-record-dev-run', () => ({ useRecordDevRun: () => devRun }))
+
+beforeEach(() => {
+	vi.useFakeTimers()
+	devRun.record.mockClear()
+})
 afterEach(() => vi.useRealTimers())
 
 describe('RaceStage', () => {
@@ -16,6 +22,8 @@ describe('RaceStage', () => {
 		})
 		expect(screen.getByRole('status')).toHaveTextContent('Finished')
 		expect(screen.getByRole('table', { name: /Final numbers/ })).toHaveTextContent('$0.0024')
+		// A replay is not a live run, so it earns nothing for Developer mode.
+		expect(devRun.record).not.toHaveBeenCalled()
 	})
 
 	it('skips straight to the recorded result', async () => {

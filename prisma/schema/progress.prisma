@@ -4,12 +4,15 @@
 
 // No row means "not started". prediction holds the picks saved at Lock in;
 // revealedAt, opponentModelId and predictionCorrect are set once, at the
-// first Reveal, and never change (user decision, slice 5).
+// first Reveal, and never change (user decision, slice 5). firstPlay holds the
+// first Router sort (level 6) or trick guesses (level 8) sent before Reveal,
+// set once, so the right_tool and trickster badges count only a first try.
 model LevelProgress {
 	userId            String    @map("user_id") @db.Uuid
 	levelId           String    @map("level_id")
 	status            String
 	prediction        Json?
+	firstPlay         Json?     @map("first_play")
 	opponentModelId   String?   @map("opponent_model_id")
 	predictionCorrect Boolean?  @map("prediction_correct")
 	revealedAt        DateTime? @map("revealed_at") @db.Timestamptz(6)

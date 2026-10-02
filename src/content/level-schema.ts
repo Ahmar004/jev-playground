@@ -77,6 +77,8 @@ export const levelSchema = z
 				.max(MAX_COMPARED)
 		}),
 		predict: z.strictObject({
+			// What is about to race, so each question has its context (Step-7 feedback).
+			intro: text,
 			questions: z
 				.array(z.strictObject({ metric: z.enum(PREDICTION_METRICS), prompt: text }))
 				.min(1)

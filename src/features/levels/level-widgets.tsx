@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { Level, RouterTool } from '@/content/level-schema'
 import type { Task } from '@/content/task-schema'
 import { COMBINE_FN_IDS, LEVEL_WIDGETS } from '@/lib/constants'
 import type { CombineArgs } from '@/runner/code/combine-fns'
+import type { FirstPlay } from '@/server/progress/first-play'
 import { CalibrationChart } from './calibration/calibration-chart'
 import { CalibrationForm } from './calibration/calibration-form'
 import type { Rating, Ratings } from './calibration/ratings'
@@ -19,10 +20,12 @@ import { TrickPicker } from './tricks/trick-picker'
 import { TrickResults } from './tricks/trick-results'
 import { defaultWeights, type Weights } from './weights/composite'
 import { WeightsPanel } from './weights/weights-panel'
+import { useFirstPlay } from './use-first-play'
 
 /**
  * The state of a level's own widget, kept in the stepper so it survives moving
- * between steps. None of it is saved: it is the user's play, not progress.
+ * between steps. It is the user's play, not progress; only the first Router
+ * sort and the trick guesses go to the server, for their badges.
  */
 export function useWidgetState(level: Level, stages: LevelStage[], tasks: Task[]) {
 	const combineStage = stages.find(
@@ -35,6 +38,8 @@ export function useWidgetState(level: Level, stages: LevelStage[], tasks: Task[]
 	const [assignments, setAssignments] = useState<Assignments>({})
 	const [ran, setRan] = useState(false)
 	const [guesses, setGuesses] = useState<Guesses>({})
+	const firstPlay = useFirstPlay(level.id)
+	const sortSent = useRef(false)
 	const codeResults = useCodeResults(tasks, level.widget === LEVEL_WIDGETS.router)
 	const combineArgs: CombineArgs | undefined =
 		level.widget === LEVEL_WIDGETS.weights ? { weights } : undefined
@@ -54,7 +59,13 @@ export function useWidgetState(level: Level, stages: LevelStage[], tasks: Task[]
 				return next
 			}),
 		ran,
-		run: () => setRan(true),
+		run: () => {
+			setRan(true)
+			// Only the first run of this visit is sent; the server counts only the first ever.
+			if (sortSent.current) return
+			sortSent.current = true
+			firstPlay.submit({ kind: LEVEL_WIDGETS.router, assignments })
+		},
 		guesses,
 		guess: (pairId: string, fooled: boolean) =>
 			setGuesses((previous) => ({ ...previous, [pairId]: fooled })),
@@ -76,6 +87,13 @@ function trickData(stages: LevelStage[], opponentId: string | undefined) {
 	if (!stage?.jev) return null
 	const opponent = stage.opponents.find((recording) => recording.modelId === opponentId)
 	return { stage, jev: stage.jev, opponent, pairs: trickPairs(stage.task, stage.jev, opponent) }
+}
+
+/** Level 8's guesses, sent with the first Reveal once every pair has one (trickster badge). */
+export function tricksFirstPlay(stages: LevelStage[], guesses: Guesses): FirstPlay | undefined {
+	const data = trickData(stages, undefined)
+	if (!data || data.pairs.some((pair) => guesses[pair.id] === undefined)) return undefined
+	return { kind: LEVEL_WIDGETS.tricks, guesses }
 }
 
 function trickQuestion(task: Task): string {

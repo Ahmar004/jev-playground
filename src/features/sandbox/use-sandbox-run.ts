@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { PRICES } from '@/content/prices'
 import type { Task } from '@/content/task-schema'
 import type { ArenaSide } from '@/features/arena/snapshot'
+import { useRecordDevRun } from '@/features/race/use-record-dev-run'
 import {
 	JEV_MODEL_ALIAS,
 	PROVIDER_ERROR_KINDS,
@@ -27,6 +28,7 @@ export function useSandboxRun(typesafeKey: string | undefined) {
 	const [side, setSide] = useState<ArenaSide | null>(null)
 	const [failure, setFailure] = useState<ProviderErrorKind | null>(null)
 	const controller = useRef<AbortController | null>(null)
+	const devRun = useRecordDevRun()
 
 	useEffect(() => () => controller.current?.abort(), [])
 
@@ -56,6 +58,7 @@ export function useSandboxRun(typesafeKey: string | undefined) {
 				setFailure(result.error)
 			} else {
 				setSide({ racer: RACERS.jev, modelId: answeredBy, at: startedAt, result })
+				devRun.record()
 			}
 			setStatus('done')
 		})

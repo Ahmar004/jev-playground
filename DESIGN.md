@@ -302,13 +302,13 @@ Level 1 (Speed Race) is also timed, so it writes Leaderboard entries under the g
 
 - `first_race`: finish level 1.
 - `pathfinder`: finish all 8 levels. This unlocks the completion card.
-- `right_tool`: sort every Router card correctly on the first try.
+- `right_tool`: sort every Router card correctly on the first try. The first "Run the pipeline" sends the sort (`submitFirstPlay`), checked on the server against the level content; only the first one, sent before the first Reveal, counts (`LevelProgress.firstPlay`).
 - `phish_spotter`: finish level 7.
-- `trickster`: fool Jev in level 8.
+- `trickster`: in level 8, guess right for every pair whether the tricky message fools Jev, judged against Jev's recording (user decision, Step-7). The guesses go with the first Reveal (`submitFirstPlay`), and only that first try counts.
 - `gamer`: finish all 4 P0 games.
 - `oracle`: make 5 correct predictions.
 - `quiz_climber`: score higher on the end quiz than on the start quiz.
-- `live_wire`: make a first Developer mode run.
+- `live_wire`: finish a first Developer mode live run (a race, an Arena run or a Sandbox run that ends without a stopping failure). `recordDevRun` also pays `dev_first_run` once.
 - `sharer`: create a first share.
 
 **Completion card (Profile):** the completion date, total XP, badges, start and end quiz scores, and Jev's wins and losses across the path.
@@ -350,6 +350,7 @@ Every action is a `validatedAction`. Every action except `signIn` and `signUp` c
 | `submitQuiz`                                                            | Scores on the server, stores the attempt, awards XP.                                                                                                                                                          |
 | `recordGameRun`                                                         | Leaderboard upsert, XP and badges (VS games and Speed Race).                                                                                                                                                  |
 | `recordArenaRun`, `recordDevRun`                                        | XP and badges only. The Leaderboard covers timed games only (spec 10.5).                                                                                                                                      |
+| `submitFirstPlay`                                                       | The first Router sort or trick guesses for a level, before its first Reveal. Stored once in `LevelProgress.firstPlay`; grants `right_tool` or `trickster` when every answer is right.                         |
 | `createShare`                                                           | Validates the snapshot with Zod. Requires a consent flag when it holds user text. Caps it at 32 KB. Allows 20 shares per user per 24 hours, counted from `Share` rows (no in-memory counter). Returns the ID. |
 | `deleteShare`                                                           | Checks ownership and deletes the row. The shared page reads the row on every request, so the link stops working at once (R87).                                                                                |
 | `signIn`, `signUp`, `signOut`                                           | Supabase Auth through `src/lib/supabase/`. `provisionUser` runs on first sign-in.                                                                                                                             |

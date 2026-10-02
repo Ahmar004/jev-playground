@@ -26,18 +26,19 @@
 		]
 	},
 	"predict": {
+		"intro": "On the Play step, Jev and an LLM each check the same 3 emails for 10 warning signs each (urgency, a request for a password, and so on). Jev gets all 10 questions about an email in one request. Guess who wins.",
 		"questions": [
 			{
 				"metric": "fastest",
-				"prompt": "Who is faster?"
+				"prompt": "Who checks all 3 emails first?"
 			},
 			{
 				"metric": "cheapest",
-				"prompt": "Who costs less?"
+				"prompt": "Who costs less for the 3 emails?"
 			},
 			{
 				"metric": "most_accurate",
-				"prompt": "Who gets more right?"
+				"prompt": "Who gets more of the 30 warning signs right?"
 			}
 		]
 	},
@@ -65,7 +66,7 @@
 		"questions": [
 			{
 				"id": "phish-fan",
-				"prompt": "What is the benefit of putting many Nouls in one request?",
+				"prompt": "What do you gain by asking Jev all ten warning-sign questions in one request?",
 				"options": [
 					{
 						"id": "cheap",
@@ -85,7 +86,7 @@
 			},
 			{
 				"id": "phish-prob",
-				"prompt": "Why does each sign come with a probability?",
+				"prompt": "Why is it useful that Jev gives a probability for each warning sign?",
 				"options": [
 					{
 						"id": "unsure",

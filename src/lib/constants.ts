@@ -258,14 +258,27 @@ export const BADGE_LABELS: Record<BadgeId, { name: string; description: string }
 	[BADGES.pathfinder]: { name: 'Pathfinder', description: 'Finish all 8 levels.' },
 	[BADGES.rightTool]: {
 		name: 'Right Tool',
-		description: 'Win a VS game by picking the right tool.'
+		description: 'In level 6, sort every card to the right tool on your first try.'
 	},
-	[BADGES.phishSpotter]: { name: 'Phish Spotter', description: 'Finish the phishing level.' },
-	[BADGES.trickster]: { name: 'Trickster', description: 'Fool Jev in the Arena.' },
-	[BADGES.gamer]: { name: 'Gamer', description: 'Finish all 4 VS games.' },
+	[BADGES.phishSpotter]: { name: 'Phish Spotter', description: 'Finish level 7, Spot the Phish.' },
+	[BADGES.trickster]: {
+		name: 'Trickster',
+		description: 'In level 8, guess right for all 6 pairs whether the trick fools Jev.'
+	},
+	[BADGES.gamer]: {
+		name: 'Gamer',
+		description:
+			'Finish Guardrail Gauntlet, Needle Hunt, Number Crunch Showdown and Review Tug-of-War.'
+	},
 	[BADGES.oracle]: { name: 'Oracle', description: 'Get 5 level predictions right.' },
-	[BADGES.quizClimber]: { name: 'Quiz Climber', description: 'Climb the quiz ladder.' },
-	[BADGES.liveWire]: { name: 'Live Wire', description: 'Run a live call in Developer mode.' },
+	[BADGES.quizClimber]: {
+		name: 'Quiz Climber',
+		description: 'Score higher on the end quiz than on the start quiz.'
+	},
+	[BADGES.liveWire]: {
+		name: 'Live Wire',
+		description: 'Finish a live run in Developer mode with your own key.'
+	},
 	[BADGES.sharer]: { name: 'Sharer', description: 'Share a result.' }
 }
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { QuestionCard } from '@/components/ui/question-card'
 import { QUIZ_TOOLS } from '@/content/quiz-schema'
 import type { QuizId } from '@/lib/constants'
 import { QUIZ_TOOL_LABELS } from './tools'
@@ -62,13 +63,13 @@ export function QuizTaker({
 					style={{ width: `${((index + 1) / questions.length) * PERCENT}%` }}
 				/>
 			</div>
-			<fieldset
+			<QuestionCard
 				key={question.id}
-				className="bg-surface border-border animate-rise shadow-card flex flex-col gap-3 rounded-lg border p-4"
+				className="animate-rise"
+				legend={question.prompt}
+				legendRef={headingRef}
+				legendClassName="text-lg"
 			>
-				<legend ref={headingRef} tabIndex={-1} className="text-text px-1 text-lg font-bold">
-					{question.prompt}
-				</legend>
 				{QUIZ_TOOLS.map((tool) => (
 					<label
 						key={tool}
@@ -85,7 +86,7 @@ export function QuizTaker({
 						<span className="text-text">{QUIZ_TOOL_LABELS[tool]}</span>
 					</label>
 				))}
-			</fieldset>
+			</QuestionCard>
 			<div className="flex flex-wrap gap-3">
 				<Button
 					type="button"

@@ -124,6 +124,10 @@ test('flow 5: replay a preset, share it, open it signed out, delete it, the link
 	await expect(mine.getByRole('link', { name: 'Product match' })).toBeVisible()
 	await mine.getByRole('button', { name: /Delete the shared result Product match/ }).click()
 	await page.getByRole('button', { name: 'Delete share' }).click()
+	// Wait for the server's answer: while the confirm dialog is open it hides the
+	// page from the accessibility tree, so the link "vanishes" before the delete lands.
+	await expect(page.getByText('Share deleted', { exact: true })).toBeVisible()
+	await expect(page.getByRole('dialog')).toHaveCount(0)
 	await expect(mine.getByRole('link', { name: 'Product match' })).toHaveCount(0)
 
 	// The link stopped working at once (R87).

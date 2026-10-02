@@ -57,3 +57,6 @@ pnpm-debug.log*
 
 # Playwright screenshots for the visual check (CLAUDE.md > Workflow)
 /e2e/screenshots/
+
+# k6 load test session cookie (a live session token)
+load/.session

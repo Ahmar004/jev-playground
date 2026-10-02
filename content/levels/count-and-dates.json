@@ -35,10 +35,11 @@
 		]
 	},
 	"predict": {
+		"intro": "On the Play step, Jev and an LLM are asked straight out how many entries in a list are fruits (4 lists), and which of two dates comes first (4 pairs). After that you see the fix, where Jev only judges small pieces and code does the counting. For now, guess about the direct questions only.",
 		"questions": [
 			{
 				"metric": "most_accurate",
-				"prompt": "Asked directly, who gets more of the counting and date questions right?"
+				"prompt": "Asked directly, who gets more of the 8 counting and date questions right?"
 			}
 		]
 	},
@@ -83,7 +84,7 @@
 		"questions": [
 			{
 				"id": "count-where-math",
-				"prompt": "Where should the adding and the date comparing happen?",
+				"prompt": "In the fix, which part should do the counting and the date comparing?",
 				"options": [
 					{
 						"id": "code",

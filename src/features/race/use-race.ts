@@ -129,18 +129,23 @@ export function useRace({
 		const clock = setInterval(() => setElapsedMs(currentTime() - begunAt), CLOCK_TICK_MS)
 		active.current.run = { controller, handles, clock }
 		void Promise.all(handles.map((handle) => handle.done))
-			.catch((error: unknown) => {
-				// A live run that hit a repeating failure stops here; the results so far stay on screen.
-				if (error instanceof LiveFailure) setFailure({ kind: error.kind, racer: error.racer })
-				else throw error
-			})
-			.then(() => {
+			.then(
+				() => true,
+				(error: unknown) => {
+					// A live run that hit a repeating failure stops here; the results so far stay on screen.
+					if (error instanceof LiveFailure) setFailure({ kind: error.kind, racer: error.racer })
+					else throw error
+					return false
+				}
+			)
+			.then((completed) => {
 				if (controller.signal.aborted) return
 				clearInterval(clock)
 				setElapsedMs(currentTime() - begunAt)
 				active.current.run = null
 				setStatus(RACE_STATUS.finished)
-				onFinished?.(finish)
+				// A stopped run is not a finish: its partial totals must not be recorded.
+				if (completed) onFinished?.(finish)
 			})
 	}
 

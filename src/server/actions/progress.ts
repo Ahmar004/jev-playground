@@ -4,18 +4,22 @@ import { refresh } from 'next/cache'
 import { z } from 'zod'
 import { getCheckQuestion } from '@/content/levels'
 import { currentRecordings } from '@/content/recordings'
+import { TASKS } from '@/content/tasks'
 import { isPredictionCorrect, judgeAll, judgedTotals } from '@/features/levels/judge'
-import { LEVEL_STATUS, XP_SOURCES } from '@/lib/constants'
+import { BADGES, LEVEL_STATUS, RACERS, XP_SOURCES } from '@/lib/constants'
 import { AppError } from '@/lib/errors/app-error'
-import { awardXp, syncBadges, type Awards } from '@/server/awards/awards'
+import { awardXp, grantBadge, syncBadges, type Awards } from '@/server/awards/awards'
 import { requireUser } from '@/server/auth/session'
-import { db } from '@/server/db/client'
+import { db, Prisma } from '@/server/db/client'
 import { parseStoredPrediction, predictionSchema } from '@/server/progress/prediction'
 import { completeIfReady, levelOrThrow, statusOf } from '@/server/progress/complete'
+import { firstPlayBadge, firstPlaySchema } from '@/server/progress/first-play'
 import { canSkip, nextStatusOnActivity } from '@/server/progress/rules'
 import { validatedAction } from './validated-action'
 
 const CONFLICT = 409
+// dev_first_run is paid once per user, so its XpEvent has one fixed sourceId (DESIGN 10).
+const DEV_RUN_SOURCE_ID = 'first'
 
 function alreadyRevealed(row: { predictionCorrect: boolean | null; status: string } | null) {
 	const none: Awards = { xp: 0, badges: [] }
@@ -196,5 +200,68 @@ export const submitCheck = validatedAction({
 		})
 		refresh()
 		return result
+	}
+})
+
+/**
+ * The first Router sort (level 6) or the trick guesses (level 8), sent before
+ * the first Reveal. Only the first one counts, and it is checked here against
+ * the level content and Jev's recording, so right_tool and trickster can't be
+ * earned by trying again after seeing the answers (DESIGN 10).
+ */
+export const submitFirstPlay = validatedAction({
+	input: z.strictObject({ levelId: z.string(), play: firstPlaySchema }),
+	handler: async (input) => {
+		const { userId } = await requireUser()
+		const level = levelOrThrow(input.levelId)
+		const taskId = level.tasks[0]?.id ?? ''
+		const badge = firstPlayBadge(input.play, {
+			level,
+			task: TASKS.get(taskId),
+			jev: currentRecordings(taskId).find((recording) => recording.racer === RACERS.jev)
+		})
+		if (badge === 'invalid') {
+			throw new AppError('That play does not fit this level.', { code: 'invalid_play' })
+		}
+		const result = await db.$transaction(async (tx) => {
+			const key = { userId_levelId: { userId, levelId: level.id } }
+			const row = await tx.levelProgress.findUnique({ where: key })
+			const status = nextStatusOnActivity(statusOf(row))
+			await tx.levelProgress.createMany({
+				data: [{ userId, levelId: level.id, status }],
+				skipDuplicates: true
+			})
+			// Guarded claim: only a play sent before Reveal, and only the first one, counts.
+			const claim = await tx.levelProgress.updateMany({
+				where: {
+					userId,
+					levelId: level.id,
+					revealedAt: null,
+					firstPlay: { equals: Prisma.DbNull }
+				},
+				data: { status, firstPlay: input.play }
+			})
+			const none: Awards = { xp: 0, badges: [] }
+			if (claim.count === 0) return { counted: false, awards: none }
+			const earned = badge !== null && (await grantBadge(tx, userId, badge))
+			return { counted: true, awards: earned ? { xp: 0, badges: [badge] } : none }
+		})
+		refresh()
+		return result
+	}
+})
+
+/** The first finished Developer mode live run: 50 XP and the live_wire badge, once (DESIGN 10). */
+export const recordDevRun = validatedAction({
+	input: z.strictObject({}),
+	handler: async () => {
+		const { userId } = await requireUser()
+		const awards = await db.$transaction(async (tx): Promise<Awards> => {
+			const xp = await awardXp(tx, userId, XP_SOURCES.devFirstRun, DEV_RUN_SOURCE_ID)
+			const earned = await grantBadge(tx, userId, BADGES.liveWire)
+			return { xp, badges: earned ? [BADGES.liveWire] : [] }
+		})
+		if (awards.xp > 0 || awards.badges.length > 0) refresh()
+		return { awards }
 	}
 })

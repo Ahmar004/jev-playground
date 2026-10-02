@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { QuestionCard } from '@/components/ui/question-card'
 import { SuccessIcon, WrongIcon } from '@/components/ui/icons'
 import type { CheckQuestion } from '@/content/level-schema'
 import type { LevelProgressView } from './level-progress'
@@ -75,8 +76,7 @@ export function CheckStep({
 							setPicks((current) => ({ ...current, [question.id]: '' }))
 						}}
 					>
-						<fieldset className="bg-surface border-border shadow-card flex flex-col gap-3 rounded-lg border p-4">
-							<legend className="text-text px-1 font-bold">{question.prompt}</legend>
+						<QuestionCard legend={question.prompt}>
 							{question.options.map((option) => (
 								<label
 									key={option.id}
@@ -97,7 +97,7 @@ export function CheckStep({
 									<span className="text-text">{option.text}</span>
 								</label>
 							))}
-						</fieldset>
+						</QuestionCard>
 						{picking && (
 							<div>
 								<Button type="submit" disabled={!pick || pendingQuestionId === question.id}>

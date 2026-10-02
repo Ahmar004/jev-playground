@@ -7,6 +7,10 @@ import type { Recording } from '@/content/recording-schema'
 import type { LevelStage } from './lineup'
 import { PlayStep } from './play-step'
 
+vi.mock('@/features/race/use-record-dev-run', () => ({
+	useRecordDevRun: () => ({ record: vi.fn() })
+}))
+
 const stage = (jev: Recording | undefined, opponents: Recording[]): LevelStage => ({
 	task: choiceTask,
 	title: 'Race',

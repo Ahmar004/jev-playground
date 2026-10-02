@@ -35,6 +35,7 @@
 		]
 	},
 	"predict": {
+		"intro": "On the Play step you send each of 6 jobs (sort a support message, add two numbers, write a poem, spot a scam, compare two dates, summarize a paragraph) to Jev, an LLM or Code, then run them. These questions compare Jev and the LLM when each tries all 6 jobs itself.",
 		"questions": [
 			{
 				"metric": "delivers",
@@ -42,11 +43,11 @@
 			},
 			{
 				"metric": "fastest",
-				"prompt": "Who is faster?"
+				"prompt": "Who finishes all 6 jobs first?"
 			},
 			{
 				"metric": "cheapest",
-				"prompt": "Who costs less?"
+				"prompt": "Who costs less for all 6 jobs?"
 			}
 		]
 	},
@@ -158,7 +159,7 @@
 			},
 			{
 				"id": "router-first",
-				"prompt": "What is a good first step in a mixed system?",
+				"prompt": "You are building one system that uses Jev, an LLM and plain code together. What matters most?",
 				"options": [
 					{
 						"id": "route",

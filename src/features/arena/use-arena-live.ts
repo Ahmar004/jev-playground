@@ -10,6 +10,7 @@ import {
 	type ProviderErrorKind,
 	type Racer
 } from '@/lib/constants'
+import { useRecordDevRun } from '@/features/race/use-record-dev-run'
 import { jevRacer, llmRacer } from '@/runner/racers'
 import type { ItemResult } from '@/runner/types'
 
@@ -29,6 +30,7 @@ export function useArenaLive(config: LiveConfig) {
 	// What the latest run was started with: the task as it was then, and when.
 	const [ran, setRan] = useState<{ task: Task; startedAt: string } | null>(null)
 	const controller = useRef<AbortController | null>(null)
+	const devRun = useRecordDevRun()
 
 	useEffect(() => () => controller.current?.abort(), [])
 
@@ -60,17 +62,20 @@ export function useArenaLive(config: LiveConfig) {
 		void Promise.all(
 			runners.map(async ([racer, pending]) => {
 				const result = await pending
-				if (abort.signal.aborted) return
+				if (abort.signal.aborted) return false
 				if (result.error && RUN_STOPPING_ERRORS.includes(result.error)) {
 					setFailure(
 						(current) => current ?? { racer, kind: result.error ?? PROVIDER_ERROR_KINDS.unknown }
 					)
-					return
+					return false
 				}
 				setResults((current) => ({ ...current, [racer]: result }))
+				return true
 			})
-		).then(() => {
-			if (!abort.signal.aborted) setStatus('done')
+		).then((answered) => {
+			if (abort.signal.aborted) return
+			setStatus('done')
+			if (answered.every(Boolean)) devRun.record()
 		})
 	}
 

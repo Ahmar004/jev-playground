@@ -16,15 +16,16 @@ Next.js 16 App Router (React 19, TypeScript strict) for frontend and backend; Su
 
 `pnpm` is not on PATH on this machine, so run every script as `corepack pnpm <script>`.
 
-| Command                                                         | What it does                                                                                                                           |
-| --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `dev` / `build` / `start`                                       | Dev server; production build; serve the build on localhost.                                                                            |
-| `lint` / `typecheck`                                            | ESLint with zero warnings; `tsc --noEmit`.                                                                                             |
-| `format` / `format:check`                                       | Prettier write / check.                                                                                                                |
-| `test` / `test:e2e`                                             | `node:test` suites, then Vitest; Playwright e2e.                                                                                       |
-| `check:env` / `check:secrets` / `check:standards` / `check:rls` | Env vars documented; no secrets in source or logs; 8x standards wired; RLS on with no policies.                                        |
-| `record`                                                        | Record Jev and the three Claude models for tasks whose content changed (`--task`, `--model`, `--dry-run`). Costs money; dry-run first. |
-| `prisma:generate` / `db:run-once`                               | Regenerate the Prisma client; apply `prisma/run-once.sql` once per database.                                                           |
+| Command                                                         | What it does                                                                                                                              |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `dev` / `build` / `start`                                       | Dev server; production build; serve the build on localhost.                                                                               |
+| `lint` / `typecheck`                                            | ESLint with zero warnings; `tsc --noEmit`.                                                                                                |
+| `format` / `format:check`                                       | Prettier write / check.                                                                                                                   |
+| `test` / `test:e2e`                                             | `node:test` suites, then Vitest; Playwright e2e.                                                                                          |
+| `check:env` / `check:secrets` / `check:standards` / `check:rls` | Env vars documented; no secrets in source or logs; 8x standards wired; RLS on with no policies.                                           |
+| `record`                                                        | Record Jev and the three Claude models for tasks whose content changed (`--task`, `--model`, `--dry-run`). Costs money; dry-run first.    |
+| `load:session` / `load`                                         | k6 load test against `pnpm start` (R78); needs k6 installed. Writes `load/results-<users>.json` for Methodology. See `docs/load-test.md`. |
+| `prisma:generate` / `db:run-once`                               | Regenerate the Prisma client; apply `prisma/run-once.sql` once per database.                                                              |
 
 `test` runs the template's `node:test` suites first (`check:standards` requires them, for the logger contract tests) and then `vitest run`. For Vitest alone, run `corepack pnpm exec vitest`.
 

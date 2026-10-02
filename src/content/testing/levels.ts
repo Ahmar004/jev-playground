@@ -11,6 +11,7 @@ export const testLevel = {
 		]
 	},
 	predict: {
+		intro: 'Jev and an LLM race on three items.',
 		questions: [
 			{ metric: 'fastest', prompt: 'Who finishes first?' },
 			{ metric: 'cheapest', prompt: 'Who costs less?' },

@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { PRICES } from '@/content/prices'
 import { currentRecordings } from '@/content/recordings'
 import { TASKS } from '@/content/tasks'
+import { LOAD_TESTS } from '@/features/methodology/load-test'
+import { LoadTestSection } from '@/features/methodology/load-test-section'
 import { priceRows, recordingRows } from '@/features/methodology/methodology-data'
 import { CLAUDE_MODELS, NOUL_THRESHOLD, RACE_LANES } from '@/lib/constants'
 import { ANTHROPIC_MAX_TOKENS } from '@/runner/providers/anthropic'
@@ -226,6 +228,8 @@ export default function MethodologyPage() {
 					</div>
 				)}
 			</section>
+
+			<LoadTestSection runs={LOAD_TESTS} />
 		</main>
 	)
 }

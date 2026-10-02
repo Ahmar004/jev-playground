@@ -159,6 +159,34 @@ describe('useRace with a live source', () => {
 		expect(result.current.failure).toEqual({ kind: 'invalid_key', racer: 'llm' })
 	})
 
+	it('reports a finish only when every racer finished, never after a stopping failure', async () => {
+		const failing: ItemRunner = async (item) =>
+			liveResult(item.id, { ok: false, error: PROVIDER_ERROR_KINDS.invalidKey })
+		const onFinished = vi.fn()
+		const { result } = renderHook(() =>
+			useRace({
+				task: choiceTask,
+				entries,
+				live: { jev: ok, llm: stopOnProviderFailure(failing) },
+				onFinished
+			})
+		)
+		act(() => result.current.start())
+		await advance(10)
+		expect(result.current.failure?.kind).toBe('invalid_key')
+		expect(onFinished).not.toHaveBeenCalled()
+	})
+
+	it('reports a finished live run once', async () => {
+		const onFinished = vi.fn()
+		const { result } = renderHook(() =>
+			useRace({ task: choiceTask, entries, live: { jev: ok, llm: ok }, onFinished })
+		)
+		act(() => result.current.start())
+		await advance(10)
+		expect(onFinished).toHaveBeenCalledTimes(1)
+	})
+
 	it('clears a failure when the race starts again', async () => {
 		const failing: ItemRunner = async (item) =>
 			liveResult(item.id, { ok: false, error: PROVIDER_ERROR_KINDS.rateLimited })

@@ -2,17 +2,21 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { QuestionCard } from '@/components/ui/question-card'
 import { PREDICTABLE_RACERS, type Level } from '@/content/level-schema'
 import { RacerTag } from '@/features/race/racer-tag'
 import type { Prediction } from './judge'
 
 /** Predict: one two-way pick per question, locked in with Enter or the button (spec 6.1). */
 export function PredictStep({
+	intro,
 	questions,
 	initial,
 	locked = false,
 	onSubmit
 }: {
+	// What is about to race, so the questions have their context.
+	intro: string
 	questions: Level['predict']['questions']
 	initial: Prediction
 	// True once the first Reveal fixed the picks (spec 6.1): they show, but can't change.
@@ -30,16 +34,14 @@ export function PredictStep({
 				if (complete) onSubmit(picks)
 			}}
 		>
-			<h2 id="predict-heading" tabIndex={-1} className="text-text text-2xl font-bold">
-				Predict
-			</h2>
+			<div className="flex flex-col gap-1">
+				<h2 id="predict-heading" tabIndex={-1} className="text-text text-2xl font-bold">
+					Predict
+				</h2>
+				<p className="text-text-muted">{intro}</p>
+			</div>
 			{questions.map((question) => (
-				<fieldset
-					key={question.metric}
-					disabled={locked}
-					className="bg-surface border-border shadow-card flex flex-col gap-3 rounded-lg border p-4"
-				>
-					<legend className="text-text px-1 font-bold">{question.prompt}</legend>
+				<QuestionCard key={question.metric} legend={question.prompt} disabled={locked}>
 					<div className="grid grid-cols-2 gap-3">
 						{PREDICTABLE_RACERS.map((racer) => (
 							<label
@@ -58,7 +60,7 @@ export function PredictStep({
 							</label>
 						))}
 					</div>
-				</fieldset>
+				</QuestionCard>
 			))}
 			{locked && (
 				<p className="text-text-muted text-sm">

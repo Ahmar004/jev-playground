@@ -26,14 +26,15 @@
 		]
 	},
 	"predict": {
+		"intro": "On the Play step, Jev and an LLM each read 12 short customer messages, 6 written plainly and 6 with a trick in the wording, and answer the same question about each: is the sender asking to cancel their subscription? Guess who answers more of the 12 correctly, and who costs less.",
 		"questions": [
 			{
 				"metric": "most_accurate",
-				"prompt": "Who gets more right?"
+				"prompt": "Who answers more of the 12 messages correctly?"
 			},
 			{
 				"metric": "cheapest",
-				"prompt": "Who costs less?"
+				"prompt": "Who costs less for all 12 messages?"
 			}
 		]
 	},
@@ -65,11 +66,11 @@
 		"questions": [
 			{
 				"id": "trick-precise",
-				"prompt": "How do you make Jev harder to trick?",
+				"prompt": "You use Jev to read customer messages, and some customers word them to fool it. What makes Jev harder to fool?",
 				"options": [
 					{
 						"id": "precise",
-						"text": "Ask a precise question and treat user text as data"
+						"text": "Ask one precise question, and treat the customer's text only as something to judge, never as instructions to follow"
 					},
 					{
 						"id": "long",
@@ -77,7 +78,7 @@
 					},
 					{
 						"id": "trust",
-						"text": "Trust whatever the message says"
+						"text": "Believe whatever the message says about itself"
 					}
 				],
 				"answerId": "precise",
@@ -85,19 +86,19 @@
 			},
 			{
 				"id": "trick-signal",
-				"prompt": "What was a sign that Jev might be wrong on a trick?",
+				"prompt": "In the results, what hinted that a trick might have fooled Jev?",
 				"options": [
 					{
 						"id": "middle",
-						"text": "A probability near the middle"
+						"text": "Its probability was near the middle (around 50%), not near 0% or 100%"
 					},
 					{
 						"id": "high",
-						"text": "A probability near 100 percent"
+						"text": "Its probability was near 100%"
 					},
 					{
 						"id": "fast",
-						"text": "A very fast answer"
+						"text": "It answered very fast"
 					}
 				],
 				"answerId": "middle",

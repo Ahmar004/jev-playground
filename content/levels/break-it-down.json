@@ -35,18 +35,19 @@
 		]
 	},
 	"predict": {
+		"intro": "On the Play step, Jev and an LLM each read the same 6 product reviews and answer one broad question about each: would this review help someone decide whether to buy? After that you see Jev answer five small questions per review instead. For now, guess about the broad question.",
 		"questions": [
 			{
 				"metric": "fastest",
-				"prompt": "Who is faster?"
+				"prompt": "Who answers the broad question for all 6 reviews first?"
 			},
 			{
 				"metric": "cheapest",
-				"prompt": "Who costs less?"
+				"prompt": "Who costs less for all 6 reviews?"
 			},
 			{
 				"metric": "most_accurate",
-				"prompt": "Who gets more right?"
+				"prompt": "Who judges more of the 6 reviews correctly?"
 			}
 		]
 	},
@@ -79,7 +80,7 @@
 		"questions": [
 			{
 				"id": "break-why",
-				"prompt": "Why combine several small Jev answers in code?",
+				"prompt": "Why ask Jev five small questions per review and combine the answers in code, instead of one broad question?",
 				"options": [
 					{
 						"id": "tune",

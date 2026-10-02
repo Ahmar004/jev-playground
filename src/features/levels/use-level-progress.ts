@@ -8,7 +8,13 @@ import { track } from '@/lib/analytics/track'
 import { LEVEL_STATUS } from '@/lib/constants'
 import { toast } from '@/lib/toast'
 import { useServerState } from '@/lib/use-server-state'
-import { revealPrediction, submitCheck, submitPrediction } from '@/server/actions/progress'
+import {
+	revealPrediction,
+	submitCheck,
+	submitFirstPlay,
+	submitPrediction
+} from '@/server/actions/progress'
+import type { FirstPlay } from '@/server/progress/first-play'
 import type { ActionResult } from '@/server/actions/validated-action'
 import { nextStatusOnActivity } from '@/server/progress/rules'
 import { announceAwards } from './awards-toast'
@@ -82,11 +88,29 @@ export function useLevelProgress(
 	})
 
 	const revealMutation = useMutation({
-		mutationFn: async (opponentModelId: string) =>
-			unwrap(await revealPrediction({ levelId, opponentModelId })),
+		mutationFn: async ({
+			opponentModelId,
+			play
+		}: {
+			opponentModelId: string
+			play?: FirstPlay
+		}) => {
+			// A level game's first try must land before Reveal shows the answers.
+			// It only decides a badge, so a failure never blocks the Reveal.
+			const played = play ? await submitFirstPlay({ levelId, play }) : null
+			const result = unwrap(await revealPrediction({ levelId, opponentModelId }))
+			if (!played?.ok) return result
+			return {
+				...result,
+				awards: {
+					xp: result.awards.xp + played.data.awards.xp,
+					badges: [...result.awards.badges, ...played.data.awards.badges]
+				}
+			}
+		},
 		onMutate: () => progress,
 		onError,
-		onSuccess: (result, opponentModelId) => {
+		onSuccess: (result, { opponentModelId }) => {
 			setProgress((current) => ({
 				...current,
 				revealed: true,
@@ -132,9 +156,9 @@ export function useLevelProgress(
 		pendingQuestionId,
 		consumeCelebration: () => setCelebrate(false),
 		lockIn: (prediction: Prediction) => lock.mutate(prediction),
-		reveal: (opponentModelId: string) => {
+		reveal: (opponentModelId: string, play?: FirstPlay) => {
 			if (progress.revealed || revealMutation.isPending) return
-			revealMutation.mutate(opponentModelId)
+			revealMutation.mutate({ opponentModelId, play })
 		},
 		answer: (questionId: string, optionId: string) => {
 			if (progress.answers[questionId]) return

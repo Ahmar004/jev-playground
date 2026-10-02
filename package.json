@@ -17,6 +17,8 @@
 		"test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --import ./scripts/register-ts.mjs --test \"scripts/*.test.mjs\" \"src/**/*.test.mts\" && vitest run",
 		"test:e2e": "playwright test",
 		"record": "tsx --env-file-if-exists=.env.local scripts/record.ts",
+		"load:session": "node load/session.mjs",
+		"load": "k6 run -q load/journey.js",
 		"prisma:generate": "prisma generate",
 		"prisma:migrate:generate:check": "node scripts/generate-migration.mjs --check",
 		"db:run-once": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --import ./scripts/register-ts.mjs scripts/run-once-sql.mjs",

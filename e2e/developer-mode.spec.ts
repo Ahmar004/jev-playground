@@ -113,6 +113,9 @@ test('flow 4: keys panel, live race, labels, then Remove all', async ({ page }) 
 	expect(hits.jev).toBe(40)
 	expect(hits.messages).toBe(40)
 	expect(hits.keysInUrl).toBe(0)
+	// The first finished live run pays once: 50 XP and the Live Wire badge (DESIGN 10).
+	await expect(page.getByText('Badge earned: Live Wire', { exact: true })).toBeVisible()
+	await expect(page.getByText('+50 XP', { exact: true })).toBeVisible()
 
 	// Every result says Developer mode, with the model that answered (R13).
 	await expect(
@@ -176,6 +179,9 @@ test('flow 8: a rejected key stops the run with a friendly message and a Beginne
 	// The run stopped early instead of spending all 40 calls on a bad key.
 	expect(hits.messages).toBeLessThan(40)
 	await expect(alert.getByRole('button', { name: 'Retry' })).toBeVisible()
+	// A stopped run is not a finish: nothing is saved and no badge is paid.
+	await expect(page.getByText('Saved to your Leaderboard')).toHaveCount(0)
+	await expect(page.getByText('Badge earned: Live Wire')).toHaveCount(0)
 	await page.screenshot({ path: `${SCREENSHOT_DIR}/dev-failure.png`, fullPage: true })
 
 	await alert.getByRole('button', { name: 'Use Beginner mode instead' }).click()
