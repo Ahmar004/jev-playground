@@ -1,0 +1,82 @@
+{
+	"taskId": "fruits-fixed",
+	"taskHash": "77080ac07dd9c2498b5042d135bfbc2767a90cce17bfd2b3a371bd19d498c331",
+	"racer": "llm",
+	"modelId": "claude-haiku-4-5-20251001",
+	"recordedAt": "2026-10-02T03:07:53.580Z",
+	"price": {
+		"inputPerM": 1,
+		"outputPerM": 5,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "f1",
+			"ok": true,
+			"raw": "{\"answer\": \"5\"}",
+			"parsed": "5",
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 688.1449999999986,
+			"usage": { "inputTokens": 195, "outputTokens": 9 },
+			"costUsd": 0.00024,
+			"lane": 0,
+			"startMs": 0.009899999999106512,
+			"endMs": 688.4990999999991
+		},
+		{
+			"itemId": "f2",
+			"ok": true,
+			"raw": "```json\n{\"answer\": \"4\"}\n```",
+			"parsed": "4",
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 744.1846999999998,
+			"usage": { "inputTokens": 198, "outputTokens": 14 },
+			"costUsd": 0.000268,
+			"lane": 1,
+			"startMs": 0.22239999999874271,
+			"endMs": 744.7034999999996
+		},
+		{
+			"itemId": "f3",
+			"ok": true,
+			"raw": "{\"answer\": \"7\"}",
+			"parsed": "7",
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 700.1184000000012,
+			"usage": { "inputTokens": 218, "outputTokens": 9 },
+			"costUsd": 0.000263,
+			"lane": 2,
+			"startMs": 0.33729999999923166,
+			"endMs": 700.761199999999
+		},
+		{
+			"itemId": "f4",
+			"ok": true,
+			"raw": "```json\n{\"answer\": \"7\"}\n```",
+			"parsed": "7",
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 757.5655999999999,
+			"usage": { "inputTokens": 224, "outputTokens": 14 },
+			"costUsd": 0.000294,
+			"lane": 3,
+			"startMs": 0.4418000000005122,
+			"endMs": 758.312899999999
+		}
+	],
+	"totals": {
+		"items": 4,
+		"scored": 4,
+		"correct": 0,
+		"accuracy": 0,
+		"wallMs": 758.3029999999999,
+		"costUsd": 0.001065,
+		"inputTokens": 835,
+		"outputTokens": 46,
+		"parseFailures": 0
+	}
+}

@@ -32,7 +32,7 @@
 			{ "metric": "most_accurate", "prompt": "Who sorts more tickets correctly?" }
 		]
 	},
-	"taskIds": ["speed-race"],
+	"tasks": [{ "id": "speed-race", "title": "Race" }],
 	"reveal": {
 		"why": [
 			"Jev returns a typed answer with no text to write, and pays only for the tokens it reads. The LLM writes its answer as text and pays for every token it writes, on every ticket.",

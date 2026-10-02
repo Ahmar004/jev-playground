@@ -1,0 +1,162 @@
+{
+	"taskId": "fruits-direct",
+	"taskHash": "ec545c5b8b00d84756e99bc9f919ebd083bf5864a8fb82f06b5db3abdda17a6d",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-02T03:07:46.897Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "f1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"4\",\"confidence\":0.55,\"probabilities\":{\"0\":0.0,\"10\":0.0,\"1\":0.0,\"7\":0.0,\"11\":0.0,\"4\":0.59,\"3\":0.0,\"2\":0.0,\"8\":0.0,\"5\":0.41,\"12\":0.0,\"6\":0.0,\"9\":0.0}}},\"usage\":{\"input_tokens\":391,\"output_tokens\":111}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "4",
+					"probabilities": {
+						"0": 0,
+						"1": 0,
+						"2": 0,
+						"3": 0,
+						"4": 0.59,
+						"5": 0.41,
+						"6": 0,
+						"7": 0,
+						"8": 0,
+						"9": 0,
+						"10": 0,
+						"11": 0,
+						"12": 0
+					},
+					"confidence": 0.55
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 563.7238000000007,
+			"usage": { "inputTokens": 391, "outputTokens": 111 },
+			"costUsd": 0.000016422,
+			"lane": 0,
+			"startMs": 0.009399999999914144,
+			"endMs": 563.9007000000001
+		},
+		{
+			"itemId": "f2",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"3\",\"confidence\":0.96,\"probabilities\":{\"8\":0.0,\"3\":0.97,\"4\":0.02,\"0\":0.0,\"10\":0.0,\"9\":0.0,\"12\":0.0,\"1\":0.0,\"6\":0.0,\"2\":0.01,\"7\":0.0,\"11\":0.0,\"5\":0.0}}},\"usage\":{\"input_tokens\":395,\"output_tokens\":111}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "3",
+					"probabilities": {
+						"0": 0,
+						"1": 0,
+						"2": 0.01,
+						"3": 0.97,
+						"4": 0.02,
+						"5": 0,
+						"6": 0,
+						"7": 0,
+						"8": 0,
+						"9": 0,
+						"10": 0,
+						"11": 0,
+						"12": 0
+					},
+					"confidence": 0.96
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 386.8917000000001,
+			"usage": { "inputTokens": 395, "outputTokens": 111 },
+			"costUsd": 0.00001659,
+			"lane": 1,
+			"startMs": 0.39360000000033324,
+			"endMs": 388.3768
+		},
+		{
+			"itemId": "f3",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"6\",\"confidence\":0.45,\"probabilities\":{\"4\":0.02,\"2\":0.0,\"0\":0.0,\"10\":0.0,\"1\":0.0,\"7\":0.05,\"5\":0.44,\"6\":0.49,\"9\":0.0,\"11\":0.0,\"8\":0.0,\"3\":0.0,\"12\":0.0}}},\"usage\":{\"input_tokens\":412,\"output_tokens\":111}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "6",
+					"probabilities": {
+						"0": 0,
+						"1": 0,
+						"2": 0,
+						"3": 0,
+						"4": 0.02,
+						"5": 0.44,
+						"6": 0.49,
+						"7": 0.05,
+						"8": 0,
+						"9": 0,
+						"10": 0,
+						"11": 0,
+						"12": 0
+					},
+					"confidence": 0.45
+				}
+			},
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 704.1966999999995,
+			"usage": { "inputTokens": 412, "outputTokens": 111 },
+			"costUsd": 0.000017304000000000002,
+			"lane": 2,
+			"startMs": 0.5654000000004089,
+			"endMs": 704.9130000000005
+		},
+		{
+			"itemId": "f4",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"7\",\"confidence\":0.49,\"probabilities\":{\"12\":0.0,\"0\":0.0,\"1\":0.0,\"7\":0.52,\"5\":0.04,\"11\":0.0,\"3\":0.0,\"6\":0.34,\"9\":0.01,\"4\":0.01,\"10\":0.0,\"2\":0.0,\"8\":0.08}}},\"usage\":{\"input_tokens\":417,\"output_tokens\":111}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "7",
+					"probabilities": {
+						"0": 0,
+						"1": 0,
+						"2": 0,
+						"3": 0,
+						"4": 0.01,
+						"5": 0.04,
+						"6": 0.34,
+						"7": 0.52,
+						"8": 0.08,
+						"9": 0.01,
+						"10": 0,
+						"11": 0,
+						"12": 0
+					},
+					"confidence": 0.49
+				}
+			},
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 604.7622999999994,
+			"usage": { "inputTokens": 417, "outputTokens": 111 },
+			"costUsd": 0.000017514,
+			"lane": 3,
+			"startMs": 0.7046000000000276,
+			"endMs": 605.6327000000001
+		}
+	],
+	"totals": {
+		"items": 4,
+		"scored": 4,
+		"correct": 2,
+		"accuracy": 0.5,
+		"wallMs": 704.9036000000006,
+		"costUsd": 0.00006783,
+		"inputTokens": 1615,
+		"outputTokens": 444,
+		"parseFailures": 0
+	}
+}

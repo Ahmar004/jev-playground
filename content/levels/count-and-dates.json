@@ -1,0 +1,126 @@
+{
+	"id": "count-and-dates",
+	"order": 3,
+	"title": "Count the Fruits, Date First",
+	"learn": {
+		"intro": "Counting, math and comparing dates are weak spots for Jev: it reads and judges, it does not calculate. The fix is to let Jev judge small pieces and let plain code do the counting and comparing.",
+		"compare": [
+			{
+				"racer": "jev",
+				"title": "Jev, asked directly",
+				"points": [
+					"Asked for a count, or which date is first, in one answer",
+					"Judges well, but does not calculate",
+					"Can be wrong without noticing"
+				]
+			},
+			{
+				"racer": "llm",
+				"title": "An LLM, asked directly",
+				"points": [
+					"Answers the same question in a fixed JSON format",
+					"Pays for every token it writes",
+					"Nothing guarantees its arithmetic"
+				]
+			},
+			{
+				"racer": "code",
+				"title": "Jev + Code",
+				"points": [
+					"Jev answers one small question per entry, or reads each date part",
+					"Code adds up the yes answers, or compares the dates",
+					"The counting is exact, because code did it"
+				]
+			}
+		]
+	},
+	"predict": {
+		"questions": [
+			{
+				"metric": "most_accurate",
+				"prompt": "Asked directly, who gets more of the counting and date questions right?"
+			}
+		]
+	},
+	"tasks": [
+		{
+			"id": "fruits-direct",
+			"title": "Count the fruits: asked directly"
+		},
+		{
+			"id": "fruits-fixed",
+			"title": "Count the fruits: after the fix",
+			"judged": false
+		},
+		{
+			"id": "dates-direct",
+			"title": "Which date is first: asked directly"
+		},
+		{
+			"id": "dates-fixed",
+			"title": "Which date is first: after the fix",
+			"judged": false
+		}
+	],
+	"reveal": {
+		"why": [
+			"Asked directly, each racer has to count or compare inside a single answer. Jev judges well but does not calculate, and the fruit counts show where it slips. The four date pairs here were easy enough for every racer, but a direct answer still comes with no guarantee.",
+			"After the fix, Jev only answers small judgments: is this entry a fruit, what is the day of this date. Code does the adding and the comparing, so the arithmetic cannot go wrong.",
+			"Keep counting, math and dates in code. Use Jev for the judgments code can't make."
+		]
+	},
+	"docs": [
+		{
+			"path": "/model-jaggedness/jev-1.13#math-and-numbers",
+			"title": "Jev 1.13 jaggedness: math and numbers"
+		},
+		{
+			"path": "/cookbooks/date_extraction_cookbook",
+			"title": "Date extraction cookbook"
+		}
+	],
+	"check": {
+		"questions": [
+			{
+				"id": "count-where-math",
+				"prompt": "Where should the adding and the date comparing happen?",
+				"options": [
+					{
+						"id": "code",
+						"text": "In plain code, after Jev answers the small questions"
+					},
+					{
+						"id": "jev",
+						"text": "Inside Jev, in one bigger question"
+					},
+					{
+						"id": "either",
+						"text": "Anywhere, they are equally reliable"
+					}
+				],
+				"answerId": "code",
+				"explanation": "Code does arithmetic and comparisons exactly, every time. Jev is for the judgments around them, like whether an entry is a fruit or what day a date names."
+			},
+			{
+				"id": "count-what-jev-does",
+				"prompt": "In the fix, what does Jev answer?",
+				"options": [
+					{
+						"id": "small",
+						"text": "Small judgments: one yes or no per entry, or one part of a date"
+					},
+					{
+						"id": "total",
+						"text": "The final count or the final order"
+					},
+					{
+						"id": "nothing",
+						"text": "Nothing, code does everything"
+					}
+				],
+				"answerId": "small",
+				"explanation": "Jev handles each small judgment, which is what it is good at. The code then combines those answers into the count or the order."
+			}
+		]
+	}
+}

@@ -1,0 +1,30 @@
+{
+	"id": "write-me-a-poem",
+	"kind": "generate",
+	"version": 1,
+	"jev": {
+		"raw": {
+			"poem": {
+				"type": "text",
+				"instructions": "Write a 4-line poem about the topic in the state."
+			}
+		}
+	},
+	"llm": {
+		"instructions": "Write a 4-line poem about the topic in the state."
+	},
+	"items": [
+		{
+			"id": "p1",
+			"state": "a rainy morning"
+		},
+		{
+			"id": "p2",
+			"state": "a robot learning to dance"
+		},
+		{
+			"id": "p3",
+			"state": "the last slice of pizza"
+		}
+	]
+}

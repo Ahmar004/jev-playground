@@ -5,39 +5,54 @@ import { Button } from '@/components/ui/button'
 import { ExternalLinkIcon } from '@/components/ui/icons'
 import type { Level } from '@/content/level-schema'
 import type { Recording } from '@/content/recording-schema'
-import type { Task } from '@/content/task-schema'
+import { jevCodeRecording, type RaceRecording } from '@/runner/combine'
 import { racerName } from '@/features/race/racer-names'
 import { Scoreboard } from '@/features/race/scoreboard'
 import { RACERS } from '@/lib/constants'
 import { typesafeDocsUrl } from '@/lib/links'
 import { ItemResults } from './item-results'
-import { judgeAll, type Prediction } from './judge'
+import { judgeAll, judgedTotals, type Prediction } from './judge'
+import type { LevelStage } from './lineup'
 import { NotRecorded } from './play-step'
 import { PredictionResults } from './prediction-results'
 import { useCelebration } from './use-celebration'
 
 const SECTION_TITLE = 'text-text text-xl font-bold'
 
-/** Reveal: the prediction against the real result, every model's numbers, why, and the docs (R25-R27). */
+// The recordings one race shows: Jev, then Jev + Code on a combine task, then the opponent and the rest.
+function stageRecordings(stage: LevelStage, opponentId: string): RaceRecording[] {
+	const { jev, task } = stage
+	if (!jev) return []
+	const opponent = stage.opponents.find((recording) => recording.modelId === opponentId)
+	const others = stage.opponents.filter((recording) => recording !== opponent)
+	return [
+		jev,
+		...(task.combine ? [jevCodeRecording(task, jev)] : []),
+		...(opponent ? [opponent] : []),
+		...others
+	]
+}
+
+/**
+ * Reveal: the prediction against the real result, every model's numbers, why,
+ * and the docs (R25-R27). `children` is the level's own widget (level 4's chart).
+ */
 export function RevealStep({
 	level,
-	task,
-	jev,
-	opponent,
-	others,
+	stages,
+	opponentId,
 	prediction,
 	celebrate,
 	onCelebrated,
 	scoredAgainst,
 	onReveal,
 	onCheck,
-	onRaceAgain
+	onRaceAgain,
+	children
 }: {
 	level: Level
-	task: Task
-	jev: Recording | undefined
-	opponent: Recording | undefined
-	others: Recording[]
+	stages: LevelStage[]
+	opponentId: string | undefined
 	prediction: Prediction
 	// True only right after a correct first Reveal (the page's progress hook decides).
 	celebrate: boolean
@@ -49,19 +64,23 @@ export function RevealStep({
 	onReveal: (opponentModelId: string) => void
 	onCheck: () => void
 	onRaceAgain: () => void
+	children?: React.ReactNode
 }) {
-	const verdicts = jev && opponent ? judgeAll(level, prediction, jev.totals, opponent.totals) : []
+	const recorded: Recording[] = stages
+		.flatMap((stage) => (stage.jev ? [stage.jev] : []))
+		.concat(stages.flatMap((stage) => stage.opponents))
+	const totals = opponentId ? judgedTotals(level, recorded, opponentId) : null
+	const verdicts = totals ? judgeAll(level, prediction, totals.jev, totals.opponent) : []
 	useCelebration(celebrate, onCelebrated)
 	const reveal = useEffectEvent(onReveal)
-	const shownModelId = jev && opponent ? opponent.modelId : null
+	const shownModelId = totals ? (opponentId ?? null) : null
 	useEffect(() => {
 		if (shownModelId) reveal(shownModelId)
 	}, [shownModelId])
 
-	if (!jev || !opponent) {
+	if (!totals || !opponentId) {
 		return <NotRecorded>The results appear here once this race is recorded.</NotRecorded>
 	}
-	const recordings = [jev, opponent, ...others]
 	return (
 		<section aria-labelledby="reveal-heading" className="flex flex-col gap-6">
 			<h2 id="reveal-heading" tabIndex={-1} className="text-text text-2xl font-bold">
@@ -70,23 +89,33 @@ export function RevealStep({
 			<PredictionResults
 				questions={level.predict.questions}
 				verdicts={verdicts}
-				opponentModelId={opponent.modelId}
+				opponentModelId={opponentId}
 			/>
-			{scoredAgainst && scoredAgainst !== opponent.modelId && (
+			{scoredAgainst && scoredAgainst !== opponentId && (
 				<p className="text-text-muted text-sm">
 					Your prediction was scored against {racerName(RACERS.llm, scoredAgainst)} on your first
 					Reveal.
 				</p>
 			)}
-			<Scoreboard
-				caption={`Every recorded model on the same ${task.items.length} items`}
-				rows={recordings.map((recording) => ({
-					racer: recording.racer,
-					modelId: recording.modelId,
-					recordedAt: recording.recordedAt,
-					totals: recording.totals
-				}))}
-			/>
+			{stages.map((stage) => {
+				const recordings = stageRecordings(stage, opponentId)
+				return (
+					<div key={stage.task.id} className="flex flex-col gap-4">
+						{stages.length > 1 && <h3 className={SECTION_TITLE}>{stage.title}</h3>}
+						<Scoreboard
+							caption={`Every recorded model on the same ${stage.task.items.length} items`}
+							rows={recordings.map((recording) => ({
+								racer: recording.racer,
+								modelId: recording.modelId,
+								recordedAt: recording.recordedAt,
+								totals: recording.totals
+							}))}
+						/>
+						<ItemResults task={stage.task} recordings={recordings} />
+					</div>
+				)
+			})}
+			{children}
 			<div className="flex flex-col gap-2">
 				<h3 className={SECTION_TITLE}>Why</h3>
 				{level.reveal.why.map((paragraph) => (
@@ -113,7 +142,6 @@ export function RevealStep({
 					))}
 				</ul>
 			</div>
-			<ItemResults task={task} recordings={recordings} />
 			<div className="flex flex-wrap gap-3">
 				<Button type="button" onClick={onCheck}>
 					Check what you learned

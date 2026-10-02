@@ -1,0 +1,106 @@
+{
+	"taskId": "dates-direct",
+	"taskHash": "c8b6a005eea4bfc698d563900bb9e291a1a2a7d6bf35978a685459861353ee1d",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-02T03:07:58.421Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "d1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"second\",\"confidence\":1.0,\"probabilities\":{\"first\":0.0,\"same\":0.0,\"second\":1.0}}},\"usage\":{\"input_tokens\":367,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "second",
+					"probabilities": { "first": 0, "same": 0, "second": 1 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 559.9589000000014,
+			"usage": { "inputTokens": 367, "outputTokens": 38 },
+			"costUsd": 0.000015414000000000002,
+			"lane": 0,
+			"startMs": 0.007900000000518048,
+			"endMs": 560.1490999999987
+		},
+		{
+			"itemId": "d2",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"first\",\"confidence\":1.0,\"probabilities\":{\"second\":0.0,\"same\":0.0,\"first\":1.0}}},\"usage\":{\"input_tokens\":366,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "first",
+					"probabilities": { "second": 0, "same": 0, "first": 1 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 612.3590000000004,
+			"usage": { "inputTokens": 366, "outputTokens": 38 },
+			"costUsd": 0.000015372,
+			"lane": 1,
+			"startMs": 0.2985000000007858,
+			"endMs": 612.7754999999997
+		},
+		{
+			"itemId": "d3",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"second\",\"confidence\":1.0,\"probabilities\":{\"same\":0.0,\"first\":0.0,\"second\":1.0}}},\"usage\":{\"input_tokens\":374,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "second",
+					"probabilities": { "same": 0, "first": 0, "second": 1 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 627.9301000000014,
+			"usage": { "inputTokens": 374, "outputTokens": 38 },
+			"costUsd": 0.000015708,
+			"lane": 2,
+			"startMs": 0.4393999999992957,
+			"endMs": 628.5064999999995
+		},
+		{
+			"itemId": "d4",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"same\",\"confidence\":0.99,\"probabilities\":{\"first\":0.0,\"second\":0.0,\"same\":1.0}}},\"usage\":{\"input_tokens\":370,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "same",
+					"probabilities": { "first": 0, "second": 0, "same": 1 },
+					"confidence": 0.99
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 403.43039999999746,
+			"usage": { "inputTokens": 370, "outputTokens": 38 },
+			"costUsd": 0.00001554,
+			"lane": 3,
+			"startMs": 0.5855000000010477,
+			"endMs": 404.1718000000001
+		}
+	],
+	"totals": {
+		"items": 4,
+		"scored": 4,
+		"correct": 4,
+		"accuracy": 1,
+		"wallMs": 628.498599999999,
+		"costUsd": 0.000062034,
+		"inputTokens": 1477,
+		"outputTokens": 152,
+		"parseFailures": 0
+	}
+}

@@ -18,3 +18,25 @@ export function computeTotals(results: ItemResult[], wallMs: number): RunTotals 
 		parseFailures: results.filter((result) => !result.ok && result.error === undefined).length
 	}
 }
+
+/**
+ * One racer's totals over several tasks run one after another: counts and
+ * cost add up, and accuracy is the credit share over every scored item.
+ */
+export function mergeTotals(parts: RunTotals[]): RunTotals {
+	const scored = parts.reduce((sum, part) => sum + part.scored, 0)
+	const totalCredit = parts.reduce((sum, part) => sum + (part.accuracy ?? 0) * part.scored, 0)
+	return {
+		items: parts.reduce((sum, part) => sum + part.items, 0),
+		scored,
+		correct: parts.reduce((sum, part) => sum + part.correct, 0),
+		accuracy: scored === 0 ? null : totalCredit / scored,
+		wallMs: parts.reduce((sum, part) => sum + part.wallMs, 0),
+		costUsd: parts.some((part) => part.costUsd === null)
+			? null
+			: parts.reduce((sum, part) => sum + (part.costUsd ?? 0), 0),
+		inputTokens: parts.reduce((sum, part) => sum + part.inputTokens, 0),
+		outputTokens: parts.reduce((sum, part) => sum + part.outputTokens, 0),
+		parseFailures: parts.reduce((sum, part) => sum + part.parseFailures, 0)
+	}
+}

@@ -1,0 +1,191 @@
+{
+	"id": "dates-fixed",
+	"kind": "choice",
+	"version": 1,
+	"combine": "compare_dates",
+	"jev": {
+		"questions": {
+			"first_day": {
+				"type": "choice",
+				"instructions": "What is the day of the month of the date in `first`?",
+				"criteria": {
+					"1": null,
+					"2": null,
+					"3": null,
+					"4": null,
+					"5": null,
+					"6": null,
+					"7": null,
+					"8": null,
+					"9": null,
+					"10": null,
+					"11": null,
+					"12": null,
+					"13": null,
+					"14": null,
+					"15": null,
+					"16": null,
+					"17": null,
+					"18": null,
+					"19": null,
+					"20": null,
+					"21": null,
+					"22": null,
+					"23": null,
+					"24": null,
+					"25": null,
+					"26": null,
+					"27": null,
+					"28": null,
+					"29": null,
+					"30": null,
+					"31": null
+				}
+			},
+			"first_month": {
+				"type": "choice",
+				"instructions": "What is the month number (January is 1) of the date in `first`?",
+				"criteria": {
+					"1": null,
+					"2": null,
+					"3": null,
+					"4": null,
+					"5": null,
+					"6": null,
+					"7": null,
+					"8": null,
+					"9": null,
+					"10": null,
+					"11": null,
+					"12": null
+				}
+			},
+			"first_year": {
+				"type": "choice",
+				"instructions": "What is the year of the date in `first`?",
+				"criteria": {
+					"2018": null,
+					"2019": null,
+					"2020": null,
+					"2021": null,
+					"2022": null,
+					"2023": null,
+					"2024": null,
+					"2025": null
+				}
+			},
+			"second_day": {
+				"type": "choice",
+				"instructions": "What is the day of the month of the date in `second`?",
+				"criteria": {
+					"1": null,
+					"2": null,
+					"3": null,
+					"4": null,
+					"5": null,
+					"6": null,
+					"7": null,
+					"8": null,
+					"9": null,
+					"10": null,
+					"11": null,
+					"12": null,
+					"13": null,
+					"14": null,
+					"15": null,
+					"16": null,
+					"17": null,
+					"18": null,
+					"19": null,
+					"20": null,
+					"21": null,
+					"22": null,
+					"23": null,
+					"24": null,
+					"25": null,
+					"26": null,
+					"27": null,
+					"28": null,
+					"29": null,
+					"30": null,
+					"31": null
+				}
+			},
+			"second_month": {
+				"type": "choice",
+				"instructions": "What is the month number (January is 1) of the date in `second`?",
+				"criteria": {
+					"1": null,
+					"2": null,
+					"3": null,
+					"4": null,
+					"5": null,
+					"6": null,
+					"7": null,
+					"8": null,
+					"9": null,
+					"10": null,
+					"11": null,
+					"12": null
+				}
+			},
+			"second_year": {
+				"type": "choice",
+				"instructions": "What is the year of the date in `second`?",
+				"criteria": {
+					"2018": null,
+					"2019": null,
+					"2020": null,
+					"2021": null,
+					"2022": null,
+					"2023": null,
+					"2024": null,
+					"2025": null
+				}
+			}
+		}
+	},
+	"llm": {
+		"type": "choice",
+		"instructions": "Which of the two dates comes first?",
+		"criteria": {
+			"first": "The date in `first` comes earlier",
+			"second": "The date in `second` comes earlier",
+			"same": "They are the same day"
+		}
+	},
+	"items": [
+		{
+			"id": "d1",
+			"state": {
+				"first": "March 9, 2024",
+				"second": "9 April 2023"
+			},
+			"label": "second"
+		},
+		{
+			"id": "d2",
+			"state": {
+				"first": "12 December 2022",
+				"second": "2 January 2023"
+			},
+			"label": "first"
+		},
+		{
+			"id": "d3",
+			"state": {
+				"first": "the 20th of July, 2019",
+				"second": "July 2nd, 2019"
+			},
+			"label": "second"
+		},
+		{
+			"id": "d4",
+			"state": {
+				"first": "10 October 2021",
+				"second": "October 10th, 2021"
+			},
+			"label": "same"
+		}
+	]
+}

@@ -3,7 +3,14 @@ import type { RunTotals } from '@/runner/types'
 import { levelSchema } from '@/content/level-schema'
 import { testLevel } from '@/content/testing/levels'
 import { PREDICTION_METRICS, PREDICTION_OUTCOMES, type PredictionOutcome } from '@/lib/constants'
-import { isPredictionCorrect, judgeAll, judgePrediction, type Contender } from './judge'
+import { jevRecording, opusRecording, sonnetRecording } from '@/features/race/testing/recordings'
+import {
+	isPredictionCorrect,
+	judgeAll,
+	judgedTotals,
+	judgePrediction,
+	type Contender
+} from './judge'
 
 function totals(overrides: Partial<RunTotals>): RunTotals {
 	return {
@@ -106,5 +113,39 @@ describe('judgeAll', () => {
 			PREDICTION_OUTCOMES.wrong,
 			PREDICTION_OUTCOMES.skipped
 		])
+	})
+})
+
+describe('delivers', () => {
+	it('is won by the racer with more items answered right, even when the other has no accuracy', () => {
+		const verdict = judgePrediction('delivers', 'llm', [
+			{ racer: 'jev', totals: totals({ scored: 0, correct: 0, accuracy: null }) },
+			{ racer: 'llm', totals: totals({ scored: 3, correct: 3, accuracy: 1 }) }
+		])
+		expect(verdict.outcome).toBe(PREDICTION_OUTCOMES.right)
+	})
+})
+
+describe('judgedTotals', () => {
+	const level = levelSchema.parse({
+		...testLevel,
+		tasks: [
+			{ id: jevRecording.taskId, title: 'Race' },
+			{ id: 'after-fix', title: 'After the fix', judged: false }
+		]
+	})
+
+	it('reads only the judged tasks, for Jev and the named opponent', () => {
+		const result = judgedTotals(
+			level,
+			[jevRecording, opusRecording, sonnetRecording],
+			opusRecording.modelId
+		)
+		expect(result?.jev).toEqual(jevRecording.totals)
+		expect(result?.opponent).toEqual(opusRecording.totals)
+	})
+
+	it('is null when the opponent has no recording for a judged task', () => {
+		expect(judgedTotals(level, [jevRecording], opusRecording.modelId)).toBeNull()
 	})
 })

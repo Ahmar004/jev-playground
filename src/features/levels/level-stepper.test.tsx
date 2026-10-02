@@ -59,7 +59,7 @@ function stepper(initialProgress: LevelProgressView = freshProgress) {
 		<QueryClientProvider client={client}>
 			<LevelStepper
 				level={level}
-				task={choiceTask}
+				tasks={[choiceTask]}
 				recordings={[jevRecording, opusRecording]}
 				initialProgress={initialProgress}
 			/>

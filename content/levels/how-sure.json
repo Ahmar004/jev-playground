@@ -1,0 +1,108 @@
+{
+	"id": "how-sure",
+	"order": 4,
+	"title": "How Sure Are You?",
+	"learn": {
+		"intro": "A confident answer is only useful if it is usually right when it says so. That is calibration. You and Jev both judge 10 true or false statements and say how sure you are, then we check how often each was right at each level of confidence.",
+		"compare": [
+			{
+				"racer": "jev",
+				"title": "Jev, a System One model",
+				"points": [
+					"Returns a probability with each Noul answer",
+					"That probability is its confidence in its pick",
+					"Can be checked: is it right as often as it claims?"
+				]
+			},
+			{
+				"racer": "llm",
+				"title": "An LLM, a System Two model",
+				"points": [
+					"Answers true or false in text",
+					"Gives no probability to check against",
+					"Its stated confidence, if you ask, is just more text"
+				]
+			}
+		]
+	},
+	"predict": {
+		"questions": [
+			{
+				"metric": "fastest",
+				"prompt": "Who judges all 10 statements first?"
+			},
+			{
+				"metric": "cheapest",
+				"prompt": "Who costs less?"
+			},
+			{
+				"metric": "most_accurate",
+				"prompt": "Who gets more statements right?"
+			}
+		]
+	},
+	"tasks": [
+		{
+			"id": "how-sure",
+			"title": "Ten statements"
+		}
+	],
+	"widget": "calibration",
+	"reveal": {
+		"why": [
+			"Jev's Noul answer is a probability, so its confidence is built in and can be checked against what really happened. Where its points sit near the dotted line, its confidence can be trusted.",
+			"An LLM's answer is a word, with no probability attached, so there is nothing to check in the same way.",
+			"Confidence you can trust lets you route: act on the sure answers, and send the unsure ones to a person or a stronger model."
+		]
+	},
+	"docs": [
+		{
+			"path": "/confidence",
+			"title": "Confidence"
+		}
+	],
+	"check": {
+		"questions": [
+			{
+				"id": "sure-what-calibrated",
+				"prompt": "What does it mean for a racer to be well calibrated?",
+				"options": [
+					{
+						"id": "match",
+						"text": "It is right about as often as its confidence says"
+					},
+					{
+						"id": "always",
+						"text": "It is always right"
+					},
+					{
+						"id": "high",
+						"text": "It always reports high confidence"
+					}
+				],
+				"answerId": "match",
+				"explanation": "A calibrated racer that says 70% is right about 7 times in 10. That makes its confidence a number you can act on."
+			},
+			{
+				"id": "sure-use",
+				"prompt": "How can you use Jev's confidence in a real system?",
+				"options": [
+					{
+						"id": "route",
+						"text": "Act on confident answers and send unsure ones for review"
+					},
+					{
+						"id": "ignore",
+						"text": "Ignore it, only the answer matters"
+					},
+					{
+						"id": "raise",
+						"text": "Raise it by asking again until it agrees with you"
+					}
+				],
+				"answerId": "route",
+				"explanation": "A trustworthy confidence lets you automate the easy cases and spend human or LLM effort only where Jev is unsure."
+			}
+		]
+	}
+}

@@ -1,9 +1,23 @@
 import speedRace from '../../content/tasks/speed-race.json'
+import datesDirect from '../../content/tasks/dates-direct.json'
+import datesFixed from '../../content/tasks/dates-fixed.json'
+import fruitsDirect from '../../content/tasks/fruits-direct.json'
+import fruitsFixed from '../../content/tasks/fruits-fixed.json'
+import howSure from '../../content/tasks/how-sure.json'
+import writeMeAPoem from '../../content/tasks/write-me-a-poem.json'
 import { taskSchema, type Task } from './task-schema'
 
 // Every file in content/tasks/ is imported here, so content renders at build
 // time (DESIGN 4.1). registry.test.ts fails when a file is missing.
-const RAW_TASKS: unknown[] = [speedRace]
+const RAW_TASKS: unknown[] = [
+	speedRace,
+	writeMeAPoem,
+	fruitsDirect,
+	fruitsFixed,
+	datesDirect,
+	datesFixed,
+	howSure
+]
 
 // Parsed at import, so a malformed file fails the build at prerender.
 export function buildTaskMap(raw: unknown[]): ReadonlyMap<string, Task> {

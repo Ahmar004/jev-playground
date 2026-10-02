@@ -1,0 +1,99 @@
+{
+	"id": "write-me-a-poem",
+	"order": 2,
+	"title": "Write Me a Poem",
+	"learn": {
+		"intro": "Jev answers typed questions: a Choice, a Noul, a Score. It has no way to write text. Here both racers get the same job: write a 4-line poem about a topic.",
+		"compare": [
+			{
+				"racer": "jev",
+				"title": "Jev, a System One model",
+				"points": [
+					"Returns typed answers as data, not sentences",
+					"Has no question type for free text",
+					"Is built to judge, not to write"
+				]
+			},
+			{
+				"racer": "llm",
+				"title": "An LLM, a System Two model",
+				"points": [
+					"Writes free text, so a poem is ordinary work",
+					"Charges for every token it writes",
+					"Takes longer, because it writes word by word"
+				]
+			}
+		]
+	},
+	"predict": {
+		"questions": [
+			{
+				"metric": "delivers",
+				"prompt": "Who writes a finished poem for every topic?"
+			}
+		]
+	},
+	"tasks": [
+		{
+			"id": "write-me-a-poem",
+			"title": "Three topics"
+		}
+	],
+	"reveal": {
+		"why": [
+			"Jev answers with typed data, and none of its question types holds a poem. Asked for one anyway, the real API response is shown above: that is what it sends back, not something we wrote.",
+			"The LLM writes free text, so it can answer any topic. That is System Two work: slower and billed per token written, but open-ended.",
+			"Use Jev to judge or sort what a model has written, and an LLM to write it."
+		]
+	},
+	"docs": [
+		{
+			"path": "/model-jaggedness/jev-1.13#generation",
+			"title": "Jev 1.13 jaggedness: generation"
+		}
+	],
+	"check": {
+		"questions": [
+			{
+				"id": "poem-who-writes",
+				"prompt": "You need a friendly 4-line message written for each new customer. Which tool fits?",
+				"options": [
+					{
+						"id": "jev",
+						"text": "Jev: it returns typed answers quickly"
+					},
+					{
+						"id": "llm",
+						"text": "An LLM: it writes free text"
+					},
+					{
+						"id": "code",
+						"text": "Plain code: a template can never sound natural"
+					}
+				],
+				"answerId": "llm",
+				"explanation": "Writing is open-ended text, which is System Two work. Jev only returns typed answers. A template is fine for fixed wording, but not for a message that has to read as new each time."
+			},
+			{
+				"id": "poem-why-failed",
+				"prompt": "Why could Jev not write the poem?",
+				"options": [
+					{
+						"id": "types",
+						"text": "Its answers are typed data (a Choice, Noul or Score), with no question type for free text"
+					},
+					{
+						"id": "slow",
+						"text": "It was too slow to finish in time"
+					},
+					{
+						"id": "topics",
+						"text": "The topics were too hard for it"
+					}
+				],
+				"answerId": "types",
+				"explanation": "Jev reads and judges, then returns data. The API has no question type that holds a poem, so the request is refused, whatever the topic."
+			}
+		]
+	}
+}

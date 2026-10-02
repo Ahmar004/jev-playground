@@ -1,0 +1,74 @@
+{
+	"id": "fruits-direct",
+	"kind": "choice",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "choice",
+				"instructions": "How many of the entries in the list are fruits?",
+				"criteria": {
+					"0": null,
+					"1": null,
+					"2": null,
+					"3": null,
+					"4": null,
+					"5": null,
+					"6": null,
+					"7": null,
+					"8": null,
+					"9": null,
+					"10": null,
+					"11": null,
+					"12": null
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "f1",
+			"state": ["apple", "carrot", "banana", "bread", "grape", "chair", "pear"],
+			"label": "4"
+		},
+		{
+			"id": "f2",
+			"state": ["potato", "mango", "onion", "kiwi", "spoon", "cheese", "orange"],
+			"label": "3"
+		},
+		{
+			"id": "f3",
+			"state": [
+				"lemon",
+				"pen",
+				"broccoli",
+				"rice",
+				"pineapple",
+				"carrot",
+				"cherry",
+				"watermelon",
+				"bread",
+				"peach"
+			],
+			"label": "5"
+		},
+		{
+			"id": "f4",
+			"state": [
+				"strawberry",
+				"onion",
+				"apple",
+				"pen",
+				"banana",
+				"cheese",
+				"grape",
+				"rice",
+				"pear",
+				"carrot",
+				"kiwi",
+				"bread"
+			],
+			"label": "6"
+		}
+	]
+}

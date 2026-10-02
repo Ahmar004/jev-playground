@@ -1,0 +1,82 @@
+{
+	"taskId": "fruits-fixed",
+	"taskHash": "77080ac07dd9c2498b5042d135bfbc2767a90cce17bfd2b3a371bd19d498c331",
+	"racer": "llm",
+	"modelId": "claude-opus-5-5",
+	"recordedAt": "2026-10-02T03:07:56.081Z",
+	"price": {
+		"inputPerM": 4,
+		"outputPerM": 20,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "f1",
+			"ok": true,
+			"raw": "{\"answer\": \"4\"}",
+			"parsed": "4",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1221.2119999999995,
+			"usage": { "inputTokens": 222, "outputTokens": 11 },
+			"costUsd": 0.001108,
+			"lane": 0,
+			"startMs": 0.0072000000000116415,
+			"endMs": 1221.5400000000009
+		},
+		{
+			"itemId": "f2",
+			"ok": false,
+			"raw": "Of the seven entries, three are fruits: mango, kiwi and orange.\n\n{\"answer\": \"3\"}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 1657.8536000000022,
+			"usage": { "inputTokens": 225, "outputTokens": 37 },
+			"costUsd": 0.00164,
+			"lane": 1,
+			"startMs": 0.2669999999998254,
+			"endMs": 1658.2421000000031
+		},
+		{
+			"itemId": "f3",
+			"ok": false,
+			"raw": "Fruits: lemon, pineapple, cherry, watermelon, peach.\n\n{\"answer\": \"5\"}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 2334.034300000003,
+			"usage": { "inputTokens": 248, "outputTokens": 38 },
+			"costUsd": 0.001752,
+			"lane": 2,
+			"startMs": 0.4066000000020722,
+			"endMs": 2334.5619000000006
+		},
+		{
+			"itemId": "f4",
+			"ok": false,
+			"raw": "Six entries are fruits: strawberry, apple, banana, grape, pear and kiwi.\n\n{\"answer\": \"6\"}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 2022.8228000000017,
+			"usage": { "inputTokens": 257, "outputTokens": 43 },
+			"costUsd": 0.001888,
+			"lane": 3,
+			"startMs": 0.5665000000008149,
+			"endMs": 2023.5093000000015
+		}
+	],
+	"totals": {
+		"items": 4,
+		"scored": 4,
+		"correct": 1,
+		"accuracy": 0.25,
+		"wallMs": 2334.5547000000006,
+		"costUsd": 0.0063880000000000004,
+		"inputTokens": 952,
+		"outputTokens": 129,
+		"parseFailures": 3
+	}
+}

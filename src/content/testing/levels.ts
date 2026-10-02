@@ -17,7 +17,7 @@ export const testLevel = {
 			{ metric: 'most_accurate', prompt: 'Who gets more right?' }
 		]
 	},
-	taskIds: ['test-choice'],
+	tasks: [{ id: 'test-choice', title: 'Race' }],
 	reveal: { why: ['Because one answers directly.'] },
 	check: {
 		questions: ['test-q1', 'test-q2'].map((id) => ({

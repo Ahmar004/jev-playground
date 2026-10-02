@@ -1,0 +1,68 @@
+{
+	"taskId": "write-me-a-poem",
+	"taskHash": "81764563745a87dea8f7d5fef29cf5136d2f230884358425286e84fc7f4a6d23",
+	"racer": "llm",
+	"modelId": "claude-opus-5-5",
+	"recordedAt": "2026-10-02T03:07:44.087Z",
+	"price": {
+		"inputPerM": 4,
+		"outputPerM": 20,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "p1",
+			"ok": true,
+			"raw": "{\"answer\": \"Soft gray light spills through the windowpane,\\nThe rooftops hum a gentle, steady rain;\\nWarm coffee steams while puddles start to grow,\\nThe sleepy world awakens, calm and slow.\"}",
+			"parsed": "Soft gray light spills through the windowpane,\nThe rooftops hum a gentle, steady rain;\nWarm coffee steams while puddles start to grow,\nThe sleepy world awakens, calm and slow.",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 2353.5864,
+			"usage": { "inputTokens": 82, "outputTokens": 82 },
+			"costUsd": 0.001968,
+			"lane": 0,
+			"startMs": 0.00830000000041764,
+			"endMs": 2353.9403
+		},
+		{
+			"itemId": "p2",
+			"ok": true,
+			"raw": "{\"answer\": \"With whirring gears it tries to sway,\\nIts metal feet in stiff ballet;\\nBut code gives way to rhythm's chance,\\nAnd circuits hum the joy of dance.\"}",
+			"parsed": "With whirring gears it tries to sway,\nIts metal feet in stiff ballet;\nBut code gives way to rhythm's chance,\nAnd circuits hum the joy of dance.",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 2002.759,
+			"usage": { "inputTokens": 84, "outputTokens": 72 },
+			"costUsd": 0.001776,
+			"lane": 1,
+			"startMs": 0.47330000000056316,
+			"endMs": 2003.5715
+		},
+		{
+			"itemId": "p3",
+			"ok": true,
+			"raw": "{\"answer\": \"Alone it waits upon the greasy tray,\\nA cheesy prize that no one dares to claim;\\nWe circle it like wolves, but look away,\\nToo polite to eat it, all the same.\"}",
+			"parsed": "Alone it waits upon the greasy tray,\nA cheesy prize that no one dares to claim;\nWe circle it like wolves, but look away,\nToo polite to eat it, all the same.",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 2804.5741,
+			"usage": { "inputTokens": 84, "outputTokens": 73 },
+			"costUsd": 0.001796,
+			"lane": 2,
+			"startMs": 0.6449000000002343,
+			"endMs": 2805.567
+		}
+	],
+	"totals": {
+		"items": 3,
+		"scored": 3,
+		"correct": 3,
+		"accuracy": 1,
+		"wallMs": 2805.5586999999996,
+		"costUsd": 0.00554,
+		"inputTokens": 250,
+		"outputTokens": 227,
+		"parseFailures": 0
+	}
+}

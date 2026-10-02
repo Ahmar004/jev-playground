@@ -130,9 +130,15 @@ export const LEVEL_STEP_ORDER: readonly LevelStep[] = [
 export const PREDICTION_METRICS = {
 	fastest: 'fastest',
 	cheapest: 'cheapest',
-	mostAccurate: 'most_accurate'
+	mostAccurate: 'most_accurate',
+	// Level 2: who hands back a finished result for every item (the runner's `correct` count).
+	delivers: 'delivers'
 } as const
 export type PredictionMetric = (typeof PREDICTION_METRICS)[keyof typeof PREDICTION_METRICS]
+
+// A level-specific widget, beside the shared loop (DESIGN 7). Level 4 only.
+export const LEVEL_WIDGETS = { calibration: 'calibration' } as const
+export type LevelWidget = (typeof LEVEL_WIDGETS)[keyof typeof LEVEL_WIDGETS]
 
 // How Reveal marks one prediction (R25). unknown: a number needed is missing.
 export const PREDICTION_OUTCOMES = {

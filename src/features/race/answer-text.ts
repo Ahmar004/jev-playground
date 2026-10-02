@@ -11,6 +11,7 @@ import { jevAnswerSchema } from '@/runner/parse'
 import type { ItemResult } from '@/runner/types'
 
 const jevAnswersSchema = z.record(z.string(), jevAnswerSchema)
+const combinedSchema = z.object({ answer: z.unknown() })
 
 /** A label or answer as plain text (R86): an option key, yes or no, a number, or JSON for the rest. */
 export function valueText(value: unknown): string {
@@ -27,6 +28,11 @@ export function answerText(racer: Racer, result: ItemResult): string | null {
 		const answers = jevAnswersSchema.safeParse(result.parsed)
 		const answer = answers.success ? answers.data[ANSWER_KEY] : undefined
 		if (answer?.type === QUESTION_KINDS.choice) return answer.choice
+	}
+	if (racer === RACERS.jevCode) {
+		// Jev + Code keeps the combined answer under `answer` (a CombineOutput).
+		const output = combinedSchema.safeParse(result.parsed)
+		if (output.success) return valueText(output.data.answer)
 	}
 	return valueText(result.parsed)
 }

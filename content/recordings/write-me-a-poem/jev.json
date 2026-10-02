@@ -1,0 +1,67 @@
+{
+	"taskId": "write-me-a-poem",
+	"taskHash": "81764563745a87dea8f7d5fef29cf5136d2f230884358425286e84fc7f4a6d23",
+	"racer": "jev",
+	"modelId": "jev-latest",
+	"recordedAt": "2026-10-02T03:07:39.554Z",
+	"price": null,
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "p1",
+			"ok": false,
+			"raw": "{\"detail\":{\"error_type\":\"api_usage_error\",\"message\":\"Invalid request.\"}}",
+			"parsed": null,
+			"credit": null,
+			"correct": null,
+			"latencyMs": 455.4487,
+			"usage": { "inputTokens": 0, "outputTokens": 0 },
+			"costUsd": 0,
+			"error": "malformed",
+			"lane": 0,
+			"startMs": 0.0777999999999679,
+			"endMs": 456.0942999999999
+		},
+		{
+			"itemId": "p2",
+			"ok": false,
+			"raw": "{\"detail\":{\"error_type\":\"api_usage_error\",\"message\":\"Invalid request.\"}}",
+			"parsed": null,
+			"credit": null,
+			"correct": null,
+			"latencyMs": 597.7994000000001,
+			"usage": { "inputTokens": 0, "outputTokens": 0 },
+			"costUsd": 0,
+			"error": "malformed",
+			"lane": 1,
+			"startMs": 24.369199999999978,
+			"endMs": 622.2754
+		},
+		{
+			"itemId": "p3",
+			"ok": false,
+			"raw": "{\"detail\":{\"error_type\":\"api_usage_error\",\"message\":\"Invalid request.\"}}",
+			"parsed": null,
+			"credit": null,
+			"correct": null,
+			"latencyMs": 577.7352000000001,
+			"usage": { "inputTokens": 0, "outputTokens": 0 },
+			"costUsd": 0,
+			"error": "malformed",
+			"lane": 2,
+			"startMs": 24.7765,
+			"endMs": 602.5787
+		}
+	],
+	"totals": {
+		"items": 3,
+		"scored": 0,
+		"correct": 0,
+		"accuracy": null,
+		"wallMs": 622.1976,
+		"costUsd": 0,
+		"inputTokens": 0,
+		"outputTokens": 0,
+		"parseFailures": 0
+	}
+}

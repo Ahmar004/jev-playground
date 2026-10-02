@@ -444,3 +444,23 @@ Next: Step-6, slice 5 (Progress: Prisma models, the Check step, XP and badges, H
 - The ledger `.superpowers/sdd/2026-10-02-slice-05-progress/` can be deleted.
 
 Next: Step-6, slice 6 (levels 2-4). Carry in from slices 4 and 5: Jev + Code totals in Reveal and the judge for a combine task (level 3), and a `useRace` test with a combining task.
+
+## Step-6 - slice 6: Levels 2-4 (2026-10-02) - done
+
+- Skills: no writing-plans file and no subagents this slice (Rule-A; the work was one connected change). Gates were run by hand: lint, typecheck, format, check:env, check:secrets, check:standards 24/24, test (422 Vitest plus node:test), check:rls, build and e2e 33/33. The manual `local-review` pass was not run.
+- User decisions: level 3 is four stacked races (fruits and dates, each asked directly and after the fix); level 4 has a rating form plus the usual race, with the calibration chart in Reveal. Recording approved after a dry run (estimate at most $0.53).
+- Built:
+  - Level files now list `tasks: [{ id, title, judged }]` (replaces `taskIds`) and an optional `widget`. Only judged tasks count toward the prediction; `judgedTotals` (in `judge.ts`) merges them through `mergeTotals` (`runner/totals.ts`) and is shared by Reveal and `revealPrediction`.
+  - New prediction metric `delivers` (level 2: the runner's `correct` count).
+  - `jevCodeRecording` (`runner/combine.ts`) derives Jev + Code from Jev's recording for Reveal. `answerText` reads its combined answer.
+  - `PlayStep` and `RevealStep` take `stages` (`levelStages`, `sharedOpponentIds` in `lineup.ts`) and a widget slot. Level 4: `calibration/` (rating form, SVG chart with a table alternative, ratings kept only in page state) and `runner/calibration.ts`.
+  - Recording CLI: a generate task's Jev run may be all `malformed` (level 2's expected rejection) and is still written.
+  - Content: tasks `write-me-a-poem`, `fruits-direct`, `fruits-fixed`, `dates-direct`, `dates-fixed`, `how-sure`; levels `write-me-a-poem`, `count-and-dates`, `how-sure`; 24 recordings.
+- Recorded results (real, unedited): spend this run $0.058, all recordings on disk $0.153 of $20.
+  - Level 2: TypeSafe answers every call with a rejection (`Invalid request.`); all three Claude models write poems.
+  - Level 3 fruits: Jev direct 2/4 (Haiku 0/4, Sonnet 0/4, Opus 1/4, mostly text around the JSON counted as a parse miss); Jev + Code 4/4. Dates: Jev and all three Claude models 4/4 directly, and Jev + Code 4/4, so the dates do not show a weakness. Level copy says so. If you want the lesson shown, the rule allows rewriting the date items once and re-recording, plus a Methodology note (spec 12.4); not done.
+  - Level 4: Jev and all three models 10/10; the chart shows Jev's confidence buckets.
+- Older e2e (`progress.spec.ts`) assumed one built level; it now expects 4 and scopes to level 1's card.
+- Left open: the `useRace` test with a combining task (covered by `combine.test.ts` and the level 3 e2e instead), the manual local-review pass, and Rule-A/Rule-B relabel references in CLAUDE.md, spec, DESIGN and TECH-STACK (needs the user's OK).
+
+Next: Step-6, slice 7 (levels 5-8: Break It Down, Router, Spot the Phish, Trick Jev). Level 5 uses `weighted_composite` with user weights; level 6 needs dnd-kit plus tap buttons.

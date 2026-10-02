@@ -1,4 +1,5 @@
 import type { Level, PredictedRacer } from '@/content/level-schema'
+import type { Recording } from '@/content/recording-schema'
 import {
 	PREDICTION_METRICS,
 	PREDICTION_OUTCOMES,
@@ -6,6 +7,7 @@ import {
 	type PredictionMetric,
 	type PredictionOutcome
 } from '@/lib/constants'
+import { mergeTotals } from '@/runner/totals'
 import type { RunTotals } from '@/runner/types'
 
 export type Prediction = Partial<Record<PredictionMetric, PredictedRacer>>
@@ -25,7 +27,9 @@ const METRIC_RULES: Record<
 > = {
 	[PREDICTION_METRICS.fastest]: { value: (totals) => totals.wallMs, lowerWins: true },
 	[PREDICTION_METRICS.cheapest]: { value: (totals) => totals.costUsd, lowerWins: true },
-	[PREDICTION_METRICS.mostAccurate]: { value: (totals) => totals.accuracy, lowerWins: false }
+	[PREDICTION_METRICS.mostAccurate]: { value: (totals) => totals.accuracy, lowerWins: false },
+	// Items answered right, so a racer that can't do the job at all scores 0.
+	[PREDICTION_METRICS.delivers]: { value: (totals) => totals.correct, lowerWins: false }
 }
 
 function winnersFor(metric: PredictionMetric, contenders: Contender[]): PredictedRacer[] | null {
@@ -85,4 +89,29 @@ export function judgeAll(
 			{ racer: RACERS.llm, totals: opponent }
 		])
 	)
+}
+
+/**
+ * Jev's and one opponent's totals over the level's judged tasks, merged by the
+ * runner; null when any judged task lacks either recording. Shared by Reveal
+ * and the server's first-Reveal scoring, so both judge the same numbers.
+ */
+export function judgedTotals(
+	level: Level,
+	recordings: Recording[],
+	opponentModelId: string
+): { jev: RunTotals; opponent: RunTotals } | null {
+	const jev: RunTotals[] = []
+	const opponent: RunTotals[] = []
+	for (const task of level.tasks.filter((entry) => entry.judged)) {
+		const own = recordings.filter((recording) => recording.taskId === task.id)
+		const jevRecording = own.find((recording) => recording.racer === RACERS.jev)
+		const opponentRecording = own.find(
+			(recording) => recording.racer === RACERS.llm && recording.modelId === opponentModelId
+		)
+		if (!jevRecording || !opponentRecording) return null
+		jev.push(jevRecording.totals)
+		opponent.push(opponentRecording.totals)
+	}
+	return { jev: mergeTotals(jev), opponent: mergeTotals(opponent) }
 }

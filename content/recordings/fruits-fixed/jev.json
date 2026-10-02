@@ -1,0 +1,118 @@
+{
+	"taskId": "fruits-fixed",
+	"taskHash": "77080ac07dd9c2498b5042d135bfbc2767a90cce17bfd2b3a371bd19d498c331",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-02T03:07:52.895Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "f1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"e1\":{\"type\":\"noul\",\"noul\":0.99},\"e2\":{\"type\":\"noul\",\"noul\":0.02},\"e3\":{\"type\":\"noul\",\"noul\":0.99},\"e4\":{\"type\":\"noul\",\"noul\":0.01},\"e5\":{\"type\":\"noul\",\"noul\":0.99},\"e6\":{\"type\":\"noul\",\"noul\":0.01},\"e7\":{\"type\":\"noul\",\"noul\":0.99}},\"usage\":{\"input_tokens\":388,\"output_tokens\":123}}",
+			"parsed": {
+				"e1": { "type": "noul", "noul": 0.99 },
+				"e2": { "type": "noul", "noul": 0.02 },
+				"e3": { "type": "noul", "noul": 0.99 },
+				"e4": { "type": "noul", "noul": 0.01 },
+				"e5": { "type": "noul", "noul": 0.99 },
+				"e6": { "type": "noul", "noul": 0.01 },
+				"e7": { "type": "noul", "noul": 0.99 }
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 673.0741999999991,
+			"usage": { "inputTokens": 388, "outputTokens": 123 },
+			"costUsd": 0.000016295999999999998,
+			"lane": 0,
+			"startMs": 0.01119999999900756,
+			"endMs": 673.2091
+		},
+		{
+			"itemId": "f2",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"e7\":{\"type\":\"noul\",\"noul\":0.99},\"e1\":{\"type\":\"noul\",\"noul\":0.02},\"e2\":{\"type\":\"noul\",\"noul\":0.99},\"e3\":{\"type\":\"noul\",\"noul\":0.04},\"e4\":{\"type\":\"noul\",\"noul\":0.99},\"e5\":{\"type\":\"noul\",\"noul\":0.0},\"e6\":{\"type\":\"noul\",\"noul\":0.01}},\"usage\":{\"input_tokens\":396,\"output_tokens\":123}}",
+			"parsed": {
+				"e7": { "type": "noul", "noul": 0.99 },
+				"e1": { "type": "noul", "noul": 0.02 },
+				"e2": { "type": "noul", "noul": 0.99 },
+				"e3": { "type": "noul", "noul": 0.04 },
+				"e4": { "type": "noul", "noul": 0.99 },
+				"e5": { "type": "noul", "noul": 0 },
+				"e6": { "type": "noul", "noul": 0.01 }
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 601.5712999999996,
+			"usage": { "inputTokens": 396, "outputTokens": 123 },
+			"costUsd": 0.000016632000000000003,
+			"lane": 1,
+			"startMs": 0.3227999999999156,
+			"endMs": 602.0974999999999
+		},
+		{
+			"itemId": "f3",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"e1\":{\"type\":\"noul\",\"noul\":0.99},\"e2\":{\"type\":\"noul\",\"noul\":0.01},\"e3\":{\"type\":\"noul\",\"noul\":0.03},\"e4\":{\"type\":\"noul\",\"noul\":0.02},\"e5\":{\"type\":\"noul\",\"noul\":0.99},\"e6\":{\"type\":\"noul\",\"noul\":0.02},\"e7\":{\"type\":\"noul\",\"noul\":0.99},\"e8\":{\"type\":\"noul\",\"noul\":0.99},\"e9\":{\"type\":\"noul\",\"noul\":0.01},\"e10\":{\"type\":\"noul\",\"noul\":0.99}},\"usage\":{\"input_tokens\":460,\"output_tokens\":175}}",
+			"parsed": {
+				"e1": { "type": "noul", "noul": 0.99 },
+				"e2": { "type": "noul", "noul": 0.01 },
+				"e3": { "type": "noul", "noul": 0.03 },
+				"e4": { "type": "noul", "noul": 0.02 },
+				"e5": { "type": "noul", "noul": 0.99 },
+				"e6": { "type": "noul", "noul": 0.02 },
+				"e7": { "type": "noul", "noul": 0.99 },
+				"e8": { "type": "noul", "noul": 0.99 },
+				"e9": { "type": "noul", "noul": 0.01 },
+				"e10": { "type": "noul", "noul": 0.99 }
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 551.0413000000008,
+			"usage": { "inputTokens": 460, "outputTokens": 175 },
+			"costUsd": 0.00001932,
+			"lane": 2,
+			"startMs": 0.4874999999992724,
+			"endMs": 552.0043999999998
+		},
+		{
+			"itemId": "f4",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"e1\":{\"type\":\"noul\",\"noul\":0.97},\"e2\":{\"type\":\"noul\",\"noul\":0.04},\"e3\":{\"type\":\"noul\",\"noul\":1.0},\"e4\":{\"type\":\"noul\",\"noul\":0.0},\"e5\":{\"type\":\"noul\",\"noul\":0.99},\"e6\":{\"type\":\"noul\",\"noul\":0.01},\"e7\":{\"type\":\"noul\",\"noul\":1.0},\"e8\":{\"type\":\"noul\",\"noul\":0.02},\"e9\":{\"type\":\"noul\",\"noul\":0.99},\"e10\":{\"type\":\"noul\",\"noul\":0.02},\"e11\":{\"type\":\"noul\",\"noul\":0.99},\"e12\":{\"type\":\"noul\",\"noul\":0.01}},\"usage\":{\"input_tokens\":490,\"output_tokens\":211}}",
+			"parsed": {
+				"e1": { "type": "noul", "noul": 0.97 },
+				"e2": { "type": "noul", "noul": 0.04 },
+				"e3": { "type": "noul", "noul": 1 },
+				"e4": { "type": "noul", "noul": 0 },
+				"e5": { "type": "noul", "noul": 0.99 },
+				"e6": { "type": "noul", "noul": 0.01 },
+				"e7": { "type": "noul", "noul": 1 },
+				"e8": { "type": "noul", "noul": 0.02 },
+				"e9": { "type": "noul", "noul": 0.99 },
+				"e10": { "type": "noul", "noul": 0.02 },
+				"e11": { "type": "noul", "noul": 0.99 },
+				"e12": { "type": "noul", "noul": 0.01 }
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 664.3189000000002,
+			"usage": { "inputTokens": 490, "outputTokens": 211 },
+			"costUsd": 0.000020580000000000003,
+			"lane": 3,
+			"startMs": 0.9015999999992346,
+			"endMs": 665.393
+		}
+	],
+	"totals": {
+		"items": 4,
+		"scored": 0,
+		"correct": 0,
+		"accuracy": null,
+		"wallMs": 673.197900000001,
+		"costUsd": 0.00007282800000000001,
+		"inputTokens": 1734,
+		"outputTokens": 632,
+		"parseFailures": 0
+	}
+}

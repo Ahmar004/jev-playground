@@ -12,6 +12,10 @@ describe('answerText', () => {
 		expect(answerText('llm', opusT1)).toBe('billing')
 	})
 
+	it("reads Jev + Code's combined answer, not the wrapper", () => {
+		expect(answerText('jev_code', { ...jevT1, parsed: { answer: '3' } })).toBe('3')
+	})
+
 	it('has no answer when the output did not parse', () => {
 		expect(answerText('llm', opusT2)).toBeNull()
 	})

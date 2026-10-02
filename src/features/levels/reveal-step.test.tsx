@@ -28,10 +28,16 @@ function renderReveal(
 	return render(
 		<RevealStep
 			level={level}
-			task={choiceTask}
-			jev={jevRecording}
-			opponent={opusRecording}
-			others={[sonnetRecording]}
+			stages={[
+				{
+					task: choiceTask,
+					title: 'Race',
+					judged: true,
+					jev: jevRecording,
+					opponents: [opusRecording, sonnetRecording]
+				}
+			]}
+			opponentId={opusRecording.modelId}
 			prediction={prediction}
 			celebrate={extra.celebrate ?? false}
 			onCelebrated={extra.onCelebrated ?? (() => undefined)}
@@ -87,10 +93,8 @@ describe('RevealStep', () => {
 		render(
 			<RevealStep
 				level={level}
-				task={choiceTask}
-				jev={undefined}
-				opponent={undefined}
-				others={[]}
+				stages={[{ task: choiceTask, title: 'Race', judged: true, jev: undefined, opponents: [] }]}
+				opponentId={undefined}
 				prediction={{}}
 				celebrate={false}
 				onCelebrated={() => undefined}

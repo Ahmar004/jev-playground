@@ -30,11 +30,11 @@ export async function generateMetadata({
 // the static shell above it still prerenders (TECH-STACK.md > Rendering strategy).
 async function LevelProgressLoader({
 	level,
-	task,
+	tasks,
 	recordings
 }: {
 	level: Level
-	task: Task
+	tasks: Task[]
 	recordings: Recording[]
 }) {
 	const session = await getSession()
@@ -44,7 +44,7 @@ async function LevelProgressLoader({
 		<LevelStepper
 			key={session.userId}
 			level={level}
-			task={task}
+			tasks={tasks}
 			recordings={recordings}
 			initialProgress={progress}
 		/>
@@ -55,14 +55,12 @@ export default async function LevelPage({ params }: PageProps<'/levels/[levelId]
 	const { levelId } = await params
 	const level = getLevel(levelId)
 	if (!level) notFound()
-	const [taskId] = level.taskIds
-	if (!taskId) notFound()
-	const task = getTask(taskId)
+	const tasks = level.tasks.map((entry) => getTask(entry.id))
 	// Only this page's recordings reach the client (R79).
-	const recordings = currentRecordings(task.id)
+	const recordings = tasks.flatMap((task) => currentRecordings(task.id))
 	return (
 		<Suspense fallback={<LevelSkeleton />}>
-			<LevelProgressLoader level={level} task={task} recordings={recordings} />
+			<LevelProgressLoader level={level} tasks={tasks} recordings={recordings} />
 		</Suspense>
 	)
 }

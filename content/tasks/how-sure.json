@@ -1,0 +1,69 @@
+{
+	"id": "how-sure",
+	"kind": "noul",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "noul",
+				"instructions": "Is the statement true?",
+				"criteria": {
+					"true": "The statement is factually true",
+					"false": "The statement is false, or a common myth"
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "s1",
+			"state": "The Great Wall of China is visible to the naked eye from the Moon.",
+			"label": false
+		},
+		{
+			"id": "s2",
+			"state": "Water boils at a lower temperature at high altitude than at sea level.",
+			"label": true
+		},
+		{
+			"id": "s3",
+			"state": "Humans use only 10 percent of their brains.",
+			"label": false
+		},
+		{
+			"id": "s4",
+			"state": "Sydney is the capital city of Australia.",
+			"label": false
+		},
+		{
+			"id": "s5",
+			"state": "A group of crows is called a murder.",
+			"label": true
+		},
+		{
+			"id": "s6",
+			"state": "Lightning never strikes the same place twice.",
+			"label": false
+		},
+		{
+			"id": "s7",
+			"state": "Venus is the hottest planet in the solar system.",
+			"label": true
+		},
+		{
+			"id": "s8",
+			"state": "Goldfish have a memory of only three seconds.",
+			"label": false
+		},
+		{
+			"id": "s9",
+			"state": "Bananas are botanically berries.",
+			"label": true
+		},
+		{
+			"id": "s10",
+			"state": "The Eiffel Tower was completed before the year 1900.",
+			"label": true
+		}
+	]
+}

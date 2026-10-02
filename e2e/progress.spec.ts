@@ -48,9 +48,9 @@ test.describe('flow 1: first level, prediction, check, XP and badge', () => {
 
 	test('play level 1 through to Level complete', async ({ page }) => {
 		await signIn(page, email)
-		await expect(page.getByText('0 of 1 levels done')).toBeVisible()
+		await expect(page.getByText('0 of 4 levels done')).toBeVisible()
 		await expect(headerBar(page)).toHaveAttribute('aria-valuenow', '0')
-		await expect(page.getByRole('banner').getByRole('link', { name: /0\/1/ })).toBeVisible()
+		await expect(page.getByRole('banner').getByRole('link', { name: /0\/4/ })).toBeVisible()
 
 		await page.getByRole('link', { name: 'Play level 1: Speed Race' }).click()
 		await expect(page).toHaveURL(LEVEL_URL)
@@ -91,7 +91,7 @@ test.describe('flow 1: first level, prediction, check, XP and badge', () => {
 		await expect(page.getByText('+100 XP', { exact: true })).toBeVisible()
 		await expect(page.getByText('Badge earned: First Race', { exact: true })).toBeVisible()
 		await expect(headerBar(page)).toHaveAttribute('aria-valuenow', '1')
-		await expect(page.getByRole('banner').getByRole('link', { name: /1\/1/ })).toBeVisible()
+		await expect(page.getByRole('banner').getByRole('link', { name: /1\/4/ })).toBeVisible()
 
 		await page.getByRole('button', { name: 'Back to Path' }).click()
 		await expect(page).toHaveURL('/path')
@@ -103,12 +103,13 @@ test.describe('flow 1: first level, prediction, check, XP and badge', () => {
 		await page.getByRole('link', { name: 'Path', exact: true }).click()
 		await expect(page).toHaveURL('/path')
 		await expect(page.getByText('Done', { exact: true })).toBeVisible()
-		await expect(page.getByRole('button', { name: 'Skip' })).toHaveCount(0)
+		// Level 1 is done, so only the three unplayed levels still offer Skip.
+		await expect(page.getByRole('button', { name: 'Skip' })).toHaveCount(3)
 	})
 
 	test('Home shows 145 XP and the First Race badge', async ({ page }) => {
 		await signIn(page, email)
-		await expect(page.getByText('1 of 1 levels done')).toBeVisible()
+		await expect(page.getByText('1 of 4 levels done')).toBeVisible()
 		await expect(page.getByText('145 XP')).toBeVisible()
 		await expect(
 			page.getByRole('list', { name: 'Badges earned' }).getByText('First Race')
@@ -168,13 +169,15 @@ test('flow 2: skip level 1 on the Path, revisit it and start it', async ({ page,
 	await signIn(page, email)
 	await page.getByRole('link', { name: 'Path', exact: true }).click()
 	await expect(page).toHaveURL('/path')
-	await expect(page.getByText('Not started')).toBeVisible()
+	// Four levels are built; this flow works on level 1's card.
+	const level1 = page.getByRole('listitem').filter({ hasText: 'Speed Race' })
+	await expect(level1.getByText('Not started')).toBeVisible()
 
-	await page.getByRole('button', { name: 'Skip' }).click()
-	await expect(page.getByText('Skipped', { exact: true })).toBeVisible()
+	await level1.getByRole('button', { name: 'Skip' }).click()
+	await expect(level1.getByText('Skipped', { exact: true })).toBeVisible()
 	await expect(page.getByText('Level skipped', { exact: true })).toBeVisible()
 
-	await page.getByRole('link', { name: 'Revisit' }).click()
+	await level1.getByRole('link', { name: 'Revisit' }).click()
 	await expect(page).toHaveURL(LEVEL_URL)
 	await page.getByRole('button', { name: 'Make your prediction' }).click()
 	await lockInJevEverywhere(page)
@@ -182,7 +185,7 @@ test('flow 2: skip level 1 on the Path, revisit it and start it', async ({ page,
 	// The header link is a client navigation: Path must show the server's status, not a stale one.
 	await page.getByRole('link', { name: 'Path', exact: true }).click()
 	await expect(page).toHaveURL('/path')
-	await expect(page.getByText('In progress')).toBeVisible()
+	await expect(level1.getByText('In progress')).toBeVisible()
 })
 
 test.describe('progress screenshots', () => {

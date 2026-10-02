@@ -1,0 +1,82 @@
+{
+	"taskId": "dates-fixed",
+	"taskHash": "e6d4ecf9727f3d6ecf1d8547ad1238813b311920ee63a52f88d9bec894cfce05",
+	"racer": "llm",
+	"modelId": "claude-sonnet-5-5",
+	"recordedAt": "2026-10-02T03:08:04.663Z",
+	"price": {
+		"inputPerM": 2,
+		"outputPerM": 10,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "d1",
+			"ok": true,
+			"raw": "{\"answer\": \"second\"}",
+			"parsed": "second",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1423.450499999999,
+			"usage": { "inputTokens": 157, "outputTokens": 11 },
+			"costUsd": 0.000424,
+			"lane": 0,
+			"startMs": 0.0051000000021304,
+			"endMs": 1423.6519000000008
+		},
+		{
+			"itemId": "d2",
+			"ok": true,
+			"raw": "{\"answer\": \"first\"}",
+			"parsed": "first",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 941.6486000000004,
+			"usage": { "inputTokens": 156, "outputTokens": 11 },
+			"costUsd": 0.000422,
+			"lane": 1,
+			"startMs": 0.20249999999941792,
+			"endMs": 942.1468999999997
+		},
+		{
+			"itemId": "d3",
+			"ok": true,
+			"raw": "{\"answer\": \"second\"}",
+			"parsed": "second",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1295.4703999999983,
+			"usage": { "inputTokens": 163, "outputTokens": 11 },
+			"costUsd": 0.000436,
+			"lane": 2,
+			"startMs": 0.3184000000001106,
+			"endMs": 1296.0573000000004
+		},
+		{
+			"itemId": "d4",
+			"ok": true,
+			"raw": "{\"answer\": \"same\"}",
+			"parsed": "same",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1422.063399999999,
+			"usage": { "inputTokens": 158, "outputTokens": 11 },
+			"costUsd": 0.000426,
+			"lane": 3,
+			"startMs": 0.424300000002404,
+			"endMs": 1422.7849000000024
+		}
+	],
+	"totals": {
+		"items": 4,
+		"scored": 4,
+		"correct": 4,
+		"accuracy": 1,
+		"wallMs": 1423.6467999999986,
+		"costUsd": 0.0017079999999999999,
+		"inputTokens": 634,
+		"outputTokens": 44,
+		"parseFailures": 0
+	}
+}

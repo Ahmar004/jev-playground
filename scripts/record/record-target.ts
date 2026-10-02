@@ -7,6 +7,7 @@ import {
 	RACE_LANES,
 	RACERS,
 	RUN_EVENTS,
+	TASK_KINDS,
 	type ProviderErrorKind
 } from '@/lib/constants'
 import { priceFor } from '@/runner/cost'
@@ -125,7 +126,13 @@ export async function recordTarget(
 		)
 	}
 	// Every call failing is a setup problem (key, network), not a model result.
-	if (events.length > 0 && events.every((event) => event.error)) {
+	// Except level 2: Jev is sent a question type it does not offer, and the
+	// real rejection (a 400 or 422) is the result worth showing (DESIGN 7).
+	const expectedRejection =
+		task.kind === TASK_KINDS.generate &&
+		target.racer === RACERS.jev &&
+		events.every((event) => event.error === PROVIDER_ERROR_KINDS.malformed)
+	if (events.length > 0 && events.every((event) => event.error) && !expectedRejection) {
 		const kinds = new Set(events.map((event) => event.error))
 		throw new Error(
 			`Every call failed (${[...kinds].join(', ')}); nothing was written. Check the key and network.`

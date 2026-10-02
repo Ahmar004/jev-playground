@@ -1,0 +1,68 @@
+{
+	"taskId": "write-me-a-poem",
+	"taskHash": "81764563745a87dea8f7d5fef29cf5136d2f230884358425286e84fc7f4a6d23",
+	"racer": "llm",
+	"modelId": "claude-sonnet-5-5",
+	"recordedAt": "2026-10-02T03:07:41.901Z",
+	"price": {
+		"inputPerM": 2,
+		"outputPerM": 10,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "p1",
+			"ok": true,
+			"raw": "{\"answer\": \"Soft raindrops tap upon the windowpane,\\nThe morning wears a coat of silver gray,\\nWarm tea steams up to meet the gentle rain,\\nAs puddles dance and wash the dark away.\"}",
+			"parsed": "Soft raindrops tap upon the windowpane,\nThe morning wears a coat of silver gray,\nWarm tea steams up to meet the gentle rain,\nAs puddles dance and wash the dark away.",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 2180.8583,
+			"usage": { "inputTokens": 82, "outputTokens": 80 },
+			"costUsd": 0.000964,
+			"lane": 0,
+			"startMs": 0.008299999999962893,
+			"endMs": 2181.218
+		},
+		{
+			"itemId": "p2",
+			"ok": true,
+			"raw": "{\"answer\": \"Its metal feet stumble, then find the beat,\\nServos whir softly in rhythm and sway.\\nEach fall becomes wisdom, each step more sweet,\\nTill circuits are gliding the night away.\"}",
+			"parsed": "Its metal feet stumble, then find the beat,\nServos whir softly in rhythm and sway.\nEach fall becomes wisdom, each step more sweet,\nTill circuits are gliding the night away.",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 2042.8693999999996,
+			"usage": { "inputTokens": 84, "outputTokens": 78 },
+			"costUsd": 0.000948,
+			"lane": 1,
+			"startMs": 0.40639999999984866,
+			"endMs": 2043.6309
+		},
+		{
+			"itemId": "p3",
+			"ok": true,
+			"raw": "{\"answer\": \"One slice remains inside the box,\\nA golden crust, still warm and sweet.\\nEveryone eyes it, quiet as foxes,\\nWaiting to see who dares to eat.\"}",
+			"parsed": "One slice remains inside the box,\nA golden crust, still warm and sweet.\nEveryone eyes it, quiet as foxes,\nWaiting to see who dares to eat.",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1480.2687,
+			"usage": { "inputTokens": 84, "outputTokens": 69 },
+			"costUsd": 0.000858,
+			"lane": 2,
+			"startMs": 0.6028999999998632,
+			"endMs": 1481.2204000000002
+		}
+	],
+	"totals": {
+		"items": 3,
+		"scored": 3,
+		"correct": 3,
+		"accuracy": 1,
+		"wallMs": 2181.2097,
+		"costUsd": 0.00277,
+		"inputTokens": 250,
+		"outputTokens": 227,
+		"parseFailures": 0
+	}
+}

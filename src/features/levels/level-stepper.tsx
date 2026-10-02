@@ -6,12 +6,15 @@ import type { Level } from '@/content/level-schema'
 import type { Recording } from '@/content/recording-schema'
 import type { Task } from '@/content/task-schema'
 import { ROUTES } from '@/lib/links'
-import { LEVEL_STATUS, LEVEL_STEPS } from '@/lib/constants'
+import { LEVEL_STATUS, LEVEL_STEPS, LEVEL_WIDGETS } from '@/lib/constants'
 import { BeginnerBanner } from './beginner-banner'
+import { CalibrationChart } from './calibration/calibration-chart'
+import { CalibrationForm } from './calibration/calibration-form'
+import type { Ratings } from './calibration/ratings'
 import { CheckStep } from './check-step'
 import { LearnStep } from './learn-step'
 import type { LevelProgressView } from './level-progress'
-import { defaultOpponentId, raceLineup } from './lineup'
+import { defaultOpponentId, levelStages, sharedOpponentIds } from './lineup'
 import { PlayStep } from './play-step'
 import { PredictStep } from './predict-step'
 import { RevealStep } from './reveal-step'
@@ -23,16 +26,17 @@ import { useStepFocus } from './use-step-focus'
 /**
  * One level's loop: Learn, Predict, Play, Reveal, Check (spec 6.1). Saved
  * progress comes from the server and is updated through useLevelProgress.
- * Level 3 (slice 6) races two tasks; levels with one task pass it here.
+ * A level with several tasks stacks one race per task (level 3); a level with
+ * a widget adds it to Play and Reveal (level 4's calibration).
  */
 export function LevelStepper({
 	level,
-	task,
+	tasks,
 	recordings,
 	initialProgress
 }: {
 	level: Level
-	task: Task
+	tasks: Task[]
 	recordings: Recording[]
 	initialProgress: LevelProgressView
 }) {
@@ -45,9 +49,17 @@ export function LevelStepper({
 		if (celebrate && step !== LEVEL_STEPS.reveal) consumeCelebration()
 	}, [celebrate, step, consumeCelebration])
 	useStepFocus(step)
-	const lineup = raceLineup(recordings)
-	const [opponentId, setOpponentId] = useState(() => defaultOpponentId(lineup.opponents))
-	const opponent = lineup.opponents.find((recording) => recording.modelId === opponentId)
+	const stages = levelStages(level, tasks, recordings)
+	const opponentIds = sharedOpponentIds(stages)
+	const [opponentId, setOpponentId] = useState(() =>
+		defaultOpponentId(
+			stages[0]?.opponents.filter((recording) => opponentIds.includes(recording.modelId)) ?? []
+		)
+	)
+	// Level 4: the user's own ratings live only in the page, never saved.
+	const [ratings, setRatings] = useState<Ratings>({})
+	const calibrationStage =
+		level.widget === LEVEL_WIDGETS.calibration ? stages.find((stage) => stage.judged) : undefined
 
 	return (
 		<main className="flex max-w-4xl flex-col gap-6">
@@ -73,21 +85,28 @@ export function LevelStepper({
 			)}
 			{step === LEVEL_STEPS.play && (
 				<PlayStep
-					task={task}
-					jev={lineup.jev}
-					opponents={lineup.opponents}
+					stages={stages}
+					opponentIds={opponentIds}
 					opponentId={opponentId}
 					onOpponentChange={setOpponentId}
 					onReveal={() => goTo(LEVEL_STEPS.reveal)}
-				/>
+				>
+					{calibrationStage && (
+						<CalibrationForm
+							task={calibrationStage.task}
+							ratings={ratings}
+							onRate={(itemId, rating) =>
+								setRatings((previous) => ({ ...previous, [itemId]: rating }))
+							}
+						/>
+					)}
+				</PlayStep>
 			)}
 			{step === LEVEL_STEPS.reveal && (
 				<RevealStep
 					level={level}
-					task={task}
-					jev={lineup.jev}
-					opponent={opponent}
-					others={lineup.opponents.filter((recording) => recording !== opponent)}
+					stages={stages}
+					opponentId={opponentId}
 					prediction={progress.prediction}
 					celebrate={celebrate}
 					onCelebrated={consumeCelebration}
@@ -95,7 +114,15 @@ export function LevelStepper({
 					onReveal={reveal}
 					onCheck={() => goTo(LEVEL_STEPS.check)}
 					onRaceAgain={() => goTo(LEVEL_STEPS.play)}
-				/>
+				>
+					{calibrationStage?.jev && (
+						<CalibrationChart
+							task={calibrationStage.task}
+							jev={calibrationStage.jev}
+							ratings={ratings}
+						/>
+					)}
+				</RevealStep>
 			)}
 			{step === LEVEL_STEPS.check && (
 				<CheckStep

@@ -1,0 +1,82 @@
+{
+	"taskId": "fruits-fixed",
+	"taskHash": "77080ac07dd9c2498b5042d135bfbc2767a90cce17bfd2b3a371bd19d498c331",
+	"racer": "llm",
+	"modelId": "claude-sonnet-5-5",
+	"recordedAt": "2026-10-02T03:07:54.345Z",
+	"price": {
+		"inputPerM": 2,
+		"outputPerM": 10,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "f1",
+			"ok": false,
+			"raw": "Going through the list, the fruits are apple, banana, grape and pear. Carrot is a vegetable, bread is a food that isn't a fruit, and chair is furniture. That makes 4 fruits.\n\n{\"answer\": \"4\"}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 1676.3681000000015,
+			"usage": { "inputTokens": 222, "outputTokens": 78 },
+			"costUsd": 0.001224,
+			"lane": 0,
+			"startMs": 0.006300000000919681,
+			"endMs": 1676.5177999999996
+		},
+		{
+			"itemId": "f2",
+			"ok": false,
+			"raw": "Of the seven entries, mango, kiwi and orange are fruits. Potato, onion, spoon and cheese are not.\n\n{\"answer\": \"3\"}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 1097.7015999999985,
+			"usage": { "inputTokens": 225, "outputTokens": 52 },
+			"costUsd": 0.00097,
+			"lane": 1,
+			"startMs": 0.23300000000017462,
+			"endMs": 1098.0577000000012
+		},
+		{
+			"itemId": "f3",
+			"ok": false,
+			"raw": "Going through the list, the fruits are lemon, pineapple, cherry, watermelon, and peach. The other entries (pen, broccoli, rice, carrot, bread) are not fruits. That makes 5 fruits.\n\n{\"answer\": \"5\"}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 1258.3940999999977,
+			"usage": { "inputTokens": 248, "outputTokens": 84 },
+			"costUsd": 0.001336,
+			"lane": 2,
+			"startMs": 0.3633000000008906,
+			"endMs": 1258.873700000002
+		},
+		{
+			"itemId": "f4",
+			"ok": false,
+			"raw": "Going through the list, the fruits are strawberry, apple, banana, grape, pear and kiwi. The other entries (onion, pen, cheese, rice, carrot, bread) are not fruits. That makes 6 fruits.\n\n{\"answer\": \"6\"}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 1729.1736999999994,
+			"usage": { "inputTokens": 257, "outputTokens": 86 },
+			"costUsd": 0.001374,
+			"lane": 3,
+			"startMs": 0.48400000000037835,
+			"endMs": 1729.784700000002
+		}
+	],
+	"totals": {
+		"items": 4,
+		"scored": 4,
+		"correct": 0,
+		"accuracy": 0,
+		"wallMs": 1729.778400000001,
+		"costUsd": 0.004904,
+		"inputTokens": 952,
+		"outputTokens": 300,
+		"parseFailures": 4
+	}
+}

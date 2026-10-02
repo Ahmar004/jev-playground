@@ -6,7 +6,7 @@ import { taskHash } from '@/content/task-hash'
 import { taskSchema } from '@/content/task-schema'
 import { PROVIDER_ERROR_KINDS, RACE_LANES } from '@/lib/constants'
 import { ProviderError } from '@/runner/providers/provider-error'
-import { choiceTask } from '@/runner/testing/tasks'
+import { choiceTask, generateTask } from '@/runner/testing/tasks'
 import type { ProviderResult } from '@/runner/types'
 import { recordTarget, type ProviderCalls } from './record-target'
 
@@ -277,6 +277,23 @@ describe('recordTarget', () => {
 		await expect(
 			recordTarget(choiceTask, jevTarget, { calls: failing, prices, recordedAt })
 		).rejects.toThrow(new RegExp(`${PROVIDER_ERROR_KINDS.invalidKey}.*nothing was written`))
+	})
+
+	it("records Jev's rejection of a free-text question as the result (level 2)", async () => {
+		const rejecting = calls({
+			jev: async () => {
+				throw new ProviderError(PROVIDER_ERROR_KINDS.malformed, 422, '{"detail":"bad type"}', 30)
+			}
+		})
+		const recording = await recordTarget(generateTask, jevTarget, {
+			calls: rejecting,
+			prices,
+			recordedAt
+		})
+		expect(recording.events.every((event) => event.error === PROVIDER_ERROR_KINDS.malformed)).toBe(
+			true
+		)
+		expect(recording.events[0]?.raw).toContain('bad type')
 	})
 
 	it('records a run with one failed call among successes, as it happened (R44)', async () => {

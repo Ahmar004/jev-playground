@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { combineResult, createCombineTap } from './combine'
+import { combineResult, createCombineTap, jevCodeRecording } from './combine'
+import type { Recording } from '@/content/recording-schema'
 import { choiceTask, countTask, datesTask, item } from './testing/tasks'
 import type { ItemResult, RunEvent } from './types'
 
@@ -95,5 +96,40 @@ describe('createCombineTap', () => {
 		const tap = createCombineTap(choiceTask, (event) => seen.push(event))
 		tap({ type: 'item_started', racer: 'jev', itemId: 't1', lane: 0, atMs: 0 })
 		expect(seen).toHaveLength(1)
+	})
+})
+
+describe('jevCodeRecording', () => {
+	it("derives Jev + Code from Jev's recording with Jev's model and date", () => {
+		const event = { ...jevResult(), lane: 0, startMs: 0, endMs: 120 }
+		const jev: Recording = {
+			taskId: countTask.id,
+			taskHash: 'a'.repeat(64),
+			racer: 'jev',
+			modelId: 'jev-1.13.0',
+			recordedAt: '2026-10-02T10:00:00.000Z',
+			price: null,
+			lanes: 4,
+			events: [event],
+			totals: {
+				items: 1,
+				scored: 0,
+				correct: 0,
+				accuracy: null,
+				wallMs: 120,
+				costUsd: 0.0000126,
+				inputTokens: 300,
+				outputTokens: 20,
+				parseFailures: 0
+			}
+		}
+		const derived = jevCodeRecording(countTask, jev)
+		expect(derived).toMatchObject({
+			racer: 'jev_code',
+			modelId: 'jev-1.13.0',
+			recordedAt: jev.recordedAt
+		})
+		expect(derived.events[0]).toMatchObject({ itemId: 'c1', correct: true })
+		expect(derived.totals).toMatchObject({ scored: 1, correct: 1, accuracy: 1, wallMs: 120 })
 	})
 })

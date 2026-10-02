@@ -1,10 +1,13 @@
 import speedRace from '../../content/levels/speed-race.json'
+import writeMeAPoem from '../../content/levels/write-me-a-poem.json'
+import countAndDates from '../../content/levels/count-and-dates.json'
+import howSure from '../../content/levels/how-sure.json'
 import { levelSchema, type CheckQuestion, type Level } from './level-schema'
 import { TASKS } from './tasks'
 
 // Every file in content/levels/ is imported here, so content renders at build
 // time (DESIGN 4.1). registry.test.ts fails when a file is missing.
-const RAW_LEVELS: unknown[] = [speedRace]
+const RAW_LEVELS: unknown[] = [speedRace, writeMeAPoem, countAndDates, howSure]
 
 /** Parses levels, checks ids, orders and task ids, and keys them by id in path order. */
 export function buildLevelMap(
@@ -18,7 +21,7 @@ export function buildLevelMap(
 	for (const level of levels) {
 		if (map.has(level.id)) throw new Error(`Duplicate level id: ${level.id}`)
 		if (orders.has(level.order)) throw new Error(`Duplicate level order: ${level.order}`)
-		for (const taskId of level.taskIds) {
+		for (const { id: taskId } of level.tasks) {
 			if (!taskIds.has(taskId)) throw new Error(`Level ${level.id} uses unknown task ${taskId}`)
 		}
 		for (const question of level.check.questions) {

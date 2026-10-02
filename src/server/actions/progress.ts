@@ -4,8 +4,8 @@ import { refresh } from 'next/cache'
 import { z } from 'zod'
 import { getCheckQuestion } from '@/content/levels'
 import { currentRecordings } from '@/content/recordings'
-import { isPredictionCorrect, judgeAll } from '@/features/levels/judge'
-import { LEVEL_STATUS, RACERS, XP_SOURCES } from '@/lib/constants'
+import { isPredictionCorrect, judgeAll, judgedTotals } from '@/features/levels/judge'
+import { LEVEL_STATUS, XP_SOURCES } from '@/lib/constants'
 import { AppError } from '@/lib/errors/app-error'
 import { awardXp, syncBadges, type Awards } from '@/server/awards/awards'
 import { requireUser } from '@/server/auth/session'
@@ -89,13 +89,9 @@ export const revealPrediction = validatedAction({
 	handler: async (input) => {
 		const { userId } = await requireUser()
 		const level = levelOrThrow(input.levelId)
-		const [taskId] = level.taskIds
-		const recordings = taskId ? currentRecordings(taskId) : []
-		const jev = recordings.find((recording) => recording.racer === RACERS.jev)
-		const opponent = recordings.find(
-			(recording) => recording.racer === RACERS.llm && recording.modelId === input.opponentModelId
-		)
-		if (!jev || !opponent) {
+		const recordings = level.tasks.flatMap((task) => currentRecordings(task.id))
+		const totals = judgedTotals(level, recordings, input.opponentModelId)
+		if (!totals) {
 			throw new AppError('That opponent has no recording for this level.', {
 				code: 'unknown_opponent'
 			})
@@ -105,7 +101,7 @@ export const revealPrediction = validatedAction({
 			const row = await tx.levelProgress.findUnique({ where: key })
 			if (row?.revealedAt) return alreadyRevealed(row)
 			const stored = parseStoredPrediction(row?.prediction)
-			const correct = isPredictionCorrect(judgeAll(level, stored, jev.totals, opponent.totals))
+			const correct = isPredictionCorrect(judgeAll(level, stored, totals.jev, totals.opponent))
 			// Guarded claim: only the call that flips revealedAt from null wins, so a
 			// concurrent Reveal can never overwrite the first result or double-award.
 			await tx.levelProgress.createMany({
@@ -117,7 +113,7 @@ export const revealPrediction = validatedAction({
 				data: {
 					status: nextStatusOnActivity(statusOf(row)),
 					revealedAt: new Date(),
-					opponentModelId: opponent.modelId,
+					opponentModelId: input.opponentModelId,
 					predictionCorrect: correct
 				}
 			})

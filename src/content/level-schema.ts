@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { LEVEL_COUNT, PREDICTION_METRICS, RACERS } from '@/lib/constants'
+import { LEVEL_COUNT, LEVEL_WIDGETS, PREDICTION_METRICS, RACERS } from '@/lib/constants'
 
 const MAX_LEARN_POINTS = 4
 const MIN_COMPARED = 2
@@ -66,7 +66,15 @@ export const levelSchema = z.strictObject({
 				'Each prediction is asked once'
 			)
 	}),
-	taskIds: z.array(z.string().min(1)).min(1),
+	// One race per task, in order. A judged task counts toward the prediction;
+	// an unjudged one (level 3's "after the fix" races) is shown but not predicted.
+	tasks: z
+		.array(
+			z.strictObject({ id: z.string().min(1), title: text, judged: z.boolean().default(true) })
+		)
+		.min(1)
+		.refine((tasks) => tasks.some((task) => task.judged), 'A level judges at least one task'),
+	widget: z.enum(LEVEL_WIDGETS).optional(),
 	// Words only: Reveal's numbers come from the recordings at render time.
 	reveal: z.strictObject({ why: z.array(text).min(1).max(MAX_REVEAL_PARAGRAPHS) }),
 	docs: z.array(z.strictObject({ path: z.string().regex(DOCS_PATH), title: text })).min(1),

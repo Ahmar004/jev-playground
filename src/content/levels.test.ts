@@ -18,9 +18,9 @@ describe('buildLevelMap', () => {
 	})
 
 	it('rejects a level whose task does not exist', () => {
-		expect(() => buildLevelMap([{ ...testLevel, taskIds: ['missing'] }], TASK_IDS)).toThrow(
-			/missing/
-		)
+		expect(() =>
+			buildLevelMap([{ ...testLevel, tasks: [{ id: 'missing', title: 'Race' }] }], TASK_IDS)
+		).toThrow(/missing/)
 	})
 
 	it('rejects duplicate ids and duplicate orders', () => {

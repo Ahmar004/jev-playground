@@ -1,0 +1,68 @@
+{
+	"taskId": "write-me-a-poem",
+	"taskHash": "81764563745a87dea8f7d5fef29cf5136d2f230884358425286e84fc7f4a6d23",
+	"racer": "llm",
+	"modelId": "claude-haiku-4-5-20251001",
+	"recordedAt": "2026-10-02T03:07:40.290Z",
+	"price": {
+		"inputPerM": 1,
+		"outputPerM": 5,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "p1",
+			"ok": true,
+			"raw": "```json\n{\"answer\": \"Gray clouds drift across the waking sky,\\nRain taps gently on the windowpane,\\nThe world outside feels soft and shy,\\nAs puddles mirror clouds again.\"}\n```",
+			"parsed": "Gray clouds drift across the waking sky,\nRain taps gently on the windowpane,\nThe world outside feels soft and shy,\nAs puddles mirror clouds again.",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1484.1821999999997,
+			"usage": { "inputTokens": 61, "outputTokens": 55 },
+			"costUsd": 0.000336,
+			"lane": 0,
+			"startMs": 0.012899999999945067,
+			"endMs": 1485.565
+		},
+		{
+			"itemId": "p2",
+			"ok": true,
+			"raw": "```json\n{\"answer\": \"A robot spins and learns to sway,\\nWith metal joints that bend and play,\\nIts circuits hum a rhythmic beat,\\nAs dancing makes the motion sweet.\"}\n```",
+			"parsed": "A robot spins and learns to sway,\nWith metal joints that bend and play,\nIts circuits hum a rhythmic beat,\nAs dancing makes the motion sweet.",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1532.3532999999998,
+			"usage": { "inputTokens": 62, "outputTokens": 54 },
+			"costUsd": 0.000332,
+			"lane": 1,
+			"startMs": 0.9157999999999902,
+			"endMs": 1533.6650999999997
+		},
+		{
+			"itemId": "p3",
+			"ok": true,
+			"raw": "```json\n{\"answer\": \"The last slice sits lonely on the plate,\\nA treasure that we all desire and debate,\\nOne final chance to taste that cheesy dream,\\nBefore the box is empty and we scheme.\"}\n```",
+			"parsed": "The last slice sits lonely on the plate,\nA treasure that we all desire and debate,\nOne final chance to taste that cheesy dream,\nBefore the box is empty and we scheme.",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1591.0270999999998,
+			"usage": { "inputTokens": 62, "outputTokens": 57 },
+			"costUsd": 0.000347,
+			"lane": 2,
+			"startMs": 1.3139999999998508,
+			"endMs": 1592.6803
+		}
+	],
+	"totals": {
+		"items": 3,
+		"scored": 3,
+		"correct": 3,
+		"accuracy": 1,
+		"wallMs": 1592.6674,
+		"costUsd": 0.0010149999999999998,
+		"inputTokens": 185,
+		"outputTokens": 166,
+		"parseFailures": 0
+	}
+}

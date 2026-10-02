@@ -1,0 +1,231 @@
+{
+	"id": "fruits-fixed",
+	"kind": "choice",
+	"version": 1,
+	"combine": "count_true",
+	"jev": {
+		"questions": {
+			"entry": {
+				"type": "noul",
+				"instructions": "Is this entry a fruit?"
+			}
+		}
+	},
+	"llm": {
+		"type": "choice",
+		"instructions": "How many of the entries in the list are fruits?",
+		"criteria": {
+			"0": null,
+			"1": null,
+			"2": null,
+			"3": null,
+			"4": null,
+			"5": null,
+			"6": null,
+			"7": null,
+			"8": null,
+			"9": null,
+			"10": null,
+			"11": null,
+			"12": null
+		}
+	},
+	"items": [
+		{
+			"id": "f1",
+			"state": ["apple", "carrot", "banana", "bread", "grape", "chair", "pear"],
+			"label": "4",
+			"questions": {
+				"e1": {
+					"type": "noul",
+					"instructions": "Is \"apple\" a fruit?"
+				},
+				"e2": {
+					"type": "noul",
+					"instructions": "Is \"carrot\" a fruit?"
+				},
+				"e3": {
+					"type": "noul",
+					"instructions": "Is \"banana\" a fruit?"
+				},
+				"e4": {
+					"type": "noul",
+					"instructions": "Is \"bread\" a fruit?"
+				},
+				"e5": {
+					"type": "noul",
+					"instructions": "Is \"grape\" a fruit?"
+				},
+				"e6": {
+					"type": "noul",
+					"instructions": "Is \"chair\" a fruit?"
+				},
+				"e7": {
+					"type": "noul",
+					"instructions": "Is \"pear\" a fruit?"
+				}
+			}
+		},
+		{
+			"id": "f2",
+			"state": ["potato", "mango", "onion", "kiwi", "spoon", "cheese", "orange"],
+			"label": "3",
+			"questions": {
+				"e1": {
+					"type": "noul",
+					"instructions": "Is \"potato\" a fruit?"
+				},
+				"e2": {
+					"type": "noul",
+					"instructions": "Is \"mango\" a fruit?"
+				},
+				"e3": {
+					"type": "noul",
+					"instructions": "Is \"onion\" a fruit?"
+				},
+				"e4": {
+					"type": "noul",
+					"instructions": "Is \"kiwi\" a fruit?"
+				},
+				"e5": {
+					"type": "noul",
+					"instructions": "Is \"spoon\" a fruit?"
+				},
+				"e6": {
+					"type": "noul",
+					"instructions": "Is \"cheese\" a fruit?"
+				},
+				"e7": {
+					"type": "noul",
+					"instructions": "Is \"orange\" a fruit?"
+				}
+			}
+		},
+		{
+			"id": "f3",
+			"state": [
+				"lemon",
+				"pen",
+				"broccoli",
+				"rice",
+				"pineapple",
+				"carrot",
+				"cherry",
+				"watermelon",
+				"bread",
+				"peach"
+			],
+			"label": "5",
+			"questions": {
+				"e1": {
+					"type": "noul",
+					"instructions": "Is \"lemon\" a fruit?"
+				},
+				"e2": {
+					"type": "noul",
+					"instructions": "Is \"pen\" a fruit?"
+				},
+				"e3": {
+					"type": "noul",
+					"instructions": "Is \"broccoli\" a fruit?"
+				},
+				"e4": {
+					"type": "noul",
+					"instructions": "Is \"rice\" a fruit?"
+				},
+				"e5": {
+					"type": "noul",
+					"instructions": "Is \"pineapple\" a fruit?"
+				},
+				"e6": {
+					"type": "noul",
+					"instructions": "Is \"carrot\" a fruit?"
+				},
+				"e7": {
+					"type": "noul",
+					"instructions": "Is \"cherry\" a fruit?"
+				},
+				"e8": {
+					"type": "noul",
+					"instructions": "Is \"watermelon\" a fruit?"
+				},
+				"e9": {
+					"type": "noul",
+					"instructions": "Is \"bread\" a fruit?"
+				},
+				"e10": {
+					"type": "noul",
+					"instructions": "Is \"peach\" a fruit?"
+				}
+			}
+		},
+		{
+			"id": "f4",
+			"state": [
+				"strawberry",
+				"onion",
+				"apple",
+				"pen",
+				"banana",
+				"cheese",
+				"grape",
+				"rice",
+				"pear",
+				"carrot",
+				"kiwi",
+				"bread"
+			],
+			"label": "6",
+			"questions": {
+				"e1": {
+					"type": "noul",
+					"instructions": "Is \"strawberry\" a fruit?"
+				},
+				"e2": {
+					"type": "noul",
+					"instructions": "Is \"onion\" a fruit?"
+				},
+				"e3": {
+					"type": "noul",
+					"instructions": "Is \"apple\" a fruit?"
+				},
+				"e4": {
+					"type": "noul",
+					"instructions": "Is \"pen\" a fruit?"
+				},
+				"e5": {
+					"type": "noul",
+					"instructions": "Is \"banana\" a fruit?"
+				},
+				"e6": {
+					"type": "noul",
+					"instructions": "Is \"cheese\" a fruit?"
+				},
+				"e7": {
+					"type": "noul",
+					"instructions": "Is \"grape\" a fruit?"
+				},
+				"e8": {
+					"type": "noul",
+					"instructions": "Is \"rice\" a fruit?"
+				},
+				"e9": {
+					"type": "noul",
+					"instructions": "Is \"pear\" a fruit?"
+				},
+				"e10": {
+					"type": "noul",
+					"instructions": "Is \"carrot\" a fruit?"
+				},
+				"e11": {
+					"type": "noul",
+					"instructions": "Is \"kiwi\" a fruit?"
+				},
+				"e12": {
+					"type": "noul",
+					"instructions": "Is \"bread\" a fruit?"
+				}
+			}
+		}
+	]
+}

@@ -1,0 +1,52 @@
+{
+	"id": "dates-direct",
+	"kind": "choice",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "choice",
+				"instructions": "Which of the two dates comes first?",
+				"criteria": {
+					"first": "The date in `first` comes earlier",
+					"second": "The date in `second` comes earlier",
+					"same": "They are the same day"
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "d1",
+			"state": {
+				"first": "March 9, 2024",
+				"second": "9 April 2023"
+			},
+			"label": "second"
+		},
+		{
+			"id": "d2",
+			"state": {
+				"first": "12 December 2022",
+				"second": "2 January 2023"
+			},
+			"label": "first"
+		},
+		{
+			"id": "d3",
+			"state": {
+				"first": "the 20th of July, 2019",
+				"second": "July 2nd, 2019"
+			},
+			"label": "second"
+		},
+		{
+			"id": "d4",
+			"state": {
+				"first": "10 October 2021",
+				"second": "October 10th, 2021"
+			},
+			"label": "same"
+		}
+	]
+}

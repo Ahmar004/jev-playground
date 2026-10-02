@@ -1,10 +1,10 @@
 import { AlertIcon, SuccessIcon, WrongIcon, InfoIcon } from '@/components/ui/icons'
-import type { Recording } from '@/content/recording-schema'
 import type { Task } from '@/content/task-schema'
 import { answerText, itemOutcome, valueText } from '@/features/race/answer-text'
 import { RacerTag } from '@/features/race/racer-tag'
 import { cn } from '@/lib/cn'
 import { ITEM_OUTCOMES, type ItemOutcome } from '@/lib/constants'
+import type { RaceRecording } from '@/runner/combine'
 import type { ItemResult } from '@/runner/types'
 
 const OUTCOME_COPY: Record<ItemOutcome, { text: string; tone: string; Icon: typeof SuccessIcon }> =
@@ -20,7 +20,7 @@ function ResultCell({
 	recording,
 	result
 }: {
-	recording: Recording
+	recording: RaceRecording
 	result: ItemResult | undefined
 }) {
 	if (!result) return <p className="text-text-muted text-sm">No result recorded</p>
@@ -45,7 +45,7 @@ function ResultCell({
 }
 
 /** Every item with each racer's answer. Misses that didn't parse show their raw output (R44), as plain text (R86). */
-export function ItemResults({ task, recordings }: { task: Task; recordings: Recording[] }) {
+export function ItemResults({ task, recordings }: { task: Task; recordings: RaceRecording[] }) {
 	const byItem = recordings.map(
 		(recording) =>
 			new Map<string, ItemResult>(recording.events.map((event) => [event.itemId, event]))
@@ -71,7 +71,7 @@ export function ItemResults({ task, recordings }: { task: Task; recordings: Reco
 						<div className="grid gap-4 sm:grid-cols-2">
 							{recordings.map((recording, column) => (
 								<ResultCell
-									key={recording.modelId}
+									key={`${recording.racer}-${recording.modelId}`}
 									recording={recording}
 									result={byItem[column]?.get(item.id)}
 								/>

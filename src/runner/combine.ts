@@ -1,6 +1,7 @@
 import { z } from 'zod'
+import type { Recording } from '@/content/recording-schema'
 import type { Task, TaskItem } from '@/content/task-schema'
-import { RACERS, RUN_EVENTS } from '@/lib/constants'
+import { RACERS, RUN_EVENTS, type Racer } from '@/lib/constants'
 import { COMBINE_FNS, type CombineArgs } from './code/combine-fns'
 import { jevAnswerSchema } from './parse'
 import { missCredit, scoreAnswer, toCorrect } from './score'
@@ -90,4 +91,27 @@ export function createCombineTap(
 				return
 		}
 	}
+}
+
+// A recording of any racer shown in Reveal, including the derived Jev + Code.
+export type RaceRecording = Omit<Recording, 'racer'> & { racer: Racer }
+
+/**
+ * Jev + Code as a recording, derived from Jev's own: each event passed
+ * through the task's combine function, never stored on disk (DESIGN 3.2).
+ * Reveal uses it for the numbers and the per-item answers.
+ */
+export function jevCodeRecording(task: Task, jev: Recording): RaceRecording {
+	const itemsById = new Map(task.items.map((item) => [item.id, item]))
+	const events = jev.events.map((event) => {
+		const item = itemsById.get(event.itemId)
+		if (!item) return event
+		const result = combineResult(task, item, event)
+		return {
+			...event,
+			...result,
+			endMs: event.endMs + (result.latencyMs - event.latencyMs)
+		}
+	})
+	return { ...jev, racer: RACERS.jevCode, events, totals: computeTotals(events, jev.totals.wallMs) }
 }

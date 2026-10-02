@@ -1,0 +1,82 @@
+{
+	"taskId": "fruits-direct",
+	"taskHash": "ec545c5b8b00d84756e99bc9f919ebd083bf5864a8fb82f06b5db3abdda17a6d",
+	"racer": "llm",
+	"modelId": "claude-opus-5-5",
+	"recordedAt": "2026-10-02T03:07:50.152Z",
+	"price": {
+		"inputPerM": 4,
+		"outputPerM": 20,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "f1",
+			"ok": false,
+			"raw": "Fruits: apple, banana, grape, pear = 4.\n\n{\"answer\": \"4\"}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 1422.8527000000013,
+			"usage": { "inputTokens": 222, "outputTokens": 32 },
+			"costUsd": 0.001528,
+			"lane": 0,
+			"startMs": 0.008899999998902786,
+			"endMs": 1422.9987
+		},
+		{
+			"itemId": "f2",
+			"ok": true,
+			"raw": "{\"answer\": \"3\"}",
+			"parsed": "3",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1355.264000000001,
+			"usage": { "inputTokens": 225, "outputTokens": 11 },
+			"costUsd": 0.00112,
+			"lane": 1,
+			"startMs": 0.23929999999927531,
+			"endMs": 1355.8872999999985
+		},
+		{
+			"itemId": "f3",
+			"ok": false,
+			"raw": "Going through the list, the fruits are lemon, pineapple, cherry, watermelon and peach, which makes 5. Pen, broccoli, rice, carrot and bread are not fruits.\n\n{\"answer\": \"5\"}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 2736.4004000000004,
+			"usage": { "inputTokens": 248, "outputTokens": 74 },
+			"costUsd": 0.002472,
+			"lane": 2,
+			"startMs": 0.3936999999987165,
+			"endMs": 2736.9098999999987
+		},
+		{
+			"itemId": "f4",
+			"ok": false,
+			"raw": "Fruits: strawberry, apple, banana, grape, pear, kiwi = 6\n\n{\"answer\": \"6\"}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 1890.5553,
+			"usage": { "inputTokens": 257, "outputTokens": 41 },
+			"costUsd": 0.001848,
+			"lane": 3,
+			"startMs": 0.5468999999993684,
+			"endMs": 1891.2307999999994
+		}
+	],
+	"totals": {
+		"items": 4,
+		"scored": 4,
+		"correct": 1,
+		"accuracy": 0.25,
+		"wallMs": 2736.901,
+		"costUsd": 0.006967999999999999,
+		"inputTokens": 952,
+		"outputTokens": 158,
+		"parseFailures": 3
+	}
+}
