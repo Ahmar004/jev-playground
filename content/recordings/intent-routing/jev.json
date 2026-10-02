@@ -1,0 +1,358 @@
+{
+	"taskId": "intent-routing",
+	"taskHash": "fe550cbea2d8d200bf985d05eebcb166bf7e63061514445cdb510277f4aff4e4",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-02T06:47:48.886Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "v01",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"lights\",\"confidence\":1.0,\"probabilities\":{\"speaker\":0.0,\"thermostat\":0.0,\"lights\":1.0,\"door_lock\":0.0,\"blinds\":0.0,\"tv\":0.0}}},\"usage\":{\"input_tokens\":438,\"output_tokens\":63}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "lights",
+					"probabilities": {
+						"speaker": 0,
+						"thermostat": 0,
+						"lights": 1,
+						"door_lock": 0,
+						"blinds": 0,
+						"tv": 0
+					},
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 624.1276,
+			"usage": { "inputTokens": 438, "outputTokens": 63 },
+			"costUsd": 0.000018396,
+			"lane": 0,
+			"startMs": 0.07510000000002037,
+			"endMs": 624.7243
+		},
+		{
+			"itemId": "v02",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"thermostat\",\"confidence\":1.0,\"probabilities\":{\"door_lock\":0.0,\"lights\":0.0,\"thermostat\":1.0,\"tv\":0.0,\"speaker\":0.0,\"blinds\":0.0}}},\"usage\":{\"input_tokens\":443,\"output_tokens\":65}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "thermostat",
+					"probabilities": {
+						"door_lock": 0,
+						"lights": 0,
+						"thermostat": 1,
+						"tv": 0,
+						"speaker": 0,
+						"blinds": 0
+					},
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 546.5249,
+			"usage": { "inputTokens": 443, "outputTokens": 65 },
+			"costUsd": 0.000018606,
+			"lane": 1,
+			"startMs": 18.253100000000018,
+			"endMs": 566.025
+		},
+		{
+			"itemId": "v03",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"door_lock\",\"confidence\":1.0,\"probabilities\":{\"speaker\":0.0,\"lights\":0.0,\"tv\":0.0,\"blinds\":0.0,\"door_lock\":1.0,\"thermostat\":0.0}}},\"usage\":{\"input_tokens\":440,\"output_tokens\":64}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "door_lock",
+					"probabilities": {
+						"speaker": 0,
+						"lights": 0,
+						"tv": 0,
+						"blinds": 0,
+						"door_lock": 1,
+						"thermostat": 0
+					},
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 639.0568,
+			"usage": { "inputTokens": 440, "outputTokens": 64 },
+			"costUsd": 0.00001848,
+			"lane": 2,
+			"startMs": 18.69720000000001,
+			"endMs": 657.9263
+		},
+		{
+			"itemId": "v04",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"speaker\",\"confidence\":1.0,\"probabilities\":{\"blinds\":0.0,\"lights\":0.0,\"tv\":0.0,\"speaker\":1.0,\"door_lock\":0.0,\"thermostat\":0.0}}},\"usage\":{\"input_tokens\":436,\"output_tokens\":63}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "speaker",
+					"probabilities": {
+						"blinds": 0,
+						"lights": 0,
+						"tv": 0,
+						"speaker": 1,
+						"door_lock": 0,
+						"thermostat": 0
+					},
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 559.7568,
+			"usage": { "inputTokens": 436, "outputTokens": 63 },
+			"costUsd": 0.000018312,
+			"lane": 3,
+			"startMs": 19.036299999999983,
+			"endMs": 578.9612
+		},
+		{
+			"itemId": "v05",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"blinds\",\"confidence\":1.0,\"probabilities\":{\"speaker\":0.0,\"door_lock\":0.0,\"tv\":0.0,\"thermostat\":0.0,\"lights\":0.0,\"blinds\":1.0}}},\"usage\":{\"input_tokens\":438,\"output_tokens\":64}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "blinds",
+					"probabilities": {
+						"speaker": 0,
+						"door_lock": 0,
+						"tv": 0,
+						"thermostat": 0,
+						"lights": 0,
+						"blinds": 1
+					},
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 326.1102000000001,
+			"usage": { "inputTokens": 438, "outputTokens": 64 },
+			"costUsd": 0.000018396,
+			"lane": 1,
+			"startMs": 566.132,
+			"endMs": 892.4178
+		},
+		{
+			"itemId": "v06",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"tv\",\"confidence\":1.0,\"probabilities\":{\"blinds\":0.0,\"thermostat\":0.0,\"tv\":1.0,\"lights\":0.0,\"speaker\":0.0,\"door_lock\":0.0}}},\"usage\":{\"input_tokens\":435,\"output_tokens\":63}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "tv",
+					"probabilities": {
+						"blinds": 0,
+						"thermostat": 0,
+						"tv": 1,
+						"lights": 0,
+						"speaker": 0,
+						"door_lock": 0
+					},
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 347.14880000000005,
+			"usage": { "inputTokens": 435, "outputTokens": 63 },
+			"costUsd": 0.00001827,
+			"lane": 3,
+			"startMs": 579.0196,
+			"endMs": 926.323
+		},
+		{
+			"itemId": "v07",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"lights\",\"confidence\":1.0,\"probabilities\":{\"tv\":0.0,\"blinds\":0.0,\"speaker\":0.0,\"door_lock\":0.0,\"thermostat\":0.0,\"lights\":1.0}}},\"usage\":{\"input_tokens\":436,\"output_tokens\":63}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "lights",
+					"probabilities": {
+						"tv": 0,
+						"blinds": 0,
+						"speaker": 0,
+						"door_lock": 0,
+						"thermostat": 0,
+						"lights": 1
+					},
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 353.76469999999995,
+			"usage": { "inputTokens": 436, "outputTokens": 63 },
+			"costUsd": 0.000018312,
+			"lane": 0,
+			"startMs": 624.7794,
+			"endMs": 978.7205
+		},
+		{
+			"itemId": "v08",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"thermostat\",\"confidence\":1.0,\"probabilities\":{\"thermostat\":1.0,\"blinds\":0.0,\"tv\":0.0,\"door_lock\":0.0,\"speaker\":0.0,\"lights\":0.0}}},\"usage\":{\"input_tokens\":438,\"output_tokens\":65}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "thermostat",
+					"probabilities": {
+						"thermostat": 1,
+						"blinds": 0,
+						"tv": 0,
+						"door_lock": 0,
+						"speaker": 0,
+						"lights": 0
+					},
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 449.5631000000001,
+			"usage": { "inputTokens": 438, "outputTokens": 65 },
+			"costUsd": 0.000018396,
+			"lane": 2,
+			"startMs": 657.9944999999999,
+			"endMs": 1107.7251999999999
+		},
+		{
+			"itemId": "v09",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"door_lock\",\"confidence\":1.0,\"probabilities\":{\"tv\":0.0,\"blinds\":0.0,\"speaker\":0.0,\"thermostat\":0.0,\"lights\":0.0,\"door_lock\":1.0}}},\"usage\":{\"input_tokens\":437,\"output_tokens\":64}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "door_lock",
+					"probabilities": {
+						"tv": 0,
+						"blinds": 0,
+						"speaker": 0,
+						"thermostat": 0,
+						"lights": 0,
+						"door_lock": 1
+					},
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 419.68330000000014,
+			"usage": { "inputTokens": 437, "outputTokens": 64 },
+			"costUsd": 0.000018354000000000004,
+			"lane": 1,
+			"startMs": 892.4758,
+			"endMs": 1312.2820000000002
+		},
+		{
+			"itemId": "v10",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"speaker\",\"confidence\":0.96,\"probabilities\":{\"tv\":0.03,\"blinds\":0.0,\"speaker\":0.97,\"thermostat\":0.0,\"lights\":0.0,\"door_lock\":0.0}}},\"usage\":{\"input_tokens\":436,\"output_tokens\":63}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "speaker",
+					"probabilities": {
+						"tv": 0.03,
+						"blinds": 0,
+						"speaker": 0.97,
+						"thermostat": 0,
+						"lights": 0,
+						"door_lock": 0
+					},
+					"confidence": 0.96
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 314.4353000000001,
+			"usage": { "inputTokens": 436, "outputTokens": 63 },
+			"costUsd": 0.000018312,
+			"lane": 3,
+			"startMs": 926.3748999999999,
+			"endMs": 1240.9906999999998
+		},
+		{
+			"itemId": "v11",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"blinds\",\"confidence\":0.68,\"probabilities\":{\"lights\":0.1,\"thermostat\":0.0,\"door_lock\":0.0,\"speaker\":0.0,\"blinds\":0.74,\"tv\":0.16}}},\"usage\":{\"input_tokens\":443,\"output_tokens\":64}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "blinds",
+					"probabilities": {
+						"lights": 0.1,
+						"thermostat": 0,
+						"door_lock": 0,
+						"speaker": 0,
+						"blinds": 0.74,
+						"tv": 0.16
+					},
+					"confidence": 0.68
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 322.7158999999999,
+			"usage": { "inputTokens": 443, "outputTokens": 64 },
+			"costUsd": 0.000018606,
+			"lane": 0,
+			"startMs": 978.7765,
+			"endMs": 1301.6975000000002
+		},
+		{
+			"itemId": "v12",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"tv\",\"confidence\":1.0,\"probabilities\":{\"lights\":0.0,\"blinds\":0.0,\"speaker\":0.0,\"tv\":1.0,\"door_lock\":0.0,\"thermostat\":0.0}}},\"usage\":{\"input_tokens\":435,\"output_tokens\":63}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "tv",
+					"probabilities": {
+						"lights": 0,
+						"blinds": 0,
+						"speaker": 0,
+						"tv": 1,
+						"door_lock": 0,
+						"thermostat": 0
+					},
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 410.1660999999999,
+			"usage": { "inputTokens": 435, "outputTokens": 63 },
+			"costUsd": 0.00001827,
+			"lane": 2,
+			"startMs": 1107.7903999999999,
+			"endMs": 1518.0991
+		}
+	],
+	"totals": {
+		"items": 12,
+		"scored": 12,
+		"correct": 12,
+		"accuracy": 1,
+		"wallMs": 1518.024,
+		"costUsd": 0.00022071000000000002,
+		"inputTokens": 5255,
+		"outputTokens": 764,
+		"parseFailures": 0
+	}
+}

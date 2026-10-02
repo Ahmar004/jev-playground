@@ -1,0 +1,115 @@
+{
+	"id": "citation-check",
+	"kind": "noul",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "noul",
+				"instructions": "Does the source text support the claim?",
+				"criteria": {
+					"true": "The source text states or clearly implies the claim",
+					"false": "The source text contradicts the claim or does not back it up"
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "c01",
+			"state": {
+				"claim": "The Eiffel Tower was completed in 1889.",
+				"source": "The Eiffel Tower, built for the 1889 World's Fair in Paris, opened to the public in May 1889 after about two years of construction."
+			},
+			"label": true
+		},
+		{
+			"id": "c02",
+			"state": {
+				"claim": "The Eiffel Tower is the tallest structure in France.",
+				"source": "The Eiffel Tower is 330 metres tall. The Millau Viaduct in southern France has a mast that reaches 343 metres, making it the tallest structure in the country."
+			},
+			"label": false
+		},
+		{
+			"id": "c03",
+			"state": {
+				"claim": "Honey never spoils when stored in a sealed container.",
+				"source": "Archaeologists have found pots of honey in ancient Egyptian tombs that were still edible. Honey's low water content and acidity keep bacteria from growing."
+			},
+			"label": true
+		},
+		{
+			"id": "c04",
+			"state": {
+				"claim": "Humans use only 10 percent of their brains.",
+				"source": "Brain imaging shows activity across virtually all regions of the brain over the course of a day. Even during sleep, many areas stay active."
+			},
+			"label": false
+		},
+		{
+			"id": "c05",
+			"state": {
+				"claim": "Mount Kilimanjaro is in Tanzania.",
+				"source": "Mount Kilimanjaro, a dormant volcano, rises 5,895 metres above sea level in north-eastern Tanzania, near the border with Kenya."
+			},
+			"label": true
+		},
+		{
+			"id": "c06",
+			"state": {
+				"claim": "Venus is the hottest planet in the solar system.",
+				"source": "Venus has a thick carbon dioxide atmosphere that traps heat, giving it a surface temperature of about 465 degrees Celsius, hotter than Mercury even though Mercury is closer to the Sun."
+			},
+			"label": true
+		},
+		{
+			"id": "c07",
+			"state": {
+				"claim": "Vitamin C prevents the common cold.",
+				"source": "A review of 29 trials found that taking vitamin C regularly did not reduce how many colds people caught, though it slightly shortened colds in some groups."
+			},
+			"label": false
+		},
+		{
+			"id": "c08",
+			"state": {
+				"claim": "The Great Wall of China is visible from space with the naked eye.",
+				"source": "Astronauts have reported that the Great Wall is very hard to see from low Earth orbit without aid. It is long but only a few metres wide, and it blends into the landscape."
+			},
+			"label": false
+		},
+		{
+			"id": "c09",
+			"state": {
+				"claim": "The first iPhone was released in 2007.",
+				"source": "Apple announced the iPhone in January 2007 and it went on sale in the United States on 29 June 2007."
+			},
+			"label": true
+		},
+		{
+			"id": "c10",
+			"state": {
+				"claim": "Sharks have no bones.",
+				"source": "A shark's skeleton is made of cartilage, the same flexible tissue found in the human nose and ears, rather than of bone."
+			},
+			"label": true
+		},
+		{
+			"id": "c11",
+			"state": {
+				"claim": "Coffee is the most traded commodity in the world after oil.",
+				"source": "Coffee is one of the most widely traded agricultural products, and Brazil, Vietnam and Colombia are its largest exporters. Wheat and soybeans are traded in larger volumes."
+			},
+			"label": false
+		},
+		{
+			"id": "c12",
+			"state": {
+				"claim": "Water boils at a lower temperature at high altitude.",
+				"source": "Atmospheric pressure drops as altitude rises, so water boils at about 95 degrees Celsius at 2,000 metres instead of 100 degrees at sea level."
+			},
+			"label": true
+		}
+	]
+}

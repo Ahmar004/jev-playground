@@ -39,6 +39,9 @@ export default function HomePage() {
 					<Link href={ROUTES.games}>Play the VS games</Link>
 				</Button>
 				<Button asChild variant="secondary">
+					<Link href={ROUTES.arena}>Try the Arena</Link>
+				</Button>
+				<Button asChild variant="secondary">
 					<Link href={ROUTES.leaderboard}>Your Leaderboard</Link>
 				</Button>
 				<Button asChild variant="secondary">

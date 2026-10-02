@@ -1,0 +1,83 @@
+{
+	"id": "intent-routing",
+	"kind": "choice",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "choice",
+				"instructions": "Which smart home device should handle this voice command?",
+				"criteria": {
+					"lights": "Ceiling lights and lamps: switching them on or off and changing their brightness",
+					"thermostat": "Heating and cooling: the room temperature and the heating schedule",
+					"door_lock": "The smart locks on the doors: locking, unlocking and checking their status",
+					"speaker": "The speakers: playing music or podcasts and changing the volume",
+					"blinds": "The motorised blinds and curtains: opening and closing them",
+					"tv": "The television: switching channels, starting shows and sports"
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "v01",
+			"state": "Turn off the lights in the living room.",
+			"label": "lights"
+		},
+		{
+			"id": "v02",
+			"state": "It's freezing in here, can you warm it up a bit?",
+			"label": "thermostat"
+		},
+		{
+			"id": "v03",
+			"state": "Lock the front door, I'm going to bed.",
+			"label": "door_lock"
+		},
+		{
+			"id": "v04",
+			"state": "Play some jazz in the kitchen.",
+			"label": "speaker"
+		},
+		{
+			"id": "v05",
+			"state": "Open the curtains, I want some sunlight.",
+			"label": "blinds"
+		},
+		{
+			"id": "v06",
+			"state": "Put on the football game.",
+			"label": "tv"
+		},
+		{
+			"id": "v07",
+			"state": "Make it brighter in the hallway.",
+			"label": "lights"
+		},
+		{
+			"id": "v08",
+			"state": "Set the temperature to 21 degrees.",
+			"label": "thermostat"
+		},
+		{
+			"id": "v09",
+			"state": "Did I leave the back door unlocked?",
+			"label": "door_lock"
+		},
+		{
+			"id": "v10",
+			"state": "Turn the volume down a little.",
+			"label": "speaker"
+		},
+		{
+			"id": "v11",
+			"state": "It's too bright to see the screen, can you fix that?",
+			"label": "blinds"
+		},
+		{
+			"id": "v12",
+			"state": "Switch to the news channel.",
+			"label": "tv"
+		}
+	]
+}

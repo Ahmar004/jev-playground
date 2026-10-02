@@ -299,3 +299,11 @@ export const RUN_STOPPING_ERRORS: readonly ProviderErrorKind[] = [
 	PROVIDER_ERROR_KINDS.overloaded,
 	PROVIDER_ERROR_KINDS.network
 ]
+
+// Share limits (DESIGN 11.3, R87): a snapshot is capped, and a user can create
+// a few per day, counted from Share rows.
+export const SHARE_LIMITS = {
+	maxBytes: 32 * 1024,
+	perUserPerDay: 20,
+	windowMs: 24 * 60 * 60 * 1000
+} as const

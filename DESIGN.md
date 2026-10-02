@@ -193,21 +193,21 @@ The mode lives in a React context and is not saved. Every page load starts in Be
 
 Every route below is in `src/lib/links.ts`. A header link is added only in the slice that builds its page. Rendering follows `TECH-STACK.md` > Rendering strategy.
 
-| Route                           | Screen        | Render              | Contents                                                                                                                                                |
-| ------------------------------- | ------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/sign-in`                      | Sign-in       | SSG                 | Tabs: Sign in / Create account. Email and password. No password-reset link (out of v1).                                                                 |
-| `/`                             | Home          | PPR                 | Welcome, path progress, "Play level 1: Speed Race" (R65), optional start-quiz card (R57).                                                               |
-| `/path`                         | Path          | PPR                 | 8 level cards with status and Skip / Revisit (R28).                                                                                                     |
-| `/levels/[levelId]`             | Level         | SSG shell + CSR     | Stepper Learn > Predict > Play > Reveal > Check, with `?step=` in the URL.                                                                              |
-| `/games`, `/games/[gameId]`     | Games, Game   | SSG + CSR           | Setup (opponent picker) > Race (scoreboard, Skip to result) > Summary (winner, why, numbers, docs link).                                                |
-| `/arena`                        | Arena         | SSG + CSR           | Preset list (`?preset=`), side-by-side result, Share. Developer mode adds editable inputs, a "Custom task" tab and the model picker.                    |
-| `/sandbox`                      | Sandbox       | SSG + CSR           | Templates, Form and JSON tabs kept in sync, weakness warnings, limit check, answer bars and gauges, Copy as code.                                       |
-| `/quizzes`, `/quizzes/[quizId]` | Quizzes       | SSG + PPR           | Start and end quiz, one question per screen, results with explanations, solutions, improvement.                                                         |
-| `/leaderboard`                  | Leaderboard   | PPR                 | Best per game, model and mode, sortable. Empty state: "Begin playing and testing out Jev and LLMs to fill up this leaderboard here."                    |
-| `/profile`                      | Profile       | PPR                 | XP, badges, quiz improvement, completion card, my shares (with delete), sign out.                                                                       |
-| `/glossary`                     | Glossary      | SSG                 | Every technical term in plain English (R74).                                                                                                            |
-| `/methodology`                  | Methodology   | SSG                 | Same inputs and format, lanes, default settings, parse and scoring rules, how items are chosen, price and recording dates; load-test results (P1, R78). |
-| `/s/[shareId]`                  | Shared result | cached SSR, noindex | Read-only snapshot with its mode label and "Sign in to try it yourself". The only page reachable without signing in.                                    |
+| Route                           | Screen        | Render                   | Contents                                                                                                                                                |
+| ------------------------------- | ------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/sign-in`                      | Sign-in       | SSG                      | Tabs: Sign in / Create account. Email and password. No password-reset link (out of v1).                                                                 |
+| `/`                             | Home          | PPR                      | Welcome, path progress, "Play level 1: Speed Race" (R65), optional start-quiz card (R57).                                                               |
+| `/path`                         | Path          | PPR                      | 8 level cards with status and Skip / Revisit (R28).                                                                                                     |
+| `/levels/[levelId]`             | Level         | SSG shell + CSR          | Stepper Learn > Predict > Play > Reveal > Check, with `?step=` in the URL.                                                                              |
+| `/games`, `/games/[gameId]`     | Games, Game   | SSG + CSR                | Setup (opponent picker) > Race (scoreboard, Skip to result) > Summary (winner, why, numbers, docs link).                                                |
+| `/arena`                        | Arena         | SSG + CSR                | Preset list (`?preset=`), side-by-side result, Share. Developer mode adds editable inputs, a "Custom task" tab and the model picker.                    |
+| `/sandbox`                      | Sandbox       | SSG + CSR                | Templates, Form and JSON tabs kept in sync, weakness warnings, limit check, answer bars and gauges, Copy as code.                                       |
+| `/quizzes`, `/quizzes/[quizId]` | Quizzes       | SSG + PPR                | Start and end quiz, one question per screen, results with explanations, solutions, improvement.                                                         |
+| `/leaderboard`                  | Leaderboard   | PPR                      | Best per game, model and mode, sortable. Empty state: "Begin playing and testing out Jev and LLMs to fill up this leaderboard here."                    |
+| `/profile`                      | Profile       | PPR                      | XP, badges, quiz improvement, completion card, my shares (with delete), sign out.                                                                       |
+| `/glossary`                     | Glossary      | SSG                      | Every technical term in plain English (R74).                                                                                                            |
+| `/methodology`                  | Methodology   | SSG                      | Same inputs and format, lanes, default settings, parse and scoring rules, how items are chosen, price and recording dates; load-test results (P1, R78). |
+| `/s/[shareId]`                  | Shared result | per-request SSR, noindex | Read-only snapshot with its mode label and "Sign in to try it yourself". The only page reachable without signing in.                                    |
 
 **Header (every signed-in page):** logo, links to Path, Games, Arena, Sandbox, Quizzes, Leaderboard and Profile (R66), the path progress bar n/8 (R67), the Beginner/Developer switch, the theme switch, and a Keys button showing how many keys are loaded. On phones, the links go into a menu one tap away.
 
@@ -351,14 +351,14 @@ Every action is a `validatedAction`. Every action except `signIn` and `signUp` c
 | `recordGameRun`                                                         | Leaderboard upsert, XP and badges (VS games and Speed Race).                                                                                                                                                  |
 | `recordArenaRun`, `recordDevRun`                                        | XP and badges only. The Leaderboard covers timed games only (spec 10.5).                                                                                                                                      |
 | `createShare`                                                           | Validates the snapshot with Zod. Requires a consent flag when it holds user text. Caps it at 32 KB. Allows 20 shares per user per 24 hours, counted from `Share` rows (no in-memory counter). Returns the ID. |
-| `deleteShare`                                                           | Checks ownership, deletes, then calls `updateTag('share:' + id)`, so the link stops working at once (R87).                                                                                                    |
+| `deleteShare`                                                           | Checks ownership and deletes the row. The shared page reads the row on every request, so the link stops working at once (R87).                                                                                |
 | `signIn`, `signUp`, `signOut`                                           | Supabase Auth through `src/lib/supabase/`. `provisionUser` runs on first sign-in.                                                                                                                             |
 
 After a write, a progress action calls `refresh()` from `next/cache`, so the header bar and pages update at once. Per-user reads are not cached, so there is no tag to update. The client applies the change optimistically through TanStack Query, rolls it back on failure, and shows a toast.
 
 ### 11.4 Reads (`src/server/data/`)
 
-`getProgress`, `getXpAndBadges`, `getLeaderboard`, `getQuizResults` and `getMyShares` read per-user data inside `<Suspense>` and are never cached. `getShare(id)` is the only cached read: `'use cache'` + `cacheLife('days')` + `cacheTag('share:' + id)`. `/s/[shareId]` reads `params` inside `<Suspense>`.
+`getProgress`, `getXpAndBadges`, `getLeaderboard`, `getQuizResults` and `getMyShares` read per-user data inside `<Suspense>` and are never cached. `getShare(id)` is not cached either: with `'use cache'` plus `updateTag`, a production build still served a deleted share once more (checked in slice 10), and R87 needs the link dead at once. `/s/[shareId]` calls `connection()` and reads `params` inside `<Suspense>`.
 
 ### 11.5 Auth and the gate
 

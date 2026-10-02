@@ -23,6 +23,15 @@ export async function awardXp(
 	return count === 1 ? XP_AMOUNTS[source] : 0
 }
 
+/** Grants one badge; true when it is new. */
+export async function grantBadge(tx: Tx, userId: string, badgeId: BadgeId): Promise<boolean> {
+	const { count } = await tx.userBadge.createMany({
+		data: [{ userId, badgeId }],
+		skipDuplicates: true
+	})
+	return count === 1
+}
+
 /** Grants every badge the user now qualifies for and returns only the new ones. */
 export async function syncBadges(tx: Tx, userId: string): Promise<BadgeId[]> {
 	const [doneRows, correctPredictions, gameRows] = await Promise.all([

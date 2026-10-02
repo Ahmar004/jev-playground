@@ -9,7 +9,10 @@ export const ROUTES = {
 	level: (levelId: string) => `/levels/${levelId}`,
 	games: '/games',
 	game: (gameId: string) => `/games/${gameId}`,
-	leaderboard: '/leaderboard'
+	leaderboard: '/leaderboard',
+	arena: '/arena',
+	arenaPreset: (presetId: string) => `/arena?preset=${presetId}`,
+	share: (shareId: string) => `/s/${shareId}`
 } as const
 
 // Shared results (/s/<id>) are the only pages reachable without signing in

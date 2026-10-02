@@ -19,6 +19,9 @@ import guardrailGauntlet from '../../content/tasks/guardrail-gauntlet.json'
 import needleHunt from '../../content/tasks/needle-hunt.json'
 import numberCrunch from '../../content/tasks/number-crunch.json'
 import reviewScore from '../../content/tasks/review-score.json'
+import productMatch from '../../content/tasks/product-match.json'
+import citationCheck from '../../content/tasks/citation-check.json'
+import intentRouting from '../../content/tasks/intent-routing.json'
 import { taskSchema, type Task } from './task-schema'
 
 // Every file in content/tasks/ is imported here, so content renders at build
@@ -44,7 +47,10 @@ const RAW_TASKS: unknown[] = [
 	guardrailGauntlet,
 	needleHunt,
 	numberCrunch,
-	reviewScore
+	reviewScore,
+	productMatch,
+	citationCheck,
+	intentRouting
 ]
 
 // Parsed at import, so a malformed file fails the build at prerender.

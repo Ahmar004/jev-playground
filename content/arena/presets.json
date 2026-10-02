@@ -1,0 +1,66 @@
+[
+	{
+		"id": "ticket-triage",
+		"title": "Ticket triage",
+		"blurb": "Which team should handle this support ticket?",
+		"taskId": "speed-race",
+		"itemId": "t35",
+		"lesson": "Jev answers with a probability for every category, so you can see how sure it was, even when it picks the wrong team."
+	},
+	{
+		"id": "prompt-injection",
+		"title": "Prompt-injection check",
+		"blurb": "Should a shop's chatbot pass, review or block this message?",
+		"taskId": "guardrail-gauntlet",
+		"itemId": "m2",
+		"lesson": "A guardrail runs on every message, so speed and cost per call matter as much as accuracy."
+	},
+	{
+		"id": "review-rating",
+		"title": "Review rating",
+		"blurb": "How positive is this product review, on a scale of 5 levels?",
+		"taskId": "review-score",
+		"itemId": "r10",
+		"lesson": "A Score question gives Jev a scale to place the text on, and its probabilities show how it spread its bet across the levels."
+	},
+	{
+		"id": "product-match",
+		"title": "Product match",
+		"blurb": "Do two shop listings describe the same product?",
+		"taskId": "product-match",
+		"itemId": "p02",
+		"lesson": "Matching products is a yes or no per pair, which suits Jev when there are thousands of pairs to judge."
+	},
+	{
+		"id": "citation-check",
+		"title": "Citation check",
+		"blurb": "Does the source text support the claim?",
+		"taskId": "citation-check",
+		"itemId": "c02",
+		"lesson": "Checking a claim against a short source is a judgment on text you provide, which is the kind of question Jev answers well."
+	},
+	{
+		"id": "intent-routing",
+		"title": "Intent routing",
+		"blurb": "Which smart home device should handle this voice command?",
+		"taskId": "intent-routing",
+		"itemId": "v11",
+		"lesson": "Routing a request to one of a few handlers is a Choice, and an indirect phrasing is the place where models differ."
+	},
+	{
+		"id": "date-comparison",
+		"title": "Date comparison",
+		"blurb": "Which of two dates written in different styles comes first?",
+		"taskId": "dates-direct",
+		"itemId": "d4",
+		"lesson": "Dates in different styles are a known weak spot for System One models: the safe pattern is to extract the parts and let Code compare them."
+	},
+	{
+		"id": "phishing-fan-out",
+		"title": "Phishing signals",
+		"blurb": "Which of 10 phishing signals does this email show?",
+		"taskId": "phish-signals",
+		"itemId": "e1",
+		"lesson": "Jev answers all 10 yes or no questions in one request, while the LLM writes all 10 answers out, so the cost of extra questions differs."
+	}
+]

@@ -1,0 +1,147 @@
+{
+	"id": "product-match",
+	"kind": "noul",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "noul",
+				"instructions": "Do these two shop listings describe the same product, with the same model, size and colour?",
+				"criteria": {
+					"true": "Both listings sell exactly the same product, even if the wording differs",
+					"false": "The listings sell different products, such as another model, size, edition or colour"
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "p01",
+			"state": {
+				"shopA": "Apple iPhone 15 Pro 256GB Natural Titanium, unlocked",
+				"shopB": "iPhone 15 Pro (256 GB) - Natural Titanium - SIM-free"
+			},
+			"label": true
+		},
+		{
+			"id": "p02",
+			"state": {
+				"shopA": "Apple iPhone 15 Pro 256GB Natural Titanium, unlocked",
+				"shopB": "Apple iPhone 15 Pro Max 256GB Natural Titanium, unlocked"
+			},
+			"label": false
+		},
+		{
+			"id": "p03",
+			"state": {
+				"shopA": "Sony WH-1000XM5 Wireless Noise Cancelling Headphones, Black",
+				"shopB": "Sony WH1000XM5 over-ear ANC headphones (black)"
+			},
+			"label": true
+		},
+		{
+			"id": "p04",
+			"state": {
+				"shopA": "Sony WH-1000XM5 Wireless Noise Cancelling Headphones, Black",
+				"shopB": "Sony WH-1000XM4 Wireless Noise Cancelling Headphones, Black"
+			},
+			"label": false
+		},
+		{
+			"id": "p05",
+			"state": {
+				"shopA": "Nike Air Zoom Pegasus 40 Men's Running Shoes, size 10, Black/White",
+				"shopB": "Men's Nike Pegasus 40 road running shoe - US 10 - black and white"
+			},
+			"label": true
+		},
+		{
+			"id": "p06",
+			"state": {
+				"shopA": "Nike Air Zoom Pegasus 40 Men's Running Shoes, size 10, Black/White",
+				"shopB": "Nike Air Zoom Pegasus 40 Women's Running Shoes, size 10, Black/White"
+			},
+			"label": false
+		},
+		{
+			"id": "p07",
+			"state": {
+				"shopA": "Instant Pot Duo 7-in-1 Electric Pressure Cooker, 6 Quart",
+				"shopB": "Instant Pot Duo 6Qt multi-use pressure cooker (7 functions)"
+			},
+			"label": true
+		},
+		{
+			"id": "p08",
+			"state": {
+				"shopA": "Instant Pot Duo 7-in-1 Electric Pressure Cooker, 6 Quart",
+				"shopB": "Instant Pot Duo 7-in-1 Electric Pressure Cooker, 3 Quart"
+			},
+			"label": false
+		},
+		{
+			"id": "p09",
+			"state": {
+				"shopA": "Logitech MX Master 3S Wireless Mouse, Graphite",
+				"shopB": "Logitech MX Master 3S performance wireless mouse - graphite grey"
+			},
+			"label": true
+		},
+		{
+			"id": "p10",
+			"state": {
+				"shopA": "Logitech MX Master 3S Wireless Mouse, Graphite",
+				"shopB": "Logitech MX Anywhere 3S Wireless Mouse, Graphite"
+			},
+			"label": false
+		},
+		{
+			"id": "p11",
+			"state": {
+				"shopA": "Samsung 55-inch Class QLED 4K Q60C Smart TV (2023)",
+				"shopB": "Samsung Q60C 55\" QLED 4K UHD smart television, 2023 model"
+			},
+			"label": true
+		},
+		{
+			"id": "p12",
+			"state": {
+				"shopA": "Samsung 55-inch Class QLED 4K Q60C Smart TV (2023)",
+				"shopB": "Samsung 65-inch Class QLED 4K Q60C Smart TV (2023)"
+			},
+			"label": false
+		},
+		{
+			"id": "p13",
+			"state": {
+				"shopA": "Kindle Paperwhite 16GB (11th generation), 6.8 inch display, Black",
+				"shopB": "Amazon Kindle Paperwhite 11th gen, 16 GB, 6.8\" e-reader, black"
+			},
+			"label": true
+		},
+		{
+			"id": "p14",
+			"state": {
+				"shopA": "Kindle Paperwhite 16GB (11th generation), 6.8 inch display, Black",
+				"shopB": "Kindle Paperwhite Signature Edition 32GB (11th generation), 6.8 inch display"
+			},
+			"label": false
+		},
+		{
+			"id": "p15",
+			"state": {
+				"shopA": "Hydro Flask 32 oz Wide Mouth Water Bottle, Pacific Blue",
+				"shopB": "Hydro Flask Wide Mouth bottle 32oz (946 ml) in Pacific"
+			},
+			"label": true
+		},
+		{
+			"id": "p16",
+			"state": {
+				"shopA": "Hydro Flask 32 oz Wide Mouth Water Bottle, Pacific Blue",
+				"shopB": "Hydro Flask 32 oz Wide Mouth Water Bottle, Black"
+			},
+			"label": false
+		}
+	]
+}

@@ -96,7 +96,7 @@ These restate spec rules that code can break silently. The spec section holds th
 - Content from `content/` is imported, not fetched, so it renders at build time.
 - Per-user data (session, progress, XP, leaderboard) never goes inside `'use cache'`. It is read in a component wrapped in `<Suspense>` with a skeleton fallback, so the static shell paints first. `cookies()`, `headers()`, `params` and `searchParams` are async and also go under `<Suspense>`.
 - Use `'use cache'` only for data that is the same for every viewer, and always pair it with `cacheLife` and `cacheTag`. A cached function can't read cookies or headers, even through a helper; read them outside and pass the values in.
-- After a write in a Server Action, call `updateTag` so the user sees the change at once. `revalidateTag(tag, 'max')` serves stale content once more, so it is only for Route Handlers where that is fine. Deleting a share calls `updateTag` with the share's tag, so the link stops working at once (R87).
+- After a write in a Server Action, call `updateTag` so the user sees the change at once. `revalidateTag(tag, 'max')` serves stale content once more, so it is only for Route Handlers where that is fine. The shared result page reads its row on every request and never caches it, because a cached read (`'use cache'` plus `updateTag`) still served a deleted share once more in a production build, and R87 needs the link dead at once.
 - `Math.random()`, `Date.now()` and `crypto.randomUUID()` in a Server Component need `await connection()` first, or prerendering fails.
 
 ## Workflow

@@ -1,4 +1,16 @@
 import 'server-only'
+import productMatchJev from '../../content/recordings/product-match/jev.json'
+import productMatchHaiku from '../../content/recordings/product-match/claude-haiku-4-5-20251001.json'
+import productMatchSonnet from '../../content/recordings/product-match/claude-sonnet-5-5.json'
+import productMatchOpus from '../../content/recordings/product-match/claude-opus-5-5.json'
+import citationCheckJev from '../../content/recordings/citation-check/jev.json'
+import citationCheckHaiku from '../../content/recordings/citation-check/claude-haiku-4-5-20251001.json'
+import citationCheckSonnet from '../../content/recordings/citation-check/claude-sonnet-5-5.json'
+import citationCheckOpus from '../../content/recordings/citation-check/claude-opus-5-5.json'
+import intentRoutingJev from '../../content/recordings/intent-routing/jev.json'
+import intentRoutingHaiku from '../../content/recordings/intent-routing/claude-haiku-4-5-20251001.json'
+import intentRoutingSonnet from '../../content/recordings/intent-routing/claude-sonnet-5-5.json'
+import intentRoutingOpus from '../../content/recordings/intent-routing/claude-opus-5-5.json'
 import speedRaceOpus from '../../content/recordings/speed-race/claude-opus-5-5.json'
 import speedRaceSonnet from '../../content/recordings/speed-race/claude-sonnet-5-5.json'
 import speedRaceHaiku from '../../content/recordings/speed-race/claude-haiku-4-5-20251001.json'
@@ -175,7 +187,19 @@ const RAW_RECORDINGS: unknown[] = [
 	reviewScoreJev,
 	reviewScoreHaiku,
 	reviewScoreSonnet,
-	reviewScoreOpus
+	reviewScoreOpus,
+	productMatchJev,
+	productMatchHaiku,
+	productMatchSonnet,
+	productMatchOpus,
+	citationCheckJev,
+	citationCheckHaiku,
+	citationCheckSonnet,
+	citationCheckOpus,
+	intentRoutingJev,
+	intentRoutingHaiku,
+	intentRoutingSonnet,
+	intentRoutingOpus
 ]
 
 export const RECORDINGS: Recording[] = RAW_RECORDINGS.map((raw) => recordingSchema.parse(raw))

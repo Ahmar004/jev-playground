@@ -1,0 +1,14 @@
+// A read-only Arena result under an unguessable id (DESIGN 11.1, 11.6). The
+// payload is validated JSON that renders as plain text; the creator can
+// delete it, and the id is 16 random bytes in base64url.
+model Share {
+	id        String   @id
+	userId    String   @map("user_id") @db.Uuid
+	mode      String
+	payload   Json
+	createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+	user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+	@@index([userId, createdAt])
+	@@map("shares")
+}

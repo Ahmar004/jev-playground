@@ -26,7 +26,11 @@ const nextConfig: NextConfig = {
 			posthogHost: process.env.NEXT_PUBLIC_POSTHOG_HOST,
 			development: process.env.NODE_ENV === 'development'
 		})
-		return [{ source: '/:path*', headers: [{ key: 'Content-Security-Policy', value: policy }] }]
+		return [
+			{ source: '/:path*', headers: [{ key: 'Content-Security-Policy', value: policy }] },
+			// Shared results are not indexed (R87); the page's robots metadata says the same.
+			{ source: '/s/:path*', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] }
+		]
 	}
 }
 

@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
 import { CLAUDE_MODELS, RACERS } from '@/lib/constants'
+import { PRESETS } from './arena'
 import { GAMES } from './games'
 import { LEVELS } from './levels'
 import { recordingSlug } from './recording-schema'
@@ -51,6 +52,15 @@ describe('content registries', () => {
 			return id
 		})
 		expect([...GAMES.keys()].sort()).toEqual(ids.sort())
+	})
+
+	it('imports every Arena preset in content/arena/presets.json', () => {
+		const parsed: unknown = JSON.parse(readFileSync(join(CONTENT, 'arena', 'presets.json'), 'utf8'))
+		const ids = z
+			.array(z.object({ id: z.string() }))
+			.parse(parsed)
+			.map((preset) => preset.id)
+		expect([...PRESETS.keys()]).toEqual(ids)
 	})
 
 	it('imports every recording file at content/recordings/<taskId>/<slug>.json', () => {
