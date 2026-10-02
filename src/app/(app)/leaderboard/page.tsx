@@ -33,11 +33,7 @@ export default function LeaderboardPage() {
 				Your best result for each model in each timed game, with the mode it ran in. Only you see
 				these.
 			</p>
-			<Suspense
-				fallback={
-					<div className="bg-surface-hover h-48 animate-pulse rounded-lg motion-reduce:animate-none" />
-				}
-			>
+			<Suspense fallback={<div className="skeleton h-48 rounded-lg" />}>
 				<LeaderboardLoader />
 			</Suspense>
 		</main>

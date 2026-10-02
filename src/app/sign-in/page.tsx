@@ -11,16 +11,16 @@ export default function SignInPage() {
 			<div className="absolute top-4 right-4">
 				<ThemeToggle />
 			</div>
-			<div className="flex flex-col items-center gap-3 text-center">
-				<span className="bg-jev text-accent-ink flex size-12 items-center justify-center rounded-lg">
+			<div className="animate-rise flex flex-col items-center gap-3 text-center">
+				<span className="from-jev to-accent text-accent-ink shadow-card-hover flex size-14 items-center justify-center rounded-lg bg-gradient-to-br">
 					<LightningIcon size={28} />
 				</span>
-				<h1 className="text-text text-3xl font-extrabold">Jev&apos;s Playground</h1>
+				<h1 className="text-brand text-4xl font-extrabold">Jev&apos;s Playground</h1>
 				<p className="text-text-muted max-w-sm">
 					Race Jev against an LLM and plain Code, and learn which tool fits which job.
 				</p>
 			</div>
-			<div className="bg-surface border-border w-full max-w-sm rounded-lg border p-6 shadow-sm">
+			<div className="bg-surface border-border animate-rise shadow-card-hover w-full max-w-sm rounded-lg border p-6">
 				<SignInView />
 			</div>
 		</main>

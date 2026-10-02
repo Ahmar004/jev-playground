@@ -102,7 +102,7 @@ export function LivePanel({
 			{live.failure && (
 				<div
 					role="alert"
-					className="bg-surface border-danger text-text flex flex-col gap-3 rounded-lg border p-4"
+					className="bg-surface border-danger text-text shadow-card flex flex-col gap-3 rounded-lg border p-4"
 				>
 					<p className="flex items-start gap-2">
 						<AlertIcon className="text-danger mt-0.5 shrink-0" />

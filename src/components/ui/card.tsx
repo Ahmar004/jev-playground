@@ -3,7 +3,12 @@ import { cn } from '@/lib/cn'
 export function Card({ className, ...props }: React.ComponentProps<'div'>) {
 	return (
 		<div
-			className={cn('border-border bg-surface rounded-lg border shadow-sm', className)}
+			className={cn(
+				'border-border bg-surface shadow-card rounded-lg border transition-all duration-200',
+				// A card that is one big link lifts on hover.
+				'has-[>a]:hover:border-accent/40 has-[>a]:hover:shadow-card-hover has-[>a]:hover:-translate-y-0.5',
+				className
+			)}
 			{...props}
 		/>
 	)

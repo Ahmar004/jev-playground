@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: "Methodology - Jev's Playground" }
 // Only TypeSafe docs may be linked from this site (CLAUDE.md > UI rules).
 const TYPESAFE_DOCS_PREFIX = 'https://docs.typesafe.ai/'
 
-const SECTION = 'bg-surface border-border flex flex-col gap-2 rounded-lg border p-4'
+const SECTION = 'bg-surface border-border flex flex-col gap-2 rounded-lg border p-4 shadow-card'
 const SECTION_TITLE = 'text-text text-xl font-bold'
 const BODY = 'text-text-muted'
 const TABLE_WRAPPER = 'overflow-x-auto'

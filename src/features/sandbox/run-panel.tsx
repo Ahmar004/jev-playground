@@ -51,7 +51,7 @@ function BeginnerRun({
 }) {
 	if (!jev || !unchanged) {
 		return (
-			<p className="bg-surface border-border text-text rounded-lg border p-4">
+			<p className="bg-surface border-border text-text shadow-card rounded-lg border p-4">
 				{jev
 					? 'You changed this setup, so there is no recording of it. Switch to Developer mode with your TypeSafe key to run it, or reset the template to replay its recording. Everything above still works without a key: the Form, the JSON, the checks and Copy as code.'
 					: 'Beginner mode replays recordings of the ready-made templates. Pick a template to see its recorded answer, or switch to Developer mode with your TypeSafe key to run your own setup.'}
@@ -68,7 +68,7 @@ function DeveloperRun({ doc, blocked }: { doc: SandboxDoc; blocked: boolean }) {
 	const built = buildSandboxTask(doc)
 	if (!jevKey) {
 		return (
-			<div className="bg-surface border-border flex flex-col gap-3 rounded-lg border p-4">
+			<div className="bg-surface border-border shadow-card flex flex-col gap-3 rounded-lg border p-4">
 				<p className="text-text">
 					Running your own setup needs your TypeSafe key, so Jev can answer. The key stays in this
 					tab and is never saved.
@@ -103,7 +103,7 @@ function DeveloperRun({ doc, blocked }: { doc: SandboxDoc; blocked: boolean }) {
 			{live.failure && (
 				<div
 					role="alert"
-					className="bg-surface border-danger text-text flex items-start gap-2 rounded-lg border p-4"
+					className="bg-surface border-danger text-text shadow-card flex items-start gap-2 rounded-lg border p-4"
 				>
 					<AlertIcon className="text-danger mt-0.5 shrink-0" />
 					<span>{providerErrorMessage(live.failure, PROVIDERS.typesafe)}</span>

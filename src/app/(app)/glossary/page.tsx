@@ -12,7 +12,7 @@ export default function GlossaryPage() {
 			</div>
 			<dl className="flex flex-col gap-3">
 				{GLOSSARY.map(({ term, definition }) => (
-					<div key={term} className="bg-surface border-border rounded-lg border p-4">
+					<div key={term} className="bg-surface border-border shadow-card rounded-lg border p-4">
 						<dt className="text-text font-bold">{term}</dt>
 						<dd className="text-text-muted mt-1">{definition}</dd>
 					</div>

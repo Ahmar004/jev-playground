@@ -48,7 +48,10 @@ export function ThresholdPanel({ jev }: { jev: Recording }) {
 			</div>
 			<dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
 				{rows.map((row) => (
-					<div key={row.label} className="bg-surface border-border rounded-lg border p-3">
+					<div
+						key={row.label}
+						className="bg-surface border-border shadow-card rounded-lg border p-3"
+					>
 						<dt className="text-text-muted text-sm">{row.label}</dt>
 						<dd className={`text-3xl font-extrabold tabular-nums ${row.tone}`}>
 							{row.count}

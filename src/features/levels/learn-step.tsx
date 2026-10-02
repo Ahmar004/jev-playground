@@ -15,7 +15,7 @@ export function LearnStep({ learn, onNext }: { learn: Level['learn']; onNext: ()
 				{learn.compare.map((entry) => (
 					<div
 						key={entry.racer}
-						className="bg-surface border-border flex flex-col gap-3 rounded-lg border p-4"
+						className="bg-surface border-border shadow-card flex flex-col gap-3 rounded-lg border p-4"
 					>
 						<RacerTag racer={entry.racer} className="text-lg" />
 						<p className="text-text font-bold">{entry.title}</p>

@@ -39,7 +39,7 @@ export function PredictionResults({
 				return (
 					<li
 						key={question.metric}
-						className="bg-surface border-border flex flex-col gap-2 rounded-lg border p-4"
+						className="bg-surface border-border shadow-card flex flex-col gap-2 rounded-lg border p-4"
 					>
 						<p className="text-text font-bold">{question.prompt}</p>
 						<div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">

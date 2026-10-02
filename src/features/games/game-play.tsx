@@ -51,7 +51,7 @@ export function GamePlay({
 
 	if (!jev || opponents.length === 0) {
 		return (
-			<p className="bg-surface border-border text-text rounded-lg border p-4">
+			<p className="bg-surface border-border text-text shadow-card rounded-lg border p-4">
 				This game has not been recorded yet, so there is nothing to replay.
 			</p>
 		)

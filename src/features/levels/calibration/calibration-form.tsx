@@ -45,7 +45,7 @@ export function CalibrationForm({
 					return (
 						<li
 							key={item.id}
-							className="bg-surface border-border flex flex-col gap-3 rounded-lg border p-4"
+							className="bg-surface border-border shadow-card flex flex-col gap-3 rounded-lg border p-4"
 						>
 							<p className="text-text">
 								<span className="text-text-muted mr-2 font-bold">{index + 1}.</span>

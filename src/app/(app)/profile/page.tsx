@@ -24,11 +24,7 @@ export default function ProfilePage() {
 	return (
 		<main className="flex flex-col gap-4">
 			<h1 className="text-text text-3xl font-extrabold">Your profile</h1>
-			<Suspense
-				fallback={
-					<div className="bg-surface-hover h-96 max-w-3xl animate-pulse rounded-lg motion-reduce:animate-none" />
-				}
-			>
+			<Suspense fallback={<div className="skeleton h-96 max-w-3xl rounded-lg" />}>
 				<ProfileLoader />
 			</Suspense>
 		</main>

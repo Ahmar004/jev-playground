@@ -5,7 +5,7 @@ import { MODES, type Mode } from '@/lib/constants'
 export function ModeBanner({ mode }: { mode: Mode }) {
 	const developer = mode === MODES.developer
 	return (
-		<p className="bg-surface border-border text-text-muted flex items-start gap-2 rounded-lg border p-3 text-sm">
+		<p className="bg-surface border-border text-text-muted shadow-card flex items-start gap-2 rounded-lg border p-3 text-sm">
 			<InfoIcon className="mt-0.5 shrink-0" />
 			{developer ? (
 				<span>

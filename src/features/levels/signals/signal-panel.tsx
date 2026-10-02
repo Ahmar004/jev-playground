@@ -76,7 +76,7 @@ export function SignalPanel({
 					</Button>
 				))}
 			</div>
-			<p className="bg-surface border-border text-text rounded-lg border p-3 text-sm break-words whitespace-pre-wrap">
+			<p className="bg-surface border-border text-text shadow-card rounded-lg border p-3 text-sm break-words whitespace-pre-wrap">
 				{valueText(item.state)}
 			</p>
 			<ul className="flex flex-col gap-2">

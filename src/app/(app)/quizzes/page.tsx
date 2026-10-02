@@ -23,11 +23,7 @@ export default function QuizzesPage() {
 				Which tool fits which job? Take the start quiz before you play and the end quiz after, to
 				see what you learned. Both are optional.
 			</p>
-			<Suspense
-				fallback={
-					<div className="bg-surface-hover h-64 max-w-2xl animate-pulse rounded-lg motion-reduce:animate-none" />
-				}
-			>
+			<Suspense fallback={<div className="skeleton h-64 max-w-2xl rounded-lg" />}>
 				<QuizListLoader />
 			</Suspense>
 		</main>

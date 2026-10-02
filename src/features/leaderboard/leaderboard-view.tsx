@@ -19,7 +19,7 @@ export function LeaderboardView({
 }) {
 	if (rows.length === 0) {
 		return (
-			<div className="bg-surface border-border flex max-w-2xl flex-col items-start gap-3 rounded-lg border p-5">
+			<div className="bg-surface border-border shadow-card flex max-w-2xl flex-col items-start gap-3 rounded-lg border p-5">
 				<p className="text-text">
 					Nothing here yet. Finish a VS game or Speed Race and your results appear on this page.
 				</p>

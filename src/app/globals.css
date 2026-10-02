@@ -9,55 +9,149 @@
 	--radius-sm: 6px;
 	--radius: 10px;
 	--radius-lg: 16px;
+
+	/* One step up from Tailwind's defaults (12 / 14 / 16 px), which read too
+	   small on the dense race and result screens. */
+	--text-xs: 0.8125rem;
+	--text-sm: 0.9375rem;
+	--text-base: 1.0625rem;
+
+	--animate-rise: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+	--animate-fade-in: fade-in 0.2s ease-out;
+	--animate-fade-out: fade-out 0.15s ease-in;
+	--animate-pop-in: pop-in 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+	--animate-pop-out: pop-out 0.12s ease-in;
+	--animate-slide-in-left: slide-in-left 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+	--animate-slide-out-left: slide-out-left 0.2s ease-in;
+	--animate-slide-in-right: slide-in-right 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+	--animate-slide-out-right: slide-out-right 0.2s ease-in;
+	--animate-grow-x: grow-x 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+	--animate-shimmer: shimmer 1.6s linear infinite;
+
+	@keyframes rise {
+		from {
+			opacity: 0;
+			transform: translateY(14px);
+		}
+	}
+	@keyframes fade-in {
+		from {
+			opacity: 0;
+		}
+	}
+	@keyframes fade-out {
+		to {
+			opacity: 0;
+		}
+	}
+	@keyframes pop-in {
+		from {
+			opacity: 0;
+			transform: scale(0.95) translateY(-4px);
+		}
+	}
+	@keyframes pop-out {
+		to {
+			opacity: 0;
+			transform: scale(0.96);
+		}
+	}
+	@keyframes slide-in-left {
+		from {
+			transform: translateX(-100%);
+		}
+	}
+	@keyframes slide-out-left {
+		to {
+			transform: translateX(-100%);
+		}
+	}
+	@keyframes slide-in-right {
+		from {
+			transform: translateX(100%);
+		}
+	}
+	@keyframes slide-out-right {
+		to {
+			transform: translateX(100%);
+		}
+	}
+	@keyframes grow-x {
+		from {
+			transform: scaleX(0);
+		}
+	}
+	@keyframes shimmer {
+		from {
+			background-position: 200% 0;
+		}
+		to {
+			background-position: -200% 0;
+		}
+	}
 }
 
 /* Role-named tokens (DESIGN 13.1). Contrast is checked by
    src/app/theme-tokens.test.ts; recheck when a value changes. */
 :root {
-	--bg: #fbf6ec;
-	--surface: #ffffff;
-	--surface-hover: #f5efe3;
-	--border: #e8dfcf;
-	--border-strong: #8c8270;
+	--bg: #f3e5c8;
+	--surface: #fffbf3;
+	--surface-hover: #f8eedb;
+	--border: #e3d1ad;
+	--border-strong: #857a66;
 	--text: #1f2328;
-	--text-muted: #5c5647;
-	--text-faint: #6f6857;
-	--accent: #1e7b45;
+	--text-muted: #56503f;
+	--text-faint: #655e4c;
+	--accent: #1b7240;
 	--accent-hover: #17633a;
 	--accent-ink: #ffffff;
 	--highlight: #f2a33a;
 	--highlight-ink: #1f2328;
-	--success: #1e7b45;
-	--warning: #9a5b00;
+	--success: #1b7240;
+	--warning: #8a5200;
 	--danger: #b42318;
-	--jev: #0b7a75;
+	--jev: #0a706b;
 	--llm: #7a3fd1;
-	--code: #4a5a6e;
+	--code: #46566a;
+	/* Shadows are tinted with the cream's own brown so cards lift off the
+	   background instead of looking grey. */
+	--elev-1: 0 1px 2px rgb(110 80 30 / 0.1), 0 4px 14px -4px rgb(110 80 30 / 0.18);
+	--elev-2: 0 2px 4px rgb(110 80 30 / 0.1), 0 16px 32px -10px rgb(110 80 30 / 0.3);
+	--glow-strength: 16%;
 }
 
 .dark {
-	--bg: #22272e;
-	--surface: #2d333b;
-	--surface-hover: #373e47;
-	--border: #444c56;
-	--border-strong: #768390;
-	--text: #cdd9e5;
-	--text-muted: #9da9b6;
-	--text-faint: #96a1ae;
+	--bg: #0f1216;
+	--surface: #181c22;
+	--surface-hover: #222830;
+	--border: #2c333c;
+	--border-strong: #68737f;
+	--text: #e1e8ef;
+	--text-muted: #a5b1bd;
+	--text-faint: #94a0ad;
 	--accent: #6bc46d;
 	--accent-hover: #85d187;
-	--accent-ink: #1c2128;
+	--accent-ink: #0f1216;
 	--highlight: #f0883e;
-	--highlight-ink: #1c2128;
+	--highlight-ink: #0f1216;
 	--success: #6bc46d;
 	--warning: #daaa3f;
 	--danger: #f78a82;
 	--jev: #39c5bb;
 	--llm: #b69cff;
 	--code: #9fb0c3;
+	--elev-1:
+		inset 0 1px 0 rgb(255 255 255 / 0.04), 0 1px 2px rgb(0 0 0 / 0.5),
+		0 6px 18px -6px rgb(0 0 0 / 0.7);
+	--elev-2:
+		inset 0 1px 0 rgb(255 255 255 / 0.06), 0 2px 4px rgb(0 0 0 / 0.5),
+		0 18px 36px -10px rgb(0 0 0 / 0.8);
+	--glow-strength: 12%;
 }
 
 @theme inline {
+	--shadow-card: var(--elev-1);
+	--shadow-card-hover: var(--elev-2);
 	--color-bg: var(--bg);
 	--color-surface: var(--surface);
 	--color-surface-hover: var(--surface-hover);
@@ -79,8 +173,84 @@
 	--color-code: var(--code);
 }
 
+/* Soft hues of the three racers behind every page, so the cream (or the
+   dark) has depth. They are decoration only: no text sits on a hue alone. */
 body {
 	background-color: var(--bg);
+	background-image:
+		radial-gradient(
+			60rem 36rem at -10% -10%,
+			color-mix(in oklab, var(--jev) var(--glow-strength), transparent),
+			transparent 70%
+		),
+		radial-gradient(
+			50rem 32rem at 110% 0%,
+			color-mix(in oklab, var(--llm) var(--glow-strength), transparent),
+			transparent 70%
+		),
+		radial-gradient(
+			60rem 40rem at 50% 120%,
+			color-mix(in oklab, var(--highlight) var(--glow-strength), transparent),
+			transparent 70%
+		);
+	background-attachment: fixed;
 	color: var(--text);
 	font-family: var(--font-sans);
+}
+
+::selection {
+	background-color: color-mix(in oklab, var(--accent) 30%, transparent);
+}
+
+/* Page enter: each top-level block of a page rises in turn. `backwards` fill
+   leaves no transform behind once it ends, so sticky and fixed children
+   still work. */
+.page-enter > * > * {
+	animation: var(--animate-rise);
+}
+.page-enter > * > :nth-child(2) {
+	animation-delay: 50ms;
+}
+.page-enter > * > :nth-child(3) {
+	animation-delay: 100ms;
+}
+.page-enter > * > :nth-child(4) {
+	animation-delay: 150ms;
+}
+.page-enter > * > :nth-child(5) {
+	animation-delay: 200ms;
+}
+.page-enter > * > :nth-child(n + 6) {
+	animation-delay: 250ms;
+}
+
+/* Gradient headline text in the racer colors. Each stop passes AA on its
+   own, so the text does too. */
+.text-brand {
+	background-image: linear-gradient(100deg, var(--accent), var(--jev) 45%, var(--llm));
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+
+/* Loading skeletons shimmer instead of blinking. */
+.skeleton {
+	background-image: linear-gradient(
+		90deg,
+		var(--surface-hover) 0%,
+		color-mix(in oklab, var(--surface-hover), var(--surface) 70%) 50%,
+		var(--surface-hover) 100%
+	);
+	background-size: 200% 100%;
+	animation: var(--animate-shimmer);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
 }

@@ -30,7 +30,7 @@ function ToolResult({ outcome, chosen }: { outcome: ToolOutcome; chosen: boolean
 	return (
 		<div
 			className={cn(
-				'flex flex-col gap-1 rounded-lg border p-3 text-sm',
+				'flex min-w-0 flex-col gap-1 rounded-lg border p-3 text-sm wrap-anywhere',
 				chosen ? 'border-accent bg-surface-hover' : 'border-border'
 			)}
 		>
@@ -74,7 +74,7 @@ export function RouterResults({
 				return (
 					<li
 						key={card.taskId}
-						className="bg-surface border-border flex flex-col gap-3 rounded-lg border p-4"
+						className="bg-surface border-border shadow-card flex flex-col gap-3 rounded-lg border p-4"
 					>
 						<h4 className="text-text font-bold">{card.title}</h4>
 						<p className="text-text-muted text-sm">

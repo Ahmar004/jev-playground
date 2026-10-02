@@ -6,11 +6,7 @@ import { SandboxView } from '@/features/sandbox/sandbox-view'
 export const metadata: Metadata = { title: "Sandbox - Jev's Playground" }
 
 const SKELETON = (
-	<div
-		role="status"
-		aria-busy="true"
-		className="bg-surface-hover h-48 animate-pulse rounded-lg motion-reduce:animate-none"
-	>
+	<div role="status" aria-busy="true" className="skeleton h-48 rounded-lg">
 		<span className="sr-only">Loading</span>
 	</div>
 )

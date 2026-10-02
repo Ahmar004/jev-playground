@@ -18,18 +18,21 @@ export function HomeProgress({
 	const { doneCount, levelCount, xp, badges } = summary
 	return (
 		<Card className="flex max-w-2xl flex-col gap-3 p-4">
-			<h2 className="text-text text-lg font-semibold">Your progress</h2>
+			<h2 className="text-text text-xl font-bold">Your progress</h2>
 			<p className="text-text">
 				{doneCount} of {levelCount} levels done
 			</p>
 			<div>
 				<ProgressBar done={doneCount} total={levelCount} />
 			</div>
-			<p className="text-text font-medium">{xp} XP</p>
+			<p className="text-brand w-fit text-2xl font-extrabold tabular-nums">{xp} XP</p>
 			{badges.length > 0 ? (
 				<ul className="flex flex-wrap gap-2" aria-label="Badges earned">
 					{badges.map((badge) => (
-						<li key={badge} className="bg-surface-hover text-text rounded-full px-3 py-1 text-sm">
+						<li
+							key={badge}
+							className="bg-highlight/20 text-text border-highlight/40 rounded-full border px-3 py-1 text-sm font-semibold"
+						>
 							{BADGE_LABELS[badge].name}
 						</li>
 					))}

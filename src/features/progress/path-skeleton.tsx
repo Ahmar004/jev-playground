@@ -5,10 +5,7 @@ export function PathSkeleton() {
 	return (
 		<div className="flex max-w-2xl flex-col gap-3" aria-hidden>
 			{SKELETON_ROWS.map((row) => (
-				<div
-					key={row}
-					className="bg-surface-hover h-24 animate-pulse rounded-lg motion-reduce:animate-none"
-				/>
+				<div key={row} className="skeleton h-24 rounded-lg" />
 			))}
 		</div>
 	)

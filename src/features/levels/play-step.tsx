@@ -11,7 +11,7 @@ import type { LevelStage } from './lineup'
 
 export function NotRecorded({ children }: { children: React.ReactNode }) {
 	return (
-		<p className="bg-surface border-border text-text flex items-center gap-2 rounded-lg border p-4">
+		<p className="bg-surface border-border text-text shadow-card flex items-center gap-2 rounded-lg border p-4">
 			<InfoIcon />
 			{children}
 		</p>

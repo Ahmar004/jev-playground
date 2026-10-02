@@ -593,3 +593,22 @@ Next: Step-6, slice 13 (VS games P1: Smart Home Dash, Twin Finder, Confidence Ca
 - Run `corepack pnpm exec next typegen` after adding a route if `PageProps<...>` types error in typecheck.
 
 Next: Step-6 is complete after slice 14. Then Step-7 (hardening: systematic-debugging, e2e for every flow, the k6 load test published on Methodology). Worth deciding before then: level 6 and 8 Developer mode live runs, the missing badges and `recordDevRun`.
+
+## UI overhaul (owner request, 2026-10-02) - done
+
+- Not a ROADMAP step: the owner asked for it directly, between Step-6 and Step-7. No skill named; no subagents. Gates: format:check, typecheck, lint, check:env, check:secrets, check:standards 24/24, test (561 Vitest plus 114 node:test), build, e2e 68/68 against `pnpm start` with `E2E_BASE_URL`. The manual `local-review` pass was not run as a separate step.
+- What changed, and where:
+  - Tokens (`src/app/globals.css`, DESIGN 13.1): light `--bg` is now a clear cream (#F3E5C8) with near-white surfaces (#FFFBF3); dark is near-black (#0F1216 / #181C22). Spec 11 updated to match (the owner asked for a darker dark). `theme-tokens.test.ts` passes for both themes.
+  - Shadows: `shadow-card` / `shadow-card-hover` (`--elev-1` / `--elev-2`) on every surface card, popover, dialog and toast. A one-off script added them to every class string with `bg-surface rounded-lg border`; new cards must add `shadow-card` by hand (or use `Card`).
+  - Type scale one step up (xs 13, sm 15, base 17 px) in `@theme`, so every `text-xs`/`text-sm` grew at once. Buttons grew a step to fit.
+  - Header (`src/features/shell/`): one row at every width (an e2e test checks height and that the nav ends before the progress bar at 1280 px). The lightning logo is gone from it (still on the sign-in page and as Jev's racer icon). Links show from `xl`; `side-nav.tsx` is a left drawer with every page (plus progress on phones); `account-menu.tsx` is a profile button whose popover shows the email, "Your profile" and Sign out. Nav data is in `nav-items.tsx` (tested).
+  - Animations: page blocks rise in on every navigation (`src/app/(app)/template.tsx` + `.page-enter`), which also animates level step changes; Radix dialogs, popovers and toasts animate in and out through `data-state` classes; buttons press and lift; link cards lift (`Card` with a direct `<a>` child); skeletons shimmer (`.skeleton`); progress bars grow; quiz questions slide in with a gradient progress bar; busy race lanes pulse. These are CSS keyframes, not Motion, because they run in Server Components and on Radix's own mount/unmount. A global `prefers-reduced-motion` rule stops them all.
+  - Hues: racer-color glows behind every page, gradient brand text, hued icon tiles on Home and in the sidebar, numbered level badges on Path colored by status (the status label still says it in words), racer-colored top edges on race lanes, colored toast edges.
+  - Home is redesigned: a hero card and a tile grid with the same link names as before (e2e depends on them).
+- Fixed on the way: the Router reveal cards overflowed phones by 6 px once text grew (`min-w-0 wrap-anywhere`).
+- Pitfall: `TaskStop` on `corepack pnpm dev` leaves the node server running on port 3000. Kill it by port (`Get-NetTCPConnection -LocalPort 3000`) before `pnpm start`, or e2e runs against a dev server whose `.next` the build just replaced (15 bogus failures).
+- Pitfall: Python `open(..., 'w')` on Windows writes CRLF; pass `newline=''` when scripting edits.
+- The Chrome extension was not connected this session, so screens were checked with Playwright screenshots (both themes, 1280/1024/390/360 px).
+- Left open: everything listed under slice 14.
+
+Next: Step-7 (hardening), as before.

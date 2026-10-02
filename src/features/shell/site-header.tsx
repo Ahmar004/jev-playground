@@ -1,89 +1,56 @@
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { ThemeToggle } from '@/components/theme-toggle'
-import { LightningIcon } from '@/components/ui/icons'
 import { ModeSwitch } from '@/features/mode/mode-switch'
 import { ProgressBar } from '@/features/progress/progress-bar'
 import { ROUTES } from '@/lib/links'
 import { getSession } from '@/server/auth/session'
 import { getProgressSummary } from '@/server/data/progress'
 import { AccountMenu } from './account-menu'
+import { HeaderNav } from './header-nav'
+import { SideNav } from './side-nav'
 
+/**
+ * One row on every screen width: the sidebar button and title on the left,
+ * the page links on wide screens, then progress, mode, theme and the profile
+ * menu. Narrower screens reach every page through the sidebar.
+ */
 export function SiteHeader() {
 	return (
-		<header className="border-border bg-surface sticky top-0 z-10 border-b">
-			<div className="mx-auto flex min-h-14 max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-1">
-				<Link
-					href={ROUTES.home}
-					aria-label="Jev's Playground home"
-					className="text-text focus-visible:outline-accent flex items-center gap-2 rounded font-extrabold focus-visible:outline focus-visible:outline-2"
-				>
-					<span className="bg-jev text-accent-ink flex size-8 items-center justify-center rounded">
-						<LightningIcon size={18} />
-					</span>
-					<span className="hidden whitespace-nowrap sm:inline">Jev&apos;s Playground</span>
-				</Link>
-				<div className="flex flex-wrap items-center justify-end gap-1 sm:gap-3">
-					<Link
-						href={ROUTES.path}
-						className="text-text hover:bg-surface-hover focus-visible:outline-accent hidden rounded px-2 py-1 text-sm font-medium focus-visible:outline focus-visible:outline-2 sm:inline"
-					>
-						Path
-					</Link>
-					<Link
-						href={ROUTES.games}
-						className="text-text hover:bg-surface-hover focus-visible:outline-accent hidden rounded px-2 py-1 text-sm font-medium focus-visible:outline focus-visible:outline-2 sm:inline"
-					>
-						Games
-					</Link>
-					<Link
-						href={ROUTES.arena}
-						className="text-text hover:bg-surface-hover focus-visible:outline-accent hidden rounded px-2 py-1 text-sm font-medium focus-visible:outline focus-visible:outline-2 sm:inline"
-					>
-						Arena
-					</Link>
-					<Link
-						href={ROUTES.sandbox}
-						className="text-text hover:bg-surface-hover focus-visible:outline-accent hidden rounded px-2 py-1 text-sm font-medium focus-visible:outline focus-visible:outline-2 sm:inline"
-					>
-						Sandbox
-					</Link>
-					<Link
-						href={ROUTES.quizzes}
-						className="text-text hover:bg-surface-hover focus-visible:outline-accent hidden rounded px-2 py-1 text-sm font-medium focus-visible:outline focus-visible:outline-2 sm:inline"
-					>
-						Quizzes
-					</Link>
-					<Link
-						href={ROUTES.leaderboard}
-						className="text-text hover:bg-surface-hover focus-visible:outline-accent hidden rounded px-2 py-1 text-sm font-medium focus-visible:outline focus-visible:outline-2 sm:inline"
-					>
-						Leaderboard
-					</Link>
-					<Link
-						href={ROUTES.profile}
-						className="text-text hover:bg-surface-hover focus-visible:outline-accent hidden rounded px-2 py-1 text-sm font-medium focus-visible:outline focus-visible:outline-2 sm:inline"
-					>
-						Profile
-					</Link>
-					<Suspense
-						fallback={
-							<div className="bg-surface-hover h-8 w-24 animate-pulse rounded motion-reduce:animate-none" />
+		<header className="bg-surface/80 shadow-card sticky top-0 z-30 backdrop-blur-md">
+			<div className="mx-auto flex h-16 max-w-7xl flex-nowrap items-center justify-between gap-2 px-3 sm:px-4">
+				<div className="flex min-w-0 items-center gap-2 xl:gap-3">
+					<SideNav
+						progress={
+							<Suspense fallback={<div className="skeleton h-8 w-32 rounded" />}>
+								<HeaderProgress />
+							</Suspense>
 						}
+					/>
+					<Link
+						href={ROUTES.home}
+						aria-label="Jev's Playground home"
+						className="text-brand focus-visible:outline-accent hidden rounded text-lg font-extrabold whitespace-nowrap focus-visible:outline focus-visible:outline-2 md:inline"
 					>
-						<HeaderProgress />
-					</Suspense>
+						Jev&apos;s Playground
+					</Link>
+					<HeaderNav />
+				</div>
+				<div className="flex flex-nowrap items-center justify-end gap-1 sm:gap-2">
+					<div className="border-border hidden sm:block xl:ml-1 xl:border-l xl:pl-3">
+						<Suspense fallback={<div className="skeleton h-8 w-24 rounded" />}>
+							<HeaderProgress />
+						</Suspense>
+					</div>
 					<ModeSwitch />
 					<ThemeToggle />
-					<Suspense
-						fallback={
-							<div className="bg-surface-hover h-8 w-24 animate-pulse rounded motion-reduce:animate-none" />
-						}
-					>
+					<Suspense fallback={<div className="skeleton size-9 rounded-full" />}>
 						<SignedInAccount />
 					</Suspense>
 				</div>
 			</div>
+			{/* A thin line in the racer colors under the header. */}
+			<div aria-hidden className="from-accent via-jev to-llm h-0.5 bg-gradient-to-r opacity-70" />
 		</header>
 	)
 }

@@ -96,7 +96,7 @@ export function GameScene({
 		<div
 			role="img"
 			aria-label={`${game.title} scene: ${game.blurb}`}
-			className="bg-surface border-border flex flex-col gap-3 rounded-lg border p-4"
+			className="bg-surface border-border shadow-card flex flex-col gap-3 rounded-lg border p-4"
 		>
 			{game.animation === GAME_ANIMATIONS.rope ? (
 				<Rope perRacer={perRacer} itemsTotal={itemsTotal} />

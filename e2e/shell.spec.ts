@@ -39,6 +39,9 @@ test('sign up, browse, sign out and sign back in', async ({ page }) => {
 	await page.goto('/sign-in')
 	await expect(page).toHaveURL('/')
 
+	// Sign out lives in the profile menu, which also shows the email.
+	await page.getByRole('button', { name: 'Account menu' }).click()
+	await expect(page.getByRole('dialog').getByText(email)).toBeVisible()
 	await page.getByRole('button', { name: 'Sign out' }).click()
 	await expect(page).toHaveURL('/sign-in')
 	await page.goto('/')
@@ -54,6 +57,33 @@ test('the footer links to the Methodology page', async ({ page }) => {
 	await expect(page.getByRole('heading', { name: 'Methodology', level: 1 })).toBeVisible()
 	await expect(page.getByRole('heading', { name: 'Same inputs, same format' })).toBeVisible()
 	await expect(page.getByRole('heading', { name: 'Cost' })).toBeVisible()
+})
+
+test('the header stays one row and the sidebar reaches every page', async ({ page }) => {
+	await signIn(page, SHARED_EMAIL)
+	for (const viewport of Object.values(VIEWPORTS)) {
+		await page.setViewportSize(viewport)
+		const header = await page.getByRole('banner').boundingBox()
+		expect(header!.height).toBeLessThan(80)
+	}
+	// At the narrowest width that shows the links, they end before the progress bar starts.
+	await page.setViewportSize({ width: 1280, height: 800 })
+	const banner = page.getByRole('banner')
+	const nav = await banner.getByRole('navigation', { name: 'Main' }).boundingBox()
+	const progress = await banner.getByRole('progressbar', { name: 'Path progress' }).boundingBox()
+	expect(nav!.x + nav!.width).toBeLessThan(progress!.x)
+	await page.getByRole('button', { name: 'Open menu' }).click()
+	const sidebar = page.getByRole('dialog')
+	for (const name of ['Home', 'Path', 'Games', 'Arena', 'Sandbox', 'Quizzes', 'Leaderboard']) {
+		await expect(sidebar.getByRole('link', { name, exact: true })).toBeVisible()
+	}
+	await sidebar.getByRole('link', { name: 'Methodology' }).click()
+	await expect(page).toHaveURL('/methodology')
+	await expect(page.getByRole('dialog')).toHaveCount(0)
+
+	await page.getByRole('button', { name: 'Account menu' }).click()
+	await page.getByRole('link', { name: 'Your profile' }).click()
+	await expect(page).toHaveURL('/profile')
 })
 
 test('wrong password shows a plain-English error', async ({ page }) => {

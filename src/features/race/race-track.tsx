@@ -37,10 +37,15 @@ export function RaceTrack({
 	const done = state.results.length
 	const totals = state.totals ?? state.progress
 	const name = racerName(racer, modelId)
-	const fill = RACER_STYLE[racer].fill
+	const { fill, edge } = RACER_STYLE[racer]
 
 	return (
-		<div className="bg-surface border-border flex flex-col gap-3 rounded-lg border p-4">
+		<div
+			className={cn(
+				'bg-surface border-border shadow-card flex flex-col gap-3 rounded-lg border border-t-4 p-4',
+				edge
+			)}
+		>
 			<div className="flex flex-wrap items-baseline justify-between gap-2">
 				<RacerTag racer={racer} modelId={modelId} />
 				<ModeLabel modelId={modelId} recordedAt={recordedAt} mode={mode} />
@@ -70,8 +75,8 @@ export function RaceTrack({
 					<span
 						key={lane}
 						className={cn(
-							'border-border-strong size-3 rounded-full border',
-							lane < state.inFlight && fill
+							'border-border-strong size-3 rounded-full border transition-colors duration-300',
+							lane < state.inFlight && cn(fill, 'animate-pulse')
 						)}
 					/>
 				))}

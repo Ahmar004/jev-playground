@@ -69,11 +69,7 @@ export default async function QuizPage({ params }: PageProps<'/quizzes/[quizId]'
 	if (!isQuizId(quizId)) notFound()
 	return (
 		<main>
-			<Suspense
-				fallback={
-					<div className="bg-surface-hover h-64 max-w-2xl animate-pulse rounded-lg motion-reduce:animate-none" />
-				}
-			>
+			<Suspense fallback={<div className="skeleton h-64 max-w-2xl rounded-lg" />}>
 				<QuizLoader quizId={quizId} />
 			</Suspense>
 		</main>

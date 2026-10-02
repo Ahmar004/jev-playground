@@ -21,7 +21,7 @@ function isLlmProvider(value: string): value is LlmProvider {
 export function LiveSetupPanel({ setup }: { setup: LiveSetup }) {
 	const { setPanelOpen } = useKeys()
 	return (
-		<div className="bg-surface border-border flex flex-col gap-3 rounded-lg border p-4">
+		<div className="bg-surface border-border shadow-card flex flex-col gap-3 rounded-lg border p-4">
 			{setup.providers.length > 0 && (
 				<div className="grid gap-3 sm:grid-cols-2">
 					<div className="flex flex-col gap-1">

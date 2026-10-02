@@ -7,6 +7,8 @@ import type { QuizId } from '@/lib/constants'
 import { QUIZ_TOOL_LABELS } from './tools'
 import { useQuizSubmit } from './use-quiz-submit'
 
+const PERCENT = 100
+
 export type PublicQuestion = { id: string; prompt: string; topicTitle: string }
 
 /** One question per screen. The answers and explanations stay on the server until the quiz is submitted. */
@@ -53,9 +55,16 @@ export function QuizTaker({
 			<p className="text-text-muted text-sm font-medium" aria-live="polite">
 				Question {index + 1} of {questions.length} - {question.topicTitle}
 			</p>
+			{/* The text above says the same; this bar is decoration. */}
+			<div aria-hidden className="bg-border/60 h-1.5 overflow-hidden rounded-full">
+				<div
+					className="from-accent via-jev to-llm h-full rounded-full bg-gradient-to-r transition-[width] duration-500"
+					style={{ width: `${((index + 1) / questions.length) * PERCENT}%` }}
+				/>
+			</div>
 			<fieldset
 				key={question.id}
-				className="bg-surface border-border flex flex-col gap-3 rounded-lg border p-4"
+				className="bg-surface border-border animate-rise shadow-card flex flex-col gap-3 rounded-lg border p-4"
 			>
 				<legend ref={headingRef} tabIndex={-1} className="text-text px-1 text-lg font-bold">
 					{question.prompt}
@@ -63,7 +72,7 @@ export function QuizTaker({
 				{QUIZ_TOOLS.map((tool) => (
 					<label
 						key={tool}
-						className="border-border has-[:checked]:border-accent has-[:checked]:bg-surface-hover has-[:focus-visible]:outline-accent flex cursor-pointer items-center gap-2 rounded-lg border p-3 has-[:focus-visible]:outline has-[:focus-visible]:outline-2"
+						className="bg-surface border-border hover:border-accent/50 hover:bg-surface-hover has-[:checked]:border-accent has-[:checked]:bg-accent/10 has-[:checked]:shadow-card has-[:focus-visible]:outline-accent flex cursor-pointer items-center gap-2 rounded-lg border p-3 transition-all duration-200 has-[:checked]:scale-[1.01] has-[:focus-visible]:outline has-[:focus-visible]:outline-2"
 					>
 						<input
 							type="radio"

@@ -76,7 +76,7 @@ export function TrickResults({
 				{pairs.map((pair, index) => (
 					<li
 						key={pair.id}
-						className="bg-surface border-border flex flex-col gap-3 rounded-lg border p-4"
+						className="bg-surface border-border shadow-card flex flex-col gap-3 rounded-lg border p-4"
 					>
 						<p className="text-text font-bold">
 							Pair {index + 1}:{' '}

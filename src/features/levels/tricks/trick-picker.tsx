@@ -37,7 +37,7 @@ export function TrickPicker({
 				{pairs.map((pair, index) => (
 					<li
 						key={pair.id}
-						className="bg-surface border-border flex flex-col gap-3 rounded-lg border p-4"
+						className="bg-surface border-border shadow-card flex flex-col gap-3 rounded-lg border p-4"
 					>
 						<p className="text-text-muted text-sm font-bold">Pair {index + 1}</p>
 						<div className="grid gap-3 sm:grid-cols-2">

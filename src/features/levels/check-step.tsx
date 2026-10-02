@@ -75,12 +75,12 @@ export function CheckStep({
 							setPicks((current) => ({ ...current, [question.id]: '' }))
 						}}
 					>
-						<fieldset className="bg-surface border-border flex flex-col gap-3 rounded-lg border p-4">
+						<fieldset className="bg-surface border-border shadow-card flex flex-col gap-3 rounded-lg border p-4">
 							<legend className="text-text px-1 font-bold">{question.prompt}</legend>
 							{question.options.map((option) => (
 								<label
 									key={option.id}
-									className="border-border has-[:checked]:border-accent has-[:checked]:bg-surface-hover has-[:focus-visible]:outline-accent flex cursor-pointer items-center gap-2 rounded-lg border p-3 has-[:focus-visible]:outline has-[:focus-visible]:outline-2"
+									className="bg-surface border-border hover:border-accent/50 hover:bg-surface-hover has-[:checked]:border-accent has-[:checked]:bg-accent/10 has-[:checked]:shadow-card has-[:focus-visible]:outline-accent flex cursor-pointer items-center gap-2 rounded-lg border p-3 transition-all duration-200 has-[:checked]:scale-[1.01] has-[:focus-visible]:outline has-[:focus-visible]:outline-2"
 								>
 									<input
 										id={optionId(question.id, option.id)}

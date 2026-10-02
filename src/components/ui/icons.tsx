@@ -20,6 +20,7 @@
 import {
 	ArrowRight,
 	ArrowSquareOut,
+	BookOpen,
 	BracketsCurly,
 	Brain,
 	Calendar,
@@ -33,9 +34,13 @@ import {
 	Copy,
 	DotsThreeVertical,
 	DownloadSimple,
+	Exam,
 	FastForward,
+	Flask,
 	FunnelSimple,
+	GameController,
 	Gear,
+	House,
 	Info,
 	Key,
 	Lightning,
@@ -43,13 +48,20 @@ import {
 	MagnifyingGlass,
 	Minus,
 	Moon,
+	Path,
 	PencilSimple,
 	Play,
 	Plus,
+	Scales,
+	SidebarSimple,
 	SignOut,
+	Sparkle,
 	Sun,
+	Sword,
 	Trash,
+	Trophy,
 	User,
+	UserCircle,
 	Warning,
 	X,
 	XCircle
@@ -101,7 +113,10 @@ function Glyph({ source: Source, size = DEFAULT_SIZE, className }: IconProps & {
 // Add an icon when a component actually needs it; don't mirror the
 // provider's whole catalog here. Keep the list alphabetical.
 export const AlertIcon = (props: IconProps) => <Glyph source={Warning} {...props} />
+export const ArenaIcon = (props: IconProps) => <Glyph source={Sword} {...props} />
 export const ArrowRightIcon = (props: IconProps) => <Glyph source={ArrowRight} {...props} />
+export const AvatarIcon = (props: IconProps) => <Glyph source={UserCircle} {...props} />
+export const BookIcon = (props: IconProps) => <Glyph source={BookOpen} {...props} />
 export const BrainIcon = (props: IconProps) => <Glyph source={Brain} {...props} />
 export const CalendarIcon = (props: IconProps) => <Glyph source={Calendar} {...props} />
 export const CheckIcon = (props: IconProps) => <Glyph source={Check} {...props} />
@@ -116,22 +131,31 @@ export const DownloadIcon = (props: IconProps) => <Glyph source={DownloadSimple}
 export const EditIcon = (props: IconProps) => <Glyph source={PencilSimple} {...props} />
 export const ExternalLinkIcon = (props: IconProps) => <Glyph source={ArrowSquareOut} {...props} />
 export const FilterIcon = (props: IconProps) => <Glyph source={FunnelSimple} {...props} />
+export const GamesIcon = (props: IconProps) => <Glyph source={GameController} {...props} />
+export const HomeIcon = (props: IconProps) => <Glyph source={House} {...props} />
 export const InfoIcon = (props: IconProps) => <Glyph source={Info} {...props} />
 export const KeyIcon = (props: IconProps) => <Glyph source={Key} {...props} />
 export const LightningIcon = (props: IconProps) => <Glyph source={Lightning} {...props} />
 export const MenuIcon = (props: IconProps) => <Glyph source={List} {...props} />
+export const MethodologyIcon = (props: IconProps) => <Glyph source={Scales} {...props} />
 export const MinusIcon = (props: IconProps) => <Glyph source={Minus} {...props} />
 export const MoonIcon = (props: IconProps) => <Glyph source={Moon} {...props} />
 export const MoreIcon = (props: IconProps) => <Glyph source={DotsThreeVertical} {...props} />
+export const PathIcon = (props: IconProps) => <Glyph source={Path} {...props} />
 export const PlayIcon = (props: IconProps) => <Glyph source={Play} {...props} />
 export const PlusIcon = (props: IconProps) => <Glyph source={Plus} {...props} />
+export const QuizIcon = (props: IconProps) => <Glyph source={Exam} {...props} />
+export const SandboxIcon = (props: IconProps) => <Glyph source={Flask} {...props} />
 export const SearchIcon = (props: IconProps) => <Glyph source={MagnifyingGlass} {...props} />
 export const SettingsIcon = (props: IconProps) => <Glyph source={Gear} {...props} />
+export const SidebarIcon = (props: IconProps) => <Glyph source={SidebarSimple} {...props} />
 export const SignOutIcon = (props: IconProps) => <Glyph source={SignOut} {...props} />
 export const SkipIcon = (props: IconProps) => <Glyph source={FastForward} {...props} />
+export const SparkleIcon = (props: IconProps) => <Glyph source={Sparkle} {...props} />
 export const SuccessIcon = (props: IconProps) => <Glyph source={CheckCircle} {...props} />
 export const SunIcon = (props: IconProps) => <Glyph source={Sun} {...props} />
 export const TrashIcon = (props: IconProps) => <Glyph source={Trash} {...props} />
+export const TrophyIcon = (props: IconProps) => <Glyph source={Trophy} {...props} />
 export const UserIcon = (props: IconProps) => <Glyph source={User} {...props} />
 export const WrongIcon = (props: IconProps) => <Glyph source={XCircle} {...props} />
 

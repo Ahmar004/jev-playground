@@ -23,11 +23,11 @@ export function ToastViewport({
 }
 
 const toastVariants = cva(
-	'pointer-events-auto relative flex w-full items-start justify-between gap-3 rounded-lg border p-4 shadow-sm transition-opacity data-[state=closed]:opacity-0',
+	'pointer-events-auto relative flex w-full items-start justify-between gap-3 rounded-lg border border-l-4 p-4 shadow-card-hover data-[state=closed]:animate-fade-out data-[state=open]:animate-slide-in-right',
 	{
 		variants: {
 			variant: {
-				default: 'border-border bg-surface text-text',
+				default: 'border-border border-l-accent bg-surface text-text',
 				destructive: 'border-danger bg-surface text-text'
 			}
 		},

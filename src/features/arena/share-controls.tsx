@@ -9,9 +9,10 @@ import { ROUTES } from '@/lib/links'
 import { toast } from '@/lib/toast'
 import { useCreateShare, type ShareRequest } from './use-arena-mutations'
 
-const OVERLAY = 'fixed inset-0 z-40 bg-black/50'
+const OVERLAY =
+	'data-[state=closed]:animate-fade-out data-[state=open]:animate-fade-in fixed inset-0 z-40 bg-black/50 backdrop-blur-sm'
 const CONTENT =
-	'bg-surface border-border fixed top-1/2 left-1/2 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 flex-col gap-3 rounded-lg border p-5'
+	'bg-surface border-border fixed top-1/2 left-1/2 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 flex-col gap-3 rounded-lg border p-5 shadow-card-hover data-[state=closed]:animate-pop-out data-[state=open]:animate-pop-in'
 
 /** Copies text, and says so, or says it could not (a locked-down browser can refuse). */
 async function copyText(text: string): Promise<void> {

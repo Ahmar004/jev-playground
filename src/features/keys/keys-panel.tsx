@@ -22,8 +22,8 @@ export function KeysPanel() {
 	return (
 		<Dialog.Root open={panelOpen} onOpenChange={setPanelOpen}>
 			<Dialog.Portal>
-				<Dialog.Overlay className="fixed inset-0 z-40 bg-black/50" />
-				<Dialog.Content className="bg-surface border-border fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col gap-2 overflow-y-auto border-l p-5">
+				<Dialog.Overlay className="data-[state=closed]:animate-fade-out data-[state=open]:animate-fade-in fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
+				<Dialog.Content className="bg-surface border-border shadow-card-hover data-[state=closed]:animate-slide-out-right data-[state=open]:animate-slide-in-right fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col gap-2 overflow-y-auto border-l p-5">
 					<div className="flex items-start justify-between gap-3">
 						<Dialog.Title className="text-text text-xl font-bold">Your API keys</Dialog.Title>
 						<Dialog.Close

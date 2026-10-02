@@ -272,8 +272,8 @@ Level status, quiz attempts, XP, badges and leaderboard entries are saved to the
 - Playful: animations, celebrations (for example confetti on a won prediction or a finished level), friendly wording. [R68]
 - Light on text: diagrams, charts and pictures wherever feasible. [R69]
 - Two themes [R70]:
-  - **Dark**: inspired by GitHub's dark theme, but lighter.
-  - **Light**: inspired by Shopeedo, with a cream background, white cards and green/orange accents.
+  - **Dark**: inspired by GitHub's dark theme, a deep near-black (the owner asked for darker on 2026-10-02).
+  - **Light**: inspired by Shopeedo, with a clearly cream background, near-white cards with soft shadows, and green/orange accents.
 - The theme follows the device setting by default, and the user's choice is remembered. A theme choice is not a secret, so remembering it locally is allowed under Rule-8. [R71]
 - Jev and the LLM each have one consistent color across the whole site, always paired with a label or icon. [R72]
 - Works well on desktop and mobile; the UI scales with any screen or window size. [R73]

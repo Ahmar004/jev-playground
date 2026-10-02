@@ -78,7 +78,7 @@ export function WeightsPanel({
 					return (
 						<li
 							key={item.id}
-							className="bg-surface border-border flex flex-col gap-2 rounded-lg border p-3"
+							className="bg-surface border-border shadow-card flex flex-col gap-2 rounded-lg border p-3"
 						>
 							<p className="text-text text-sm">
 								<span className="text-text-muted mr-2 font-bold">{index + 1}.</span>

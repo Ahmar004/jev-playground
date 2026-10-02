@@ -30,7 +30,7 @@ export function ModeSwitch() {
 			<div
 				role="radiogroup"
 				aria-label="Mode"
-				className="border-border flex rounded border p-0.5 text-sm"
+				className="border-border bg-surface-hover/60 flex rounded-full border p-0.5 text-xs sm:text-sm"
 			>
 				{MODE_OPTIONS.map((option) => (
 					<button
@@ -40,10 +40,10 @@ export function ModeSwitch() {
 						aria-checked={mode === option.mode}
 						onClick={() => choose(option.mode)}
 						className={cn(
-							'focus-visible:outline-accent rounded px-2 py-1 font-medium focus-visible:outline focus-visible:outline-2',
+							'focus-visible:outline-accent rounded-full px-2.5 py-1 font-semibold transition-all duration-300 focus-visible:outline focus-visible:outline-2',
 							mode === option.mode
-								? 'bg-accent text-accent-ink'
-								: 'text-text hover:bg-surface-hover'
+								? 'bg-accent text-accent-ink shadow-card'
+								: 'text-text-muted hover:text-text'
 						)}
 					>
 						{option.label}
@@ -58,7 +58,7 @@ export function ModeSwitch() {
 				onClick={() => setPanelOpen(true)}
 			>
 				<KeyIcon />
-				<span className="hidden sm:inline">Keys</span>
+				<span className="hidden lg:inline xl:hidden 2xl:inline">Keys</span>
 			</Button>
 		</div>
 	)

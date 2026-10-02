@@ -209,7 +209,7 @@ Every route below is in `src/lib/links.ts`. A header link is added only in the s
 | `/methodology`                  | Methodology   | SSG                      | Same inputs and format, lanes, default settings, parse and scoring rules, how items are chosen, price and recording dates; load-test results (P1, R78). |
 | `/s/[shareId]`                  | Shared result | per-request SSR, noindex | Read-only snapshot with its mode label and "Sign in to try it yourself". The only page reachable without signing in.                                    |
 
-**Header (every signed-in page):** logo, links to Path, Games, Arena, Sandbox, Quizzes, Leaderboard and Profile (R66), the path progress bar n/8 (R67), the Beginner/Developer switch, the theme switch, and a Keys button showing how many keys are loaded. On phones, the links go into a menu one tap away.
+**Header (every signed-in page):** always one row. Left: the sidebar button and the "Jev's Playground" title (no logo icon). Then the links to Path, Games, Arena, Sandbox, Quizzes, Leaderboard and Profile (R66), shown from 1280 px. Right: the path progress bar n/8 (R67, in the sidebar on phones), the Beginner/Developer switch, the Keys button, the theme switch and the profile button, whose menu shows the email, a Profile link and Sign out. The sidebar (`src/features/shell/side-nav.tsx`) lists every page on every screen width; the links live in `nav-items.tsx`.
 
 **Pop-ups and panels:**
 
@@ -389,15 +389,17 @@ Tokens are named by role, not value. Colors live on `:root`, with the dark set u
 
 | Token                                          | Light                       | Dark                        |
 | ---------------------------------------------- | --------------------------- | --------------------------- |
-| `--bg` / `--surface` / `--surface-hover`       | #FBF6EC / #FFFFFF / #F5EFE3 | #22272E / #2D333B / #373E47 |
-| `--border` / `--border-strong`                 | #E8DFCF / #8C8270           | #444C56 / #768390           |
-| `--text` / `--text-muted` / `--text-faint`     | #1F2328 / #5C5647 / #6F6857 | #CDD9E5 / #9DA9B6 / #96A1AE |
-| `--accent` / `--accent-hover` / `--accent-ink` | #1E7B45 / #17633A / #FFFFFF | #6BC46D / #85D187 / #1C2128 |
-| `--highlight` / `--highlight-ink`              | #F2A33A / #1F2328           | #F0883E / #1C2128           |
-| `--success` / `--warning` / `--danger`         | #1E7B45 / #9A5B00 / #B42318 | #6BC46D / #DAAA3F / #F78A82 |
-| `--jev` / `--llm` / `--code`                   | #0B7A75 / #7A3FD1 / #4A5A6E | #39C5BB / #B69CFF / #9FB0C3 |
+| `--bg` / `--surface` / `--surface-hover`       | #F3E5C8 / #FFFBF3 / #F8EEDB | #0F1216 / #181C22 / #222830 |
+| `--border` / `--border-strong`                 | #E3D1AD / #857A66           | #2C333C / #68737F           |
+| `--text` / `--text-muted` / `--text-faint`     | #1F2328 / #56503F / #655E4C | #E1E8EF / #A5B1BD / #94A0AD |
+| `--accent` / `--accent-hover` / `--accent-ink` | #1B7240 / #17633A / #FFFFFF | #6BC46D / #85D187 / #0F1216 |
+| `--highlight` / `--highlight-ink`              | #F2A33A / #1F2328           | #F0883E / #0F1216           |
+| `--success` / `--warning` / `--danger`         | #1B7240 / #8A5200 / #B42318 | #6BC46D / #DAAA3F / #F78A82 |
+| `--jev` / `--llm` / `--code`                   | #0A706B / #7A3FD1 / #46566A | #39C5BB / #B69CFF / #9FB0C3 |
 
-Contrast was checked on 2026-10-01:
+Also in `globals.css`: `--elev-1` / `--elev-2` (card and hover shadows, used as `shadow-card` / `shadow-card-hover` on every surface card), `--glow-strength` (the racer-color hues behind each page), the type scale one step up from Tailwind's (xs 13, sm 15, base 17 px), and the animation keyframes (`animate-rise`, `pop-in`, `slide-in-*`, `grow-x`, `.skeleton` shimmer). Page blocks rise in on navigation (`src/app/(app)/template.tsx`). Every CSS animation stops under reduced motion.
+
+Contrast was checked on 2026-10-02 (`src/app/theme-tokens.test.ts`):
 
 - Every text token is at least 4.5:1 on `--bg` and `--surface` in its theme.
 - `--border-strong` and the racer colors are at least 3:1.

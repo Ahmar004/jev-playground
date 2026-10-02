@@ -20,7 +20,7 @@ export function ErrorPage({
 }) {
 	return (
 		<div className="flex min-h-screen flex-col items-center justify-center gap-4 px-6 text-center">
-			<div className="border-border bg-surface flex max-w-md flex-col items-center gap-4 rounded-lg border p-8 shadow-sm">
+			<div className="border-border bg-surface shadow-card flex max-w-md flex-col items-center gap-4 rounded-lg border p-8">
 				<h1 className="text-text text-lg font-semibold">{title}</h1>
 				<p className="text-text-muted text-sm">{description}</p>
 				{action}

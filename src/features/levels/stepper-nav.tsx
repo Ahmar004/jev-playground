@@ -29,10 +29,10 @@ export function StepperNav({
 								aria-current={active ? 'step' : undefined}
 								onClick={() => onSelect(step)}
 								className={cn(
-									'focus-visible:outline-accent w-full rounded-lg border px-3 py-2 text-left text-sm font-bold focus-visible:outline focus-visible:outline-2',
+									'focus-visible:outline-accent shadow-card w-full rounded-lg border px-3 py-2.5 text-left text-sm font-bold transition-all duration-300 focus-visible:outline focus-visible:outline-2',
 									active
-										? 'bg-accent text-accent-ink border-accent'
-										: 'bg-surface text-text border-border hover:bg-surface-hover'
+										? 'from-accent to-accent-hover text-accent-ink border-accent scale-[1.03] bg-gradient-to-br'
+										: 'bg-surface text-text border-border hover:bg-surface-hover hover:shadow-card-hover hover:-translate-y-0.5'
 								)}
 							>
 								{index + 1}. {STEP_LABELS[step]}

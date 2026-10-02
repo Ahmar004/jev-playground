@@ -66,8 +66,8 @@ export function MyShares({ shares }: { shares: MyShare[] }) {
 
 			<Dialog.Root open={pending !== null} onOpenChange={(open) => !open && setPending(null)}>
 				<Dialog.Portal>
-					<Dialog.Overlay className="fixed inset-0 z-40 bg-black/50" />
-					<Dialog.Content className="bg-surface border-border fixed top-1/2 left-1/2 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 flex-col gap-3 rounded-lg border p-5">
+					<Dialog.Overlay className="data-[state=closed]:animate-fade-out data-[state=open]:animate-fade-in fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
+					<Dialog.Content className="bg-surface border-border shadow-card-hover data-[state=closed]:animate-pop-out data-[state=open]:animate-pop-in fixed top-1/2 left-1/2 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 flex-col gap-3 rounded-lg border p-5">
 						<Dialog.Title className="text-text text-lg font-bold">Delete this share?</Dialog.Title>
 						<Dialog.Description className="text-text-muted text-sm">
 							The link stops working at once for everyone who has it. This cannot be undone.

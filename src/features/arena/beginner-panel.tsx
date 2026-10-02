@@ -85,7 +85,7 @@ export function BeginnerPanel({ view }: { view: ArenaPresetView }) {
 	const opponent = view.opponents.find((side) => side.modelId === opponentId)
 	if (!view.jev || !opponent || !opponentId) {
 		return (
-			<p className="bg-surface border-border text-text rounded-lg border p-4">
+			<p className="bg-surface border-border text-text shadow-card rounded-lg border p-4">
 				This preset has not been recorded yet, so there is nothing to replay.
 			</p>
 		)

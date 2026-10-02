@@ -29,11 +29,7 @@ export default function SharedPage({ params }: PageProps<'/s/[shareId]'>) {
 		<main className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8">
 			<Suspense
 				fallback={
-					<div
-						role="status"
-						aria-busy="true"
-						className="bg-surface-hover h-64 animate-pulse rounded-lg motion-reduce:animate-none"
-					>
+					<div role="status" aria-busy="true" className="skeleton h-64 rounded-lg">
 						<span className="sr-only">Loading the shared result</span>
 					</div>
 				}

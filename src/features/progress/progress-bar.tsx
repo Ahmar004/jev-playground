@@ -9,7 +9,7 @@ export function ProgressBar({ done, total }: { done: number; total: number }) {
 	return (
 		<Link
 			href={ROUTES.path}
-			className="focus-visible:outline-accent flex items-center gap-2 rounded focus-visible:outline focus-visible:outline-2"
+			className="focus-visible:outline-accent hover:bg-surface-hover flex items-center gap-2 rounded-full px-2 py-1 transition-colors focus-visible:outline focus-visible:outline-2"
 		>
 			<div
 				role="progressbar"
@@ -18,10 +18,13 @@ export function ProgressBar({ done, total }: { done: number; total: number }) {
 				aria-valuemin={0}
 				aria-valuemax={total}
 				aria-valuetext={`${done} of ${total} levels done`}
-				className="bg-surface-hover h-2 w-16 overflow-hidden rounded-full sm:w-24"
+				className="bg-border/60 h-2 w-16 overflow-hidden rounded-full sm:w-24"
 			>
 				{/* A percentage is data, not a design value: the one allowed inline style. */}
-				<div className="bg-accent h-full" style={{ width: `${percent}%` }} />
+				<div
+					className="from-accent to-jev animate-grow-x h-full origin-left rounded-full bg-gradient-to-r transition-[width] duration-700"
+					style={{ width: `${percent}%` }}
+				/>
 			</div>
 			<span className="text-text text-sm font-medium tabular-nums">
 				{done}/{total}
