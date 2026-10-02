@@ -21,6 +21,7 @@ const OPUS = CLAUDE_MODELS.opus
 const state = vi.hoisted(() => ({
 	signedIn: true,
 	fake: undefined as unknown,
+	onlyAsk: undefined as string | undefined,
 	refresh: vi.fn()
 }))
 vi.mock('@/server/db/client', () => ({
@@ -38,6 +39,22 @@ vi.mock('@/server/auth/session', () => ({
 		return { userId: USER_ID, email: 'ada@example.com' }
 	}
 }))
+vi.mock('@/content/levels', async (importOriginal) => {
+	const original = await importOriginal<typeof import('@/content/levels')>()
+	return {
+		...original,
+		// Lets one test use a level that asks fewer predictions than the real one.
+		getLevel: (id: string) => {
+			const level = original.getLevel(id)
+			if (!level || !state.onlyAsk) return level
+			const metric = state.onlyAsk
+			return {
+				...level,
+				predict: { questions: level.predict.questions.filter((q) => q.metric === metric) }
+			}
+		}
+	}
+})
 vi.mock('next/cache', () => ({ refresh: state.refresh }))
 vi.mock('next/navigation', () => ({ unstable_rethrow: () => {} }))
 vi.mock('@/lib/observability/capture-error', () => ({
@@ -55,6 +72,7 @@ let fake: ReturnType<typeof createFakeProgressDb>
 beforeEach(() => {
 	vi.clearAllMocks()
 	state.signedIn = true
+	state.onlyAsk = undefined
 	fake = createFakeProgressDb()
 	state.fake = fake.db
 })
@@ -111,6 +129,16 @@ describe('input checks', () => {
 	it('rejects a status other than skipped', async () => {
 		const result = await setLevelStatus({ levelId: LEVEL, status: LEVEL_STATUS.done })
 		expect(result).toMatchObject({ ok: false, status: 400 })
+	})
+
+	it('rejects a real metric the level does not ask with unknown_metric', async () => {
+		state.onlyAsk = PREDICTION_METRICS.fastest
+		const result = await submitPrediction({
+			levelId: LEVEL,
+			prediction: { [PREDICTION_METRICS.cheapest]: RACERS.jev }
+		})
+		expect(result).toMatchObject({ ok: false, status: 400 })
+		expect(fake.db.$transaction).not.toHaveBeenCalled()
 	})
 
 	it('rejects an unknown metric, question, option and opponent with 400', async () => {
@@ -191,14 +219,34 @@ describe('revealPrediction', () => {
 			predictionCorrect: true
 		})
 
-		const writes = fake.tx.levelProgress.upsert.mock.calls.length
+		const writeMethods = [
+			fake.tx.levelProgress.update,
+			fake.tx.levelProgress.updateMany,
+			fake.tx.levelProgress.upsert,
+			fake.tx.levelProgress.createMany,
+			fake.tx.xpEvent.createMany,
+			fake.tx.userBadge.createMany
+		]
+		for (const method of writeMethods) method.mockClear()
 		const second = await revealPrediction({ levelId: LEVEL, opponentModelId: OPUS })
 		expect(second).toMatchObject({
 			ok: true,
 			data: { firstReveal: false, predictionCorrect: true, awards: { xp: 0, badges: [] } }
 		})
-		expect(fake.tx.levelProgress.upsert.mock.calls.length).toBe(writes)
+		for (const method of writeMethods) expect(method).not.toHaveBeenCalled()
 		expect(fake.tx.xpEvent.rows).toHaveLength(1)
+	})
+
+	it('awards nothing and keeps the first result when a concurrent Reveal won the claim', async () => {
+		await submitPrediction({ levelId: LEVEL, prediction: RIGHT_PICKS })
+		// The row looks unrevealed when read, but the guarded update finds it claimed.
+		fake.tx.levelProgress.updateMany.mockResolvedValueOnce({ count: 0 })
+		const result = await revealPrediction({ levelId: LEVEL, opponentModelId: OPUS })
+		expect(result).toMatchObject({
+			ok: true,
+			data: { firstReveal: false, awards: { xp: 0, badges: [] } }
+		})
+		expect(fake.tx.xpEvent.rows).toHaveLength(0)
 	})
 
 	it('counts a wrong prediction as incorrect with no XP', async () => {

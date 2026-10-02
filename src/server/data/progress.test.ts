@@ -40,6 +40,16 @@ describe('getProgressSummary', () => {
 		)
 	})
 
+	it('drops unknown statuses and unknown badge ids', async () => {
+		fake.levelProgress.findMany.mockResolvedValue([{ levelId: 'speed-race', status: 'junk' }])
+		fake.xpEvent.aggregate.mockResolvedValue({ _sum: { xp: 0 } })
+		fake.userBadge.findMany.mockResolvedValue([{ badgeId: 'junk' }, { badgeId: BADGES.firstRace }])
+		const summary = await getProgressSummary(USER_ID)
+		expect(summary.statuses).toEqual({})
+		expect(summary.doneCount).toBe(0)
+		expect(summary.badges).toEqual([BADGES.firstRace])
+	})
+
 	it('treats a null xp sum as 0', async () => {
 		fake.levelProgress.findMany.mockResolvedValue([])
 		fake.xpEvent.aggregate.mockResolvedValue({ _sum: { xp: null } })
@@ -77,6 +87,18 @@ describe('getLevelProgress', () => {
 		expect(fake.checkAnswer.findMany).toHaveBeenCalledWith({
 			where: { userId: USER_ID, levelId: 'speed-race' }
 		})
+	})
+
+	it('counts an unknown stored status as not started', async () => {
+		fake.levelProgress.findUnique.mockResolvedValue({
+			status: 'junk',
+			prediction: null,
+			revealedAt: null,
+			opponentModelId: null,
+			predictionCorrect: null
+		})
+		fake.checkAnswer.findMany.mockResolvedValue([])
+		expect((await getLevelProgress(USER_ID, 'speed-race')).status).toBeNull()
 	})
 
 	it('returns an empty view when nothing is saved and survives bad prediction JSON', async () => {

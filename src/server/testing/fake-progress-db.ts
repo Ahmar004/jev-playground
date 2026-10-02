@@ -14,7 +14,7 @@ function flatten(where: Where): Where {
 }
 
 function matches(row: Row, where: Where): boolean {
-	return Object.entries(flatten(where)).every(([key, value]) => row[key] === value)
+	return Object.entries(flatten(where)).every(([key, value]) => (row[key] ?? null) === value)
 }
 
 function table(uniqueKeys: string[]) {
@@ -45,6 +45,11 @@ function table(uniqueKeys: string[]) {
 			if (!row) throw new Error('row not found')
 			Object.assign(row, data)
 			return row
+		}),
+		updateMany: vi.fn(async ({ where, data }: { where: Where; data: Row }) => {
+			const hits = rows.filter((entry) => matches(entry, where))
+			for (const row of hits) Object.assign(row, data)
+			return { count: hits.length }
 		}),
 		upsert: vi.fn(async ({ where, create, update }: { where: Where; create: Row; update: Row }) => {
 			const row = rows.find((entry) => matches(entry, where))

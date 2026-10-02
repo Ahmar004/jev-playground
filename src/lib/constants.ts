@@ -28,6 +28,13 @@ export const LEVEL_STATUS = {
 } as const
 export type LevelStatus = (typeof LEVEL_STATUS)[keyof typeof LEVEL_STATUS]
 
+const LEVEL_STATUS_VALUES: readonly string[] = Object.values(LEVEL_STATUS)
+
+/** Narrows a database string; anything unknown is not a status. */
+export function isLevelStatus(value: string): value is LevelStatus {
+	return LEVEL_STATUS_VALUES.includes(value)
+}
+
 export const CLAUDE_MODELS = {
 	opus: 'claude-opus-5-5',
 	sonnet: 'claude-sonnet-5-5',
@@ -191,6 +198,13 @@ export const BADGES = {
 	sharer: 'sharer'
 } as const
 export type BadgeId = (typeof BADGES)[keyof typeof BADGES]
+
+const BADGE_VALUES: readonly string[] = Object.values(BADGES)
+
+/** Narrows a database string; anything unknown is not a badge. */
+export function isBadgeId(value: string): value is BadgeId {
+	return BADGE_VALUES.includes(value)
+}
 
 export const BADGE_LABELS: Record<BadgeId, { name: string; description: string }> = {
 	[BADGES.firstRace]: { name: 'First Race', description: 'Finish level 1.' },

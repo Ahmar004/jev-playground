@@ -2,60 +2,29 @@
 
 import { refresh } from 'next/cache'
 import { z } from 'zod'
-import type { Level } from '@/content/level-schema'
-import { getCheckQuestion, getLevel } from '@/content/levels'
+import { getCheckQuestion } from '@/content/levels'
 import { currentRecordings } from '@/content/recordings'
 import { isPredictionCorrect, judgeAll } from '@/features/levels/judge'
-import { LEVEL_STATUS, RACERS, XP_SOURCES, type LevelStatus } from '@/lib/constants'
+import { LEVEL_STATUS, RACERS, XP_SOURCES } from '@/lib/constants'
 import { AppError } from '@/lib/errors/app-error'
-import { awardXp, syncBadges, type Awards, type Tx } from '@/server/awards/awards'
+import { awardXp, syncBadges, type Awards } from '@/server/awards/awards'
 import { requireUser } from '@/server/auth/session'
 import { db } from '@/server/db/client'
 import { parseStoredPrediction, predictionSchema } from '@/server/progress/prediction'
-import { canSkip, isLevelComplete, nextStatusOnActivity } from '@/server/progress/rules'
+import { completeIfReady, levelOrThrow, statusOf } from '@/server/progress/complete'
+import { canSkip, nextStatusOnActivity } from '@/server/progress/rules'
 import { validatedAction } from './validated-action'
 
-const NOT_FOUND = 404
 const CONFLICT = 409
 
-function levelOrThrow(levelId: string): Level {
-	const level = getLevel(levelId)
-	if (!level) {
-		throw new AppError('That level does not exist.', { status: NOT_FOUND, code: 'unknown_level' })
+function alreadyRevealed(row: { predictionCorrect: boolean | null; status: string } | null) {
+	const none: Awards = { xp: 0, badges: [] }
+	return {
+		firstReveal: false,
+		predictionCorrect: row?.predictionCorrect ?? false,
+		awards: none,
+		levelDone: row?.status === LEVEL_STATUS.done
 	}
-	return level
-}
-
-function statusOf(row: { status: string } | null): LevelStatus | null {
-	return row ? (row.status as LevelStatus) : null
-}
-
-/** Marks the level done and awards it once Reveal is reached and every Check question is answered. */
-async function completeIfReady(
-	tx: Tx,
-	userId: string,
-	level: Level
-): Promise<{ levelDone: boolean; xp: number }> {
-	const [row, answers] = await Promise.all([
-		tx.levelProgress.findUnique({ where: { userId_levelId: { userId, levelId: level.id } } }),
-		tx.checkAnswer.findMany({
-			where: { userId, levelId: level.id },
-			select: { questionId: true }
-		})
-	])
-	if (row?.status === LEVEL_STATUS.done) return { levelDone: true, xp: 0 }
-	const complete = isLevelComplete({
-		revealed: row?.revealedAt != null,
-		answeredQuestionIds: new Set(answers.map((answer) => answer.questionId)),
-		level
-	})
-	if (!complete) return { levelDone: false, xp: 0 }
-	await tx.levelProgress.update({
-		where: { userId_levelId: { userId, levelId: level.id } },
-		data: { status: LEVEL_STATUS.done }
-	})
-	const xp = await awardXp(tx, userId, XP_SOURCES.levelDone, level.id)
-	return { levelDone: true, xp }
 }
 
 export const setLevelStatus = validatedAction({
@@ -134,28 +103,28 @@ export const revealPrediction = validatedAction({
 		const result = await db.$transaction(async (tx) => {
 			const key = { userId_levelId: { userId, levelId: level.id } }
 			const row = await tx.levelProgress.findUnique({ where: key })
-			if (row?.revealedAt) {
-				const none: Awards = { xp: 0, badges: [] }
-				return {
-					firstReveal: false,
-					predictionCorrect: row.predictionCorrect ?? false,
-					awards: none,
-					levelDone: row.status === LEVEL_STATUS.done
-				}
-			}
+			if (row?.revealedAt) return alreadyRevealed(row)
 			const stored = parseStoredPrediction(row?.prediction)
 			const correct = isPredictionCorrect(judgeAll(level, stored, jev.totals, opponent.totals))
-			const data = {
-				status: nextStatusOnActivity(statusOf(row)),
-				revealedAt: new Date(),
-				opponentModelId: opponent.modelId,
-				predictionCorrect: correct
-			}
-			await tx.levelProgress.upsert({
-				where: key,
-				create: { userId, levelId: level.id, ...data },
-				update: data
+			// Guarded claim: only the call that flips revealedAt from null wins, so a
+			// concurrent Reveal can never overwrite the first result or double-award.
+			await tx.levelProgress.createMany({
+				data: [{ userId, levelId: level.id, status: nextStatusOnActivity(statusOf(row)) }],
+				skipDuplicates: true
 			})
+			const claim = await tx.levelProgress.updateMany({
+				where: { userId, levelId: level.id, revealedAt: null },
+				data: {
+					status: nextStatusOnActivity(statusOf(row)),
+					revealedAt: new Date(),
+					opponentModelId: opponent.modelId,
+					predictionCorrect: correct
+				}
+			})
+			if (claim.count === 0) {
+				const winner = await tx.levelProgress.findUnique({ where: key })
+				return alreadyRevealed(winner)
+			}
 			const predictionXp = correct
 				? await awardXp(tx, userId, XP_SOURCES.predictionCorrect, level.id)
 				: 0
