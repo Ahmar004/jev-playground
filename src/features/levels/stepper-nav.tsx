@@ -5,7 +5,8 @@ const STEP_LABELS: Record<LevelStep, string> = {
 	[LEVEL_STEPS.learn]: 'Learn',
 	[LEVEL_STEPS.predict]: 'Predict',
 	[LEVEL_STEPS.play]: 'Play',
-	[LEVEL_STEPS.reveal]: 'Reveal'
+	[LEVEL_STEPS.reveal]: 'Reveal',
+	[LEVEL_STEPS.check]: 'Check'
 }
 
 /** The level loop as a step list. Every step can be opened; none is locked (R23, R28). */
@@ -18,7 +19,7 @@ export function StepperNav({
 }) {
 	return (
 		<nav aria-label="Level steps">
-			<ol className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+			<ol className="grid grid-cols-2 gap-2 sm:grid-cols-5">
 				{LEVEL_STEP_ORDER.map((step, index) => {
 					const active = step === current
 					return (

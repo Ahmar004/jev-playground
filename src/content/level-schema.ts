@@ -1,7 +1,6 @@
 import { z } from 'zod'
-import { PREDICTION_METRICS, RACERS } from '@/lib/constants'
+import { LEVEL_COUNT, PREDICTION_METRICS, RACERS } from '@/lib/constants'
 
-const LEVEL_COUNT = 8
 const MAX_LEARN_POINTS = 4
 const MIN_COMPARED = 2
 const MAX_COMPARED = 3
@@ -10,14 +9,38 @@ const MAX_REVEAL_PARAGRAPHS = 3
 const DOCS_PATH = /^\/[a-z0-9/_.-]+(#[a-z0-9-]+)?$/
 
 const text = z.string().min(1)
+const slug = z.string().regex(/^[a-z0-9-]+$/)
+const MIN_CHECK_OPTIONS = 2
+const MAX_CHECK_OPTIONS = 4
+const MAX_CHECK_QUESTIONS = 2
 
 // A race prediction picks one of the two racers that face each other.
 export const PREDICTABLE_RACERS = [RACERS.jev, RACERS.llm] as const
 export type PredictedRacer = (typeof PREDICTABLE_RACERS)[number]
 
-// content/levels/<levelId>.json (DESIGN 4.1). Slice 5 adds check.
+export const checkQuestionSchema = z
+	.strictObject({
+		id: slug,
+		prompt: text,
+		options: z
+			.array(z.strictObject({ id: slug, text }))
+			.min(MIN_CHECK_OPTIONS)
+			.max(MAX_CHECK_OPTIONS)
+			.refine(
+				(options) => new Set(options.map((option) => option.id)).size === options.length,
+				'Option ids are unique'
+			),
+		answerId: slug,
+		explanation: text
+	})
+	.refine((question) => question.options.some((option) => option.id === question.answerId), {
+		message: 'answerId must name an option'
+	})
+export type CheckQuestion = z.infer<typeof checkQuestionSchema>
+
+// content/levels/<levelId>.json (DESIGN 4.1).
 export const levelSchema = z.strictObject({
-	id: z.string().regex(/^[a-z0-9-]+$/),
+	id: slug,
 	order: z.number().int().min(1).max(LEVEL_COUNT),
 	title: text,
 	learn: z.strictObject({
@@ -46,6 +69,7 @@ export const levelSchema = z.strictObject({
 	taskIds: z.array(z.string().min(1)).min(1),
 	// Words only: Reveal's numbers come from the recordings at render time.
 	reveal: z.strictObject({ why: z.array(text).min(1).max(MAX_REVEAL_PARAGRAPHS) }),
-	docs: z.array(z.strictObject({ path: z.string().regex(DOCS_PATH), title: text })).min(1)
+	docs: z.array(z.strictObject({ path: z.string().regex(DOCS_PATH), title: text })).min(1),
+	check: z.strictObject({ questions: z.array(checkQuestionSchema).min(1).max(MAX_CHECK_QUESTIONS) })
 })
 export type Level = z.infer<typeof levelSchema>

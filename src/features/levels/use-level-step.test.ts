@@ -20,7 +20,8 @@ beforeEach(() => {
 describe('parseStep', () => {
 	it('reads a known step and falls back to Learn', () => {
 		expect(parseStep('reveal')).toBe('reveal')
-		expect(parseStep('check')).toBe('learn')
+		expect(parseStep('check')).toBe('check')
+		expect(parseStep('bogus')).toBe('learn')
 		expect(parseStep(null)).toBe('learn')
 	})
 })

@@ -19,5 +19,18 @@ export const testLevel = {
 	},
 	taskIds: ['test-choice'],
 	reveal: { why: ['Because one answers directly.'] },
+	check: {
+		questions: ['test-q1', 'test-q2'].map((id) => ({
+			id,
+			prompt: 'Which one fits?',
+			options: [
+				{ id: 'a', text: 'Option A' },
+				{ id: 'b', text: 'Option B' },
+				{ id: 'c', text: 'Option C' }
+			],
+			answerId: 'a',
+			explanation: 'Because A.'
+		}))
+	},
 	docs: [{ path: '/concepts/system-one', title: 'System One models' }]
 }

@@ -102,19 +102,21 @@ export const NOUL_THRESHOLD = 0.5
 export const RACE_STATUS = { idle: 'idle', running: 'running', finished: 'finished' } as const
 export type RaceStatus = (typeof RACE_STATUS)[keyof typeof RACE_STATUS]
 
-// The level loop (spec 6.1, R24). Slice 5 adds the Check step.
+// The level loop (spec 6.1, R24): Learn, Predict, Play, Reveal, then Check.
 export const LEVEL_STEPS = {
 	learn: 'learn',
 	predict: 'predict',
 	play: 'play',
-	reveal: 'reveal'
+	reveal: 'reveal',
+	check: 'check'
 } as const
 export type LevelStep = (typeof LEVEL_STEPS)[keyof typeof LEVEL_STEPS]
 export const LEVEL_STEP_ORDER: readonly LevelStep[] = [
 	LEVEL_STEPS.learn,
 	LEVEL_STEPS.predict,
 	LEVEL_STEPS.play,
-	LEVEL_STEPS.reveal
+	LEVEL_STEPS.reveal,
+	LEVEL_STEPS.check
 ]
 
 // What a race prediction asks: who finishes first, costs less, gets more right.
@@ -144,3 +146,64 @@ export const ITEM_OUTCOMES = {
 	unscored: 'unscored'
 } as const
 export type ItemOutcome = (typeof ITEM_OUTCOMES)[keyof typeof ITEM_OUTCOMES]
+
+// Levels on the Path in the finished product; the pathfinder badge needs all of them (spec 5.2).
+export const LEVEL_COUNT = 8
+
+// Level 1 is the one the first_race badge is for.
+export const FIRST_LEVEL_ID = 'speed-race'
+
+// Correct level predictions that earn the oracle badge.
+export const ORACLE_PREDICTIONS = 5
+
+// What earns XP. XpEvent rows are unique on (user, source, sourceId) so a repeat never pays twice.
+export const XP_SOURCES = {
+	levelDone: 'level_done',
+	checkCorrect: 'check_correct',
+	predictionCorrect: 'prediction_correct',
+	gameDone: 'game_done',
+	quizCorrect: 'quiz_correct',
+	arenaPreset: 'arena_preset',
+	devFirstRun: 'dev_first_run'
+} as const
+export type XpSource = (typeof XP_SOURCES)[keyof typeof XP_SOURCES]
+
+export const XP_AMOUNTS: Record<XpSource, number> = {
+	[XP_SOURCES.levelDone]: 100,
+	[XP_SOURCES.checkCorrect]: 20,
+	[XP_SOURCES.predictionCorrect]: 25,
+	[XP_SOURCES.gameDone]: 50,
+	[XP_SOURCES.quizCorrect]: 10,
+	[XP_SOURCES.arenaPreset]: 10,
+	[XP_SOURCES.devFirstRun]: 50
+}
+
+export const BADGES = {
+	firstRace: 'first_race',
+	pathfinder: 'pathfinder',
+	rightTool: 'right_tool',
+	phishSpotter: 'phish_spotter',
+	trickster: 'trickster',
+	gamer: 'gamer',
+	oracle: 'oracle',
+	quizClimber: 'quiz_climber',
+	liveWire: 'live_wire',
+	sharer: 'sharer'
+} as const
+export type BadgeId = (typeof BADGES)[keyof typeof BADGES]
+
+export const BADGE_LABELS: Record<BadgeId, { name: string; description: string }> = {
+	[BADGES.firstRace]: { name: 'First Race', description: 'Finish level 1.' },
+	[BADGES.pathfinder]: { name: 'Pathfinder', description: 'Finish all 8 levels.' },
+	[BADGES.rightTool]: {
+		name: 'Right Tool',
+		description: 'Win a VS game by picking the right tool.'
+	},
+	[BADGES.phishSpotter]: { name: 'Phish Spotter', description: 'Finish the phishing level.' },
+	[BADGES.trickster]: { name: 'Trickster', description: 'Fool Jev in the Arena.' },
+	[BADGES.gamer]: { name: 'Gamer', description: 'Finish a VS game.' },
+	[BADGES.oracle]: { name: 'Oracle', description: 'Get 5 level predictions right.' },
+	[BADGES.quizClimber]: { name: 'Quiz Climber', description: 'Climb the quiz ladder.' },
+	[BADGES.liveWire]: { name: 'Live Wire', description: 'Run a live call in Developer mode.' },
+	[BADGES.sharer]: { name: 'Sharer', description: 'Share a result.' }
+}

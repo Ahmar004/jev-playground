@@ -3,6 +3,7 @@
 export const ROUTES = {
 	home: '/',
 	signIn: '/sign-in',
+	path: '/path',
 	glossary: '/glossary',
 	methodology: '/methodology',
 	level: (levelId: string) => `/levels/${levelId}`

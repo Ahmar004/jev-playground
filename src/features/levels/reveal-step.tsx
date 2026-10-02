@@ -6,10 +6,10 @@ import type { Level } from '@/content/level-schema'
 import type { Recording } from '@/content/recording-schema'
 import type { Task } from '@/content/task-schema'
 import { Scoreboard } from '@/features/race/scoreboard'
-import { PREDICTION_OUTCOMES, RACERS } from '@/lib/constants'
+import { PREDICTION_OUTCOMES } from '@/lib/constants'
 import { typesafeDocsUrl } from '@/lib/links'
 import { ItemResults } from './item-results'
-import { judgePrediction, type Prediction } from './judge'
+import { judgeAll, type Prediction } from './judge'
 import { NotRecorded } from './play-step'
 import { PredictionResults } from './prediction-results'
 import { useCelebration } from './use-celebration'
@@ -34,15 +34,7 @@ export function RevealStep({
 	prediction: Prediction
 	onRaceAgain: () => void
 }) {
-	const verdicts =
-		jev && opponent
-			? level.predict.questions.map((question) =>
-					judgePrediction(question.metric, prediction[question.metric], [
-						{ racer: RACERS.jev, totals: jev.totals },
-						{ racer: RACERS.llm, totals: opponent.totals }
-					])
-				)
-			: []
+	const verdicts = jev && opponent ? judgeAll(level, prediction, jev.totals, opponent.totals) : []
 	useCelebration(verdicts.some((verdict) => verdict.outcome === PREDICTION_OUTCOMES.right))
 
 	if (!jev || !opponent) {

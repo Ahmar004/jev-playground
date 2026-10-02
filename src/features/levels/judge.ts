@@ -1,7 +1,8 @@
-import type { PredictedRacer } from '@/content/level-schema'
+import type { Level, PredictedRacer } from '@/content/level-schema'
 import {
 	PREDICTION_METRICS,
 	PREDICTION_OUTCOMES,
+	RACERS,
 	type PredictionMetric,
 	type PredictionOutcome
 } from '@/lib/constants'
@@ -56,4 +57,32 @@ export function judgePrediction(
 		...base,
 		outcome: winners[0] === predicted ? PREDICTION_OUTCOMES.right : PREDICTION_OUTCOMES.wrong
 	}
+}
+
+const JUDGED: ReadonlySet<PredictionOutcome> = new Set([
+	PREDICTION_OUTCOMES.right,
+	PREDICTION_OUTCOMES.wrong
+])
+
+/** A level's prediction counts when every clear pick is right and at least one is (user decision, slice 5). */
+export function isPredictionCorrect(verdicts: Verdict[]): boolean {
+	const judged = verdicts.filter((verdict) => JUDGED.has(verdict.outcome))
+	return (
+		judged.length > 0 && judged.every((verdict) => verdict.outcome === PREDICTION_OUTCOMES.right)
+	)
+}
+
+/** Judges every prediction question of a level, in order, for Jev against the opponent raced. */
+export function judgeAll(
+	level: Level,
+	prediction: Prediction,
+	jev: RunTotals,
+	opponent: RunTotals
+): Verdict[] {
+	return level.predict.questions.map((question) =>
+		judgePrediction(question.metric, prediction[question.metric], [
+			{ racer: RACERS.jev, totals: jev },
+			{ racer: RACERS.llm, totals: opponent }
+		])
+	)
 }

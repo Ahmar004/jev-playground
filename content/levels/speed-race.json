@@ -40,5 +40,34 @@
 			"One ticket makes little difference. Thousands of tickets a day is where speed and cost add up."
 		]
 	},
-	"docs": [{ "path": "/concepts/system-one", "title": "System One models" }]
+	"docs": [{ "path": "/concepts/system-one", "title": "System One models" }],
+	"check": {
+		"questions": [
+			{
+				"id": "speed-race-tool-fit",
+				"prompt": "Your shop gets 50,000 support tickets a day, and each one needs one of five teams. Which tool fits this job best?",
+				"options": [
+					{ "id": "jev", "text": "Jev: one typed Choice per ticket, fast and cheap at scale" },
+					{ "id": "llm", "text": "An LLM: it writes a reasoned answer for every ticket" },
+					{ "id": "code", "text": "Plain Code: keyword rules always pick the right team" }
+				],
+				"answerId": "jev",
+				"explanation": "Routing a ticket is one quick judgment repeated many times. Jev answers each with a typed Choice, so it is fast and pays only for the tokens it reads. Keyword rules break on wording they don't expect."
+			},
+			{
+				"id": "speed-race-llm-cost",
+				"prompt": "Why did the LLM cost more per ticket in the race?",
+				"options": [
+					{
+						"id": "output-tokens",
+						"text": "It pays for the tokens it writes, not only the ones it reads"
+					},
+					{ "id": "retries", "text": "It got tickets wrong and had to try them again" },
+					{ "id": "more-questions", "text": "It was asked more questions per ticket" }
+				],
+				"answerId": "output-tokens",
+				"explanation": "Both read the same ticket and the same five teams, with one request per ticket and no retries. The LLM also writes its answer as text, and every token it writes is billed. Jev returns the answer as data and pays only for what it reads."
+			}
+		]
+	}
 }
