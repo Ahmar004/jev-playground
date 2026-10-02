@@ -1,0 +1,108 @@
+{
+	"id": "spot-the-phish",
+	"order": 7,
+	"title": "Spot the Phish",
+	"learn": {
+		"intro": "One email can show many warning signs. Instead of asking Jev ten separate times, ask all ten yes or no questions in a single request. Each sign comes back with its own probability, so you can see which ones lit up and how sure Jev is.",
+		"compare": [
+			{
+				"racer": "jev",
+				"title": "Jev, ten Nouls in one request",
+				"points": [
+					"One call carries all ten questions",
+					"Each answer is its own probability",
+					"Cheap, and one round trip"
+				]
+			},
+			{
+				"racer": "llm",
+				"title": "An LLM, asked for ten answers",
+				"points": [
+					"Returns ten true or false fields",
+					"Pays for every token it writes",
+					"No probability to tell sure from unsure"
+				]
+			}
+		]
+	},
+	"predict": {
+		"questions": [
+			{
+				"metric": "fastest",
+				"prompt": "Who is faster?"
+			},
+			{
+				"metric": "cheapest",
+				"prompt": "Who costs less?"
+			},
+			{
+				"metric": "most_accurate",
+				"prompt": "Who gets more right?"
+			}
+		]
+	},
+	"tasks": [
+		{
+			"id": "phish-signals",
+			"title": "Three emails, ten signs each"
+		}
+	],
+	"widget": "signals",
+	"reveal": {
+		"why": [
+			"A single request can carry many questions. Jev answers them together, so asking for ten signs costs little more than asking for one.",
+			"Each sign has a probability, so a sign at 53 percent reads very differently from one at 97 percent. That is the cue to send a borderline email to a person.",
+			"Both racers are scored on each sign, so a racer that gets 9 of 10 signs right on an email earns most of the credit for it."
+		]
+	},
+	"docs": [
+		{
+			"path": "/patterns/fan-out",
+			"title": "Fan-out"
+		}
+	],
+	"check": {
+		"questions": [
+			{
+				"id": "phish-fan",
+				"prompt": "What is the benefit of putting many Nouls in one request?",
+				"options": [
+					{
+						"id": "cheap",
+						"text": "Many answers for one fast, cheap call"
+					},
+					{
+						"id": "exact",
+						"text": "Every answer becomes exactly right"
+					},
+					{
+						"id": "text",
+						"text": "Jev can then write an explanation"
+					}
+				],
+				"answerId": "cheap",
+				"explanation": "Jev answers them together, so extra questions add little time or cost. It does not make answers perfect, and Jev still returns typed answers only."
+			},
+			{
+				"id": "phish-prob",
+				"prompt": "Why does each sign come with a probability?",
+				"options": [
+					{
+						"id": "unsure",
+						"text": "It shows how sure Jev is, so unsure ones can be reviewed"
+					},
+					{
+						"id": "final",
+						"text": "It makes the answer final"
+					},
+					{
+						"id": "price",
+						"text": "It sets the price of the call"
+					}
+				],
+				"answerId": "unsure",
+				"explanation": "A probability near 50 percent flags a borderline call worth a second look."
+			}
+		]
+	}
+}

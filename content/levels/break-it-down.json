@@ -1,0 +1,122 @@
+{
+	"id": "break-it-down",
+	"order": 5,
+	"title": "Break It Down",
+	"learn": {
+		"intro": "A broad question like \"is this a good review?\" hides several judgments in one answer. Break it into small yes or no questions, let Jev answer each, and let code combine them with weights you choose. You can see why the score is what it is, and change it without asking Jev again.",
+		"compare": [
+			{
+				"racer": "jev",
+				"title": "Jev, asked one broad question",
+				"points": [
+					"One Noul for the whole judgment",
+					"Fast and cheap",
+					"You get a verdict, not the reasons behind it"
+				]
+			},
+			{
+				"racer": "llm",
+				"title": "An LLM, asked the same broad question",
+				"points": [
+					"Reads the review and answers true or false",
+					"Pays for every token it writes",
+					"You get a verdict, not the reasons behind it"
+				]
+			},
+			{
+				"racer": "code",
+				"title": "Jev + Code, five small questions",
+				"points": [
+					"Jev answers five small Nouls per review",
+					"Code combines them with your weights",
+					"Change a weight and the score changes at once"
+				]
+			}
+		]
+	},
+	"predict": {
+		"questions": [
+			{
+				"metric": "fastest",
+				"prompt": "Who is faster?"
+			},
+			{
+				"metric": "cheapest",
+				"prompt": "Who costs less?"
+			},
+			{
+				"metric": "most_accurate",
+				"prompt": "Who gets more right?"
+			}
+		]
+	},
+	"tasks": [
+		{
+			"id": "review-broad",
+			"title": "One broad question"
+		},
+		{
+			"id": "review-parts",
+			"title": "Five small questions, combined in code",
+			"judged": false
+		}
+	],
+	"widget": "weights",
+	"reveal": {
+		"why": [
+			"Small questions are easier to answer and easier to check. The code that combines them is plain arithmetic, so it never drifts and costs nothing.",
+			"The weights are yours: if tone matters more to you than detail, turn it up and the same Jev answers give a different score. The broad question has no such dial.",
+			"On this set the broad question was already accurate for every racer. The gain here is not accuracy, it is that you can see and tune the reasons."
+		]
+	},
+	"docs": [
+		{
+			"path": "/patterns/composite-scoring",
+			"title": "Composite scoring"
+		}
+	],
+	"check": {
+		"questions": [
+			{
+				"id": "break-why",
+				"prompt": "Why combine several small Jev answers in code?",
+				"options": [
+					{
+						"id": "tune",
+						"text": "You can see each reason and change its weight"
+					},
+					{
+						"id": "faster",
+						"text": "It is always faster than one question"
+					},
+					{
+						"id": "free",
+						"text": "It makes Jev free to run"
+					}
+				],
+				"answerId": "tune",
+				"explanation": "Each small answer is a visible reason, and the weights are plain code you control. It is not always faster, and Jev still costs a little per question."
+			},
+			{
+				"id": "break-weights",
+				"prompt": "You turn the weight of one small question to zero. What happens to the score?",
+				"options": [
+					{
+						"id": "ignored",
+						"text": "That question no longer counts"
+					},
+					{
+						"id": "rerun",
+						"text": "Jev must be asked everything again"
+					},
+					{
+						"id": "break",
+						"text": "The score stops working"
+					}
+				],
+				"answerId": "ignored",
+				"explanation": "The combining step is code. A zero weight just leaves that answer out, with no new call to Jev."
+			}
+		]
+	}
+}

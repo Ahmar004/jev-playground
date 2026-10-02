@@ -1,0 +1,40 @@
+{
+	"taskId": "router-sum",
+	"taskHash": "2b2ee33fe9decadf403403173c3926ab90191d576c4ea5422eb75683239dd01a",
+	"racer": "llm",
+	"modelId": "claude-sonnet-5-5",
+	"recordedAt": "2026-10-02T03:36:33.716Z",
+	"price": {
+		"inputPerM": 2,
+		"outputPerM": 10,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "c1",
+			"ok": false,
+			"raw": "4817 + 2956 = 7773\n\n{\"answer\": \"7773\"}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 1032.6469999999972,
+			"usage": { "inputTokens": 134, "outputTokens": 25 },
+			"costUsd": 0.000518,
+			"lane": 0,
+			"startMs": 0.004799999995157123,
+			"endMs": 1032.7834999999977
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 1,
+		"correct": 0,
+		"accuracy": 0,
+		"wallMs": 1032.7787000000026,
+		"costUsd": 0.000518,
+		"inputTokens": 134,
+		"outputTokens": 25,
+		"parseFailures": 1
+	}
+}

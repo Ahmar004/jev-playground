@@ -1,0 +1,24 @@
+{
+	"id": "router-phish",
+	"kind": "noul",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "noul",
+				"instructions": "Is this message trying to trick the reader into giving up a password or a payment?",
+				"criteria": {
+					"true": "The message tries to get a password or a payment by deception",
+					"false": "The message is an ordinary message"
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "c1",
+			"state": "Your parcel is held at customs. Pay a 2.99 fee today at http://parcel-release.example/pay or it will be returned to the sender.",
+			"label": true
+		}
+	]
+}

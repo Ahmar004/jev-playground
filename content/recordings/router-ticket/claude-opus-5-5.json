@@ -1,0 +1,40 @@
+{
+	"taskId": "router-ticket",
+	"taskHash": "421fcf3344a2cd027731568f3dea98b0fe545f4845a9573fc3d5b2b7709983dc",
+	"racer": "llm",
+	"modelId": "claude-opus-5-5",
+	"recordedAt": "2026-10-02T03:36:31.484Z",
+	"price": {
+		"inputPerM": 4,
+		"outputPerM": 20,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "c1",
+			"ok": true,
+			"raw": "{\"answer\": \"billing\"}",
+			"parsed": "billing",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1179.974000000002,
+			"usage": { "inputTokens": 155, "outputTokens": 12 },
+			"costUsd": 0.00086,
+			"lane": 0,
+			"startMs": 0.0039000000033411197,
+			"endMs": 1180.2566000000006
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 1,
+		"correct": 1,
+		"accuracy": 1,
+		"wallMs": 1180.2526999999973,
+		"costUsd": 0.00086,
+		"inputTokens": 155,
+		"outputTokens": 12,
+		"parseFailures": 0
+	}
+}

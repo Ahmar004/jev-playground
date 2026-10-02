@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowRightIcon, InfoIcon } from '@/components/ui/icons'
 import { OpponentPicker } from '@/features/race/opponent-picker'
 import { RaceStage } from '@/features/race/race-stage'
+import type { CombineArgs } from '@/runner/code/combine-fns'
 import type { LevelStage } from './lineup'
 
 export function NotRecorded({ children }: { children: React.ReactNode }) {
@@ -26,6 +27,8 @@ export function PlayStep({
 	opponentId,
 	onOpponentChange,
 	onReveal,
+	combineArgs,
+	hideRaces = false,
 	children
 }: {
 	stages: LevelStage[]
@@ -33,6 +36,9 @@ export function PlayStep({
 	opponentId: string | undefined
 	onOpponentChange: (modelId: string) => void
 	onReveal: () => void
+	combineArgs?: CombineArgs
+	// Level 6 replaces the races with its own widget.
+	hideRaces?: boolean
 	children?: React.ReactNode
 }) {
 	const ready =
@@ -55,23 +61,25 @@ export function PlayStep({
 				<OpponentPicker value={opponentId} options={opponentIds} onChange={onOpponentChange} />
 			</div>
 			{children}
-			{stages.map((stage) => {
-				const opponent = stage.opponents.find((recording) => recording.modelId === opponentId)
-				if (!stage.jev || !opponent) return null
-				return (
-					<div key={stage.task.id} className="flex flex-col gap-3">
-						{(stages.length > 1 || children) && (
-							<h3 className="text-text text-xl font-bold">{stage.title}</h3>
-						)}
-						<RaceStage
-							key={opponent.modelId}
-							task={stage.task}
-							jev={stage.jev}
-							opponent={opponent}
-						/>
-					</div>
-				)
-			})}
+			{!hideRaces &&
+				stages.map((stage) => {
+					const opponent = stage.opponents.find((recording) => recording.modelId === opponentId)
+					if (!stage.jev || !opponent) return null
+					return (
+						<div key={stage.task.id} className="flex flex-col gap-3">
+							{(stages.length > 1 || children) && (
+								<h3 className="text-text text-xl font-bold">{stage.title}</h3>
+							)}
+							<RaceStage
+								key={opponent.modelId}
+								task={stage.task}
+								jev={stage.jev}
+								opponent={opponent}
+								combineArgs={combineArgs}
+							/>
+						</div>
+					)
+				})}
 			<div>
 				<Button type="button" onClick={onReveal}>
 					See the result

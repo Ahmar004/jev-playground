@@ -1,0 +1,40 @@
+{
+	"taskId": "router-summary",
+	"taskHash": "adfb5eedaf73e83b4b198e9de1d537ca13fcda62bd21d471c7cc21cdffca9509",
+	"racer": "llm",
+	"modelId": "claude-haiku-4-5-20251001",
+	"recordedAt": "2026-10-02T03:36:52.042Z",
+	"price": {
+		"inputPerM": 1,
+		"outputPerM": 5,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "c1",
+			"ok": true,
+			"raw": "```json\n{\"answer\": \"The town council voted to extend library hours until 9pm on weekdays based on resident demand, funding the change by reallocating budget from printed newspapers to additional staffing.\"}\n```",
+			"parsed": "The town council voted to extend library hours until 9pm on weekdays based on resident demand, funding the change by reallocating budget from printed newspapers to additional staffing.",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1006.0924999999988,
+			"usage": { "inputTokens": 114, "outputTokens": 49 },
+			"costUsd": 0.000359,
+			"lane": 0,
+			"startMs": 0.005300000004353933,
+			"endMs": 1006.4360000000015
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 1,
+		"correct": 1,
+		"accuracy": 1,
+		"wallMs": 1006.4306999999972,
+		"costUsd": 0.000359,
+		"inputTokens": 114,
+		"outputTokens": 49,
+		"parseFailures": 0
+	}
+}

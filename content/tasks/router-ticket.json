@@ -1,0 +1,25 @@
+{
+	"id": "router-ticket",
+	"kind": "choice",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "choice",
+				"instructions": "Which category fits this support message?",
+				"criteria": {
+					"billing": "A charge, refund or invoice problem",
+					"technical": "Something is broken or will not work",
+					"account": "Login, profile or account settings"
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "c1",
+			"state": "I was charged twice for my last order and I would like one of the payments refunded.",
+			"label": "billing"
+		}
+	]
+}

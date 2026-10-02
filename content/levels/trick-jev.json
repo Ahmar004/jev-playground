@@ -1,0 +1,108 @@
+{
+	"id": "trick-jev",
+	"order": 8,
+	"title": "Trick Jev",
+	"learn": {
+		"intro": "Jev reads the words you give it, literally. That is a strength, and a risk: wording can hide the real meaning, point at someone else, or even try to give Jev orders. Here are six messages, each written plainly and then in a tricky way. Guess which tricks fool Jev, then see what really happened.",
+		"compare": [
+			{
+				"racer": "jev",
+				"title": "Jev",
+				"points": [
+					"Answers the exact question it was asked",
+					"Reads wording literally",
+					"Can be misled by tricky phrasing"
+				]
+			},
+			{
+				"racer": "llm",
+				"title": "An LLM",
+				"points": [
+					"Reads the whole message in context",
+					"Can also be fooled",
+					"Its answer can come back in the wrong format"
+				]
+			}
+		]
+	},
+	"predict": {
+		"questions": [
+			{
+				"metric": "most_accurate",
+				"prompt": "Who gets more right?"
+			},
+			{
+				"metric": "cheapest",
+				"prompt": "Who costs less?"
+			}
+		]
+	},
+	"tasks": [
+		{
+			"id": "trick-jev",
+			"title": "Twelve messages: six plain, six tricky"
+		}
+	],
+	"widget": "tricks",
+	"reveal": {
+		"why": [
+			"Most tricks did not fool Jev: it read negations, other people and planted orders correctly. Where it slipped, the probability was close to the middle, a sign it was unsure.",
+			"Literal reading means the question must be precise. Ask exactly what you need to know, and treat any text you did not write as data, never as instructions.",
+			"These items were rewritten once after a first set did not fool Jev at all. Both results are on the Methodology page."
+		]
+	},
+	"docs": [
+		{
+			"path": "/jaggedness#literal-reading",
+			"title": "Literal reading"
+		},
+		{
+			"path": "/jaggedness#adversarial-content",
+			"title": "Adversarial content"
+		}
+	],
+	"check": {
+		"questions": [
+			{
+				"id": "trick-precise",
+				"prompt": "How do you make Jev harder to trick?",
+				"options": [
+					{
+						"id": "precise",
+						"text": "Ask a precise question and treat user text as data"
+					},
+					{
+						"id": "long",
+						"text": "Make the question much longer"
+					},
+					{
+						"id": "trust",
+						"text": "Trust whatever the message says"
+					}
+				],
+				"answerId": "precise",
+				"explanation": "Precise questions leave less room for wording to mislead, and text from users should never be followed as an order."
+			},
+			{
+				"id": "trick-signal",
+				"prompt": "What was a sign that Jev might be wrong on a trick?",
+				"options": [
+					{
+						"id": "middle",
+						"text": "A probability near the middle"
+					},
+					{
+						"id": "high",
+						"text": "A probability near 100 percent"
+					},
+					{
+						"id": "fast",
+						"text": "A very fast answer"
+					}
+				],
+				"answerId": "middle",
+				"explanation": "A probability near 50 percent means Jev was unsure, which is the cue to review the item."
+			}
+		]
+	}
+}

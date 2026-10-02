@@ -8,13 +8,11 @@ import type { Task } from '@/content/task-schema'
 import { ROUTES } from '@/lib/links'
 import { LEVEL_STATUS, LEVEL_STEPS, LEVEL_WIDGETS } from '@/lib/constants'
 import { BeginnerBanner } from './beginner-banner'
-import { CalibrationChart } from './calibration/calibration-chart'
-import { CalibrationForm } from './calibration/calibration-form'
-import type { Ratings } from './calibration/ratings'
 import { CheckStep } from './check-step'
 import { LearnStep } from './learn-step'
 import type { LevelProgressView } from './level-progress'
 import { defaultOpponentId, levelStages, sharedOpponentIds } from './lineup'
+import { PlayWidget, RevealWidget, useWidgetState } from './level-widgets'
 import { PlayStep } from './play-step'
 import { PredictStep } from './predict-step'
 import { RevealStep } from './reveal-step'
@@ -56,10 +54,9 @@ export function LevelStepper({
 			stages[0]?.opponents.filter((recording) => opponentIds.includes(recording.modelId)) ?? []
 		)
 	)
-	// Level 4: the user's own ratings live only in the page, never saved.
-	const [ratings, setRatings] = useState<Ratings>({})
-	const calibrationStage =
-		level.widget === LEVEL_WIDGETS.calibration ? stages.find((stage) => stage.judged) : undefined
+	// A level's own widget (ratings, weights, sorted cards, guesses) lives in the page, never saved.
+	const widget = useWidgetState(level, stages, tasks)
+	const widgetProps = { level, stages, opponentId, state: widget }
 
 	return (
 		<main className="flex max-w-4xl flex-col gap-6">
@@ -90,16 +87,10 @@ export function LevelStepper({
 					opponentId={opponentId}
 					onOpponentChange={setOpponentId}
 					onReveal={() => goTo(LEVEL_STEPS.reveal)}
+					combineArgs={widget.combineArgs}
+					hideRaces={level.widget === LEVEL_WIDGETS.router}
 				>
-					{calibrationStage && (
-						<CalibrationForm
-							task={calibrationStage.task}
-							ratings={ratings}
-							onRate={(itemId, rating) =>
-								setRatings((previous) => ({ ...previous, [itemId]: rating }))
-							}
-						/>
-					)}
+					{level.widget && <PlayWidget {...widgetProps} />}
 				</PlayStep>
 			)}
 			{step === LEVEL_STEPS.reveal && (
@@ -114,14 +105,10 @@ export function LevelStepper({
 					onReveal={reveal}
 					onCheck={() => goTo(LEVEL_STEPS.check)}
 					onRaceAgain={() => goTo(LEVEL_STEPS.play)}
+					combineArgs={widget.combineArgs}
+					showStages={level.widget !== LEVEL_WIDGETS.router}
 				>
-					{calibrationStage?.jev && (
-						<CalibrationChart
-							task={calibrationStage.task}
-							jev={calibrationStage.jev}
-							ratings={ratings}
-						/>
-					)}
+					<RevealWidget {...widgetProps} />
 				</RevealStep>
 			)}
 			{step === LEVEL_STEPS.check && (

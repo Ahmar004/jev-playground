@@ -1,0 +1,99 @@
+{
+	"id": "phish-signals",
+	"kind": "fan_out",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"urgent": {
+				"type": "noul",
+				"instructions": "Does the email pressure the reader to act urgently?"
+			},
+			"credentials": {
+				"type": "noul",
+				"instructions": "Does it ask for a password, PIN or login details?"
+			},
+			"payment": {
+				"type": "noul",
+				"instructions": "Does it ask for a payment, gift cards or bank details?"
+			},
+			"link": {
+				"type": "noul",
+				"instructions": "Does it tell the reader to click a link or open an attachment?"
+			},
+			"threat": {
+				"type": "noul",
+				"instructions": "Does it threaten a consequence, such as closing an account?"
+			},
+			"impersonation": {
+				"type": "noul",
+				"instructions": "Does it claim to come from a bank, a company or an official body?"
+			},
+			"generic": {
+				"type": "noul",
+				"instructions": "Does it greet the reader generically instead of by name?"
+			},
+			"mismatch": {
+				"type": "noul",
+				"instructions": "Does the sender address or link look unrelated to the organisation it claims to be?"
+			},
+			"errors": {
+				"type": "noul",
+				"instructions": "Does it contain odd spelling or grammar?"
+			},
+			"too_good": {
+				"type": "noul",
+				"instructions": "Does it offer a prize or reward that seems too good to be true?"
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "e1",
+			"state": "From: security@mybank-alerts-verify.com\nSubject: Your account will be closed\n\nDear Customer,\n\nWe noticed unusual activity on your account. Verify your login and password within 24 hours at http://mybank-verify-now.example/login or your account will be closed.\n\nMyBank Security Team",
+			"label": {
+				"urgent": true,
+				"credentials": true,
+				"payment": false,
+				"link": true,
+				"threat": true,
+				"impersonation": true,
+				"generic": true,
+				"mismatch": true,
+				"errors": false,
+				"too_good": false
+			}
+		},
+		{
+			"id": "e2",
+			"state": "From: promo@gift-rewardz.example\nSubject: You has won a $500 gift card!!\n\nHello winner, you have been selected to recieve a $500 store gift card. To claim it, pay a small $4.99 shipping fee by card at the link below. This offer ends tonight.\nhttp://claim-gift.example/now",
+			"label": {
+				"urgent": true,
+				"credentials": false,
+				"payment": true,
+				"link": true,
+				"threat": false,
+				"impersonation": false,
+				"generic": true,
+				"mismatch": false,
+				"errors": true,
+				"too_good": true
+			}
+		},
+		{
+			"id": "e3",
+			"state": "From: orders@brightbooks.example\nSubject: Your order #48213 has shipped\n\nHi Sam,\n\nGood news: your order shipped today and should arrive by Friday. You can follow it any time from the Orders page after you sign in on our website. No action is needed.\n\nThanks for shopping with Bright Books.",
+			"label": {
+				"urgent": false,
+				"credentials": false,
+				"payment": false,
+				"link": false,
+				"threat": false,
+				"impersonation": false,
+				"generic": false,
+				"mismatch": false,
+				"errors": false,
+				"too_good": false
+			}
+		}
+	]
+}

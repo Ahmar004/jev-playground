@@ -27,6 +27,46 @@ import writeMeAPoemHaiku from '../../content/recordings/write-me-a-poem/claude-h
 import writeMeAPoemOpus from '../../content/recordings/write-me-a-poem/claude-opus-5-5.json'
 import writeMeAPoemSonnet from '../../content/recordings/write-me-a-poem/claude-sonnet-5-5.json'
 import writeMeAPoemJev from '../../content/recordings/write-me-a-poem/jev.json'
+import reviewBroadHaiku from '../../content/recordings/review-broad/claude-haiku-4-5-20251001.json'
+import reviewBroadOpus from '../../content/recordings/review-broad/claude-opus-5-5.json'
+import reviewBroadSonnet from '../../content/recordings/review-broad/claude-sonnet-5-5.json'
+import reviewBroadJev from '../../content/recordings/review-broad/jev.json'
+import reviewPartsHaiku from '../../content/recordings/review-parts/claude-haiku-4-5-20251001.json'
+import reviewPartsOpus from '../../content/recordings/review-parts/claude-opus-5-5.json'
+import reviewPartsSonnet from '../../content/recordings/review-parts/claude-sonnet-5-5.json'
+import reviewPartsJev from '../../content/recordings/review-parts/jev.json'
+import phishSignalsHaiku from '../../content/recordings/phish-signals/claude-haiku-4-5-20251001.json'
+import phishSignalsOpus from '../../content/recordings/phish-signals/claude-opus-5-5.json'
+import phishSignalsSonnet from '../../content/recordings/phish-signals/claude-sonnet-5-5.json'
+import phishSignalsJev from '../../content/recordings/phish-signals/jev.json'
+import trickJevHaiku from '../../content/recordings/trick-jev/claude-haiku-4-5-20251001.json'
+import trickJevOpus from '../../content/recordings/trick-jev/claude-opus-5-5.json'
+import trickJevSonnet from '../../content/recordings/trick-jev/claude-sonnet-5-5.json'
+import trickJevJev from '../../content/recordings/trick-jev/jev.json'
+import routerTicketHaiku from '../../content/recordings/router-ticket/claude-haiku-4-5-20251001.json'
+import routerTicketOpus from '../../content/recordings/router-ticket/claude-opus-5-5.json'
+import routerTicketSonnet from '../../content/recordings/router-ticket/claude-sonnet-5-5.json'
+import routerTicketJev from '../../content/recordings/router-ticket/jev.json'
+import routerSumHaiku from '../../content/recordings/router-sum/claude-haiku-4-5-20251001.json'
+import routerSumOpus from '../../content/recordings/router-sum/claude-opus-5-5.json'
+import routerSumSonnet from '../../content/recordings/router-sum/claude-sonnet-5-5.json'
+import routerSumJev from '../../content/recordings/router-sum/jev.json'
+import routerPoemHaiku from '../../content/recordings/router-poem/claude-haiku-4-5-20251001.json'
+import routerPoemOpus from '../../content/recordings/router-poem/claude-opus-5-5.json'
+import routerPoemSonnet from '../../content/recordings/router-poem/claude-sonnet-5-5.json'
+import routerPoemJev from '../../content/recordings/router-poem/jev.json'
+import routerPhishHaiku from '../../content/recordings/router-phish/claude-haiku-4-5-20251001.json'
+import routerPhishOpus from '../../content/recordings/router-phish/claude-opus-5-5.json'
+import routerPhishSonnet from '../../content/recordings/router-phish/claude-sonnet-5-5.json'
+import routerPhishJev from '../../content/recordings/router-phish/jev.json'
+import routerDatesHaiku from '../../content/recordings/router-dates/claude-haiku-4-5-20251001.json'
+import routerDatesOpus from '../../content/recordings/router-dates/claude-opus-5-5.json'
+import routerDatesSonnet from '../../content/recordings/router-dates/claude-sonnet-5-5.json'
+import routerDatesJev from '../../content/recordings/router-dates/jev.json'
+import routerSummaryHaiku from '../../content/recordings/router-summary/claude-haiku-4-5-20251001.json'
+import routerSummaryOpus from '../../content/recordings/router-summary/claude-opus-5-5.json'
+import routerSummarySonnet from '../../content/recordings/router-summary/claude-sonnet-5-5.json'
+import routerSummaryJev from '../../content/recordings/router-summary/jev.json'
 import { recordingSchema, type Recording } from './recording-schema'
 import { taskHash } from './task-hash'
 import { getTask } from './tasks'
@@ -63,7 +103,47 @@ const RAW_RECORDINGS: unknown[] = [
 	writeMeAPoemHaiku,
 	writeMeAPoemOpus,
 	writeMeAPoemSonnet,
-	writeMeAPoemJev
+	writeMeAPoemJev,
+	reviewBroadHaiku,
+	reviewBroadOpus,
+	reviewBroadSonnet,
+	reviewBroadJev,
+	reviewPartsHaiku,
+	reviewPartsOpus,
+	reviewPartsSonnet,
+	reviewPartsJev,
+	phishSignalsHaiku,
+	phishSignalsOpus,
+	phishSignalsSonnet,
+	phishSignalsJev,
+	trickJevHaiku,
+	trickJevOpus,
+	trickJevSonnet,
+	trickJevJev,
+	routerTicketHaiku,
+	routerTicketOpus,
+	routerTicketSonnet,
+	routerTicketJev,
+	routerSumHaiku,
+	routerSumOpus,
+	routerSumSonnet,
+	routerSumJev,
+	routerPoemHaiku,
+	routerPoemOpus,
+	routerPoemSonnet,
+	routerPoemJev,
+	routerPhishHaiku,
+	routerPhishOpus,
+	routerPhishSonnet,
+	routerPhishJev,
+	routerDatesHaiku,
+	routerDatesOpus,
+	routerDatesSonnet,
+	routerDatesJev,
+	routerSummaryHaiku,
+	routerSummaryOpus,
+	routerSummarySonnet,
+	routerSummaryJev
 ]
 
 export const RECORDINGS: Recording[] = RAW_RECORDINGS.map((raw) => recordingSchema.parse(raw))

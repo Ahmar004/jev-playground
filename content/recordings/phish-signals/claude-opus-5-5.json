@@ -1,0 +1,101 @@
+{
+	"taskId": "phish-signals",
+	"taskHash": "0d52fbe3dafcdab3b9e10a550a94990c5a6a1180ec86310e4438054386097d36",
+	"racer": "llm",
+	"modelId": "claude-opus-5-5",
+	"recordedAt": "2026-10-02T03:36:08.833Z",
+	"price": {
+		"inputPerM": 4,
+		"outputPerM": 20,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "e1",
+			"ok": true,
+			"raw": "{\"answer\": {\"urgent\": true, \"credentials\": true, \"payment\": false, \"link\": true, \"threat\": true, \"impersonation\": true, \"generic\": true, \"mismatch\": true, \"errors\": false, \"too_good\": false}}",
+			"parsed": {
+				"urgent": true,
+				"credentials": true,
+				"payment": false,
+				"link": true,
+				"threat": true,
+				"impersonation": true,
+				"generic": true,
+				"mismatch": true,
+				"errors": false,
+				"too_good": false
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 2501.5125000000007,
+			"usage": { "inputTokens": 497, "outputTokens": 75 },
+			"costUsd": 0.003488,
+			"lane": 0,
+			"startMs": 0.006800000002840534,
+			"endMs": 2501.8723000000027
+		},
+		{
+			"itemId": "e2",
+			"ok": true,
+			"raw": "{\"answer\": {\"urgent\": true, \"credentials\": false, \"payment\": true, \"link\": true, \"threat\": false, \"impersonation\": false, \"generic\": true, \"mismatch\": false, \"errors\": true, \"too_good\": true}}",
+			"parsed": {
+				"urgent": true,
+				"credentials": false,
+				"payment": true,
+				"link": true,
+				"threat": false,
+				"impersonation": false,
+				"generic": true,
+				"mismatch": false,
+				"errors": true,
+				"too_good": true
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 4671.649000000001,
+			"usage": { "inputTokens": 505, "outputTokens": 210 },
+			"costUsd": 0.00622,
+			"lane": 1,
+			"startMs": 0.30120000000169966,
+			"endMs": 4672.2667
+		},
+		{
+			"itemId": "e3",
+			"ok": true,
+			"raw": "{\"answer\": {\"urgent\": false, \"credentials\": false, \"payment\": false, \"link\": false, \"threat\": false, \"impersonation\": true, \"generic\": false, \"mismatch\": false, \"errors\": false, \"too_good\": false}}",
+			"parsed": {
+				"urgent": false,
+				"credentials": false,
+				"payment": false,
+				"link": false,
+				"threat": false,
+				"impersonation": true,
+				"generic": false,
+				"mismatch": false,
+				"errors": false,
+				"too_good": false
+			},
+			"credit": 0.9,
+			"correct": false,
+			"latencyMs": 3241.1575999999986,
+			"usage": { "inputTokens": 503, "outputTokens": 183 },
+			"costUsd": 0.005672,
+			"lane": 2,
+			"startMs": 0.480200000001787,
+			"endMs": 3241.9613000000027
+		}
+	],
+	"totals": {
+		"items": 3,
+		"scored": 3,
+		"correct": 2,
+		"accuracy": 0.9666666666666667,
+		"wallMs": 4672.259899999997,
+		"costUsd": 0.01538,
+		"inputTokens": 1505,
+		"outputTokens": 468,
+		"parseFailures": 0
+	}
+}

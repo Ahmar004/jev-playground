@@ -48,9 +48,9 @@ test.describe('flow 1: first level, prediction, check, XP and badge', () => {
 
 	test('play level 1 through to Level complete', async ({ page }) => {
 		await signIn(page, email)
-		await expect(page.getByText('0 of 4 levels done')).toBeVisible()
+		await expect(page.getByText('0 of 8 levels done')).toBeVisible()
 		await expect(headerBar(page)).toHaveAttribute('aria-valuenow', '0')
-		await expect(page.getByRole('banner').getByRole('link', { name: /0\/4/ })).toBeVisible()
+		await expect(page.getByRole('banner').getByRole('link', { name: /0\/8/ })).toBeVisible()
 
 		await page.getByRole('link', { name: 'Play level 1: Speed Race' }).click()
 		await expect(page).toHaveURL(LEVEL_URL)
@@ -91,7 +91,7 @@ test.describe('flow 1: first level, prediction, check, XP and badge', () => {
 		await expect(page.getByText('+100 XP', { exact: true })).toBeVisible()
 		await expect(page.getByText('Badge earned: First Race', { exact: true })).toBeVisible()
 		await expect(headerBar(page)).toHaveAttribute('aria-valuenow', '1')
-		await expect(page.getByRole('banner').getByRole('link', { name: /1\/4/ })).toBeVisible()
+		await expect(page.getByRole('banner').getByRole('link', { name: /1\/8/ })).toBeVisible()
 
 		await page.getByRole('button', { name: 'Back to Path' }).click()
 		await expect(page).toHaveURL('/path')
@@ -104,12 +104,12 @@ test.describe('flow 1: first level, prediction, check, XP and badge', () => {
 		await expect(page).toHaveURL('/path')
 		await expect(page.getByText('Done', { exact: true })).toBeVisible()
 		// Level 1 is done, so only the three unplayed levels still offer Skip.
-		await expect(page.getByRole('button', { name: 'Skip' })).toHaveCount(3)
+		await expect(page.getByRole('button', { name: 'Skip' })).toHaveCount(7)
 	})
 
 	test('Home shows 145 XP and the First Race badge', async ({ page }) => {
 		await signIn(page, email)
-		await expect(page.getByText('1 of 4 levels done')).toBeVisible()
+		await expect(page.getByText('1 of 8 levels done')).toBeVisible()
 		await expect(page.getByText('145 XP')).toBeVisible()
 		await expect(
 			page.getByRole('list', { name: 'Badges earned' }).getByText('First Race')

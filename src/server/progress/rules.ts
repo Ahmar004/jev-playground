@@ -2,6 +2,7 @@ import type { Level } from '@/content/level-schema'
 import {
 	BADGES,
 	FIRST_LEVEL_ID,
+	PHISH_LEVEL_ID,
 	LEVEL_COUNT,
 	LEVEL_STATUS,
 	ORACLE_PREDICTIONS,
@@ -32,9 +33,10 @@ export function isLevelComplete(input: {
 	)
 }
 
-// Badges later slices award (right_tool, phish_spotter, ...) join this table in their slice.
+// Badges later slices award (right_tool, trickster, ...) join this table in their slice.
 const BADGE_RULES: { id: BadgeId; earned: (stats: BadgeStats) => boolean }[] = [
 	{ id: BADGES.firstRace, earned: (stats) => stats.doneLevelIds.has(FIRST_LEVEL_ID) },
+	{ id: BADGES.phishSpotter, earned: (stats) => stats.doneLevelIds.has(PHISH_LEVEL_ID) },
 	{ id: BADGES.pathfinder, earned: (stats) => stats.doneLevelIds.size >= LEVEL_COUNT },
 	{ id: BADGES.oracle, earned: (stats) => stats.correctPredictions >= ORACLE_PREDICTIONS }
 ]

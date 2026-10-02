@@ -7,14 +7,16 @@ import { ITEM_OUTCOMES, type ItemOutcome } from '@/lib/constants'
 import type { RaceRecording } from '@/runner/combine'
 import type { ItemResult } from '@/runner/types'
 
-const OUTCOME_COPY: Record<ItemOutcome, { text: string; tone: string; Icon: typeof SuccessIcon }> =
-	{
-		[ITEM_OUTCOMES.right]: { text: 'Right', tone: 'text-success', Icon: SuccessIcon },
-		[ITEM_OUTCOMES.wrong]: { text: 'Wrong', tone: 'text-danger', Icon: WrongIcon },
-		[ITEM_OUTCOMES.unparsed]: { text: "Couldn't parse", tone: 'text-warning', Icon: AlertIcon },
-		[ITEM_OUTCOMES.failed]: { text: 'Call failed', tone: 'text-warning', Icon: AlertIcon },
-		[ITEM_OUTCOMES.unscored]: { text: 'Not scored', tone: 'text-text-muted', Icon: InfoIcon }
-	}
+export const OUTCOME_COPY: Record<
+	ItemOutcome,
+	{ text: string; tone: string; Icon: typeof SuccessIcon }
+> = {
+	[ITEM_OUTCOMES.right]: { text: 'Right', tone: 'text-success', Icon: SuccessIcon },
+	[ITEM_OUTCOMES.wrong]: { text: 'Wrong', tone: 'text-danger', Icon: WrongIcon },
+	[ITEM_OUTCOMES.unparsed]: { text: "Couldn't parse", tone: 'text-warning', Icon: AlertIcon },
+	[ITEM_OUTCOMES.failed]: { text: 'Call failed', tone: 'text-warning', Icon: AlertIcon },
+	[ITEM_OUTCOMES.unscored]: { text: 'Not scored', tone: 'text-text-muted', Icon: InfoIcon }
+}
 
 function ResultCell({
 	recording,

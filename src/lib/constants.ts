@@ -77,7 +77,7 @@ export const RUN_EVENTS = {
 } as const
 
 // Code racer functions: item state in, answer out.
-export const CODE_FN_IDS = { compareDates: 'compare_dates' } as const
+export const CODE_FN_IDS = { compareDates: 'compare_dates', sumNumbers: 'sum_numbers' } as const
 export type CodeFnId = (typeof CODE_FN_IDS)[keyof typeof CODE_FN_IDS]
 
 // combine functions: Jev's answers in, answer out (DESIGN 3.2).
@@ -136,8 +136,14 @@ export const PREDICTION_METRICS = {
 } as const
 export type PredictionMetric = (typeof PREDICTION_METRICS)[keyof typeof PREDICTION_METRICS]
 
-// A level-specific widget, beside the shared loop (DESIGN 7). Level 4 only.
-export const LEVEL_WIDGETS = { calibration: 'calibration' } as const
+// A level-specific widget, beside the shared loop (DESIGN 7).
+export const LEVEL_WIDGETS = {
+	calibration: 'calibration',
+	weights: 'weights',
+	router: 'router',
+	signals: 'signals',
+	tricks: 'tricks'
+} as const
 export type LevelWidget = (typeof LEVEL_WIDGETS)[keyof typeof LEVEL_WIDGETS]
 
 // How Reveal marks one prediction (R25). unknown: a number needed is missing.
@@ -165,6 +171,9 @@ export const LEVEL_COUNT = 8
 
 // Level 1 is the one the first_race badge is for.
 export const FIRST_LEVEL_ID = 'speed-race'
+
+// Level 7 is the one the phish_spotter badge is for.
+export const PHISH_LEVEL_ID = 'spot-the-phish'
 
 // Correct level predictions that earn the oracle badge.
 export const ORACLE_PREDICTIONS = 5

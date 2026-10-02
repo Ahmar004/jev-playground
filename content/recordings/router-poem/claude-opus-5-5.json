@@ -1,0 +1,40 @@
+{
+	"taskId": "router-poem",
+	"taskHash": "20a996cb663d88e1f15f5032491788d0c5ccce3e3f62d839da83d5570b64c74b",
+	"racer": "llm",
+	"modelId": "claude-opus-5-5",
+	"recordedAt": "2026-10-02T03:36:40.374Z",
+	"price": {
+		"inputPerM": 4,
+		"outputPerM": 20,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "c1",
+			"ok": true,
+			"raw": "{\"answer\": \"Upon the cliff where restless waters roam,\\nA tower burns to guide the sailors home;\\nIts patient beam sweeps through the starless deep,\\nA steadfast watch while weary harbors sleep.\"}",
+			"parsed": "Upon the cliff where restless waters roam,\nA tower burns to guide the sailors home;\nIts patient beam sweeps through the starless deep,\nA steadfast watch while weary harbors sleep.",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 2852.7062000000005,
+			"usage": { "inputTokens": 84, "outputTokens": 78 },
+			"costUsd": 0.001896,
+			"lane": 0,
+			"startMs": 0.0051000000021304,
+			"endMs": 2853.046199999997
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 1,
+		"correct": 1,
+		"accuracy": 1,
+		"wallMs": 2853.041099999995,
+		"costUsd": 0.001896,
+		"inputTokens": 84,
+		"outputTokens": 78,
+		"parseFailures": 0
+	}
+}

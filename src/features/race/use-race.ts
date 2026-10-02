@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { Recording } from '@/content/recording-schema'
 import type { Task } from '@/content/task-schema'
 import { RACE_STATUS, type Racer, type RaceStatus } from '@/lib/constants'
+import type { CombineArgs } from '@/runner/code/combine-fns'
 import { createCombineTap } from '@/runner/combine'
 import { replaySource, type ReplayHandle } from '@/runner/replay'
 import { initialRaceState, raceRacers, raceReducer, type RaceState } from './race-state'
@@ -39,7 +40,16 @@ function stopRun(run: ActiveRun | null): void {
  * Plays a race from Recordings at their recorded speed (DESIGN 3.3, R7).
  * skip() jumps to the recorded totals. Slice 8 adds the live source.
  */
-export function useRace({ task, entries }: { task: Task; entries: RaceEntry[] }): RaceControls {
+export function useRace({
+	task,
+	entries,
+	combineArgs
+}: {
+	task: Task
+	entries: RaceEntry[]
+	// Level 5's slider weights, read when the race starts.
+	combineArgs?: CombineArgs
+}): RaceControls {
 	const racers = raceRacers(
 		task,
 		entries.map((entry) => entry.racer)
@@ -67,8 +77,10 @@ export function useRace({ task, entries }: { task: Task; entries: RaceEntry[] })
 		setElapsedMs(0)
 		setStatus(RACE_STATUS.running)
 		// One tap per run: it accumulates Jev + Code results for their totals.
-		const onEvent = createCombineTap(task, (event) =>
-			setPerRacer((state) => raceReducer(state, event))
+		const onEvent = createCombineTap(
+			task,
+			(event) => setPerRacer((state) => raceReducer(state, event)),
+			combineArgs
 		)
 		const handles = entries.map(({ recording }) =>
 			replaySource(recording, { onEvent, signal: controller.signal })

@@ -9,7 +9,7 @@ export type CombineArgs = { weights?: Record<string, number> }
 /** The combined answer in the LLM format, plus any numbers a view shows (level 5's composite). */
 export type CombineOutput = { answer: LlmAnswer; detail?: Record<string, number> }
 
-const DEFAULT_WEIGHT = 1
+export const DEFAULT_WEIGHT = 1
 const DATE_SIDES = { first: 'first', second: 'second' } as const
 type DateSide = (typeof DATE_SIDES)[keyof typeof DATE_SIDES]
 

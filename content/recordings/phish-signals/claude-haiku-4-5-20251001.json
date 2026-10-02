@@ -1,0 +1,101 @@
+{
+	"taskId": "phish-signals",
+	"taskHash": "0d52fbe3dafcdab3b9e10a550a94990c5a6a1180ec86310e4438054386097d36",
+	"racer": "llm",
+	"modelId": "claude-haiku-4-5-20251001",
+	"recordedAt": "2026-10-02T03:36:04.889Z",
+	"price": {
+		"inputPerM": 1,
+		"outputPerM": 5,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "e1",
+			"ok": true,
+			"raw": "```json\n{\"answer\": {\"urgent\": true, \"credentials\": true, \"payment\": false, \"link\": true, \"threat\": true, \"impersonation\": true, \"generic\": true, \"mismatch\": true, \"errors\": false, \"too_good\": false}}\n```",
+			"parsed": {
+				"urgent": true,
+				"credentials": true,
+				"payment": false,
+				"link": true,
+				"threat": true,
+				"impersonation": true,
+				"generic": true,
+				"mismatch": true,
+				"errors": false,
+				"too_good": false
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1024.321,
+			"usage": { "inputTokens": 377, "outputTokens": 67 },
+			"costUsd": 0.000712,
+			"lane": 0,
+			"startMs": 0.009000000001833541,
+			"endMs": 1024.6554000000033
+		},
+		{
+			"itemId": "e2",
+			"ok": true,
+			"raw": "```json\n{\"answer\": {\"urgent\": true, \"credentials\": false, \"payment\": true, \"link\": true, \"threat\": false, \"impersonation\": true, \"generic\": true, \"mismatch\": true, \"errors\": true, \"too_good\": true}}\n```",
+			"parsed": {
+				"urgent": true,
+				"credentials": false,
+				"payment": true,
+				"link": true,
+				"threat": false,
+				"impersonation": true,
+				"generic": true,
+				"mismatch": true,
+				"errors": true,
+				"too_good": true
+			},
+			"credit": 0.8,
+			"correct": false,
+			"latencyMs": 927.4925000000003,
+			"usage": { "inputTokens": 388, "outputTokens": 67 },
+			"costUsd": 0.000723,
+			"lane": 1,
+			"startMs": 0.2555000000029395,
+			"endMs": 928.1635000000024
+		},
+		{
+			"itemId": "e3",
+			"ok": true,
+			"raw": "```json\n{\"answer\": {\"urgent\": false, \"credentials\": false, \"payment\": false, \"link\": false, \"threat\": false, \"impersonation\": false, \"generic\": false, \"mismatch\": false, \"errors\": false, \"too_good\": false}}\n```",
+			"parsed": {
+				"urgent": false,
+				"credentials": false,
+				"payment": false,
+				"link": false,
+				"threat": false,
+				"impersonation": false,
+				"generic": false,
+				"mismatch": false,
+				"errors": false,
+				"too_good": false
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1183.0371000000014,
+			"usage": { "inputTokens": 377, "outputTokens": 67 },
+			"costUsd": 0.000712,
+			"lane": 2,
+			"startMs": 0.3915000000015425,
+			"endMs": 1183.7300000000032
+		}
+	],
+	"totals": {
+		"items": 3,
+		"scored": 3,
+		"correct": 2,
+		"accuracy": 0.9333333333333332,
+		"wallMs": 1183.7210000000014,
+		"costUsd": 0.002147,
+		"inputTokens": 1142,
+		"outputTokens": 201,
+		"parseFailures": 0
+	}
+}

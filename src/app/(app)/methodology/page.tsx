@@ -164,6 +164,14 @@ export default function MethodologyPage() {
 					account, not the model. When content changes, it is recorded again and old recordings stop
 					showing.
 				</p>
+				<p className={BODY}>
+					Level 8 (Trick Jev) was rewritten once. The first set of six tricks did not fool Jev at
+					all: it answered all 12 messages correctly, as did Haiku 4.5 and Opus 5.5, and Sonnet 5.5
+					had two replies that did not parse. We then wrote new tricks aimed at documented
+					weaknesses (wording that points at someone else, a planted instruction, a question about
+					cancelling rather than a request) and recorded that set once. Only the second set is shown
+					in the level.
+				</p>
 			</section>
 
 			<section className={SECTION}>

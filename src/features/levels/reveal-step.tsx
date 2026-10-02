@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { ExternalLinkIcon } from '@/components/ui/icons'
 import type { Level } from '@/content/level-schema'
 import type { Recording } from '@/content/recording-schema'
+import type { CombineArgs } from '@/runner/code/combine-fns'
 import { jevCodeRecording, type RaceRecording } from '@/runner/combine'
 import { racerName } from '@/features/race/racer-names'
 import { Scoreboard } from '@/features/race/scoreboard'
@@ -20,14 +21,18 @@ import { useCelebration } from './use-celebration'
 const SECTION_TITLE = 'text-text text-xl font-bold'
 
 // The recordings one race shows: Jev, then Jev + Code on a combine task, then the opponent and the rest.
-function stageRecordings(stage: LevelStage, opponentId: string): RaceRecording[] {
+function stageRecordings(
+	stage: LevelStage,
+	opponentId: string,
+	args?: CombineArgs
+): RaceRecording[] {
 	const { jev, task } = stage
 	if (!jev) return []
 	const opponent = stage.opponents.find((recording) => recording.modelId === opponentId)
 	const others = stage.opponents.filter((recording) => recording !== opponent)
 	return [
 		jev,
-		...(task.combine ? [jevCodeRecording(task, jev)] : []),
+		...(task.combine ? [jevCodeRecording(task, jev, args)] : []),
 		...(opponent ? [opponent] : []),
 		...others
 	]
@@ -48,6 +53,8 @@ export function RevealStep({
 	onReveal,
 	onCheck,
 	onRaceAgain,
+	combineArgs,
+	showStages = true,
 	children
 }: {
 	level: Level
@@ -64,6 +71,9 @@ export function RevealStep({
 	onReveal: (opponentModelId: string) => void
 	onCheck: () => void
 	onRaceAgain: () => void
+	combineArgs?: CombineArgs
+	// Level 6 shows its own per-card table instead of one scoreboard per card.
+	showStages?: boolean
 	children?: React.ReactNode
 }) {
 	const recorded: Recording[] = stages
@@ -97,24 +107,25 @@ export function RevealStep({
 					Reveal.
 				</p>
 			)}
-			{stages.map((stage) => {
-				const recordings = stageRecordings(stage, opponentId)
-				return (
-					<div key={stage.task.id} className="flex flex-col gap-4">
-						{stages.length > 1 && <h3 className={SECTION_TITLE}>{stage.title}</h3>}
-						<Scoreboard
-							caption={`Every recorded model on the same ${stage.task.items.length} items`}
-							rows={recordings.map((recording) => ({
-								racer: recording.racer,
-								modelId: recording.modelId,
-								recordedAt: recording.recordedAt,
-								totals: recording.totals
-							}))}
-						/>
-						<ItemResults task={stage.task} recordings={recordings} />
-					</div>
-				)
-			})}
+			{showStages &&
+				stages.map((stage) => {
+					const recordings = stageRecordings(stage, opponentId, combineArgs)
+					return (
+						<div key={stage.task.id} className="flex flex-col gap-4">
+							{stages.length > 1 && <h3 className={SECTION_TITLE}>{stage.title}</h3>}
+							<Scoreboard
+								caption={`Every recorded model on the same ${stage.task.items.length} items`}
+								rows={recordings.map((recording) => ({
+									racer: recording.racer,
+									modelId: recording.modelId,
+									recordedAt: recording.recordedAt,
+									totals: recording.totals
+								}))}
+							/>
+							<ItemResults task={stage.task} recordings={recordings} />
+						</div>
+					)
+				})}
 			{children}
 			<div className="flex flex-col gap-2">
 				<h3 className={SECTION_TITLE}>Why</h3>

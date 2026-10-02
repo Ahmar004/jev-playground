@@ -1,0 +1,22 @@
+{
+	"id": "router-summary",
+	"kind": "generate",
+	"version": 1,
+	"jev": {
+		"raw": {
+			"summary": {
+				"type": "text",
+				"instructions": "Summarize the text in the state in one sentence."
+			}
+		}
+	},
+	"llm": {
+		"instructions": "Summarize the text in the state in one sentence."
+	},
+	"items": [
+		{
+			"id": "c1",
+			"state": "The town council voted on Tuesday to extend the library's opening hours to 9pm on weekdays. The change follows a survey in which most residents said they could not visit before work ended. The extra hours will be paid for by moving part of the budget for printed newspapers to staffing."
+		}
+	]
+}

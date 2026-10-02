@@ -1,0 +1,30 @@
+{
+	"id": "router-sum",
+	"kind": "choice",
+	"version": 1,
+	"code": "sum_numbers",
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "choice",
+				"instructions": "What is a plus b?",
+				"criteria": {
+					"7773": null,
+					"7673": null,
+					"7783": null,
+					"8773": null
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "c1",
+			"state": {
+				"a": 4817,
+				"b": 2956
+			},
+			"label": "7773"
+		}
+	]
+}

@@ -1,0 +1,142 @@
+{
+	"taskId": "review-parts",
+	"taskHash": "0b87434e72fb994531b71e07397ab64cbecda99530b97076c559d8d983dd0d5d",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-02T03:35:57.003Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "r1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"specific\":{\"type\":\"noul\",\"noul\":0.98},\"reasons\":{\"type\":\"noul\",\"noul\":0.9},\"balanced\":{\"type\":\"noul\",\"noul\":0.99},\"civil\":{\"type\":\"noul\",\"noul\":0.91},\"honest\":{\"type\":\"noul\",\"noul\":0.98}},\"usage\":{\"input_tokens\":408,\"output_tokens\":86}}",
+			"parsed": {
+				"specific": { "type": "noul", "noul": 0.98 },
+				"reasons": { "type": "noul", "noul": 0.9 },
+				"balanced": { "type": "noul", "noul": 0.99 },
+				"civil": { "type": "noul", "noul": 0.91 },
+				"honest": { "type": "noul", "noul": 0.98 }
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 566.8282999999992,
+			"usage": { "inputTokens": 408, "outputTokens": 86 },
+			"costUsd": 0.000017136000000000003,
+			"lane": 0,
+			"startMs": 0.03839999999945576,
+			"endMs": 567.0226000000002
+		},
+		{
+			"itemId": "r2",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"specific\":{\"type\":\"noul\",\"noul\":0.03},\"reasons\":{\"type\":\"noul\",\"noul\":0.04},\"balanced\":{\"type\":\"noul\",\"noul\":0.01},\"civil\":{\"type\":\"noul\",\"noul\":0.74},\"honest\":{\"type\":\"noul\",\"noul\":0.91}},\"usage\":{\"input_tokens\":371,\"output_tokens\":86}}",
+			"parsed": {
+				"specific": { "type": "noul", "noul": 0.03 },
+				"reasons": { "type": "noul", "noul": 0.04 },
+				"balanced": { "type": "noul", "noul": 0.01 },
+				"civil": { "type": "noul", "noul": 0.74 },
+				"honest": { "type": "noul", "noul": 0.91 }
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 594.0830000000005,
+			"usage": { "inputTokens": 371, "outputTokens": 86 },
+			"costUsd": 0.000015582,
+			"lane": 1,
+			"startMs": 0.4138999999995576,
+			"endMs": 594.6213000000007
+		},
+		{
+			"itemId": "r3",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"specific\":{\"type\":\"noul\",\"noul\":0.98},\"reasons\":{\"type\":\"noul\",\"noul\":0.83},\"balanced\":{\"type\":\"noul\",\"noul\":0.98},\"civil\":{\"type\":\"noul\",\"noul\":0.9},\"honest\":{\"type\":\"noul\",\"noul\":0.97}},\"usage\":{\"input_tokens\":405,\"output_tokens\":86}}",
+			"parsed": {
+				"specific": { "type": "noul", "noul": 0.98 },
+				"reasons": { "type": "noul", "noul": 0.83 },
+				"balanced": { "type": "noul", "noul": 0.98 },
+				"civil": { "type": "noul", "noul": 0.9 },
+				"honest": { "type": "noul", "noul": 0.97 }
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 1010.0288999999993,
+			"usage": { "inputTokens": 405, "outputTokens": 86 },
+			"costUsd": 0.00001701,
+			"lane": 2,
+			"startMs": 0.5563000000001921,
+			"endMs": 1010.7250000000004
+		},
+		{
+			"itemId": "r4",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"specific\":{\"type\":\"noul\",\"noul\":0.06},\"reasons\":{\"type\":\"noul\",\"noul\":0.06},\"balanced\":{\"type\":\"noul\",\"noul\":0.03},\"civil\":{\"type\":\"noul\",\"noul\":0.08},\"honest\":{\"type\":\"noul\",\"noul\":0.02}},\"usage\":{\"input_tokens\":388,\"output_tokens\":86}}",
+			"parsed": {
+				"specific": { "type": "noul", "noul": 0.06 },
+				"reasons": { "type": "noul", "noul": 0.06 },
+				"balanced": { "type": "noul", "noul": 0.03 },
+				"civil": { "type": "noul", "noul": 0.08 },
+				"honest": { "type": "noul", "noul": 0.02 }
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 411.07750000000124,
+			"usage": { "inputTokens": 388, "outputTokens": 86 },
+			"costUsd": 0.000016295999999999998,
+			"lane": 3,
+			"startMs": 0.6977000000006228,
+			"endMs": 411.9825000000001
+		},
+		{
+			"itemId": "r5",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"specific\":{\"type\":\"noul\",\"noul\":0.02},\"reasons\":{\"type\":\"noul\",\"noul\":0.08},\"balanced\":{\"type\":\"noul\",\"noul\":0.01},\"civil\":{\"type\":\"noul\",\"noul\":0.01},\"honest\":{\"type\":\"noul\",\"noul\":0.93}},\"usage\":{\"input_tokens\":380,\"output_tokens\":86}}",
+			"parsed": {
+				"specific": { "type": "noul", "noul": 0.02 },
+				"reasons": { "type": "noul", "noul": 0.08 },
+				"balanced": { "type": "noul", "noul": 0.01 },
+				"civil": { "type": "noul", "noul": 0.01 },
+				"honest": { "type": "noul", "noul": 0.93 }
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 389.0118000000002,
+			"usage": { "inputTokens": 380, "outputTokens": 86 },
+			"costUsd": 0.00001596,
+			"lane": 3,
+			"startMs": 412.02820000000065,
+			"endMs": 801.2302
+		},
+		{
+			"itemId": "r6",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"specific\":{\"type\":\"noul\",\"noul\":0.98},\"reasons\":{\"type\":\"noul\",\"noul\":0.81},\"balanced\":{\"type\":\"noul\",\"noul\":0.98},\"civil\":{\"type\":\"noul\",\"noul\":0.95},\"honest\":{\"type\":\"noul\",\"noul\":0.97}},\"usage\":{\"input_tokens\":408,\"output_tokens\":86}}",
+			"parsed": {
+				"specific": { "type": "noul", "noul": 0.98 },
+				"reasons": { "type": "noul", "noul": 0.81 },
+				"balanced": { "type": "noul", "noul": 0.98 },
+				"civil": { "type": "noul", "noul": 0.95 },
+				"honest": { "type": "noul", "noul": 0.97 }
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 339.64350000000013,
+			"usage": { "inputTokens": 408, "outputTokens": 86 },
+			"costUsd": 0.000017136000000000003,
+			"lane": 0,
+			"startMs": 567.0871999999999,
+			"endMs": 906.8464999999997
+		}
+	],
+	"totals": {
+		"items": 6,
+		"scored": 0,
+		"correct": 0,
+		"accuracy": null,
+		"wallMs": 1010.6866000000009,
+		"costUsd": 0.00009912000000000001,
+		"inputTokens": 2360,
+		"outputTokens": 516,
+		"parseFailures": 0
+	}
+}

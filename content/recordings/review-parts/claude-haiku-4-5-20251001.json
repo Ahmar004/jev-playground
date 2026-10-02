@@ -1,0 +1,110 @@
+{
+	"taskId": "review-parts",
+	"taskHash": "0b87434e72fb994531b71e07397ab64cbecda99530b97076c559d8d983dd0d5d",
+	"racer": "llm",
+	"modelId": "claude-haiku-4-5-20251001",
+	"recordedAt": "2026-10-02T03:35:58.026Z",
+	"price": {
+		"inputPerM": 1,
+		"outputPerM": 5,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "r1",
+			"ok": true,
+			"raw": "{\"answer\": true}",
+			"parsed": true,
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 709.9970000000012,
+			"usage": { "inputTokens": 137, "outputTokens": 8 },
+			"costUsd": 0.000177,
+			"lane": 0,
+			"startMs": 0.008899999998902786,
+			"endMs": 710.2615999999998
+		},
+		{
+			"itemId": "r2",
+			"ok": true,
+			"raw": "{\"answer\": false}",
+			"parsed": false,
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 651.0829999999987,
+			"usage": { "inputTokens": 99, "outputTokens": 8 },
+			"costUsd": 0.000139,
+			"lane": 1,
+			"startMs": 0.2341999999989639,
+			"endMs": 651.5383999999995
+		},
+		{
+			"itemId": "r3",
+			"ok": true,
+			"raw": "{\"answer\": true}",
+			"parsed": true,
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 747.4351000000006,
+			"usage": { "inputTokens": 135, "outputTokens": 8 },
+			"costUsd": 0.000175,
+			"lane": 2,
+			"startMs": 0.3433999999997468,
+			"endMs": 747.982399999999
+		},
+		{
+			"itemId": "r4",
+			"ok": true,
+			"raw": "```json\n{\"answer\": false}\n```",
+			"parsed": false,
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 736.4041000000016,
+			"usage": { "inputTokens": 114, "outputTokens": 13 },
+			"costUsd": 0.000179,
+			"lane": 3,
+			"startMs": 0.4444999999996071,
+			"endMs": 737.0709000000006
+		},
+		{
+			"itemId": "r5",
+			"ok": true,
+			"raw": "```json\n{\"answer\": false}\n```",
+			"parsed": false,
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 751.9925999999996,
+			"usage": { "inputTokens": 108, "outputTokens": 13 },
+			"costUsd": 0.000173,
+			"lane": 1,
+			"startMs": 651.5776999999998,
+			"endMs": 1403.7945999999993
+		},
+		{
+			"itemId": "r6",
+			"ok": true,
+			"raw": "{\"answer\": true}",
+			"parsed": true,
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 903.4403000000002,
+			"usage": { "inputTokens": 135, "outputTokens": 8 },
+			"costUsd": 0.000175,
+			"lane": 0,
+			"startMs": 710.3032999999996,
+			"endMs": 1614.0018
+		}
+	],
+	"totals": {
+		"items": 6,
+		"scored": 6,
+		"correct": 6,
+		"accuracy": 1,
+		"wallMs": 1613.992900000001,
+		"costUsd": 0.001018,
+		"inputTokens": 728,
+		"outputTokens": 58,
+		"parseFailures": 0
+	}
+}

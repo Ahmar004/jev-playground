@@ -464,3 +464,20 @@ Next: Step-6, slice 6 (levels 2-4). Carry in from slices 4 and 5: Jev + Code tot
 - Left open: the `useRace` test with a combining task (covered by `combine.test.ts` and the level 3 e2e instead), the manual local-review pass, and Rule-A/Rule-B relabel references in CLAUDE.md, spec, DESIGN and TECH-STACK (needs the user's OK).
 
 Next: Step-6, slice 7 (levels 5-8: Break It Down, Router, Spot the Phish, Trick Jev). Level 5 uses `weighted_composite` with user weights; level 6 needs dnd-kit plus tap buttons.
+
+## Step-6 - slice 7: Levels 5-8 (2026-10-02) - done
+
+- Skills: no writing-plans file and no subagents (Rule-A). Gates by hand: lint, typecheck, format:check, check:env, check:secrets, check:standards 24/24, test (432 Vitest plus node:test), check:rls, build, e2e 42/42. The manual `local-review` pass was not run as a separate step.
+- User decisions: Router shows a per-card result table (no race animation); Trick Jev asks the user to guess per pair whether Jev is fooled; all four levels in one session. The Router has 6 cards, not 8 (spec sets no count; DESIGN 7 updated).
+- Built:
+  - Level files `break-it-down`, `the-router`, `spot-the-phish`, `trick-jev`; 10 tasks; 40 recordings (Jev plus 3 Claude models). Spend this slice about $0.1; all recordings on disk well under the $20 credit.
+  - Weights: `weights/` (sliders; the composite comes from the runner's `combineResult` with `CombineArgs`). `combineArgs` threads through `useRace`, `RaceStage`, `PlayStep`, `RevealStep` and `jevCodeRecording`.
+  - Router: `router/` (dnd-kit core plus tap buttons, Code results from `codeRacer` in `useCodeResults`, results table). New Code function `sum_numbers`. The level schema gained `router` cards (`best` tool and `why` in content).
+  - Signals (`signals/`, Reveal) and Tricks (`tricks/`, Play picker and Reveal results). Widget state lives in `level-widgets.tsx` (`useWidgetState`, `PlayWidget`, `RevealWidget`); the calibration widget moved there too.
+  - `phish_spotter` badge (finish level 7). Methodology notes the level 8 rewrite.
+- Recorded results (real): level 5 broad question 6/6 for all four racers; level 6 Jev, Haiku right on the sum, Sonnet and Opus parse misses on it, Jev rejects both text-writing cards; level 7 Jev 90% (1 of 3 emails fully right), Claude models 93-97%; level 8 second set: Jev 11/12 (fooled once, on the "how many days to cancel" wording at 55%).
+- Honesty note (spec 12.4): level 8's first set did not fool Jev (12/12), so the items were rewritten once and recorded again; the old recordings were replaced. Methodology says so.
+- Left open: `right_tool` and `trickster` badges (BADGE_LABELS ties them to games and the Arena, so they wait for those slices); the manual local-review pass; the Rule-A/Rule-B relabel references in CLAUDE.md, spec, DESIGN and TECH-STACK (needs the user's OK); the Router's keyboard drag path is not e2e-tested (tap buttons are).
+- Older e2e (`progress.spec.ts`) now expects 8 built levels.
+
+Next: Step-6, slice 8 (Developer mode: KeysProvider, Keys panel, OpenRouter/OpenAI/Google providers, `/api/jev`, CSP, live source in `useRace`). Level 8's Developer mode (user writes the trick) and the price-unknown display land there.

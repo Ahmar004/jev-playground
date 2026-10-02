@@ -5,6 +5,16 @@ import fruitsDirect from '../../content/tasks/fruits-direct.json'
 import fruitsFixed from '../../content/tasks/fruits-fixed.json'
 import howSure from '../../content/tasks/how-sure.json'
 import writeMeAPoem from '../../content/tasks/write-me-a-poem.json'
+import reviewBroad from '../../content/tasks/review-broad.json'
+import reviewParts from '../../content/tasks/review-parts.json'
+import phishSignals from '../../content/tasks/phish-signals.json'
+import trickJev from '../../content/tasks/trick-jev.json'
+import routerTicket from '../../content/tasks/router-ticket.json'
+import routerSum from '../../content/tasks/router-sum.json'
+import routerPoem from '../../content/tasks/router-poem.json'
+import routerPhish from '../../content/tasks/router-phish.json'
+import routerDates from '../../content/tasks/router-dates.json'
+import routerSummary from '../../content/tasks/router-summary.json'
 import { taskSchema, type Task } from './task-schema'
 
 // Every file in content/tasks/ is imported here, so content renders at build
@@ -16,7 +26,17 @@ const RAW_TASKS: unknown[] = [
 	fruitsFixed,
 	datesDirect,
 	datesFixed,
-	howSure
+	howSure,
+	reviewBroad,
+	reviewParts,
+	phishSignals,
+	trickJev,
+	routerTicket,
+	routerSum,
+	routerPoem,
+	routerPhish,
+	routerDates,
+	routerSummary
 ]
 
 // Parsed at import, so a malformed file fails the build at prerender.

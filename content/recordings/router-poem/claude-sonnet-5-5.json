@@ -1,0 +1,40 @@
+{
+	"taskId": "router-poem",
+	"taskHash": "20a996cb663d88e1f15f5032491788d0c5ccce3e3f62d839da83d5570b64c74b",
+	"racer": "llm",
+	"modelId": "claude-sonnet-5-5",
+	"recordedAt": "2026-10-02T03:36:38.452Z",
+	"price": {
+		"inputPerM": 2,
+		"outputPerM": 10,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "c1",
+			"ok": true,
+			"raw": "{\"answer\": \"The lighthouse stands where dark waves roar,\\nIts golden beam sweeps shore to shore,\\nA steady guide through night and foam,\\nCalling lost sailors safely home.\"}",
+			"parsed": "The lighthouse stands where dark waves roar,\nIts golden beam sweeps shore to shore,\nA steady guide through night and foam,\nCalling lost sailors safely home.",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1918.4981000000043,
+			"usage": { "inputTokens": 84, "outputTokens": 70 },
+			"costUsd": 0.000868,
+			"lane": 0,
+			"startMs": 0.005099999994854443,
+			"endMs": 1918.8070000000007
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 1,
+		"correct": 1,
+		"accuracy": 1,
+		"wallMs": 1918.8019000000058,
+		"costUsd": 0.000868,
+		"inputTokens": 84,
+		"outputTokens": 70,
+		"parseFailures": 0
+	}
+}

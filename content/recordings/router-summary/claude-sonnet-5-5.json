@@ -1,0 +1,40 @@
+{
+	"taskId": "router-summary",
+	"taskHash": "adfb5eedaf73e83b4b198e9de1d537ca13fcda62bd21d471c7cc21cdffca9509",
+	"racer": "llm",
+	"modelId": "claude-sonnet-5-5",
+	"recordedAt": "2026-10-02T03:36:53.051Z",
+	"price": {
+		"inputPerM": 2,
+		"outputPerM": 10,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "c1",
+			"ok": true,
+			"raw": "{\"answer\": \"The town council voted to extend the library's weekday hours to 9pm after a survey showed most residents couldn't visit before work ended, funding the change by shifting part of the printed newspaper budget to staffing.\"}",
+			"parsed": "The town council voted to extend the library's weekday hours to 9pm after a survey showed most residents couldn't visit before work ended, funding the change by shifting part of the printed newspaper budget to staffing.",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1661.368100000007,
+			"usage": { "inputTokens": 159, "outputTokens": 74 },
+			"costUsd": 0.001058,
+			"lane": 0,
+			"startMs": 0.005099999994854443,
+			"endMs": 1661.6802000000025
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 1,
+		"correct": 1,
+		"accuracy": 1,
+		"wallMs": 1661.6751000000077,
+		"costUsd": 0.001058,
+		"inputTokens": 159,
+		"outputTokens": 74,
+		"parseFailures": 0
+	}
+}

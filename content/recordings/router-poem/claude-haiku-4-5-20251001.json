@@ -1,0 +1,40 @@
+{
+	"taskId": "router-poem",
+	"taskHash": "20a996cb663d88e1f15f5032491788d0c5ccce3e3f62d839da83d5570b64c74b",
+	"racer": "llm",
+	"modelId": "claude-haiku-4-5-20251001",
+	"recordedAt": "2026-10-02T03:36:37.243Z",
+	"price": {
+		"inputPerM": 1,
+		"outputPerM": 5,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "c1",
+			"ok": true,
+			"raw": "```json\n{\"answer\": \"A beacon shines through endless night,\\nIts golden beam, a steady light,\\nGuiding ships through dark and storm,\\nKeeping sailors safe and warm.\"}\n```",
+			"parsed": "A beacon shines through endless night,\nIts golden beam, a steady light,\nGuiding ships through dark and storm,\nKeeping sailors safe and warm.",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 1205.1405000000013,
+			"usage": { "inputTokens": 61, "outputTokens": 51 },
+			"costUsd": 0.000316,
+			"lane": 0,
+			"startMs": 0.005199999999604188,
+			"endMs": 1205.5281000000032
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 1,
+		"correct": 1,
+		"accuracy": 1,
+		"wallMs": 1205.5229000000036,
+		"costUsd": 0.000316,
+		"inputTokens": 61,
+		"outputTokens": 51,
+		"parseFailures": 0
+	}
+}

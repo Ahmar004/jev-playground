@@ -1,0 +1,37 @@
+{
+	"taskId": "router-poem",
+	"taskHash": "20a996cb663d88e1f15f5032491788d0c5ccce3e3f62d839da83d5570b64c74b",
+	"racer": "jev",
+	"modelId": "jev-latest",
+	"recordedAt": "2026-10-02T03:36:36.950Z",
+	"price": null,
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "c1",
+			"ok": false,
+			"raw": "{\"detail\":{\"error_type\":\"api_usage_error\",\"message\":\"Invalid request.\"}}",
+			"parsed": null,
+			"credit": null,
+			"correct": null,
+			"latencyMs": 290.8422999999966,
+			"usage": { "inputTokens": 0, "outputTokens": 0 },
+			"costUsd": 0,
+			"error": "malformed",
+			"lane": 0,
+			"startMs": 0.010699999998905696,
+			"endMs": 291.0830999999962
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 0,
+		"correct": 0,
+		"accuracy": null,
+		"wallMs": 291.0723999999973,
+		"costUsd": 0,
+		"inputTokens": 0,
+		"outputTokens": 0,
+		"parseFailures": 0
+	}
+}

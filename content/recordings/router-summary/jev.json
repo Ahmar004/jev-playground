@@ -1,0 +1,37 @@
+{
+	"taskId": "router-summary",
+	"taskHash": "adfb5eedaf73e83b4b198e9de1d537ca13fcda62bd21d471c7cc21cdffca9509",
+	"racer": "jev",
+	"modelId": "jev-latest",
+	"recordedAt": "2026-10-02T03:36:51.724Z",
+	"price": null,
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "c1",
+			"ok": false,
+			"raw": "{\"detail\":{\"error_type\":\"api_usage_error\",\"message\":\"Invalid request.\"}}",
+			"parsed": null,
+			"credit": null,
+			"correct": null,
+			"latencyMs": 315.9746000000014,
+			"usage": { "inputTokens": 0, "outputTokens": 0 },
+			"costUsd": 0,
+			"error": "malformed",
+			"lane": 0,
+			"startMs": 0.005299999997077975,
+			"endMs": 316.06499999999505
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 0,
+		"correct": 0,
+		"accuracy": null,
+		"wallMs": 316.059699999998,
+		"costUsd": 0,
+		"inputTokens": 0,
+		"outputTokens": 0,
+		"parseFailures": 0
+	}
+}

@@ -1,0 +1,43 @@
+{
+	"taskId": "router-dates",
+	"taskHash": "edd6b557b949d599422e59a313862a00c0657db4fbc43b54888de1c6aec5db97",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-02T03:36:47.713Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "c1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"second\",\"confidence\":1.0,\"probabilities\":{\"same\":0.0,\"second\":1.0,\"first\":0.0}}},\"usage\":{\"input_tokens\":371,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "second",
+					"probabilities": { "same": 0, "second": 1, "first": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 607.1152000000002,
+			"usage": { "inputTokens": 371, "outputTokens": 38 },
+			"costUsd": 0.000015582,
+			"lane": 0,
+			"startMs": 0.004899999999906868,
+			"endMs": 607.2469999999958
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 1,
+		"correct": 1,
+		"accuracy": 1,
+		"wallMs": 607.2420999999958,
+		"costUsd": 0.000015582,
+		"inputTokens": 371,
+		"outputTokens": 38,
+		"parseFailures": 0
+	}
+}

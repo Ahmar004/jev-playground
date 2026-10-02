@@ -101,12 +101,12 @@ export type RaceRecording = Omit<Recording, 'racer'> & { racer: Racer }
  * through the task's combine function, never stored on disk (DESIGN 3.2).
  * Reveal uses it for the numbers and the per-item answers.
  */
-export function jevCodeRecording(task: Task, jev: Recording): RaceRecording {
+export function jevCodeRecording(task: Task, jev: Recording, args?: CombineArgs): RaceRecording {
 	const itemsById = new Map(task.items.map((item) => [item.id, item]))
 	const events = jev.events.map((event) => {
 		const item = itemsById.get(event.itemId)
 		if (!item) return event
-		const result = combineResult(task, item, event)
+		const result = combineResult(task, item, event, args)
 		return {
 			...event,
 			...result,

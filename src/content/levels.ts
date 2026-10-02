@@ -2,12 +2,25 @@ import speedRace from '../../content/levels/speed-race.json'
 import writeMeAPoem from '../../content/levels/write-me-a-poem.json'
 import countAndDates from '../../content/levels/count-and-dates.json'
 import howSure from '../../content/levels/how-sure.json'
+import breakItDown from '../../content/levels/break-it-down.json'
+import theRouter from '../../content/levels/the-router.json'
+import spotThePhish from '../../content/levels/spot-the-phish.json'
+import trickJev from '../../content/levels/trick-jev.json'
 import { levelSchema, type CheckQuestion, type Level } from './level-schema'
 import { TASKS } from './tasks'
 
 // Every file in content/levels/ is imported here, so content renders at build
 // time (DESIGN 4.1). registry.test.ts fails when a file is missing.
-const RAW_LEVELS: unknown[] = [speedRace, writeMeAPoem, countAndDates, howSure]
+const RAW_LEVELS: unknown[] = [
+	speedRace,
+	writeMeAPoem,
+	countAndDates,
+	howSure,
+	breakItDown,
+	theRouter,
+	spotThePhish,
+	trickJev
+]
 
 /** Parses levels, checks ids, orders and task ids, and keys them by id in path order. */
 export function buildLevelMap(

@@ -1,0 +1,181 @@
+{
+	"id": "the-router",
+	"order": 6,
+	"title": "The Router",
+	"learn": {
+		"intro": "Real systems mix three tools. Jev gives fast, cheap judgments with typed answers. An LLM writes and reasons in free text. Plain code does exact rules and math. The skill is sending each job to the right one. Sort six task cards, then run them and see what each tool really did.",
+		"compare": [
+			{
+				"racer": "jev",
+				"title": "Jev",
+				"points": [
+					"Typed answers: choices, yes or no, scores",
+					"Fast and cheap at scale",
+					"Cannot write free text"
+				]
+			},
+			{
+				"racer": "llm",
+				"title": "An LLM",
+				"points": [
+					"Writes and summarizes in free text",
+					"Can reason, at a higher cost",
+					"Slower, and its format can slip"
+				]
+			},
+			{
+				"racer": "code",
+				"title": "Plain code",
+				"points": [
+					"Exact for rules, math and dates",
+					"Instant and free",
+					"Needs a rule written in advance"
+				]
+			}
+		]
+	},
+	"predict": {
+		"questions": [
+			{
+				"metric": "delivers",
+				"prompt": "Across all six jobs, who finishes more of them correctly?"
+			},
+			{
+				"metric": "fastest",
+				"prompt": "Who is faster?"
+			},
+			{
+				"metric": "cheapest",
+				"prompt": "Who costs less?"
+			}
+		]
+	},
+	"tasks": [
+		{
+			"id": "router-ticket",
+			"title": "Sort a support message"
+		},
+		{
+			"id": "router-sum",
+			"title": "Add two numbers"
+		},
+		{
+			"id": "router-poem",
+			"title": "Write a poem"
+		},
+		{
+			"id": "router-phish",
+			"title": "Spot a scam message"
+		},
+		{
+			"id": "router-dates",
+			"title": "Which date is first"
+		},
+		{
+			"id": "router-summary",
+			"title": "Summarize a paragraph"
+		}
+	],
+	"widget": "router",
+	"router": [
+		{
+			"taskId": "router-ticket",
+			"title": "Sort a support message",
+			"prompt": "Put one support message into billing, technical or account.",
+			"best": "jev",
+			"why": "A fast, cheap judgment with a fixed set of labels is exactly what Jev is for."
+		},
+		{
+			"taskId": "router-sum",
+			"title": "Add two numbers",
+			"prompt": "Work out 4817 plus 2956.",
+			"best": "code",
+			"why": "Arithmetic has one exact answer, so code does it instantly, for free and with no chance of a slip."
+		},
+		{
+			"taskId": "router-poem",
+			"title": "Write a poem",
+			"prompt": "Write four lines about a lighthouse at night.",
+			"best": "llm",
+			"why": "Writing new text is System Two work. Jev only returns typed answers."
+		},
+		{
+			"taskId": "router-phish",
+			"title": "Spot a scam message",
+			"prompt": "Decide whether a message is trying to get a password or a payment.",
+			"best": "jev",
+			"why": "A yes or no judgment on a message is quick and cheap for Jev, and it also gives a probability."
+		},
+		{
+			"taskId": "router-dates",
+			"title": "Which date is first",
+			"prompt": "Say which of two dates in the format year-month-day comes first.",
+			"best": "code",
+			"why": "Comparing dates that are already structured is a one-line rule. Code is exact and free."
+		},
+		{
+			"taskId": "router-summary",
+			"title": "Summarize a paragraph",
+			"prompt": "Write one sentence that sums up a short news item.",
+			"best": "llm",
+			"why": "Condensing text into new words needs generation, which is what an LLM does."
+		}
+	],
+	"reveal": {
+		"why": [
+			"No single tool wins every card. Jev took the quick judgments, code took the exact rules, and the LLM took the writing.",
+			"Where a tool cannot do a job, the table shows what really happened: Jev rejected the writing requests, and code has no rule for the open-ended ones.",
+			"Sorting well is the habit that keeps a system fast, cheap and right."
+		]
+	},
+	"docs": [
+		{
+			"path": "/patterns/intent-routing",
+			"title": "Intent routing"
+		}
+	],
+	"check": {
+		"questions": [
+			{
+				"id": "router-math",
+				"prompt": "Which tool should add up an invoice total?",
+				"options": [
+					{
+						"id": "code",
+						"text": "Plain code"
+					},
+					{
+						"id": "jev",
+						"text": "Jev"
+					},
+					{
+						"id": "llm",
+						"text": "An LLM"
+					}
+				],
+				"answerId": "code",
+				"explanation": "Sums have one exact answer. Code gets it every time, instantly and for free."
+			},
+			{
+				"id": "router-first",
+				"prompt": "What is a good first step in a mixed system?",
+				"options": [
+					{
+						"id": "route",
+						"text": "Send each job to the tool that fits it"
+					},
+					{
+						"id": "one",
+						"text": "Use one model for everything"
+					},
+					{
+						"id": "code",
+						"text": "Write everything as code"
+					}
+				],
+				"answerId": "route",
+				"explanation": "Fit each job to Jev, an LLM or code. One tool for everything is usually slower, dearer or less exact."
+			}
+		]
+	}
+}

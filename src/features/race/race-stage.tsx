@@ -3,6 +3,7 @@
 import type { Recording } from '@/content/recording-schema'
 import type { Task } from '@/content/task-schema'
 import { RACE_LANES, RACERS } from '@/lib/constants'
+import type { CombineArgs } from '@/runner/code/combine-fns'
 import { RaceView, type RaceTrackData } from './race-view'
 import { useRace } from './use-race'
 
@@ -13,16 +14,19 @@ import { useRace } from './use-race'
 export function RaceStage({
 	task,
 	jev,
-	opponent
+	opponent,
+	combineArgs
 }: {
 	task: Task
 	jev: Recording
 	opponent: Recording
+	combineArgs?: CombineArgs
 }) {
 	const recordings = [jev, opponent]
 	const race = useRace({
 		task,
-		entries: recordings.map((recording) => ({ racer: recording.racer, recording }))
+		entries: recordings.map((recording) => ({ racer: recording.racer, recording })),
+		combineArgs
 	})
 	// Jev + Code (a combine task) shows Jev's model and recording date.
 	const tracks: RaceTrackData[] = race.racers.flatMap((racer) => {

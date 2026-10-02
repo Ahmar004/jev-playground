@@ -1,0 +1,70 @@
+{
+	"id": "review-parts",
+	"kind": "noul",
+	"version": 1,
+	"combine": "weighted_composite",
+	"jev": {
+		"questions": {
+			"specific": {
+				"type": "noul",
+				"instructions": "Does the review mention specific details about the product, such as what it does or how it was used?"
+			},
+			"reasons": {
+				"type": "noul",
+				"instructions": "Does the review explain why the author likes or dislikes the product?"
+			},
+			"balanced": {
+				"type": "noul",
+				"instructions": "Does the review mention both good and bad points?"
+			},
+			"civil": {
+				"type": "noul",
+				"instructions": "Is the review written in a calm, respectful tone?"
+			},
+			"honest": {
+				"type": "noul",
+				"instructions": "Is the review free of advertising, spam and off-topic content?"
+			}
+		}
+	},
+	"llm": {
+		"type": "noul",
+		"instructions": "Would this review help someone decide whether to buy the product?",
+		"criteria": {
+			"true": "The review gives useful information for a buyer",
+			"false": "The review gives little or no useful information for a buyer"
+		}
+	},
+	"items": [
+		{
+			"id": "r1",
+			"state": "The battery lasts about six hours of music and the case adds three more charges. The fit is snug for running, but the touch controls trigger by accident when I adjust them. Sound is clear, the bass is a little light.",
+			"label": true
+		},
+		{
+			"id": "r2",
+			"state": "Great product!!! Love it. Five stars.",
+			"label": false
+		},
+		{
+			"id": "r3",
+			"state": "Our blender crushes ice in under ten seconds and the jar goes in the dishwasher. It is loud, so I do not use it before 8am. The lid took a few tries to seat properly.",
+			"label": true
+		},
+		{
+			"id": "r4",
+			"state": "Best deal ever! Visit cheapdeals-4u dot com for 70 percent off all electronics. Order now!!!",
+			"label": false
+		},
+		{
+			"id": "r5",
+			"state": "Total garbage. The worst company on earth. Never buying anything from these clowns again.",
+			"label": false
+		},
+		{
+			"id": "r6",
+			"state": "I bought this standing desk for a small apartment. Assembly took about an hour with one person. The motor is quiet and it holds my two monitors without wobbling at normal height, though it shakes a little when fully raised.",
+			"label": true
+		}
+	]
+}

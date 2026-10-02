@@ -6,7 +6,8 @@ import {
 	FIRST_LEVEL_ID,
 	LEVEL_COUNT,
 	LEVEL_STATUS,
-	ORACLE_PREDICTIONS
+	ORACLE_PREDICTIONS,
+	PHISH_LEVEL_ID
 } from '@/lib/constants'
 import { canSkip, earnedBadges, isLevelComplete, nextStatusOnActivity } from './rules'
 
@@ -54,6 +55,12 @@ describe('earnedBadges', () => {
 		expect(
 			earnedBadges({ doneLevelIds: new Set([FIRST_LEVEL_ID]), correctPredictions: 0 })
 		).toEqual([BADGES.firstRace])
+	})
+
+	it('awards Phish Spotter for finishing level 7', () => {
+		expect(
+			earnedBadges({ doneLevelIds: new Set([PHISH_LEVEL_ID]), correctPredictions: 0 })
+		).toEqual([BADGES.phishSpotter])
 	})
 
 	it('awards Oracle at the prediction threshold', () => {

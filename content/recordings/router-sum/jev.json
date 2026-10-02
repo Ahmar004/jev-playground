@@ -1,0 +1,43 @@
+{
+	"taskId": "router-sum",
+	"taskHash": "2b2ee33fe9decadf403403173c3926ab90191d576c4ea5422eb75683239dd01a",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-02T03:36:32.667Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "c1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"7773\",\"confidence\":1.0,\"probabilities\":{\"8773\":0.0,\"7783\":0.0,\"7773\":1.0,\"7673\":0.0}}},\"usage\":{\"input_tokens\":329,\"output_tokens\":60}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "7773",
+					"probabilities": { "7673": 0, "7773": 1, "7783": 0, "8773": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 335.66709999999875,
+			"usage": { "inputTokens": 329, "outputTokens": 60 },
+			"costUsd": 0.000013818000000000002,
+			"lane": 0,
+			"startMs": 0.007700000001932494,
+			"endMs": 335.80739999999787
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 1,
+		"correct": 1,
+		"accuracy": 1,
+		"wallMs": 335.79969999999594,
+		"costUsd": 0.000013818000000000002,
+		"inputTokens": 329,
+		"outputTokens": 60,
+		"parseFailures": 0
+	}
+}

@@ -1,0 +1,29 @@
+{
+	"id": "router-dates",
+	"kind": "choice",
+	"version": 1,
+	"code": "compare_dates",
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "choice",
+				"instructions": "Which of the two dates comes first?",
+				"criteria": {
+					"first": "The date in `first` comes earlier",
+					"second": "The date in `second` comes earlier",
+					"same": "They are the same day"
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "c1",
+			"state": {
+				"first": "2026-03-09",
+				"second": "2026-02-27"
+			},
+			"label": "second"
+		}
+	]
+}

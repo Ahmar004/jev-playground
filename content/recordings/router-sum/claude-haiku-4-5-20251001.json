@@ -1,0 +1,40 @@
+{
+	"taskId": "router-sum",
+	"taskHash": "2b2ee33fe9decadf403403173c3926ab90191d576c4ea5422eb75683239dd01a",
+	"racer": "llm",
+	"modelId": "claude-haiku-4-5-20251001",
+	"recordedAt": "2026-10-02T03:36:33.006Z",
+	"price": {
+		"inputPerM": 1,
+		"outputPerM": 5,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "c1",
+			"ok": true,
+			"raw": "```json\n{\"answer\": \"7773\"}\n```",
+			"parsed": "7773",
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 707.818499999994,
+			"usage": { "inputTokens": 115, "outputTokens": 15 },
+			"costUsd": 0.00019,
+			"lane": 0,
+			"startMs": 0.004899999999906868,
+			"endMs": 708.1142000000036
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 1,
+		"correct": 1,
+		"accuracy": 1,
+		"wallMs": 708.1093000000037,
+		"costUsd": 0.00019,
+		"inputTokens": 115,
+		"outputTokens": 15,
+		"parseFailures": 0
+	}
+}
