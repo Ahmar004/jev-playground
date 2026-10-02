@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card'
 import { SpinnerIcon } from '@/components/ui/icons'
 import { LEVEL_STATUS, type LevelStatus } from '@/lib/constants'
 import { ROUTES } from '@/lib/links'
+import { canSkip } from '@/server/progress/rules'
 import { LevelStatusLabel } from './level-status-label'
 
 export type PathLevel = { id: string; order: number; title: string }
@@ -27,7 +28,6 @@ export function PathView({ levels, statuses, pendingLevelId, onSkip }: PathViewP
 		<ol className="flex max-w-2xl flex-col gap-3">
 			{levels.map((level) => {
 				const status = statuses[level.id]
-				const canSkip = status === undefined || status === LEVEL_STATUS.inProgress
 				const pending = pendingLevelId === level.id
 				return (
 					<li key={level.id}>
@@ -41,7 +41,7 @@ export function PathView({ levels, statuses, pendingLevelId, onSkip }: PathViewP
 								<Button asChild variant={status === undefined ? 'primary' : 'secondary'}>
 									<Link href={ROUTES.level(level.id)}>{playLabel(status)}</Link>
 								</Button>
-								{canSkip && (
+								{canSkip(status ?? null) && (
 									<Button
 										type="button"
 										variant="outline"

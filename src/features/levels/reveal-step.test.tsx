@@ -18,7 +18,12 @@ beforeEach(() => {
 
 function renderReveal(
 	prediction = {},
-	extra: { celebrate?: boolean; scoredAgainst?: string | null; onCheck?: () => void } = {}
+	extra: {
+		celebrate?: boolean
+		scoredAgainst?: string | null
+		onCheck?: () => void
+		onCelebrated?: () => void
+	} = {}
 ) {
 	return render(
 		<RevealStep
@@ -29,6 +34,7 @@ function renderReveal(
 			others={[sonnetRecording]}
 			prediction={prediction}
 			celebrate={extra.celebrate ?? false}
+			onCelebrated={extra.onCelebrated ?? (() => undefined)}
 			scoredAgainst={extra.scoredAgainst ?? null}
 			onReveal={() => undefined}
 			onCheck={extra.onCheck ?? (() => undefined)}
@@ -87,6 +93,7 @@ describe('RevealStep', () => {
 				others={[]}
 				prediction={{}}
 				celebrate={false}
+				onCelebrated={() => undefined}
 				scoredAgainst={null}
 				onReveal={() => undefined}
 				onCheck={() => undefined}
@@ -105,6 +112,13 @@ describe('RevealStep', () => {
 	it('fires confetti once for a celebrated first Reveal', async () => {
 		renderReveal({ fastest: 'jev' }, { celebrate: true })
 		await waitFor(() => expect(confetti).toHaveBeenCalledTimes(1))
+	})
+
+	it('reports the celebration once the confetti fired', async () => {
+		const onCelebrated = vi.fn()
+		renderReveal({ fastest: 'jev' }, { celebrate: true, onCelebrated })
+		await waitFor(() => expect(onCelebrated).toHaveBeenCalledTimes(1))
+		expect(confetti).toHaveBeenCalledTimes(1)
 	})
 
 	it('opens the Check step from the primary button', async () => {

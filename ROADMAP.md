@@ -12,6 +12,10 @@ Current Reamining Budget for this project: 7000 pkr
 ## Rules:
 
 ### Rule-A:
+Do efficient utilization of tokens, to avoid hitting limits, without compromizing on the quality of the system we are shipping. we have to ship fast and solid stuff.
+currently, 39% usage is done, and the 5 hour limit resets at 11:20, we need to ensure that we don't hit the limit by doing effective utlization of tokens.
+
+### Rule-B:
 Paid Anthrpoic API with 20 usd credits has been added in the .env.local, we have to make sure and ensure that we build the whole app without utilizing more than 20 usd, work in a way that we do all our work of recording for beginners and still the usage does not finish, so we don't have to buy more usage. Funds are limited...
 
 ### Rule-0:

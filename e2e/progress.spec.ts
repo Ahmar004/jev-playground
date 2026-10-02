@@ -96,6 +96,14 @@ test.describe('flow 1: first level, prediction, check, XP and badge', () => {
 		await page.getByRole('button', { name: 'Back to Path' }).click()
 		await expect(page).toHaveURL('/path')
 		await expect(page.getByText('Done', { exact: true })).toBeVisible()
+
+		// Back and the header link are client navigations: Path must show the server's status.
+		await page.goBack()
+		await expect(page).toHaveURL(/step=check/)
+		await page.getByRole('link', { name: 'Path', exact: true }).click()
+		await expect(page).toHaveURL('/path')
+		await expect(page.getByText('Done', { exact: true })).toBeVisible()
+		await expect(page.getByRole('button', { name: 'Skip' })).toHaveCount(0)
 	})
 
 	test('Home shows 145 XP and the First Race badge', async ({ page }) => {
@@ -109,7 +117,11 @@ test.describe('flow 1: first level, prediction, check, XP and badge', () => {
 
 	test('a replay awards nothing again', async ({ page }) => {
 		await signIn(page, email)
-		await page.goto(`${LEVEL_URL}?step=play`)
+		// The picks were fixed at the first Reveal, so Predict shows them locked.
+		await page.goto(`${LEVEL_URL}?step=predict`)
+		await expect(page.getByRole('radio', { name: 'Jev' }).first()).toBeDisabled()
+		await page.getByRole('button', { name: 'Back to the race' }).click()
+		await expect(page).toHaveURL(/step=play/)
 		await raceToReveal(page)
 		await expect(page.getByRole('list', { name: 'Your prediction' })).toBeVisible()
 		// Give a wrongly fired toast time to appear before asserting none did.
@@ -167,7 +179,9 @@ test('flow 2: skip level 1 on the Path, revisit it and start it', async ({ page,
 	await page.getByRole('button', { name: 'Make your prediction' }).click()
 	await lockInJevEverywhere(page)
 
-	await page.goto('/path')
+	// The header link is a client navigation: Path must show the server's status, not a stale one.
+	await page.getByRole('link', { name: 'Path', exact: true }).click()
+	await expect(page).toHaveURL('/path')
 	await expect(page.getByText('In progress')).toBeVisible()
 })
 

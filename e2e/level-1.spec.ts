@@ -26,7 +26,9 @@ async function predictJevEverywhere(page: Page) {
 	// all() doesn't wait, so wait for the step first.
 	await expect(page.getByRole('heading', { name: 'Predict' })).toBeVisible()
 	for (const group of await page.getByRole('group').all()) {
-		await group.getByRole('radio', { name: 'Jev' }).check()
+		const radio = group.getByRole('radio', { name: 'Jev' })
+		// Once an earlier test revealed, the account's picks are final and disabled.
+		if (await radio.isEnabled()) await radio.check()
 	}
 }
 
@@ -135,7 +137,7 @@ for (const [name, viewport] of Object.entries(VIEWPORTS)) {
 			await page.getByRole('button', { name: 'Make your prediction' }).click()
 			await predictJevEverywhere(page)
 			await shot('predict')
-			await page.getByRole('button', { name: 'Lock in my prediction' }).click()
+			await page.getByRole('button', { name: /^(Lock in my prediction|Back to the race)$/ }).click()
 			await page.getByRole('button', { name: 'Start the race' }).click()
 			await page.waitForTimeout(1_500)
 			await shot('race-running')

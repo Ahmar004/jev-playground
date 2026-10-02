@@ -27,6 +27,7 @@ export function RevealStep({
 	others,
 	prediction,
 	celebrate,
+	onCelebrated,
 	scoredAgainst,
 	onReveal,
 	onCheck,
@@ -40,6 +41,8 @@ export function RevealStep({
 	prediction: Prediction
 	// True only right after a correct first Reveal (the page's progress hook decides).
 	celebrate: boolean
+	// Called once the confetti fired, so it never fires twice.
+	onCelebrated: () => void
 	// The opponent the first Reveal was scored against, once it happened.
 	scoredAgainst: string | null
 	// Called with the opponent shown, once per mount and per opponent change.
@@ -48,7 +51,7 @@ export function RevealStep({
 	onRaceAgain: () => void
 }) {
 	const verdicts = jev && opponent ? judgeAll(level, prediction, jev.totals, opponent.totals) : []
-	useCelebration(celebrate)
+	useCelebration(celebrate, onCelebrated)
 	const reveal = useEffectEvent(onReveal)
 	const shownModelId = jev && opponent ? opponent.modelId : null
 	useEffect(() => {

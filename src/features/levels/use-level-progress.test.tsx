@@ -74,6 +74,17 @@ describe('useLevelProgress lockIn', () => {
 		})
 	})
 
+	it('keeps the stored picks and tracks nothing when the server did not save', async () => {
+		submitPrediction.mockResolvedValue({ ok: true, data: { saved: false } })
+		const stored = { fastest: 'llm' } as const
+		const { result } = render({ ...fresh, status: LEVEL_STATUS.inProgress, prediction: stored })
+		act(() => result.current.lockIn({ fastest: 'jev' }))
+		await waitFor(() => expect(toast).toHaveBeenCalled())
+		expect(toast).toHaveBeenCalledWith(expect.objectContaining({ title: 'Your picks are final' }))
+		expect(result.current.progress.prediction).toEqual(stored)
+		expect(track).not.toHaveBeenCalled()
+	})
+
 	it('rolls back and shows a destructive toast when the save fails', async () => {
 		submitPrediction.mockResolvedValue({ ok: false, error: 'Nope', status: 500 })
 		const { result } = render()
@@ -86,6 +97,22 @@ describe('useLevelProgress lockIn', () => {
 		})
 		expect(result.current.progress).toEqual(fresh)
 		expect(track).not.toHaveBeenCalled()
+	})
+})
+
+describe('useLevelProgress server props', () => {
+	it('adopts fresh server progress when the prop changes', () => {
+		const client = new QueryClient()
+		const wrapper = ({ children }: { children: ReactNode }) => (
+			<QueryClientProvider client={client}>{children}</QueryClientProvider>
+		)
+		const { result, rerender } = renderHook(
+			({ initial }) => useLevelProgress(LEVEL_ID, initial, QUESTIONS),
+			{ wrapper, initialProps: { initial: fresh } }
+		)
+		expect(result.current.progress.status).toBeNull()
+		rerender({ initial: { ...fresh, status: LEVEL_STATUS.done } })
+		expect(result.current.progress.status).toBe(LEVEL_STATUS.done)
 	})
 })
 

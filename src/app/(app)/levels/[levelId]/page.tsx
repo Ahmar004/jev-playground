@@ -41,7 +41,13 @@ async function LevelProgressLoader({
 	if (!session) redirect(ROUTES.signIn)
 	const progress = await getLevelProgress(session.userId, level.id)
 	return (
-		<LevelStepper level={level} task={task} recordings={recordings} initialProgress={progress} />
+		<LevelStepper
+			key={session.userId}
+			level={level}
+			task={task}
+			recordings={recordings}
+			initialProgress={progress}
+		/>
 	)
 }
 

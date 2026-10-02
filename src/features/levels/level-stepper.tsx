@@ -64,8 +64,9 @@ export function LevelStepper({
 				<PredictStep
 					questions={level.predict.questions}
 					initial={progress.prediction}
+					locked={progress.revealed}
 					onSubmit={(next) => {
-						lockIn(next)
+						if (!progress.revealed) lockIn(next)
 						goTo(LEVEL_STEPS.play)
 					}}
 				/>
@@ -89,6 +90,7 @@ export function LevelStepper({
 					others={lineup.opponents.filter((recording) => recording !== opponent)}
 					prediction={progress.prediction}
 					celebrate={celebrate}
+					onCelebrated={consumeCelebration}
 					scoredAgainst={progress.revealed ? progress.opponentModelId : null}
 					onReveal={reveal}
 					onCheck={() => goTo(LEVEL_STEPS.check)}

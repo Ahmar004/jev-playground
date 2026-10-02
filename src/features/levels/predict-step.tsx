@@ -10,10 +10,13 @@ import type { Prediction } from './judge'
 export function PredictStep({
 	questions,
 	initial,
+	locked = false,
 	onSubmit
 }: {
 	questions: Level['predict']['questions']
 	initial: Prediction
+	// True once the first Reveal fixed the picks (spec 6.1): they show, but can't change.
+	locked?: boolean
 	onSubmit: (prediction: Prediction) => void
 }) {
 	const [picks, setPicks] = useState<Prediction>(initial)
@@ -33,6 +36,7 @@ export function PredictStep({
 			{questions.map((question) => (
 				<fieldset
 					key={question.metric}
+					disabled={locked}
 					className="bg-surface border-border flex flex-col gap-3 rounded-lg border p-4"
 				>
 					<legend className="text-text px-1 font-bold">{question.prompt}</legend>
@@ -56,10 +60,17 @@ export function PredictStep({
 					</div>
 				</fieldset>
 			))}
-			{!complete && <p className="text-text-muted text-sm">Pick one answer for each question.</p>}
+			{locked && (
+				<p className="text-text-muted text-sm">
+					Your picks were locked in at your first Reveal, so they cannot change.
+				</p>
+			)}
+			{!complete && !locked && (
+				<p className="text-text-muted text-sm">Pick one answer for each question.</p>
+			)}
 			<div>
 				<Button type="submit" disabled={!complete}>
-					Lock in my prediction
+					{locked ? 'Back to the race' : 'Lock in my prediction'}
 				</Button>
 			</div>
 		</form>

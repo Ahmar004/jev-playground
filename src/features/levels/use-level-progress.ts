@@ -7,6 +7,7 @@ import { ANALYTICS_EVENTS } from '@/lib/analytics/events'
 import { track } from '@/lib/analytics/track'
 import { LEVEL_STATUS } from '@/lib/constants'
 import { toast } from '@/lib/toast'
+import { useServerState } from '@/lib/use-server-state'
 import { revealPrediction, submitCheck, submitPrediction } from '@/server/actions/progress'
 import type { ActionResult } from '@/server/actions/validated-action'
 import { nextStatusOnActivity } from '@/server/progress/rules'
@@ -34,7 +35,7 @@ export function useLevelProgress(
 	initial: LevelProgressView,
 	questions: CheckQuestion[]
 ) {
-	const [progress, setProgress] = useState(initial)
+	const [progress, setProgress] = useServerState(initial)
 	const [celebrate, setCelebrate] = useState(false)
 	const [pendingQuestionId, setPendingQuestionId] = useState<string | null>(null)
 
@@ -63,7 +64,16 @@ export function useLevelProgress(
 			return progress
 		},
 		onError,
-		onSuccess: (_data, _prediction, previous) => {
+		onSuccess: (data, _prediction, previous) => {
+			// After the first Reveal the server keeps the original picks (saved: false).
+			if (!data.saved) {
+				if (previous) setProgress((current) => ({ ...current, prediction: previous.prediction }))
+				toast({
+					title: 'Your picks are final',
+					description: 'They were locked in at your first Reveal.'
+				})
+				return
+			}
 			track(ANALYTICS_EVENTS.PREDICTION_MADE, { level_id: levelId })
 			if (previous?.status === null) {
 				track(ANALYTICS_EVENTS.LEVEL_STARTED, { level_id: levelId })

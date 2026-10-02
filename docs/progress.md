@@ -405,3 +405,42 @@ Next: part A (slice 4's key-independent work) is done; see the slice 4 section b
 - Carried to slice 5: confetti on every Reveal visit, the prediction lost on reload, `prediction_made`/`level_started` analytics. To slice 6: Jev + Code totals in Reveal and the judge, and a `useRace` test with a combining task. To slice 8: "price unknown". To slice 13: the screen-reader browse-mode click in the picker, the skip link.
 
 Next: Step-6, slice 5 (Progress: Prisma models, the Check step, XP and badges, Home, Path). Write its plan with writing-plans, then run subagent-driven-development.
+
+## Step-6 - slice 5: Progress (2026-10-02) - in progress
+
+- A power cut ended the first slice 5 session before any code or plan was written (checked: no commits after `33b91f2`, no plan, no ledger, no uncommitted source).
+- User decisions:
+  - A level's prediction is correct (25 XP, counts toward `oracle`) when every pick with a clear winner is right and at least one pick is right; ties and "can't tell" are ignored.
+  - Picks are saved on the server at Lock in, so a reload keeps them. The first Reveal is judged on the server against the opponent raced, and that result is final; later Reveals still show right or wrong but change no XP. Confetti fires only on that first Reveal.
+  - Check: the first answer is stored and decides the XP; the user then sees the right answer and explanation and may retry for learning, with no XP change. Revisits show the stored answers.
+  - Path and the header bar count only built levels (`n of LEVELS.size`), so nothing links to a missing page.
+  - Level 1's 2 Check questions (tool choice for 50,000 tickets a day; why the LLM costs more per ticket) were approved as drafted; they go into `content/levels/speed-race.json` under `check`.
+- Skills: writing-plans for `docs/superpowers/plans/2026-10-02-slice-05-progress.md`, then subagent-driven-development (Sonnet implementer and reviewer per task, one at a time; Opus final review). The ledger is `.superpowers/sdd/2026-10-02-slice-05-progress/progress.md` (git-ignored). It holds every ruling, and `final-review.md` sits next to it. Keep both until slice 5 is done.
+- All 6 tasks are built, reviewed and committed locally on `main`. Nothing is pushed yet. Commits `ff177c3..4c56b9d` (11):
+  - Task 1 `ff177c3`, `440f058`: `check` in the level schema and level 1's 2 questions, plus the `XP_SOURCES`, `XP_AMOUNTS`, `BADGES`, `BADGE_LABELS` and `LEVEL_COUNT` constants. `isPredictionCorrect` and `judgeAll` in `judge.ts`; `src/server/progress/rules.ts`.
+  - Task 2 `16bd7a7`: `prisma/schema/progress.prisma` (LevelProgress, CheckAnswer, XpEvent, UserBadge). Migrations `20261002014132_progress` and the hand-written `20261002014133_progress_rls` are applied to the dev database; `check:rls` passes on 6 tables.
+  - Task 3 `a7f0fa8`, `e6da3b2`: `src/server/actions/progress.ts` (`setLevelStatus` skip only, `submitPrediction`, `revealPrediction`, `submitCheck`), `src/server/awards/awards.ts`, `src/server/data/progress.ts` (`getProgressSummary` wrapped in `cache()`, `getLevelProgress`) and `src/server/progress/complete.ts`. The first Reveal is an atomic claim (`updateMany ... revealedAt: null`), DB enums go through the `isLevelStatus`/`isBadgeId` guards, and actions call `refresh()` from `next/cache` after a successful write.
+  - Task 4 `419470e`, `721ddce`: `use-level-progress.ts` (TanStack mutations, optimistic updates, rollback, toasts, analytics `level_started`/`level_completed`/`prediction_made`), `check-step.tsx`, `awards-toast.ts`, first-Reveal-only confetti (`consumeCelebration`), and the level page loading progress inside `<Suspense>`.
+  - Task 5 `3f3d219`, `9487411`: `/path` (Skip/Revisit), Home progress (XP, badges), and the header Path link plus progress bar. The wordmark is hidden below `sm`; measured with no horizontal scroll at 360 and 390 px.
+  - Task 6 `b578e68`, `4c56b9d`: `e2e/progress.spec.ts` (flow 1 with 145 XP and First Race, replay awards nothing, reload keeps picks, flow 2, screenshots); DESIGN 11.1 and 11.3 updated (`revealPrediction`, `refresh()`).
+  - Last gates: Vitest 406/406, e2e 26/26, typecheck, lint, format:check and build all pass.
+- Final whole-slice review (Opus): READY_AFTER_FIXES. Full text: `.superpowers/sdd/2026-10-02-slice-05-progress/final-review.md`.
+  - **Important I1 (must fix):** `use-skip-level.ts` and `use-level-progress.ts` seed state once with `useState(initial)` and ignore the fresh props that `refresh()` sends, while Next 16 Activity keeps client state across navigations. So after a client navigation, Path can show a stale status ("Skipped" or "Not started" after finishing the level, where Skip then returns 409). After a sign-out and sign-in in one tab, the old user's progress can flash. Fix: derive the view from the server props plus an optimistic overlay (or resync when the props change), key both client roots by `session.userId`, and make the flow 2 e2e reach Path through the header link instead of `page.goto`.
+  - Minors worth fixing in the same wave: M1, browser Back to `?step=reveal` fires confetti again. M2, changing picks after the first Reveal looks saved and fires `prediction_made` although the server returns `saved: false` (lock the picks in the UI once revealed). M5, `path-view.tsx` duplicates `canSkip` (import it from `rules.ts`).
+  - Minors to leave: M3 (`level_started` misses skip-first or Reveal-first starts), M4 (rollback snapshot), M6 (the opponent id comes from the client; low stakes, and it would need a user decision).
+- Other notes: in Task 5 a subagent ran `taskkill /IM node.exe`, which stops every Node process. Tell subagents to stop only the PID they started. Toasts render twice in the DOM (visible text plus a status region), so e2e assertions use exact text.
+
+## Step-6 - slice 5: finished (2026-10-02)
+
+- The fix wave for I1, M1, M2 and M5 is done (no subagent: it was small, and ROADMAP Rule-A asks for lean token use).
+  - I1: new `src/lib/use-server-state.ts` (state that adopts a fresh server prop, the "adjust state when a prop changes" pattern). `useSkipLevel` and `useLevelProgress` use it, so `refresh()` and revisits win over stale client state. `PathList` and `LevelStepper` are keyed by `session.userId`. A hook test must pass a stable prop object, or the resync loops (real server props are stable).
+  - M1: `useCelebration(celebrate, onCelebrated)` reports once the confetti fired, and `RevealStep` passes `consumeCelebration`, so Back cannot fire it twice.
+  - M2: Predict is locked after the first Reveal (radios disabled, button "Back to the race", no `lockIn`). If the server still answers `saved: false`, the hook restores the stored picks, toasts "Your picks are final" and tracks nothing.
+  - M5: `path-view.tsx` imports `canSkip` from `rules.ts`.
+- e2e: flow 1 goes Back, then the header Path link, and expects Done with no Skip. Flow 2 reaches Path through the header link and expects In progress. The replay test expects locked picks. `level-1.spec.ts` screenshot tests share one account that already revealed, so they skip disabled radios.
+- Gates: lint, typecheck, format:check, check:env, check:secrets, check:standards 24/24, Vitest 411/411 plus node:test, check:rls, build and e2e 26/26 all pass.
+- Left open: M3 (`level_started` for skip-first starts), M4 (rollback snapshot), M6 (the opponent id comes from the client; needs a user decision).
+- Roadmap note: the user relabeled ROADMAP rules, so token use is now Rule-A and the $20 Anthropic credit is Rule-B. `CLAUDE.md`, spec, DESIGN and TECH-STACK still say "Rule-A" for the credit; ask the user before changing those references (Rule-3).
+- The ledger `.superpowers/sdd/2026-10-02-slice-05-progress/` can be deleted.
+
+Next: Step-6, slice 6 (levels 2-4). Carry in from slices 4 and 5: Jev + Code totals in Reveal and the judge for a combine task (level 3), and a `useRace` test with a combining task.

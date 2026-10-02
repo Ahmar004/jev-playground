@@ -54,4 +54,14 @@ describe('PredictStep', () => {
 		)
 		expect(radioAt('LLM', 0)).toBeChecked()
 	})
+
+	it('shows the picks but cannot change them once locked', async () => {
+		const onSubmit = vi.fn()
+		const picks = { fastest: 'jev', cheapest: 'llm', most_accurate: 'jev' } as const
+		render(<PredictStep questions={questions} initial={picks} locked onSubmit={onSubmit} />)
+		expect(radioAt('Jev', 0)).toBeChecked()
+		expect(radioAt('Jev', 0)).toBeDisabled()
+		await userEvent.click(screen.getByRole('button', { name: 'Back to the race' }))
+		expect(onSubmit).toHaveBeenCalledWith(picks)
+	})
 })

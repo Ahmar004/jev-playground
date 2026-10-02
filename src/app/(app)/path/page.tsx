@@ -21,7 +21,7 @@ async function PathLoader() {
 	const session = await getSession()
 	if (!session) redirect(ROUTES.signIn)
 	const summary = await getProgressSummary(session.userId)
-	return <PathList levels={PATH_LEVELS} initialStatuses={summary.statuses} />
+	return <PathList key={session.userId} levels={PATH_LEVELS} initialStatuses={summary.statuses} />
 }
 
 export default function PathPage() {
