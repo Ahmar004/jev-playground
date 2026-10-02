@@ -317,16 +317,16 @@ Level 1 (Speed Race) is also timed, so it writes Leaderboard entries under the g
 
 ### 11.1 Prisma models (one `.prisma` file per area)
 
-| Model              | Key                                        | Fields                                                                                            |
-| ------------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------- |
-| `User`             | `id` = Supabase auth UUID                  | email (existing)                                                                                  |
-| `LevelProgress`    | (userId, levelId)                          | status (`in_progress`, `done`, `skipped`; no row means not started), predictionCorrect, updatedAt |
-| `CheckAnswer`      | (userId, questionId)                       | levelId, correct, answeredAt                                                                      |
-| `QuizAttempt`      | id                                         | userId, quizId (`start` or `end`), answers (option IDs), score, createdAt                         |
-| `XpEvent`          | id, unique (userId, source, sourceId)      | xp, createdAt                                                                                     |
-| `UserBadge`        | (userId, badgeId)                          | earnedAt                                                                                          |
-| `LeaderboardEntry` | id, unique (userId, gameId, modelId, mode) | accuracy, timeMs, costUsd (nullable), runs, updatedAt                                             |
-| `Share`            | id (16 random bytes, base64url)            | userId, mode, payload (JSON), createdAt; index (userId, createdAt)                                |
+| Model              | Key                                        | Fields                                                                                                                                                       |
+| ------------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `User`             | `id` = Supabase auth UUID                  | email (existing)                                                                                                                                             |
+| `LevelProgress`    | (userId, levelId)                          | status (`in_progress`, `done`, `skipped`; no row means not started), prediction (the saved picks), opponentModelId, predictionCorrect, revealedAt, updatedAt |
+| `CheckAnswer`      | (userId, questionId)                       | levelId, optionId, correct, answeredAt                                                                                                                       |
+| `QuizAttempt`      | id                                         | userId, quizId (`start` or `end`), answers (option IDs), score, createdAt                                                                                    |
+| `XpEvent`          | id, unique (userId, source, sourceId)      | xp, createdAt                                                                                                                                                |
+| `UserBadge`        | (userId, badgeId)                          | earnedAt                                                                                                                                                     |
+| `LeaderboardEntry` | id, unique (userId, gameId, modelId, mode) | accuracy, timeMs, costUsd (nullable), runs, updatedAt                                                                                                        |
+| `Share`            | id (16 random bytes, base64url)            | userId, mode, payload (JSON), createdAt; index (userId, createdAt)                                                                                           |
 
 Every table gets RLS enabled with no policies in its migration (`docs/rules/auth.md`, `pnpm check:rls`).
 
@@ -342,17 +342,17 @@ The server never trusts a client-computed result it can check itself:
 
 Every action is a `validatedAction`. Every action except `signIn` and `signUp` calls `requireUser()` first. Every write scopes by the session's user ID, never by a client-given ID.
 
-| Action                                              | Does                                                                                                                                                                                                          |
-| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `setLevelStatus`, `submitPrediction`, `submitCheck` | Progress plus XP and badges.                                                                                                                                                                                  |
-| `submitQuiz`                                        | Scores on the server, stores the attempt, awards XP.                                                                                                                                                          |
-| `recordGameRun`                                     | Leaderboard upsert, XP and badges (VS games and Speed Race).                                                                                                                                                  |
-| `recordArenaRun`, `recordDevRun`                    | XP and badges only. The Leaderboard covers timed games only (spec 10.5).                                                                                                                                      |
-| `createShare`                                       | Validates the snapshot with Zod. Requires a consent flag when it holds user text. Caps it at 32 KB. Allows 20 shares per user per 24 hours, counted from `Share` rows (no in-memory counter). Returns the ID. |
-| `deleteShare`                                       | Checks ownership, deletes, then calls `updateTag('share:' + id)`, so the link stops working at once (R87).                                                                                                    |
-| `signIn`, `signUp`, `signOut`                       | Supabase Auth through `src/lib/supabase/`. `provisionUser` runs on first sign-in.                                                                                                                             |
+| Action                                                                  | Does                                                                                                                                                                                                          |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `setLevelStatus`, `submitPrediction`, `revealPrediction`, `submitCheck` | Progress plus XP and badges. `submitPrediction` saves the picks at Lock in. `revealPrediction` judges the first Reveal on the server against the opponent raced, and that result is final.                    |
+| `submitQuiz`                                                            | Scores on the server, stores the attempt, awards XP.                                                                                                                                                          |
+| `recordGameRun`                                                         | Leaderboard upsert, XP and badges (VS games and Speed Race).                                                                                                                                                  |
+| `recordArenaRun`, `recordDevRun`                                        | XP and badges only. The Leaderboard covers timed games only (spec 10.5).                                                                                                                                      |
+| `createShare`                                                           | Validates the snapshot with Zod. Requires a consent flag when it holds user text. Caps it at 32 KB. Allows 20 shares per user per 24 hours, counted from `Share` rows (no in-memory counter). Returns the ID. |
+| `deleteShare`                                                           | Checks ownership, deletes, then calls `updateTag('share:' + id)`, so the link stops working at once (R87).                                                                                                    |
+| `signIn`, `signUp`, `signOut`                                           | Supabase Auth through `src/lib/supabase/`. `provisionUser` runs on first sign-in.                                                                                                                             |
 
-After a write, the action calls `updateTag` on the user's progress tag, so the header bar and pages update at once. The client applies the change optimistically through TanStack Query, rolls it back on failure, and shows a toast.
+After a write, a progress action calls `refresh()` from `next/cache`, so the header bar and pages update at once. Per-user reads are not cached, so there is no tag to update. The client applies the change optimistically through TanStack Query, rolls it back on failure, and shows a toast.
 
 ### 11.4 Reads (`src/server/data/`)
 
