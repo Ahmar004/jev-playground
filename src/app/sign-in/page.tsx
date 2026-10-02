@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { HueBackdrop } from '@/components/hue-backdrop'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { LightningIcon } from '@/components/ui/icons'
 import { SignInView } from '@/features/auth/sign-in-view'
@@ -8,12 +9,7 @@ export const metadata: Metadata = { title: "Sign in - Jev's Playground" }
 export default function SignInPage() {
 	return (
 		<main className="relative isolate flex min-h-screen flex-col items-center justify-center gap-8 overflow-hidden px-4 py-12">
-			{/* Large drifting hues behind the form; decoration only, no text sits on them alone. */}
-			<div aria-hidden className="hue-blobs pointer-events-none absolute inset-0 -z-10">
-				<div className="bg-hue-1/35 dark:bg-hue-1/30 animate-drift absolute -top-32 -left-24 size-112 rounded-full blur-3xl" />
-				<div className="bg-hue-2/30 dark:bg-hue-2/30 animate-drift absolute top-1/4 -right-32 size-120 rounded-full blur-3xl" />
-				<div className="bg-hue-3/35 dark:bg-hue-3/30 animate-drift absolute -bottom-40 left-1/4 size-104 rounded-full blur-3xl" />
-			</div>
+			<HueBackdrop strength="strong" />
 			<div className="absolute top-4 right-4">
 				<ThemeToggle />
 			</div>

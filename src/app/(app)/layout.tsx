@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { HueBackdrop } from '@/components/hue-backdrop'
 import { KeysPanel } from '@/features/keys/keys-panel'
 import { KeysProvider } from '@/features/keys/keys-context'
 import { ModeProvider } from '@/features/mode/mode-context'
@@ -12,7 +13,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<ModeProvider>
 			<KeysProvider>
-				<div className="flex min-h-screen flex-col">
+				<div className="relative isolate flex min-h-screen flex-col">
+					<HueBackdrop strength="soft" fixed />
 					<SiteHeader />
 					<div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:py-10">{children}</div>
 					<footer className="border-border bg-surface/60 text-text-muted border-t py-6 text-sm backdrop-blur-sm">
