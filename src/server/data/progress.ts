@@ -1,4 +1,5 @@
 import 'server-only'
+import { cache } from 'react'
 import { LEVELS } from '@/content/levels'
 import type { LevelProgressView } from '@/features/levels/level-progress'
 import {
@@ -19,8 +20,8 @@ export type ProgressSummary = {
 	badges: BadgeId[]
 }
 
-/** Per-user, never cached: statuses of built levels, total XP and badges. */
-export async function getProgressSummary(userId: string): Promise<ProgressSummary> {
+/** Per-user, never cached across requests (cache() only dedupes within one): statuses of built levels, total XP and badges. */
+export const getProgressSummary = cache(async (userId: string): Promise<ProgressSummary> => {
 	const [rows, xpSum, badgeRows] = await Promise.all([
 		db.levelProgress.findMany({ where: { userId }, select: { levelId: true, status: true } }),
 		db.xpEvent.aggregate({ where: { userId }, _sum: { xp: true } }),
@@ -37,7 +38,7 @@ export async function getProgressSummary(userId: string): Promise<ProgressSummar
 		xp: xpSum._sum.xp ?? 0,
 		badges: badgeRows.flatMap((row): BadgeId[] => (isBadgeId(row.badgeId) ? [row.badgeId] : []))
 	}
-}
+})
 
 export async function getLevelProgress(
 	userId: string,

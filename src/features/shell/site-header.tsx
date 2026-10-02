@@ -16,12 +16,13 @@ export function SiteHeader() {
 			<div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4">
 				<Link
 					href={ROUTES.home}
+					aria-label="Jev's Playground home"
 					className="text-text focus-visible:outline-accent flex items-center gap-2 rounded font-extrabold focus-visible:outline focus-visible:outline-2"
 				>
 					<span className="bg-jev text-accent-ink flex size-8 items-center justify-center rounded">
 						<LightningIcon size={18} />
 					</span>
-					<span className="whitespace-nowrap">Jev&apos;s Playground</span>
+					<span className="hidden whitespace-nowrap sm:inline">Jev&apos;s Playground</span>
 				</Link>
 				<div className="flex shrink-0 items-center gap-1 sm:gap-3">
 					<Link

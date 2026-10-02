@@ -17,6 +17,7 @@ export function ProgressBar({ done, total }: { done: number; total: number }) {
 				aria-valuenow={done}
 				aria-valuemin={0}
 				aria-valuemax={total}
+				aria-valuetext={`${done} of ${total} levels done`}
 				className="bg-surface-hover h-2 w-16 overflow-hidden rounded-full sm:w-24"
 			>
 				{/* A percentage is data, not a design value: the one allowed inline style. */}
