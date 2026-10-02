@@ -33,7 +33,7 @@ export function buildPresetMap(raw: unknown[]): ReadonlyMap<string, ArenaPreset>
 export const PRESETS = buildPresetMap(presets)
 
 // The recorded result for the preset's item, with where it came from.
-function sideOf(recording: Recording, itemId: string): ArenaSide | null {
+export function sideOf(recording: Recording, itemId: string): ArenaSide | null {
 	const event = recording.events.find((candidate) => candidate.itemId === itemId)
 	if (!event) return null
 	return arenaSideSchema.parse({

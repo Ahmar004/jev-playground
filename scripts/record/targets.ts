@@ -1,7 +1,7 @@
 import { parseArgs } from 'node:util'
 import { recordingSlug } from '@/content/recording-schema'
 import type { Task } from '@/content/task-schema'
-import { CLAUDE_MODELS, JEV_MODEL_ALIAS, RACERS } from '@/lib/constants'
+import { CLAUDE_MODELS, JEV_MODEL_ALIAS, RACERS, TASK_KINDS } from '@/lib/constants'
 
 // Jev plus the three Claude models, in the order they are recorded (DESIGN 4.2).
 // On the command line, "jev" names Jev.
@@ -77,7 +77,10 @@ export function selectTargets(
 	const skipped: Target[] = []
 	for (const task of chosenTasks) {
 		const hash = hashOf(task)
-		for (const model of models) {
+		// A Sandbox template is Jev only (spec 9).
+		const taskModels =
+			task.kind === TASK_KINDS.sandbox ? models.filter((model) => model === RACERS.jev) : models
+		for (const model of taskModels) {
 			const target = targetFor(task.id, model)
 			if (existingHash(task.id, target.slug) === hash) skipped.push(target)
 			else run.push(target)

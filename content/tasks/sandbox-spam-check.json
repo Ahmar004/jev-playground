@@ -1,0 +1,33 @@
+{
+	"id": "sandbox-spam-check",
+	"kind": "sandbox",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"scam": {
+				"type": "noul",
+				"instructions": "Is this message trying to trick the reader into giving up money or login details?"
+			},
+			"asks_money": {
+				"type": "noul",
+				"instructions": "Does the message ask the reader to pay or hand over money?"
+			},
+			"type": {
+				"type": "choice",
+				"instructions": "What kind of message is this?",
+				"criteria": {
+					"personal": null,
+					"newsletter": null,
+					"order update": null,
+					"scam": null
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "t1",
+			"state": "Congratulations! You have been selected to receive a $500 gift card. Click the link below within 24 hours to claim it, and confirm your bank login so we can send the funds."
+		}
+	]
+}

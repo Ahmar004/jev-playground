@@ -89,6 +89,7 @@ export function scoreJev(task: Task, item: TaskItem, answers: JevAnswers): numbe
 			return credit(f1(yesLines, label) >= FIND_LINES_F1_BAR)
 		}
 		case TASK_KINDS.generate:
+		case TASK_KINDS.sandbox:
 			return null
 	}
 }

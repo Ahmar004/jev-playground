@@ -1,0 +1,45 @@
+{
+	"taskId": "sandbox-spam-check",
+	"taskHash": "460eade054e84724d722fe1fe4867746f8f39c8e56b1d701e971eb4ed2832f8c",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-02T07:25:42.213Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "t1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"scam\":{\"type\":\"noul\",\"noul\":0.98},\"asks_money\":{\"type\":\"noul\",\"noul\":0.08},\"type\":{\"type\":\"choice\",\"choice\":\"scam\",\"confidence\":1.0,\"probabilities\":{\"personal\":0.0,\"newsletter\":0.0,\"order update\":0.0,\"scam\":1.0}}},\"usage\":{\"input_tokens\":387,\"output_tokens\":82}}",
+			"parsed": {
+				"scam": { "type": "noul", "noul": 0.98 },
+				"asks_money": { "type": "noul", "noul": 0.08 },
+				"type": {
+					"type": "choice",
+					"choice": "scam",
+					"probabilities": { "personal": 0, "newsletter": 0, "order update": 0, "scam": 1 },
+					"confidence": 1
+				}
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 685.1154000000001,
+			"usage": { "inputTokens": 387, "outputTokens": 82 },
+			"costUsd": 0.000016254,
+			"lane": 0,
+			"startMs": 0.07739999999995462,
+			"endMs": 687.1546000000001
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 0,
+		"correct": 0,
+		"accuracy": null,
+		"wallMs": 687.0772000000002,
+		"costUsd": 0.000016254,
+		"inputTokens": 387,
+		"outputTokens": 82,
+		"parseFailures": 0
+	}
+}

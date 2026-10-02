@@ -1,0 +1,45 @@
+{
+	"taskId": "sandbox-counting-trap",
+	"taskHash": "db192f0d4008705d674748f8026ab7646c8ac7e2b6b121e95aa2a92a23bcbaa9",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-02T07:25:49.190Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "t1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"items\":{\"type\":\"choice\",\"choice\":\"8\",\"confidence\":0.98,\"probabilities\":{\"7\":0.0,\"9\":0.01,\"8\":0.99,\"6\":0.0}},\"more_than_ten\":{\"type\":\"noul\",\"noul\":0.89},\"has_fruit\":{\"type\":\"noul\",\"noul\":1.0}},\"usage\":{\"input_tokens\":385,\"output_tokens\":84}}",
+			"parsed": {
+				"items": {
+					"type": "choice",
+					"choice": "8",
+					"probabilities": { "6": 0, "7": 0, "8": 0.99, "9": 0.01 },
+					"confidence": 0.98
+				},
+				"more_than_ten": { "type": "noul", "noul": 0.89 },
+				"has_fruit": { "type": "noul", "noul": 1 }
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 637.864,
+			"usage": { "inputTokens": 385, "outputTokens": 84 },
+			"costUsd": 0.000016170000000000003,
+			"lane": 0,
+			"startMs": 0.09909999999996444,
+			"endMs": 639.8925
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 0,
+		"correct": 0,
+		"accuracy": null,
+		"wallMs": 639.7934,
+		"costUsd": 0.000016170000000000003,
+		"inputTokens": 385,
+		"outputTokens": 84,
+		"parseFailures": 0
+	}
+}

@@ -216,8 +216,9 @@ function itemProblems(task: Task, item: TaskItem): string[] {
 			}
 			break
 		}
-		case TASK_KINDS.generate: {
-			if (label !== undefined) problems.push('generate items are not scored')
+		case TASK_KINDS.generate:
+		case TASK_KINDS.sandbox: {
+			if (label !== undefined) problems.push(`${task.kind} items are not scored`)
 			break
 		}
 	}
@@ -239,6 +240,11 @@ export function taskProblems(task: Task): Problem[] {
 	const { jev, llm } = task
 	const llmQuestion = llm && isQuestion(llm) ? llm : null
 
+	if (task.kind === TASK_KINDS.sandbox) {
+		if (!('questions' in jev)) add('A sandbox task needs Jev questions', 'jev')
+		if (llm || task.code || task.combine) add('A sandbox task is Jev only', 'kind')
+		return problems
+	}
 	if (task.kind === TASK_KINDS.generate) {
 		if (!('raw' in jev)) add('A generate task sends raw Jev questions', 'jev')
 		if (!llm || llmQuestion) add('A generate task needs llm instructions', 'llm')

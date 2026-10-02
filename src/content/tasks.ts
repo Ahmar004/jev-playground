@@ -22,6 +22,12 @@ import reviewScore from '../../content/tasks/review-score.json'
 import productMatch from '../../content/tasks/product-match.json'
 import citationCheck from '../../content/tasks/citation-check.json'
 import intentRouting from '../../content/tasks/intent-routing.json'
+import sandboxSupportTicket from '../../content/tasks/sandbox-support-ticket.json'
+import sandboxSpamCheck from '../../content/tasks/sandbox-spam-check.json'
+import sandboxReviewRating from '../../content/tasks/sandbox-review-rating.json'
+import sandboxResumeFit from '../../content/tasks/sandbox-resume-fit.json'
+import sandboxModeration from '../../content/tasks/sandbox-moderation.json'
+import sandboxCountingTrap from '../../content/tasks/sandbox-counting-trap.json'
 import { taskSchema, type Task } from './task-schema'
 
 // Every file in content/tasks/ is imported here, so content renders at build
@@ -50,7 +56,13 @@ const RAW_TASKS: unknown[] = [
 	reviewScore,
 	productMatch,
 	citationCheck,
-	intentRouting
+	intentRouting,
+	sandboxSupportTicket,
+	sandboxSpamCheck,
+	sandboxReviewRating,
+	sandboxResumeFit,
+	sandboxModeration,
+	sandboxCountingTrap
 ]
 
 // Parsed at import, so a malformed file fails the build at prerender.

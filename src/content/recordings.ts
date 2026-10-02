@@ -98,6 +98,12 @@ import reviewScoreJev from '../../content/recordings/review-score/jev.json'
 import reviewScoreHaiku from '../../content/recordings/review-score/claude-haiku-4-5-20251001.json'
 import reviewScoreSonnet from '../../content/recordings/review-score/claude-sonnet-5-5.json'
 import reviewScoreOpus from '../../content/recordings/review-score/claude-opus-5-5.json'
+import sandboxSupportTicketJev from '../../content/recordings/sandbox-support-ticket/jev.json'
+import sandboxSpamCheckJev from '../../content/recordings/sandbox-spam-check/jev.json'
+import sandboxReviewRatingJev from '../../content/recordings/sandbox-review-rating/jev.json'
+import sandboxResumeFitJev from '../../content/recordings/sandbox-resume-fit/jev.json'
+import sandboxModerationJev from '../../content/recordings/sandbox-moderation/jev.json'
+import sandboxCountingTrapJev from '../../content/recordings/sandbox-counting-trap/jev.json'
 
 // Every file in content/recordings/ is imported here. Server-only: a page's
 // server component loads only its own recordings and passes them down as
@@ -199,7 +205,13 @@ const RAW_RECORDINGS: unknown[] = [
 	intentRoutingJev,
 	intentRoutingHaiku,
 	intentRoutingSonnet,
-	intentRoutingOpus
+	intentRoutingOpus,
+	sandboxSupportTicketJev,
+	sandboxSpamCheckJev,
+	sandboxReviewRatingJev,
+	sandboxResumeFitJev,
+	sandboxModerationJev,
+	sandboxCountingTrapJev
 ]
 
 export const RECORDINGS: Recording[] = RAW_RECORDINGS.map((raw) => recordingSchema.parse(raw))

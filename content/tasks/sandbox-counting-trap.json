@@ -1,0 +1,33 @@
+{
+	"id": "sandbox-counting-trap",
+	"kind": "sandbox",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"items": {
+				"type": "choice",
+				"instructions": "How many different kinds of item are on the shopping list?",
+				"criteria": {
+					"6": null,
+					"7": null,
+					"8": null,
+					"9": null
+				}
+			},
+			"more_than_ten": {
+				"type": "noul",
+				"instructions": "Does the list have more than 10 individual pieces of food in total?"
+			},
+			"has_fruit": {
+				"type": "noul",
+				"instructions": "Is there any fruit on the list?"
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "t1",
+			"state": "Shopping list: 3 apples, 2 bananas, 1 loaf of bread, 4 tomatoes, 1 jar of honey, 2 onions, 6 eggs, 1 bag of rice."
+		}
+	]
+}

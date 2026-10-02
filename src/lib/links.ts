@@ -12,6 +12,7 @@ export const ROUTES = {
 	leaderboard: '/leaderboard',
 	arena: '/arena',
 	arenaPreset: (presetId: string) => `/arena?preset=${presetId}`,
+	sandbox: '/sandbox',
 	share: (shareId: string) => `/s/${shareId}`
 } as const
 

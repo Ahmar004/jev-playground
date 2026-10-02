@@ -269,7 +269,7 @@ Level 1 (Speed Race) is also timed, so it writes Leaderboard entries under the g
 
 **Sandbox (R47-R54):**
 
-- 6 templates, each with a Jev-only recording.
+- 6 templates, each a Task of kind `sandbox` (Jev only, any mix of Noul, Choice and Score questions, never scored) with one Jev recording; `pnpm record` records only Jev for these. Beginner mode replays an unchanged template; an edited setup needs Developer mode and a TypeSafe key, and runs through `jevRacer` and `/api/jev`.
 - The Form view and the JSON view edit one state object, and each re-renders from it, so they can't drift (R48).
 - Answers render as bars (Choice and Score probabilities) and gauges (Noul, confidence) (R51).
 - Weakness warnings come from simple rules on the question text and input size: count or how-many words, arithmetic, date words, write or generate verbs, or an estimated state over 8k tokens (R52).

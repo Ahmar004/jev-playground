@@ -1,0 +1,34 @@
+{
+	"id": "sandbox-review-rating",
+	"kind": "sandbox",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"stars": {
+				"type": "score",
+				"instructions": "How many stars would this reviewer give?",
+				"criteria": ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"]
+			},
+			"topic": {
+				"type": "choice",
+				"instructions": "What is the reviewer's biggest complaint?",
+				"criteria": {
+					"food": null,
+					"service speed": null,
+					"price": null,
+					"cleanliness": null
+				}
+			},
+			"recommends": {
+				"type": "noul",
+				"instructions": "Would the reviewer recommend the restaurant to a friend?"
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "t1",
+			"state": "The pasta was lovely and the waiter was friendly, but we waited almost an hour for the main course and the bill was much higher than the menu said. Probably will not come back."
+		}
+	]
+}

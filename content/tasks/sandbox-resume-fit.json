@@ -1,0 +1,34 @@
+{
+	"id": "sandbox-resume-fit",
+	"kind": "sandbox",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"fit": {
+				"type": "choice",
+				"instructions": "Which role fits this candidate best?",
+				"criteria": {
+					"ward nurse": null,
+					"nurse manager": null,
+					"hospital accountant": null,
+					"IT support": null
+				}
+			},
+			"leadership": {
+				"type": "noul",
+				"instructions": "Has the candidate led a team before?"
+			},
+			"ready": {
+				"type": "score",
+				"instructions": "How ready is the candidate for a hospital administration role?",
+				"criteria": ["not ready", "needs training", "ready with support", "fully ready"]
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "t1",
+			"state": "Maria Lopez. Five years as a nurse in a children's hospital, two of them as shift lead for a team of eight. Certified in pediatric advanced life support. Wants to move into hospital administration. No formal management degree."
+		}
+	]
+}

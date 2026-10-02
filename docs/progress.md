@@ -535,3 +535,17 @@ Next: Step-6, slice 10 (Arena + Share): 8 presets (with the 3 tasks slice 13 reu
 - For slice 12 (Profile): reuse `MyShares` (`src/features/arena/my-shares.tsx`) with `getMyShares` for "my shares".
 
 Next: Step-6, slice 11 (Sandbox).
+
+## Step-6 - slice 11: Sandbox (2026-10-02) - done
+
+- Skills: no writing-plans file and no subagents (Rule-A; one connected change). Gates by hand: lint, typecheck, format:check, check:env, check:secrets, check:standards 24/24, test (540 Vitest plus node:test), build, e2e 61/61 (against `pnpm start` with `E2E_BASE_URL`). The manual `local-review` pass was not run as a separate step.
+- Built:
+  - New task kind `sandbox` (`TASK_KINDS.sandbox`): Jev only, any mix of questions, never scored. `scripts/record/targets.ts` records only Jev for it, and `registry.test.ts` expects only a Jev recording. Six tasks `sandbox-*` plus `content/sandbox/templates.json` (words only; `src/content/sandbox.ts` is server-only and builds the views). `sideOf` in `arena.ts` is now exported and reused.
+  - `src/features/sandbox/`: `doc.ts` (one setup object for the Form and the JSON view, `bodyToDoc`, `buildSandboxTask`), `checks.ts` (limit check from characters / 4, blocks the send; weakness warnings for counting, math, dates, text generation, long state), `snippets.ts` (curl and TypeScript with a key placeholder), `synced-textarea.tsx` (keeps typed text while the setup adopts outside edits), `form-editor`, `json-editor`, `checks-panel`, `code-panel`, `run-panel`, `use-sandbox-run`, `sandbox-workspace`, `sandbox-view` (`?template=`, `blank`).
+  - `/sandbox` page, `ROUTES.sandbox`, header link and a Home button. Beginner mode replays an unchanged template at the recorded latency; an edited setup shows why it cannot run. Developer mode runs through `jevRacer` and `/api/jev` with the TypeSafe key only (user decision from slice 8); a rejection shows Jev's raw reply plus a plain note.
+- Recorded (real, Jev only, no Anthropic spend; all recordings on disk still $0.448 of the $20 credit): support ticket, spam check, review rating, resume fit, moderation, counting trap. Jev got the counting trap's list right (8 kinds), so its lesson says "may get it right, never rely on it".
+- Finding: Supabase rate-limits sign-ins ("Too many attempts"), so a full e2e run with many `signIn` calls fails in a cluster. The sandbox spec signs up once and reuses one page. If the full suite fails on `toHaveURL('/')`, wait a minute and rerun.
+- Left open: the manual local-review pass; `right_tool` and `trickster` badges; `recordDevRun`/`live_wire`; Noul criteria and Choice option descriptions are kept by the JSON view but have no Form fields; Sandbox runs award no XP; the Rule-A/Rule-B relabel references in CLAUDE.md, spec, DESIGN and TECH-STACK (needs the user's OK).
+- For slice 12 (Quizzes + Profile): reuse `MyShares` with `getMyShares`.
+
+Next: Step-6, slice 12 (Quizzes + Profile).

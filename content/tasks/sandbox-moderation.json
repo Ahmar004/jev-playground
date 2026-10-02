@@ -1,0 +1,32 @@
+{
+	"id": "sandbox-moderation",
+	"kind": "sandbox",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"private": {
+				"type": "noul",
+				"instructions": "Does the post share the author's private contact details?"
+			},
+			"hostile": {
+				"type": "noul",
+				"instructions": "Is the post rude or hostile toward anyone?"
+			},
+			"action": {
+				"type": "choice",
+				"instructions": "What should a moderator do with this post?",
+				"criteria": {
+					"leave it up": null,
+					"ask the author to remove the details": null,
+					"delete it": null
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "t1",
+			"state": "Does anyone know a good plumber near Riverside? You can reach me at 555-0142 or at 24 Elm Street if someone can come by this weekend. Thanks in advance!"
+		}
+	]
+}

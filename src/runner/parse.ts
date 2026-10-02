@@ -87,6 +87,9 @@ function pickAnswer(kind: TaskKind, value: unknown): LlmAnswer | null {
 				value,
 				z.string().refine((text) => text.trim() !== '')
 			)
+		case TASK_KINDS.sandbox:
+			// Sandbox tasks have no LLM racer.
+			return null
 	}
 }
 

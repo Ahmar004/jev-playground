@@ -1,0 +1,44 @@
+[
+	{
+		"id": "support-ticket",
+		"title": "Support ticket",
+		"blurb": "One message, three kinds of question.",
+		"taskId": "sandbox-support-ticket",
+		"lesson": "One state can answer many questions at once. The Choice names a team with a probability for each option, the Noul gives the probability of yes, and the Score places the customer's mood on a scale."
+	},
+	{
+		"id": "spam-check",
+		"title": "Spam and scam check",
+		"blurb": "Yes or no questions about a suspicious message.",
+		"taskId": "sandbox-spam-check",
+		"lesson": "A Noul answers with the probability of yes, not a hard decision. Read how close each answer is to the ends before you trust it, and compare the questions: two questions about the same message can get very different answers."
+	},
+	{
+		"id": "review-rating",
+		"title": "Review rating",
+		"blurb": "A star Score and the main complaint.",
+		"taskId": "sandbox-review-rating",
+		"lesson": "A Score reads a position on your scale. The probabilities across the levels show how torn Jev is, and a low confidence on the Choice is a sign the review mixes several complaints."
+	},
+	{
+		"id": "resume-fit",
+		"title": "Resume fit",
+		"blurb": "Match a candidate to a role.",
+		"taskId": "sandbox-resume-fit",
+		"lesson": "Jev screens a short profile quickly, but a fit question is a judgment call. Treat the probabilities as a first pass for a person to review, never as the final decision about a candidate."
+	},
+	{
+		"id": "moderation",
+		"title": "Post moderation",
+		"blurb": "Private details, tone and what to do.",
+		"taskId": "sandbox-moderation",
+		"lesson": "Jev is strong at flagging a post for review. When the Choice about what to do has a low confidence, the case is a real judgment call, and that is the point to hand it to a person."
+	},
+	{
+		"id": "counting-trap",
+		"title": "Counting trap",
+		"blurb": "Questions that ask Jev to count.",
+		"taskId": "sandbox-counting-trap",
+		"lesson": "Counting is a known weak spot of System One models. Jev may get a list right, but you can never be sure, so use plain code when you need an exact count. The Sandbox warns you when a question asks to count."
+	}
+]

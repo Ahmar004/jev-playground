@@ -1,0 +1,34 @@
+{
+	"id": "sandbox-support-ticket",
+	"kind": "sandbox",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"category": {
+				"type": "choice",
+				"instructions": "Which team should handle this message?",
+				"criteria": {
+					"billing": null,
+					"shipping": null,
+					"technical": null,
+					"sales": null
+				}
+			},
+			"urgent": {
+				"type": "noul",
+				"instructions": "Does the customer need a reply today?"
+			},
+			"mood": {
+				"type": "score",
+				"instructions": "How upset is the customer?",
+				"criteria": ["calm", "a little annoyed", "upset", "furious"]
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "t1",
+			"state": "Hi, I was charged twice for my March order and the second charge is still pending. I have emailed three times and nobody has answered. If this is not fixed by Friday I will dispute both charges with my bank."
+		}
+	]
+}

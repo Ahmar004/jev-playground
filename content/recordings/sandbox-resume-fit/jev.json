@@ -1,0 +1,61 @@
+{
+	"taskId": "sandbox-resume-fit",
+	"taskHash": "cca3a89b812197f3e5ebf8989aab36c9f424244cc3caa59752089551929711c4",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-02T07:25:45.673Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "t1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"fit\":{\"type\":\"choice\",\"choice\":\"nurse manager\",\"confidence\":0.99,\"probabilities\":{\"ward nurse\":0.0,\"IT support\":0.0,\"nurse manager\":1.0,\"hospital accountant\":0.0}},\"leadership\":{\"type\":\"noul\",\"noul\":0.97},\"ready\":{\"type\":\"score\",\"score\":1.42,\"confidence\":0.58,\"legend\":{\"0\":\"not ready\",\"1\":\"needs training\",\"2\":\"ready with support\",\"3\":\"fully ready\"},\"probabilities\":{\"0\":0.0,\"1\":0.58,\"2\":0.42,\"3\":0.0}}},\"usage\":{\"input_tokens\":419,\"output_tokens\":84}}",
+			"parsed": {
+				"fit": {
+					"type": "choice",
+					"choice": "nurse manager",
+					"probabilities": {
+						"ward nurse": 0,
+						"IT support": 0,
+						"nurse manager": 1,
+						"hospital accountant": 0
+					},
+					"confidence": 0.99
+				},
+				"leadership": { "type": "noul", "noul": 0.97 },
+				"ready": {
+					"type": "score",
+					"score": 1.42,
+					"legend": {
+						"0": "not ready",
+						"1": "needs training",
+						"2": "ready with support",
+						"3": "fully ready"
+					},
+					"probabilities": { "0": 0, "1": 0.58, "2": 0.42, "3": 0 },
+					"confidence": 0.58
+				}
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 650.2142,
+			"usage": { "inputTokens": 419, "outputTokens": 84 },
+			"costUsd": 0.000017598000000000003,
+			"lane": 0,
+			"startMs": 0.07730000000003656,
+			"endMs": 652.3747999999999
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 0,
+		"correct": 0,
+		"accuracy": null,
+		"wallMs": 652.2974999999999,
+		"costUsd": 0.000017598000000000003,
+		"inputTokens": 419,
+		"outputTokens": 84,
+		"parseFailures": 0
+	}
+}

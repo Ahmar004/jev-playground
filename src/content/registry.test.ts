@@ -2,7 +2,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { CLAUDE_MODELS, RACERS } from '@/lib/constants'
+import { CLAUDE_MODELS, RACERS, TASK_KINDS } from '@/lib/constants'
 import { PRESETS } from './arena'
 import { GAMES } from './games'
 import { LEVELS } from './levels'
@@ -71,10 +71,14 @@ describe('content registries', () => {
 		expect(imported).toEqual(onDisk)
 	})
 
-	it('has a current recording for Jev and all three Claude models for every task', () => {
-		for (const taskId of TASKS.keys()) {
+	it('has a current recording for Jev and all three Claude models for every task (Sandbox templates: Jev only)', () => {
+		for (const [taskId, task] of TASKS) {
 			const slugs = currentRecordings(taskId).map(recordingSlug)
-			for (const slug of [RACERS.jev, ...Object.values(CLAUDE_MODELS)]) {
+			const racers =
+				task.kind === TASK_KINDS.sandbox
+					? [RACERS.jev]
+					: [RACERS.jev, ...Object.values(CLAUDE_MODELS)]
+			for (const slug of racers) {
 				expect(slugs, `${taskId} needs a current ${slug} recording`).toContain(slug)
 			}
 		}

@@ -43,6 +43,12 @@ export function SiteHeader() {
 						Arena
 					</Link>
 					<Link
+						href={ROUTES.sandbox}
+						className="text-text hover:bg-surface-hover focus-visible:outline-accent hidden rounded px-2 py-1 text-sm font-medium focus-visible:outline focus-visible:outline-2 sm:inline"
+					>
+						Sandbox
+					</Link>
+					<Link
 						href={ROUTES.leaderboard}
 						className="text-text hover:bg-surface-hover focus-visible:outline-accent hidden rounded px-2 py-1 text-sm font-medium focus-visible:outline focus-visible:outline-2 sm:inline"
 					>

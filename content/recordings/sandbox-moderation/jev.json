@@ -1,0 +1,49 @@
+{
+	"taskId": "sandbox-moderation",
+	"taskHash": "be73d5a99c7faf356e34bf00148790f141fc904c5f00bd7f88f4f38cf13746c6",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-02T07:25:47.370Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "t1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"private\":{\"type\":\"noul\",\"noul\":0.98},\"hostile\":{\"type\":\"noul\",\"noul\":0.01},\"action\":{\"type\":\"choice\",\"choice\":\"ask the author to remove the details\",\"confidence\":0.37,\"probabilities\":{\"leave it up\":0.4,\"ask the author to remove the details\":0.58,\"delete it\":0.02}}},\"usage\":{\"input_tokens\":382,\"output_tokens\":86}}",
+			"parsed": {
+				"private": { "type": "noul", "noul": 0.98 },
+				"hostile": { "type": "noul", "noul": 0.01 },
+				"action": {
+					"type": "choice",
+					"choice": "ask the author to remove the details",
+					"probabilities": {
+						"leave it up": 0.4,
+						"ask the author to remove the details": 0.58,
+						"delete it": 0.02
+					},
+					"confidence": 0.37
+				}
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 798.0614999999999,
+			"usage": { "inputTokens": 382, "outputTokens": 86 },
+			"costUsd": 0.000016044,
+			"lane": 0,
+			"startMs": 0.07319999999998572,
+			"endMs": 800.0973999999999
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 0,
+		"correct": 0,
+		"accuracy": null,
+		"wallMs": 800.0241999999998,
+		"costUsd": 0.000016044,
+		"inputTokens": 382,
+		"outputTokens": 86,
+		"parseFailures": 0
+	}
+}

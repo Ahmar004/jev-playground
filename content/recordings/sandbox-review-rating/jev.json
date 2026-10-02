@@ -1,0 +1,57 @@
+{
+	"taskId": "sandbox-review-rating",
+	"taskHash": "9be3d8f0e896ab1961ddce2622e455fe42c1526473281064cd3af5d108382624",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-02T07:25:43.929Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "t1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"stars\":{\"type\":\"score\",\"score\":1.0,\"confidence\":0.94,\"legend\":{\"0\":\"1 star\",\"1\":\"2 stars\",\"2\":\"3 stars\",\"3\":\"4 stars\",\"4\":\"5 stars\"},\"probabilities\":{\"0\":0.04,\"1\":0.93,\"2\":0.03,\"3\":0.0,\"4\":0.0}},\"topic\":{\"type\":\"choice\",\"choice\":\"service speed\",\"confidence\":0.47,\"probabilities\":{\"cleanliness\":0.0,\"service speed\":0.61,\"food\":0.0,\"price\":0.39}},\"recommends\":{\"type\":\"noul\",\"noul\":0.13}},\"usage\":{\"input_tokens\":415,\"output_tokens\":81}}",
+			"parsed": {
+				"stars": {
+					"type": "score",
+					"score": 1,
+					"legend": {
+						"0": "1 star",
+						"1": "2 stars",
+						"2": "3 stars",
+						"3": "4 stars",
+						"4": "5 stars"
+					},
+					"probabilities": { "0": 0.04, "1": 0.93, "2": 0.03, "3": 0, "4": 0 },
+					"confidence": 0.94
+				},
+				"topic": {
+					"type": "choice",
+					"choice": "service speed",
+					"probabilities": { "cleanliness": 0, "service speed": 0.61, "food": 0, "price": 0.39 },
+					"confidence": 0.47
+				},
+				"recommends": { "type": "noul", "noul": 0.13 }
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 672.3703,
+			"usage": { "inputTokens": 415, "outputTokens": 81 },
+			"costUsd": 0.00001743,
+			"lane": 0,
+			"startMs": 0.07420000000001892,
+			"endMs": 674.5291
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 0,
+		"correct": 0,
+		"accuracy": null,
+		"wallMs": 674.4549,
+		"costUsd": 0.00001743,
+		"inputTokens": 415,
+		"outputTokens": 81,
+		"parseFailures": 0
+	}
+}

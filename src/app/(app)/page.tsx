@@ -42,6 +42,9 @@ export default function HomePage() {
 					<Link href={ROUTES.arena}>Try the Arena</Link>
 				</Button>
 				<Button asChild variant="secondary">
+					<Link href={ROUTES.sandbox}>Build in the Sandbox</Link>
+				</Button>
+				<Button asChild variant="secondary">
 					<Link href={ROUTES.leaderboard}>Your Leaderboard</Link>
 				</Button>
 				<Button asChild variant="secondary">

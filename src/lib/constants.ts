@@ -61,7 +61,9 @@ export const TASK_KINDS = {
 	score: 'score',
 	fanOut: 'fan_out',
 	findLines: 'find_lines',
-	generate: 'generate'
+	generate: 'generate',
+	// Sandbox templates: Jev-only, any mix of questions, never scored (spec 9).
+	sandbox: 'sandbox'
 } as const
 export type TaskKind = (typeof TASK_KINDS)[keyof typeof TASK_KINDS]
 

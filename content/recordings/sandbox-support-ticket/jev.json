@@ -1,0 +1,51 @@
+{
+	"taskId": "sandbox-support-ticket",
+	"taskHash": "bd4b3248a774e5f184f0b9eb5b6dca123e711a2817a3db7801a83ef052ed62db",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-02T07:25:40.468Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "t1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"category\":{\"type\":\"choice\",\"choice\":\"billing\",\"confidence\":1.0,\"probabilities\":{\"sales\":0.0,\"technical\":0.0,\"shipping\":0.0,\"billing\":1.0}},\"urgent\":{\"type\":\"noul\",\"noul\":0.53},\"mood\":{\"type\":\"score\",\"score\":2.23,\"confidence\":0.76,\"legend\":{\"0\":\"calm\",\"1\":\"a little annoyed\",\"2\":\"upset\",\"3\":\"furious\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":0.77,\"3\":0.23}}},\"usage\":{\"input_tokens\":408,\"output_tokens\":76}}",
+			"parsed": {
+				"category": {
+					"type": "choice",
+					"choice": "billing",
+					"probabilities": { "sales": 0, "technical": 0, "shipping": 0, "billing": 1 },
+					"confidence": 1
+				},
+				"urgent": { "type": "noul", "noul": 0.53 },
+				"mood": {
+					"type": "score",
+					"score": 2.23,
+					"legend": { "0": "calm", "1": "a little annoyed", "2": "upset", "3": "furious" },
+					"probabilities": { "0": 0, "1": 0, "2": 0.77, "3": 0.23 },
+					"confidence": 0.76
+				}
+			},
+			"credit": null,
+			"correct": null,
+			"latencyMs": 675.692,
+			"usage": { "inputTokens": 408, "outputTokens": 76 },
+			"costUsd": 0.000017136000000000003,
+			"lane": 0,
+			"startMs": 0.07549999999997681,
+			"endMs": 677.6951
+		}
+	],
+	"totals": {
+		"items": 1,
+		"scored": 0,
+		"correct": 0,
+		"accuracy": null,
+		"wallMs": 677.6196,
+		"costUsd": 0.000017136000000000003,
+		"inputTokens": 408,
+		"outputTokens": 76,
+		"parseFailures": 0
+	}
+}
