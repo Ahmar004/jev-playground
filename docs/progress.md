@@ -612,3 +612,9 @@ Next: Step-6 is complete after slice 14. Then Step-7 (hardening: systematic-debu
 - Left open: everything listed under slice 14.
 
 Next: Step-7 (hardening), as before.
+
+## UI follow-up: hues (owner request, 2026-10-02) - done
+
+- Sign-in: three large blurred hue blobs drift slowly behind the form (`.hue-blobs` in `globals.css`); stronger in light, softer in dark.
+- Dark mode hues: the page glows, Home hero blobs and sign-in blobs now read `--hue-1/2/3`, which are the racer colors in light (unchanged look) and calmer teal #2A9D94, slate blue #4A64B8 and green #2F7D52 at lower strength in dark. Dark drops the purple from the brand gradient text, the header line and the avatar ring. Light theme is unchanged.
+- Gates: format:check, typecheck, lint, check:standards, check:secrets, test (561 Vitest plus 114 node:test), build, e2e 68/68 against `pnpm start`.

@@ -92,11 +92,11 @@ export default function HomePage() {
 				{/* Decorative hues in the racer colors; no text sits on them alone. */}
 				<div
 					aria-hidden
-					className="bg-jev/20 pointer-events-none absolute -top-24 -right-16 size-64 rounded-full blur-3xl"
+					className="bg-hue-1/20 dark:bg-hue-1/25 pointer-events-none absolute -top-24 -right-16 size-64 rounded-full blur-3xl"
 				/>
 				<div
 					aria-hidden
-					className="bg-llm/20 pointer-events-none absolute -bottom-24 left-1/3 size-64 rounded-full blur-3xl"
+					className="bg-hue-2/20 dark:bg-hue-2/25 pointer-events-none absolute -bottom-24 left-1/3 size-64 rounded-full blur-3xl"
 				/>
 				<div className="relative flex max-w-2xl flex-col gap-4">
 					<span className="bg-accent/12 text-accent inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold">
