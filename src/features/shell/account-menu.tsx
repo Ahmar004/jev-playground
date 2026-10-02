@@ -15,7 +15,7 @@ export function AccountMenu({ email }: { email: string }) {
 		<Popover>
 			<PopoverTrigger
 				aria-label="Account menu"
-				className="focus-visible:outline-accent from-accent via-jev to-llm dark:to-jev rounded-full bg-gradient-to-br p-0.5 transition-transform duration-200 hover:scale-105 focus-visible:outline focus-visible:outline-2 active:scale-95"
+				className="focus-visible:outline-accent bg-border rounded-full p-0.5 transition-transform duration-200 hover:scale-105 focus-visible:outline focus-visible:outline-2 active:scale-95"
 			>
 				<span className="bg-surface text-text flex size-8 items-center justify-center rounded-full">
 					<AvatarIcon size={22} />

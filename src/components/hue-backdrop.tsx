@@ -3,22 +3,14 @@ import { cn } from '@/lib/cn'
 // Literal class strings per strength, so Tailwind sees them at build.
 const STRENGTH = {
 	// Sign-in: the hues are the page's main decoration.
-	strong: [
-		'bg-hue-1/35 dark:bg-hue-1/45',
-		'bg-hue-2/35 dark:bg-hue-2/45',
-		'bg-hue-3/30 dark:bg-hue-3/45'
-	],
+	strong: ['bg-hue-1/38', 'bg-hue-2/38', 'bg-hue-3/38'],
 	// In the app: visible behind the cards, never competing with them.
-	soft: [
-		'bg-hue-1/15 dark:bg-hue-1/30',
-		'bg-hue-2/15 dark:bg-hue-2/30',
-		'bg-hue-3/12 dark:bg-hue-3/28'
-	]
+	soft: ['bg-hue-1/30', 'bg-hue-2/30', 'bg-hue-3/24']
 } as const
 
 /**
- * Three large blurred hues that drift slowly behind a page (`.hue-blobs` in
- * globals.css staggers them; reduced motion stops the drift). Decoration
+ * Three large blurred hues that drift and pulse slowly behind a page (`.hue-blobs` in
+ * globals.css staggers them; reduced motion stops both). Decoration
  * only: no text sits on a hue alone. `fixed` keeps them in view while the
  * page scrolls.
  */

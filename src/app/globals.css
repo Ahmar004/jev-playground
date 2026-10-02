@@ -27,7 +27,11 @@
 	--animate-slide-out-right: slide-out-right 0.2s ease-in;
 	--animate-grow-x: grow-x 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 	--animate-shimmer: shimmer 1.6s linear infinite;
-	--animate-drift: drift 14s ease-in-out infinite alternate;
+	/* The hues drift and, separately, pulse like a slow heartbeat: full size
+	   and strength at the peak, down to 30% size at the low. `translate` and
+	   `scale` are separate properties, so the two animations never clash. */
+	--animate-drift:
+		drift 14s ease-in-out infinite alternate, hue-pulse 7s ease-in-out infinite alternate;
 
 	@keyframes rise {
 		from {
@@ -84,7 +88,13 @@
 	}
 	@keyframes drift {
 		to {
-			transform: translate(6%, 8%) scale(1.12);
+			translate: 6% 8%;
+		}
+	}
+	@keyframes hue-pulse {
+		to {
+			scale: 0.3;
+			opacity: 0.35;
 		}
 	}
 	@keyframes shimmer {
@@ -158,13 +168,16 @@
 	--elev-2:
 		inset 0 1px 0 rgb(255 255 255 / 0.06), 0 2px 4px rgb(0 0 0 / 0.5),
 		0 18px 36px -10px rgb(0 0 0 / 0.8);
+	/* Warm gold for the brand text and the bottom hue: it stands off the
+	   dark blue crisply where a cyan or green blurs into it. */
+	--gold: #ecc56a;
 	/* Dark uses calmer, cooler hues at lower strength: the bright racer
 	   colors (and orange) glow too loudly on near-black. */
 	--hue-1: #2a9d94;
 	--hue-2: #4a64b8;
-	--hue-3: #2f7d52;
+	--hue-3: var(--gold);
 	--glow-strength: 14%;
-	--brand-gradient: linear-gradient(100deg, var(--accent), var(--jev));
+	--brand-gradient: linear-gradient(100deg, #8ad98c, var(--gold));
 }
 
 @theme inline {
@@ -254,7 +267,7 @@ body {
 	color: transparent;
 }
 
-/* The sign-in page's drifting hues start at different points of the drift. */
+/* The drifting hues start at different points of the drift and pulse. */
 .hue-blobs > :nth-child(2) {
 	animation-delay: -5s;
 }

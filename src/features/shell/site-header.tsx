@@ -49,11 +49,6 @@ export function SiteHeader() {
 					</Suspense>
 				</div>
 			</div>
-			{/* A thin line in the racer colors under the header. */}
-			<div
-				aria-hidden
-				className="from-accent via-jev to-llm dark:to-jev h-0.5 bg-gradient-to-r opacity-70 dark:opacity-40"
-			/>
 		</header>
 	)
 }

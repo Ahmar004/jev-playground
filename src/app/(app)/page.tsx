@@ -87,7 +87,7 @@ const TILES = [
 
 export default function HomePage() {
 	return (
-		<main className="flex flex-col gap-6">
+		<main className="flex flex-1 flex-col gap-6">
 			<section className="border-border bg-surface shadow-card relative overflow-hidden rounded-lg border p-6 sm:p-8">
 				{/* Decorative hues in the racer colors; no text sits on them alone. */}
 				<div
@@ -145,7 +145,7 @@ export default function HomePage() {
 				))}
 			</ul>
 			{firstLevel && (
-				<Suspense fallback={<div className="skeleton h-32 rounded-lg" />}>
+				<Suspense fallback={<div className="skeleton min-h-28 flex-1 rounded-lg" />}>
 					<HomeProgressLoader firstLevel={firstLevel} />
 				</Suspense>
 			)}

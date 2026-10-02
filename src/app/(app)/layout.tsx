@@ -16,8 +16,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 				<div className="relative isolate flex min-h-screen flex-col">
 					<HueBackdrop strength="soft" fixed />
 					<SiteHeader />
-					<div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:py-10">{children}</div>
-					<footer className="border-border bg-surface/60 text-text-muted border-t py-6 text-sm backdrop-blur-sm">
+					<div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-8 sm:py-10">
+						{children}
+					</div>
+					<footer className="border-border bg-surface/60 text-text-muted border-t py-2 text-xs backdrop-blur-sm">
 						<nav aria-label="Footer" className="mx-auto flex max-w-6xl flex-wrap gap-4 px-4">
 							<Link href={ROUTES.glossary} className={FOOTER_LINK}>
 								Glossary
