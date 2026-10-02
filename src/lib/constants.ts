@@ -147,7 +147,7 @@ export const ITEM_OUTCOMES = {
 } as const
 export type ItemOutcome = (typeof ITEM_OUTCOMES)[keyof typeof ITEM_OUTCOMES]
 
-// Levels on the Path in the finished product; the pathfinder badge needs all of them (spec 5.2).
+// Levels on the Path in the finished product; the pathfinder badge needs all of them (spec 6.1, DESIGN 10).
 export const LEVEL_COUNT = 8
 
 // Level 1 is the one the first_race badge is for.

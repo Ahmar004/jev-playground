@@ -6,7 +6,7 @@ export function LevelSkeleton() {
 		<div role="status" aria-busy="true" className="flex max-w-4xl flex-col gap-6">
 			<span className="sr-only">Loading the level</span>
 			<div className="bg-surface-hover h-9 w-64 animate-pulse rounded motion-reduce:animate-none" />
-			<div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+			<div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
 				{Array.from({ length: SKELETON_STEPS }, (_, index) => (
 					<div
 						key={index}
