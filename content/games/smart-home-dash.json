@@ -1,0 +1,17 @@
+{
+	"id": "smart-home-dash",
+	"title": "Smart Home Dash",
+	"priority": "p1",
+	"taskId": "intent-routing",
+	"blurb": "Route spoken commands to the right smart home device.",
+	"animation": "runners",
+	"lesson": "Routing a short command to one of a few options is what Jev does fast and cheaply.",
+	"why": [
+		"Each voice command is one Choice question over six devices. Jev returns the device with a probability, so every command is routed in a single quick call.",
+		"A racer scores when it picks the device that should handle the command. Vague commands such as \"make it brighter\" are the hard ones."
+	],
+	"docs": {
+		"path": "/primitives/choice",
+		"title": "Choice"
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"id": "twin-finder",
+	"title": "Twin Finder",
+	"priority": "p1",
+	"taskId": "product-match",
+	"blurb": "Decide whether two shop listings describe the same product.",
+	"animation": "belts",
+	"lesson": "Pairwise yes/no judgments are cheap and quick per pair, which adds up at catalogue scale.",
+	"why": [
+		"Each pair of listings is one Noul question: the same product or not. Jev returns a probability, and above one half counts as yes.",
+		"Different model, size or colour in similar wording is the trap, so read the item list to see which pairs were missed."
+	],
+	"docs": {
+		"path": "/primitives/noul",
+		"title": "Noul"
+	}
+}

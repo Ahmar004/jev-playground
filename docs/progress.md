@@ -568,3 +568,18 @@ Next: Step-6, slice 12 (Quizzes + Profile).
 - Every P0 row in spec 15 is now built (slice 12's exit criterion), except the open items above.
 
 Next: Step-6, slice 13 (VS games P1: Smart Home Dash, Twin Finder, Confidence Catch, Citation Cop). Their tasks `product-match`, `citation-check` and `intent-routing` are already recorded (slice 10).
+
+## Step-6 - slice 13: VS games (P1) (2026-10-02) - done
+
+- Skills: no writing-plans file and no subagents (Rule-A; one connected change). Gates by hand: lint, typecheck, format:check, check:env, check:secrets, check:standards 24/24, test (557 Vitest plus 114 node:test), build, e2e 65/65 (against `pnpm start` with `E2E_BASE_URL`, as in slices 9-12). The manual `local-review` pass was not run as a separate step.
+- User decision: record Confidence Catch after the dry run (upper bound $0.37). Real spend $0.044; all recordings on disk $0.492 of the $20 credit.
+- Built:
+  - Four games in `content/games/` (all `p1`): `smart-home-dash` (task `intent-routing`), `twin-finder` (`product-match`), `citation-cop` (`citation-check`), `confidence-catch` (new task `confidence-catch`: 20 customer messages, Choice among billing / technical / shipping, written by Claude, spot-check them). Smart Home Dash, Twin Finder and Citation Cop reuse the slice 10 recordings, so nothing was re-recorded for them.
+  - New `GAME_ANIMATIONS` values `runners`, `belts`, `fall`, `checkpoint`; `GameScene` labels chips per animation (device, "Pair n", "Claim n", answer).
+  - Confidence Catch's slider: `src/runner/threshold.ts` (`jevChoicePoints`, `splitByThreshold`, tested) and `ThresholdPanel`. It re-sorts Jev's recorded answers into acted right, acted wrong and sent to a person. It runs nothing, and shows only in Beginner mode after the race (a live run has no stored Jev confidences in the view).
+  - Games, Leaderboard and `recordGameRun` are generic, so the P1 games write entries with no server change. The `gamer` badge and `game_done` XP still look at P0 only for the badge; P1 games earn the 50 XP once per game and opponent like P0 games.
+- Recorded (real): Confidence Catch Jev 20/20 (confidence 0.46-1; lowest on the ambiguous messages), Haiku 19/20, Sonnet 19/20, Opus 19/20. Jev is fastest (2.2 s vs 4.5 s, 9.7 s, 14.1 s) and cheapest. Because Jev got all 20 right, a high threshold only sends right answers to a person; the copy says the slider re-sorts recorded answers and does not claim a safety gain.
+- Tests: `threshold.test.ts`; `e2e/games.spec.ts` plays all four P1 games, checks their Leaderboard sections and drives the slider.
+- Left open: the manual local-review pass; no screenshots checked for the new scenes in both themes; animations are chip scenes, not the richer metaphors in spec 7.2; `right_tool`, `trickster` and `live_wire` badges; `recordDevRun`; the Rule-A/Rule-B relabel references in CLAUDE.md, spec, DESIGN and TECH-STACK (needs the user's OK).
+
+Next: Step-6, slice 14 (Arena batch mode, P1: the 25-item batch task and the race view in Arena).

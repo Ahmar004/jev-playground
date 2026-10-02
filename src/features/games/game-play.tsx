@@ -10,11 +10,12 @@ import { defaultOpponentId, raceLineup } from '@/features/levels/lineup'
 import { useMode } from '@/features/mode/mode-context'
 import { OpponentPicker } from '@/features/race/opponent-picker'
 import { RaceStage, type RaceResult } from '@/features/race/race-stage'
-import { MODES } from '@/lib/constants'
+import { GAME_ANIMATIONS, MODES } from '@/lib/constants'
 import { gameRunInput } from './game-run'
 import { GameScene } from './game-scene'
 import { GameSummary } from './game-summary'
 import { useCodeRun } from './use-code-run'
+import { ThresholdPanel } from './threshold-panel'
 import { useRecordGameRun } from './use-record-game-run'
 
 /**
@@ -88,6 +89,9 @@ export function GamePlay({
 					scene={scene}
 					onFinished={onFinished}
 				/>
+			)}
+			{results && mode === MODES.beginner && game.animation === GAME_ANIMATIONS.fall && (
+				<ThresholdPanel jev={jev} />
 			)}
 			{results && <GameSummary game={game} results={results} code={code} />}
 		</div>

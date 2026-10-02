@@ -1,0 +1,120 @@
+{
+	"id": "confidence-catch",
+	"kind": "choice",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "choice",
+				"instructions": "Which team should handle this customer message?",
+				"criteria": {
+					"billing": "Charges, invoices, refunds, payment methods and discount codes",
+					"technical": "The website or app not working: crashes, errors, login and broken pages",
+					"shipping": "Delivery, couriers, tracking, delivery dates and lost parcels"
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "c01",
+			"state": "My card was charged twice for the same order.",
+			"label": "billing"
+		},
+		{
+			"id": "c02",
+			"state": "The app crashes every time I open the camera screen.",
+			"label": "technical"
+		},
+		{
+			"id": "c03",
+			"state": "My parcel says delivered but nothing arrived.",
+			"label": "shipping"
+		},
+		{
+			"id": "c04",
+			"state": "Please send me a copy of last month's invoice.",
+			"label": "billing"
+		},
+		{
+			"id": "c05",
+			"state": "I cannot log in, the password reset email never comes.",
+			"label": "technical"
+		},
+		{
+			"id": "c06",
+			"state": "How long will delivery to Berlin take?",
+			"label": "shipping"
+		},
+		{
+			"id": "c07",
+			"state": "Why was I billed after I cancelled my plan?",
+			"label": "billing"
+		},
+		{
+			"id": "c08",
+			"state": "The website shows a blank page on my phone.",
+			"label": "technical"
+		},
+		{
+			"id": "c09",
+			"state": "The courier left my box at the wrong address.",
+			"label": "shipping"
+		},
+		{
+			"id": "c10",
+			"state": "Update the credit card on my subscription.",
+			"label": "billing"
+		},
+		{
+			"id": "c11",
+			"state": "Error 500 when I try to upload a photo.",
+			"label": "technical"
+		},
+		{
+			"id": "c12",
+			"state": "Can I change the delivery date for my order?",
+			"label": "shipping"
+		},
+		{
+			"id": "c13",
+			"state": "My order arrived but the invoice total looks wrong.",
+			"label": "billing"
+		},
+		{
+			"id": "c14",
+			"state": "I paid for express shipping but it came with standard delivery.",
+			"label": "shipping"
+		},
+		{
+			"id": "c15",
+			"state": "The checkout page froze right after I entered my card.",
+			"label": "technical"
+		},
+		{
+			"id": "c16",
+			"state": "It says my payment failed but my bank shows the money left.",
+			"label": "billing"
+		},
+		{
+			"id": "c17",
+			"state": "The tracking link opens an error page.",
+			"label": "technical"
+		},
+		{
+			"id": "c18",
+			"state": "My package is stuck at customs and I was asked to pay a fee.",
+			"label": "shipping"
+		},
+		{
+			"id": "c19",
+			"state": "The discount code was not applied and I was charged full price.",
+			"label": "billing"
+		},
+		{
+			"id": "c20",
+			"state": "The mobile app says the item shipped but the website says processing.",
+			"label": "technical"
+		}
+	]
+}

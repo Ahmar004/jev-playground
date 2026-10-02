@@ -187,7 +187,11 @@ export const GAME_ANIMATIONS = {
 	gate: 'gate',
 	lines: 'lines',
 	duel: 'duel',
-	rope: 'rope'
+	rope: 'rope',
+	runners: 'runners',
+	belts: 'belts',
+	fall: 'fall',
+	checkpoint: 'checkpoint'
 } as const
 export type GameAnimation = (typeof GAME_ANIMATIONS)[keyof typeof GAME_ANIMATIONS]
 

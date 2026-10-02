@@ -32,8 +32,13 @@ function Chip({
 	}
 	const answer = answerText(racer, result)
 	let label = String(index + 1)
-	if (animation === GAME_ANIMATIONS.gate && answer) label = answer
+	if ((animation === GAME_ANIMATIONS.gate || animation === GAME_ANIMATIONS.runners) && answer) {
+		label = answer
+	}
 	if (animation === GAME_ANIMATIONS.lines) label = `Doc ${index + 1}`
+	if (animation === GAME_ANIMATIONS.belts) label = `Pair ${index + 1}`
+	if (animation === GAME_ANIMATIONS.checkpoint) label = `Claim ${index + 1}`
+	if (animation === GAME_ANIMATIONS.fall && answer) label = answer
 	const right = result.correct === true
 	return (
 		<m.span

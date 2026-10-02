@@ -7,6 +7,10 @@ import citationCheckJev from '../../content/recordings/citation-check/jev.json'
 import citationCheckHaiku from '../../content/recordings/citation-check/claude-haiku-4-5-20251001.json'
 import citationCheckSonnet from '../../content/recordings/citation-check/claude-sonnet-5-5.json'
 import citationCheckOpus from '../../content/recordings/citation-check/claude-opus-5-5.json'
+import confidenceCatchJev from '../../content/recordings/confidence-catch/jev.json'
+import confidenceCatchHaiku from '../../content/recordings/confidence-catch/claude-haiku-4-5-20251001.json'
+import confidenceCatchSonnet from '../../content/recordings/confidence-catch/claude-sonnet-5-5.json'
+import confidenceCatchOpus from '../../content/recordings/confidence-catch/claude-opus-5-5.json'
 import intentRoutingJev from '../../content/recordings/intent-routing/jev.json'
 import intentRoutingHaiku from '../../content/recordings/intent-routing/claude-haiku-4-5-20251001.json'
 import intentRoutingSonnet from '../../content/recordings/intent-routing/claude-sonnet-5-5.json'
@@ -206,6 +210,10 @@ const RAW_RECORDINGS: unknown[] = [
 	intentRoutingHaiku,
 	intentRoutingSonnet,
 	intentRoutingOpus,
+	confidenceCatchJev,
+	confidenceCatchHaiku,
+	confidenceCatchSonnet,
+	confidenceCatchOpus,
 	sandboxSupportTicketJev,
 	sandboxSpamCheckJev,
 	sandboxReviewRatingJev,

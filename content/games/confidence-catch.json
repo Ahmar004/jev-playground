@@ -1,0 +1,17 @@
+{
+	"id": "confidence-catch",
+	"title": "Confidence Catch",
+	"priority": "p1",
+	"taskId": "confidence-catch",
+	"blurb": "Drag a confidence threshold to decide which answers a machine may act on.",
+	"animation": "fall",
+	"lesson": "Jev's confidence is useful: raise the threshold and the answers it acts on get safer.",
+	"why": [
+		"Each message is a Choice question. Jev returns its pick with a confidence. After the race, set a threshold: answers at or above it are acted on, the rest go to a human.",
+		"A good threshold sends the doubtful answers to a person and lets the sure ones through. The slider only re-sorts Jev's recorded answers; it runs nothing new."
+	],
+	"docs": {
+		"path": "/primitives/choice",
+		"title": "Choice"
+	}
+}

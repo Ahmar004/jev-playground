@@ -244,16 +244,16 @@ Across the path, Jev wins levels 1, 4 and 7, the LLM wins level 2, and Code wins
 
 Every game uses the race view from section 3.3. The opponent defaults to Opus 5.5 in Beginner mode (section 1). Each game ends with a summary: winner, why, numbers and a docs link. Every finished run calls `recordGameRun` (section 11).
 
-| Game                   | Priority | Items                               | Task kind                                                              | Animation                                                  |
-| ---------------------- | -------- | ----------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------- |
-| Guardrail Gauntlet     | P0       | 16 messages                         | Choice: pass / review / block                                          | messages rush a gate; each bouncer stamps its decision     |
-| Needle Hunt            | P0       | 3 documents x 30 lines              | `find_lines` (Jev: 30 Nouls in one call; LLM returns line numbers)     | lines light up as each racer answers                       |
-| Number Crunch Showdown | P0       | 12 counting and arithmetic problems | Choice from the same 6 numeric options for both; Code computes exactly | two-lane duel; Code's result sits in the summary           |
-| Review Tug-of-War      | P0       | 20 reviews                          | Score, 5 levels                                                        | each correct score pulls the rope toward that racer        |
-| Smart Home Dash        | P1       | 12 voice commands                   | Choice from 6 devices                                                  | two robot runners reach the device before the next command |
-| Twin Finder            | P1       | 16 product pairs                    | Noul "same product?"                                                   | pairs on conveyor belts get stamped                        |
-| Confidence Catch       | P1       | 20 items                            | Choice with confidence; the threshold slider is local                  | answers fall into act / review / bin                       |
-| Citation Cop           | P1       | 12 claims with sources              | Noul "does the source support it?"                                     | claims pass a checkpoint and get flagged                   |
+| Game                   | Priority | Items                               | Task kind                                                              | Animation                                                                                                            |
+| ---------------------- | -------- | ----------------------------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Guardrail Gauntlet     | P0       | 16 messages                         | Choice: pass / review / block                                          | messages rush a gate; each bouncer stamps its decision                                                               |
+| Needle Hunt            | P0       | 3 documents x 30 lines              | `find_lines` (Jev: 30 Nouls in one call; LLM returns line numbers)     | lines light up as each racer answers                                                                                 |
+| Number Crunch Showdown | P0       | 12 counting and arithmetic problems | Choice from the same 6 numeric options for both; Code computes exactly | two-lane duel; Code's result sits in the summary                                                                     |
+| Review Tug-of-War      | P0       | 20 reviews                          | Score, 5 levels                                                        | each correct score pulls the rope toward that racer                                                                  |
+| Smart Home Dash        | P1       | 12 voice commands                   | Choice from 6 devices                                                  | two robot runners reach the device before the next command                                                           |
+| Twin Finder            | P1       | 16 product pairs                    | Noul "same product?"                                                   | pairs on conveyor belts get stamped                                                                                  |
+| Confidence Catch       | P1       | 20 items                            | Choice with confidence; the threshold slider is local                  | answers fall into act / review; the slider sorts Jev's recorded answers (acted right, acted wrong, sent to a person) |
+| Citation Cop           | P1       | 12 claims with sources              | Noul "does the source support it?"                                     | claims pass a checkpoint and get flagged                                                                             |
 
 Level 1 (Speed Race) is also timed, so it writes Leaderboard entries under the game ID `speed-race`.
 

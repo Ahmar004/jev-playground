@@ -1,0 +1,17 @@
+{
+	"id": "citation-cop",
+	"title": "Citation Cop",
+	"priority": "p1",
+	"taskId": "citation-check",
+	"blurb": "Flag claims that their quoted source does not support.",
+	"animation": "checkpoint",
+	"lesson": "Checking a claim against a source is a close race, which shows the trade-off between speed and care.",
+	"why": [
+		"Each claim comes with its source text. One Noul question asks whether the source supports the claim. Jev answers with a probability.",
+		"The LLM reads the same pair. The race is usually close, so the lesson is in the time and cost columns as much as in accuracy."
+	],
+	"docs": {
+		"path": "/primitives/noul",
+		"title": "Noul"
+	}
+}

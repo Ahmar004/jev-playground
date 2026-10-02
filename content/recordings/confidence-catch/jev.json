@@ -1,0 +1,442 @@
+{
+	"taskId": "confidence-catch",
+	"taskHash": "895399eb336cf50fda8f4105d90e7f676555f7bd22a2426cb48cb1dd8398a514",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-02T08:04:36.431Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "c01",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"billing\",\"confidence\":1.0,\"probabilities\":{\"billing\":1.0,\"technical\":0.0,\"shipping\":0.0}}},\"usage\":{\"input_tokens\":366,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "billing",
+					"probabilities": { "billing": 1, "technical": 0, "shipping": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 653.1875,
+			"usage": { "inputTokens": 366, "outputTokens": 38 },
+			"costUsd": 0.000015372,
+			"lane": 0,
+			"startMs": 0.07150000000001455,
+			"endMs": 653.7507999999999
+		},
+		{
+			"itemId": "c02",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"technical\",\"confidence\":1.0,\"probabilities\":{\"shipping\":0.0,\"technical\":1.0,\"billing\":0.0}}},\"usage\":{\"input_tokens\":367,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "technical",
+					"probabilities": { "shipping": 0, "technical": 1, "billing": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 636.2941000000001,
+			"usage": { "inputTokens": 367, "outputTokens": 38 },
+			"costUsd": 0.000015414000000000002,
+			"lane": 1,
+			"startMs": 18.095799999999997,
+			"endMs": 654.4988999999999
+		},
+		{
+			"itemId": "c03",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"shipping\",\"confidence\":1.0,\"probabilities\":{\"billing\":0.0,\"shipping\":1.0,\"technical\":0.0}}},\"usage\":{\"input_tokens\":364,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "shipping",
+					"probabilities": { "billing": 0, "shipping": 1, "technical": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 625.3995,
+			"usage": { "inputTokens": 364, "outputTokens": 38 },
+			"costUsd": 0.000015288,
+			"lane": 2,
+			"startMs": 18.501100000000008,
+			"endMs": 645.1111
+		},
+		{
+			"itemId": "c04",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"billing\",\"confidence\":1.0,\"probabilities\":{\"shipping\":0.0,\"technical\":0.0,\"billing\":1.0}}},\"usage\":{\"input_tokens\":367,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "billing",
+					"probabilities": { "shipping": 0, "technical": 0, "billing": 1 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 636.3742,
+			"usage": { "inputTokens": 367, "outputTokens": 38 },
+			"costUsd": 0.000015414000000000002,
+			"lane": 3,
+			"startMs": 18.840400000000045,
+			"endMs": 655.3094
+		},
+		{
+			"itemId": "c05",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"technical\",\"confidence\":1.0,\"probabilities\":{\"shipping\":0.0,\"billing\":0.0,\"technical\":1.0}}},\"usage\":{\"input_tokens\":368,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "technical",
+					"probabilities": { "shipping": 0, "billing": 0, "technical": 1 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 316.79190000000017,
+			"usage": { "inputTokens": 368, "outputTokens": 38 },
+			"costUsd": 0.000015456000000000002,
+			"lane": 2,
+			"startMs": 645.2189,
+			"endMs": 962.169
+		},
+		{
+			"itemId": "c06",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"shipping\",\"confidence\":1.0,\"probabilities\":{\"shipping\":1.0,\"billing\":0.0,\"technical\":0.0}}},\"usage\":{\"input_tokens\":364,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "shipping",
+					"probabilities": { "shipping": 1, "billing": 0, "technical": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 348.6670999999999,
+			"usage": { "inputTokens": 364, "outputTokens": 38 },
+			"costUsd": 0.000015288,
+			"lane": 0,
+			"startMs": 653.8035000000001,
+			"endMs": 1002.5768999999999
+		},
+		{
+			"itemId": "c07",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"billing\",\"confidence\":1.0,\"probabilities\":{\"technical\":0.0,\"billing\":1.0,\"shipping\":0.0}}},\"usage\":{\"input_tokens\":366,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "billing",
+					"probabilities": { "technical": 0, "billing": 1, "shipping": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 339.7457999999999,
+			"usage": { "inputTokens": 366, "outputTokens": 38 },
+			"costUsd": 0.000015372,
+			"lane": 1,
+			"startMs": 654.536,
+			"endMs": 994.4163
+		},
+		{
+			"itemId": "c08",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"technical\",\"confidence\":1.0,\"probabilities\":{\"technical\":1.0,\"billing\":0.0,\"shipping\":0.0}}},\"usage\":{\"input_tokens\":366,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "technical",
+					"probabilities": { "technical": 1, "billing": 0, "shipping": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 365.4783,
+			"usage": { "inputTokens": 366, "outputTokens": 38 },
+			"costUsd": 0.000015372,
+			"lane": 3,
+			"startMs": 655.35,
+			"endMs": 1020.9054
+		},
+		{
+			"itemId": "c09",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"shipping\",\"confidence\":1.0,\"probabilities\":{\"shipping\":1.0,\"billing\":0.0,\"technical\":0.0}}},\"usage\":{\"input_tokens\":366,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "shipping",
+					"probabilities": { "shipping": 1, "billing": 0, "technical": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 354.2568000000001,
+			"usage": { "inputTokens": 366, "outputTokens": 38 },
+			"costUsd": 0.000015372,
+			"lane": 2,
+			"startMs": 962.2231,
+			"endMs": 1316.6660000000002
+		},
+		{
+			"itemId": "c10",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"billing\",\"confidence\":1.0,\"probabilities\":{\"shipping\":0.0,\"billing\":1.0,\"technical\":0.0}}},\"usage\":{\"input_tokens\":364,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "billing",
+					"probabilities": { "shipping": 0, "billing": 1, "technical": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 350.04840000000013,
+			"usage": { "inputTokens": 364, "outputTokens": 38 },
+			"costUsd": 0.000015288,
+			"lane": 1,
+			"startMs": 994.4653999999999,
+			"endMs": 1344.6803
+		},
+		{
+			"itemId": "c11",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"technical\",\"confidence\":1.0,\"probabilities\":{\"technical\":1.0,\"billing\":0.0,\"shipping\":0.0}}},\"usage\":{\"input_tokens\":369,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "technical",
+					"probabilities": { "technical": 1, "billing": 0, "shipping": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 483.0742,
+			"usage": { "inputTokens": 369, "outputTokens": 38 },
+			"costUsd": 0.000015498,
+			"lane": 0,
+			"startMs": 1002.6178000000001,
+			"endMs": 1485.8065000000001
+		},
+		{
+			"itemId": "c12",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"shipping\",\"confidence\":1.0,\"probabilities\":{\"technical\":0.0,\"billing\":0.0,\"shipping\":1.0}}},\"usage\":{\"input_tokens\":366,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "shipping",
+					"probabilities": { "technical": 0, "billing": 0, "shipping": 1 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 338.6854999999998,
+			"usage": { "inputTokens": 366, "outputTokens": 38 },
+			"costUsd": 0.000015372,
+			"lane": 3,
+			"startMs": 1020.9507,
+			"endMs": 1359.7129
+		},
+		{
+			"itemId": "c13",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"billing\",\"confidence\":1.0,\"probabilities\":{\"technical\":0.0,\"billing\":1.0,\"shipping\":0.0}}},\"usage\":{\"input_tokens\":366,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "billing",
+					"probabilities": { "technical": 0, "billing": 1, "shipping": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 322.87339999999995,
+			"usage": { "inputTokens": 366, "outputTokens": 38 },
+			"costUsd": 0.000015372,
+			"lane": 2,
+			"startMs": 1316.7323999999999,
+			"endMs": 1639.7217999999998
+		},
+		{
+			"itemId": "c14",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"shipping\",\"confidence\":0.97,\"probabilities\":{\"shipping\":0.98,\"technical\":0.0,\"billing\":0.02}}},\"usage\":{\"input_tokens\":368,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "shipping",
+					"probabilities": { "shipping": 0.98, "technical": 0, "billing": 0.02 },
+					"confidence": 0.97
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 360.7293000000002,
+			"usage": { "inputTokens": 368, "outputTokens": 38 },
+			"costUsd": 0.000015456000000000002,
+			"lane": 1,
+			"startMs": 1344.7402000000002,
+			"endMs": 1705.5475000000001
+		},
+		{
+			"itemId": "c15",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"technical\",\"confidence\":0.98,\"probabilities\":{\"shipping\":0.0,\"technical\":0.99,\"billing\":0.01}}},\"usage\":{\"input_tokens\":367,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "technical",
+					"probabilities": { "shipping": 0, "technical": 0.99, "billing": 0.01 },
+					"confidence": 0.98
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 341.51800000000003,
+			"usage": { "inputTokens": 367, "outputTokens": 38 },
+			"costUsd": 0.000015414000000000002,
+			"lane": 3,
+			"startMs": 1359.7513,
+			"endMs": 1701.3926000000001
+		},
+		{
+			"itemId": "c16",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"billing\",\"confidence\":1.0,\"probabilities\":{\"billing\":1.0,\"technical\":0.0,\"shipping\":0.0}}},\"usage\":{\"input_tokens\":369,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "billing",
+					"probabilities": { "billing": 1, "technical": 0, "shipping": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 322.59910000000013,
+			"usage": { "inputTokens": 369, "outputTokens": 38 },
+			"costUsd": 0.000015498,
+			"lane": 0,
+			"startMs": 1485.8544000000002,
+			"endMs": 1808.5912000000003
+		},
+		{
+			"itemId": "c17",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"technical\",\"confidence\":0.72,\"probabilities\":{\"technical\":0.82,\"billing\":0.0,\"shipping\":0.18}}},\"usage\":{\"input_tokens\":364,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "technical",
+					"probabilities": { "technical": 0.82, "billing": 0, "shipping": 0.18 },
+					"confidence": 0.72
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 388.25700000000006,
+			"usage": { "inputTokens": 364, "outputTokens": 38 },
+			"costUsd": 0.000015288,
+			"lane": 2,
+			"startMs": 1639.7673,
+			"endMs": 2028.0976
+		},
+		{
+			"itemId": "c18",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"shipping\",\"confidence\":0.81,\"probabilities\":{\"shipping\":0.88,\"billing\":0.12,\"technical\":0.0}}},\"usage\":{\"input_tokens\":371,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "shipping",
+					"probabilities": { "shipping": 0.88, "billing": 0.12, "technical": 0 },
+					"confidence": 0.81
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 312.7711999999997,
+			"usage": { "inputTokens": 371, "outputTokens": 38 },
+			"costUsd": 0.000015582,
+			"lane": 3,
+			"startMs": 1701.4312,
+			"endMs": 2014.3314
+		},
+		{
+			"itemId": "c19",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"billing\",\"confidence\":1.0,\"probabilities\":{\"shipping\":0.0,\"billing\":1.0,\"technical\":0.0}}},\"usage\":{\"input_tokens\":369,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "billing",
+					"probabilities": { "shipping": 0, "billing": 1, "technical": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 365.94669999999996,
+			"usage": { "inputTokens": 369, "outputTokens": 38 },
+			"costUsd": 0.000015498,
+			"lane": 1,
+			"startMs": 1705.5768000000003,
+			"endMs": 2071.6206
+		},
+		{
+			"itemId": "c20",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"technical\",\"confidence\":0.46,\"probabilities\":{\"technical\":0.64,\"shipping\":0.36,\"billing\":0.0}}},\"usage\":{\"input_tokens\":369,\"output_tokens\":38}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "technical",
+					"probabilities": { "technical": 0.64, "shipping": 0.36, "billing": 0 },
+					"confidence": 0.46
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 361.34169999999995,
+			"usage": { "inputTokens": 369, "outputTokens": 38 },
+			"costUsd": 0.000015498,
+			"lane": 0,
+			"startMs": 1808.6383,
+			"endMs": 2170.106
+		}
+	],
+	"totals": {
+		"items": 20,
+		"scored": 20,
+		"correct": 20,
+		"accuracy": 1,
+		"wallMs": 2170.0345,
+		"costUsd": 0.00030811200000000003,
+		"inputTokens": 7336,
+		"outputTokens": 760,
+		"parseFailures": 0
+	}
+}

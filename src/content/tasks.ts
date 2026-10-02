@@ -16,6 +16,7 @@ import routerPhish from '../../content/tasks/router-phish.json'
 import routerDates from '../../content/tasks/router-dates.json'
 import routerSummary from '../../content/tasks/router-summary.json'
 import guardrailGauntlet from '../../content/tasks/guardrail-gauntlet.json'
+import confidenceCatch from '../../content/tasks/confidence-catch.json'
 import needleHunt from '../../content/tasks/needle-hunt.json'
 import numberCrunch from '../../content/tasks/number-crunch.json'
 import reviewScore from '../../content/tasks/review-score.json'
@@ -57,6 +58,7 @@ const RAW_TASKS: unknown[] = [
 	productMatch,
 	citationCheck,
 	intentRouting,
+	confidenceCatch,
 	sandboxSupportTicket,
 	sandboxSpamCheck,
 	sandboxReviewRating,

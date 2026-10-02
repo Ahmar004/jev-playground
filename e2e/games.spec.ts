@@ -78,3 +78,37 @@ test('a game works at phone width without horizontal scroll', async ({ page }) =
 	await page.goto('/leaderboard')
 	await expectNoHorizontalScroll(page)
 })
+
+test('the four P1 games play and write Leaderboard entries; Confidence Catch has a threshold', async ({
+	page
+}) => {
+	await signIn(page, EMAIL)
+	const titles = ['Smart Home Dash', 'Twin Finder', 'Confidence Catch', 'Citation Cop']
+	await page.goto('/games')
+	for (const title of titles) {
+		await expect(page.getByRole('link', { name: new RegExp(title) })).toBeVisible()
+	}
+	const slugs = ['smart-home-dash', 'twin-finder', 'confidence-catch', 'citation-cop']
+	for (const slug of slugs) {
+		await page.goto(`/games/${slug}`)
+		await page.getByRole('button', { name: 'Start the race' }).click()
+		await page.getByRole('button', { name: 'Skip to result' }).click()
+		await expect(page.getByRole('region', { name: 'Result' })).toBeVisible()
+		await expect(page.getByText('Saved to your Leaderboard', { exact: true }).first()).toBeVisible()
+	}
+	// Confidence Catch: the slider re-sorts Jev's recorded answers.
+	await page.goto('/games/confidence-catch')
+	await page.getByRole('button', { name: 'Start the race' }).click()
+	await page.getByRole('button', { name: 'Skip to result' }).click()
+	const panel = page.getByRole('region', { name: 'Set the confidence threshold' })
+	await expect(panel).toBeVisible()
+	await panel.getByRole('slider').fill('0')
+	await expect(panel.getByText('Sent to a person').locator('..')).toContainText('0 of 20')
+	await panel.getByRole('slider').fill('100')
+	await expect(panel.getByText('Acted on, wrong').locator('..')).toContainText('0 of 20')
+
+	await page.goto('/leaderboard')
+	for (const title of titles) {
+		await expect(page.getByRole('region', { name: title })).toBeVisible()
+	}
+})
