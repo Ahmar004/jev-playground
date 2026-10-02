@@ -17,7 +17,7 @@ async function QuizListLoader() {
 
 export default function QuizzesPage() {
 	return (
-		<main className="flex flex-col gap-4">
+		<main className="mx-auto flex w-full max-w-2xl flex-col gap-4">
 			<h1 className="text-text text-3xl font-extrabold">Quizzes</h1>
 			<p className="text-text-muted max-w-2xl text-lg">
 				Which tool fits which job? Take the start quiz before you play and the end quiz after, to

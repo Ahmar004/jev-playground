@@ -68,7 +68,7 @@ export default async function QuizPage({ params }: PageProps<'/quizzes/[quizId]'
 	const { quizId } = await params
 	if (!isQuizId(quizId)) notFound()
 	return (
-		<main>
+		<main className="mx-auto w-full max-w-2xl">
 			<Suspense fallback={<div className="skeleton h-64 max-w-2xl rounded-lg" />}>
 				<QuizLoader quizId={quizId} />
 			</Suspense>

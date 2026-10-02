@@ -145,7 +145,7 @@ export default function HomePage() {
 				))}
 			</ul>
 			{firstLevel && (
-				<Suspense fallback={<div className="skeleton h-48 max-w-2xl rounded-lg" />}>
+				<Suspense fallback={<div className="skeleton h-32 rounded-lg" />}>
 					<HomeProgressLoader firstLevel={firstLevel} />
 				</Suspense>
 			)}

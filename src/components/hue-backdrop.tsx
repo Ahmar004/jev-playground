@@ -4,15 +4,15 @@ import { cn } from '@/lib/cn'
 const STRENGTH = {
 	// Sign-in: the hues are the page's main decoration.
 	strong: [
-		'bg-hue-1/35 dark:bg-hue-1/30',
-		'bg-hue-2/30 dark:bg-hue-2/30',
-		'bg-hue-3/35 dark:bg-hue-3/30'
+		'bg-hue-1/35 dark:bg-hue-1/45',
+		'bg-hue-2/35 dark:bg-hue-2/45',
+		'bg-hue-3/30 dark:bg-hue-3/45'
 	],
 	// In the app: visible behind the cards, never competing with them.
 	soft: [
-		'bg-hue-1/20 dark:bg-hue-1/20',
-		'bg-hue-2/16 dark:bg-hue-2/20',
-		'bg-hue-3/20 dark:bg-hue-3/18'
+		'bg-hue-1/15 dark:bg-hue-1/30',
+		'bg-hue-2/15 dark:bg-hue-2/30',
+		'bg-hue-3/12 dark:bg-hue-3/28'
 	]
 } as const
 

@@ -123,10 +123,11 @@
 	   background instead of looking grey. */
 	--elev-1: 0 1px 2px rgb(110 80 30 / 0.1), 0 4px 14px -4px rgb(110 80 30 / 0.18);
 	--elev-2: 0 2px 4px rgb(110 80 30 / 0.1), 0 16px 32px -10px rgb(110 80 30 / 0.3);
-	/* The three decorative hues behind pages: the racer colors in light. */
+	/* The three decorative hues behind pages: the racer colors in light,
+	   with orange top-right and purple at the bottom. */
 	--hue-1: var(--jev);
-	--hue-2: var(--llm);
-	--hue-3: var(--highlight);
+	--hue-2: var(--highlight);
+	--hue-3: var(--llm);
 	--glow-strength: 16%;
 	--brand-gradient: linear-gradient(100deg, var(--accent), var(--jev) 45%, var(--llm));
 }
@@ -162,7 +163,7 @@
 	--hue-1: #2a9d94;
 	--hue-2: #4a64b8;
 	--hue-3: #2f7d52;
-	--glow-strength: 9%;
+	--glow-strength: 14%;
 	--brand-gradient: linear-gradient(100deg, var(--accent), var(--jev));
 }
 

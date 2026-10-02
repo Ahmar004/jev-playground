@@ -27,7 +27,7 @@ async function LeaderboardLoader() {
 
 export default function LeaderboardPage() {
 	return (
-		<main className="flex flex-col gap-4">
+		<main className="mx-auto flex w-full max-w-2xl flex-col gap-4">
 			<h1 className="text-text text-3xl font-extrabold">Your Leaderboard</h1>
 			<p className="text-text-muted max-w-2xl text-lg">
 				Your best result for each model in each timed game, with the mode it ran in. Only you see

@@ -76,7 +76,7 @@ export function LevelStepper({
 	const widgetProps = { level, stages, opponentId, state: widget }
 
 	return (
-		<main className="flex max-w-4xl flex-col gap-6">
+		<main className="mx-auto flex w-full max-w-4xl flex-col gap-6">
 			<div className="flex flex-col gap-1">
 				<p className="text-jev text-sm font-bold tracking-wide uppercase">Level {level.order}</p>
 				<h1 className="text-text text-3xl font-extrabold">{level.title}</h1>

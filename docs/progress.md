@@ -624,3 +624,12 @@ Next: Step-7 (hardening), as before.
 - The owner liked the sign-in hues and asked for them on every in-app page, a bit softer. `HueBackdrop` (`src/components/hue-backdrop.tsx`) now draws them: `strong` on sign-in, `soft` (about 20% instead of 30-35%) and `fixed` behind the whole app shell in `src/app/(app)/layout.tsx`, so they stay in view while scrolling. Both themes use the `--hue-*` tokens.
 - Full-page e2e screenshots show the fixed hues only in the first screen, and a page grabbed the moment its text appears can still be fading in (Playwright counts opacity 0 as visible). Both are screenshot artifacts, not bugs.
 - Gates: format:check, typecheck, lint, build, e2e 68/68 against `pnpm start`.
+
+## UI follow-up: hue tuning, centering, light default (owner request, 2026-10-02) - done
+
+- Hues: dark is stronger (sign-in blobs 45%, in-app blobs about 30%, page glow 14%); light swaps purple and orange (orange top-right, purple at the bottom) and the in-app blobs drop to 12-15%. Light sign-in keeps its strength.
+- Narrow pages (Path, Quizzes, a quiz, Leaderboard, Profile, Glossary, Methodology, a Level) center their column with `mx-auto w-full max-w-*` instead of hugging the left edge of the 6xl shell.
+- New visitors get the light theme (`defaultTheme="light"`, no system theme; the toggle only offers light and dark).
+- Home's progress card spans the hero's width and is compact (title, levels done with the bar, and XP on one row) so the footer fits on a desktop first screen. Not yet confirmed in a browser: the Chrome extension was disconnected all session.
+- A `pnpm start` server serves the last build, so UI changes need `pnpm build` before they show.
+- Gates: lint, typecheck, format:check, check:env, check:secrets, check:standards, check:rls, test (561 Vitest), build.

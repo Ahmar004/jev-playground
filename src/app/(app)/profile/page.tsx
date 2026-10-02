@@ -22,7 +22,7 @@ async function ProfileLoader() {
 
 export default function ProfilePage() {
 	return (
-		<main className="flex flex-col gap-4">
+		<main className="mx-auto flex w-full max-w-3xl flex-col gap-4">
 			<h1 className="text-text text-3xl font-extrabold">Your profile</h1>
 			<Suspense fallback={<div className="skeleton h-96 max-w-3xl rounded-lg" />}>
 				<ProfileLoader />

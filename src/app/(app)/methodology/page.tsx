@@ -47,7 +47,7 @@ export default function MethodologyPage() {
 	const recordings = recordingRows([...TASKS.keys()].flatMap(currentRecordings))
 
 	return (
-		<main className="flex max-w-3xl flex-col gap-6">
+		<main className="mx-auto flex w-full max-w-3xl flex-col gap-6">
 			<div className="flex flex-col gap-2">
 				<h1 className="text-text text-3xl font-extrabold">Methodology</h1>
 				<p className={BODY}>

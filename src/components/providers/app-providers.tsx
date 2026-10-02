@@ -8,7 +8,12 @@ import { ThemeProvider } from 'next-themes'
 // loads its animation features lazily and honors reduced motion (R91).
 export function AppProviders({ children }: { children: React.ReactNode }) {
 	return (
-		<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+		<ThemeProvider
+			attribute="class"
+			defaultTheme="light"
+			enableSystem={false}
+			disableTransitionOnChange
+		>
 			<LazyMotion features={domAnimation} strict>
 				<MotionConfig reducedMotion="user">{children}</MotionConfig>
 			</LazyMotion>
