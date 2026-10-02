@@ -30,6 +30,18 @@ export function SiteHeader() {
 					>
 						Path
 					</Link>
+					<Link
+						href={ROUTES.games}
+						className="text-text hover:bg-surface-hover focus-visible:outline-accent hidden rounded px-2 py-1 text-sm font-medium focus-visible:outline focus-visible:outline-2 sm:inline"
+					>
+						Games
+					</Link>
+					<Link
+						href={ROUTES.leaderboard}
+						className="text-text hover:bg-surface-hover focus-visible:outline-accent hidden rounded px-2 py-1 text-sm font-medium focus-visible:outline focus-visible:outline-2 sm:inline"
+					>
+						Leaderboard
+					</Link>
 					<Suspense
 						fallback={
 							<div className="bg-surface-hover h-8 w-24 animate-pulse rounded motion-reduce:animate-none" />

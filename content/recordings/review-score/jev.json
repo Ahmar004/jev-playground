@@ -1,0 +1,582 @@
+{
+	"taskId": "review-score",
+	"taskHash": "b054e1ead2ea23a697b70463c6d9f037c08d15b55cbdac8f52612ee84ad46ea4",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-02T04:43:43.483Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "r1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":0.0,\"confidence\":1.0,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":1.0,\"1\":0.0,\"2\":0.0,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":367,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 0,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 1, "1": 0, "2": 0, "3": 0, "4": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 595.5655,
+			"usage": { "inputTokens": 367, "outputTokens": 17 },
+			"costUsd": 0.000015414000000000002,
+			"lane": 0,
+			"startMs": 0.07280000000002929,
+			"endMs": 596.1271
+		},
+		{
+			"itemId": "r2",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":4.0,\"confidence\":1.0,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":0.0,\"3\":0.0,\"4\":1.0}}},\"usage\":{\"input_tokens\":364,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 4,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 0, "3": 0, "4": 1 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 581.1634,
+			"usage": { "inputTokens": 364, "outputTokens": 17 },
+			"costUsd": 0.000015288,
+			"lane": 1,
+			"startMs": 18.37710000000004,
+			"endMs": 599.7057
+		},
+		{
+			"itemId": "r3",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":2.23,\"confidence\":0.81,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":0.77,\"3\":0.23,\"4\":0.0}}},\"usage\":{\"input_tokens\":366,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 2.23,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 0.77, "3": 0.23, "4": 0 },
+					"confidence": 0.81
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 645.386,
+			"usage": { "inputTokens": 366, "outputTokens": 17 },
+			"costUsd": 0.000015372,
+			"lane": 2,
+			"startMs": 18.80940000000004,
+			"endMs": 664.3928000000001
+		},
+		{
+			"itemId": "r4",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":1.0,\"confidence\":1.0,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.0,\"1\":1.0,\"2\":0.0,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":366,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 1,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0, "1": 1, "2": 0, "3": 0, "4": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 572.9666,
+			"usage": { "inputTokens": 366, "outputTokens": 17 },
+			"costUsd": 0.000015372,
+			"lane": 3,
+			"startMs": 19.154700000000048,
+			"endMs": 593.5924
+		},
+		{
+			"itemId": "r5",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":3.0,\"confidence\":1.0,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":0.0,\"3\":1.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":372,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 3,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 0, "3": 1, "4": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 369.0203999999999,
+			"usage": { "inputTokens": 372, "outputTokens": 17 },
+			"costUsd": 0.000015624,
+			"lane": 3,
+			"startMs": 593.7202,
+			"endMs": 962.9150999999999
+		},
+		{
+			"itemId": "r6",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":0.0,\"confidence\":1.0,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":1.0,\"1\":0.0,\"2\":0.0,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":366,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 0,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 1, "1": 0, "2": 0, "3": 0, "4": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 374.4603000000001,
+			"usage": { "inputTokens": 366, "outputTokens": 17 },
+			"costUsd": 0.000015372,
+			"lane": 0,
+			"startMs": 596.1765,
+			"endMs": 970.7618
+		},
+		{
+			"itemId": "r7",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":3.97,\"confidence\":0.97,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":0.01,\"3\":0.02,\"4\":0.97}}},\"usage\":{\"input_tokens\":362,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 3.97,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 0.01, "3": 0.02, "4": 0.97 },
+					"confidence": 0.97
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 385.0144999999999,
+			"usage": { "inputTokens": 362, "outputTokens": 17 },
+			"costUsd": 0.000015204,
+			"lane": 1,
+			"startMs": 599.7555,
+			"endMs": 984.9053000000001
+		},
+		{
+			"itemId": "r8",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":1.83,\"confidence\":0.86,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.0,\"1\":0.17,\"2\":0.83,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":370,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 1.83,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0, "1": 0.17, "2": 0.83, "3": 0, "4": 0 },
+					"confidence": 0.86
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 411.7122999999999,
+			"usage": { "inputTokens": 370, "outputTokens": 17 },
+			"costUsd": 0.00001554,
+			"lane": 2,
+			"startMs": 664.4534000000001,
+			"endMs": 1076.3249
+		},
+		{
+			"itemId": "r9",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":0.65,\"confidence\":0.71,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.35,\"1\":0.65,\"2\":0.0,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":361,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 0.65,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0.35, "1": 0.65, "2": 0, "3": 0, "4": 0 },
+					"confidence": 0.71
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 335.4829,
+			"usage": { "inputTokens": 361, "outputTokens": 17 },
+			"costUsd": 0.000015162000000000002,
+			"lane": 3,
+			"startMs": 962.9688000000001,
+			"endMs": 1298.6182000000001
+		},
+		{
+			"itemId": "r10",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":3.73,\"confidence\":0.78,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":0.0,\"3\":0.27,\"4\":0.73}}},\"usage\":{\"input_tokens\":362,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 3.73,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 0, "3": 0.27, "4": 0.73 },
+					"confidence": 0.78
+				}
+			},
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 331.71309999999994,
+			"usage": { "inputTokens": 362, "outputTokens": 17 },
+			"costUsd": 0.000015204,
+			"lane": 0,
+			"startMs": 970.8022000000001,
+			"endMs": 1302.6809
+		},
+		{
+			"itemId": "r11",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":0.0,\"confidence\":1.0,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":1.0,\"1\":0.0,\"2\":0.0,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":364,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 0,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 1, "1": 0, "2": 0, "3": 0, "4": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 323.84770000000003,
+			"usage": { "inputTokens": 364, "outputTokens": 17 },
+			"costUsd": 0.000015288,
+			"lane": 1,
+			"startMs": 984.9474,
+			"endMs": 1308.907
+		},
+		{
+			"itemId": "r12",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":4.0,\"confidence\":1.0,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":0.0,\"3\":0.0,\"4\":1.0}}},\"usage\":{\"input_tokens\":366,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 4,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 0, "3": 0, "4": 1 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 379.3904,
+			"usage": { "inputTokens": 366, "outputTokens": 17 },
+			"costUsd": 0.000015372,
+			"lane": 2,
+			"startMs": 1076.3890000000001,
+			"endMs": 1455.9249
+		},
+		{
+			"itemId": "r13",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":2.0,\"confidence\":1.0,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":1.0,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":366,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 2,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 1, "3": 0, "4": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 349.0900999999999,
+			"usage": { "inputTokens": 366, "outputTokens": 17 },
+			"costUsd": 0.000015372,
+			"lane": 3,
+			"startMs": 1298.6769,
+			"endMs": 1647.8601
+		},
+		{
+			"itemId": "r14",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":0.8,\"confidence\":0.83,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.2,\"1\":0.8,\"2\":0.0,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":361,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 0.8,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0.2, "1": 0.8, "2": 0, "3": 0, "4": 0 },
+					"confidence": 0.83
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 339.40380000000005,
+			"usage": { "inputTokens": 361, "outputTokens": 17 },
+			"costUsd": 0.000015162000000000002,
+			"lane": 0,
+			"startMs": 1302.7179,
+			"endMs": 1642.2534
+		},
+		{
+			"itemId": "r15",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":3.0,\"confidence\":1.0,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":0.0,\"3\":1.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":366,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 3,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 0, "3": 1, "4": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 347.8527999999999,
+			"usage": { "inputTokens": 366, "outputTokens": 17 },
+			"costUsd": 0.000015372,
+			"lane": 1,
+			"startMs": 1308.9522,
+			"endMs": 1656.8812
+		},
+		{
+			"itemId": "r16",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":0.0,\"confidence\":1.0,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":1.0,\"1\":0.0,\"2\":0.0,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":365,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 0,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 1, "1": 0, "2": 0, "3": 0, "4": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 346.9504999999999,
+			"usage": { "inputTokens": 365, "outputTokens": 17 },
+			"costUsd": 0.00001533,
+			"lane": 2,
+			"startMs": 1455.9753,
+			"endMs": 1803.0647999999999
+		},
+		{
+			"itemId": "r17",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":4.0,\"confidence\":1.0,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":0.0,\"3\":0.0,\"4\":1.0}}},\"usage\":{\"input_tokens\":367,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 4,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 0, "3": 0, "4": 1 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 331.93730000000005,
+			"usage": { "inputTokens": 367, "outputTokens": 17 },
+			"costUsd": 0.000015414000000000002,
+			"lane": 0,
+			"startMs": 1642.2963,
+			"endMs": 1974.3569
+		},
+		{
+			"itemId": "r18",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":0.67,\"confidence\":0.72,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.33,\"1\":0.67,\"2\":0.0,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":366,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 0.67,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0.33, "1": 0.67, "2": 0, "3": 0, "4": 0 },
+					"confidence": 0.72
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 341.88969999999995,
+			"usage": { "inputTokens": 366, "outputTokens": 17 },
+			"costUsd": 0.000015372,
+			"lane": 3,
+			"startMs": 1647.9037,
+			"endMs": 1989.8603999999998
+		},
+		{
+			"itemId": "r19",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":2.22,\"confidence\":0.81,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.0,\"1\":0.01,\"2\":0.77,\"3\":0.22,\"4\":0.0}}},\"usage\":{\"input_tokens\":363,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 2.22,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0, "1": 0.01, "2": 0.77, "3": 0.22, "4": 0 },
+					"confidence": 0.81
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 329.1009999999999,
+			"usage": { "inputTokens": 363, "outputTokens": 17 },
+			"costUsd": 0.000015246000000000001,
+			"lane": 1,
+			"startMs": 1656.9103,
+			"endMs": 1986.0829999999999
+		},
+		{
+			"itemId": "r20",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":3.0,\"confidence\":1.0,\"legend\":{\"0\":\"Very negative: the reviewer is angry or unhappy\",\"1\":\"Negative: the reviewer is disappointed\",\"2\":\"Neutral or mixed: good and bad in equal measure\",\"3\":\"Positive: the reviewer is happy with small reservations\",\"4\":\"Very positive: the reviewer loves it\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":0.0,\"3\":1.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":365,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 3,
+					"legend": {
+						"0": "Very negative: the reviewer is angry or unhappy",
+						"1": "Negative: the reviewer is disappointed",
+						"2": "Neutral or mixed: good and bad in equal measure",
+						"3": "Positive: the reviewer is happy with small reservations",
+						"4": "Very positive: the reviewer loves it"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 0, "3": 1, "4": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 348.2420000000002,
+			"usage": { "inputTokens": 365, "outputTokens": 17 },
+			"costUsd": 0.00001533,
+			"lane": 2,
+			"startMs": 1803.1083,
+			"endMs": 2151.4728999999998
+		}
+	],
+	"totals": {
+		"items": 20,
+		"scored": 20,
+		"correct": 19,
+		"accuracy": 0.95,
+		"wallMs": 2151.4001,
+		"costUsd": 0.0003068099999999999,
+		"inputTokens": 7305,
+		"outputTokens": 340,
+		"parseFailures": 0
+	}
+}

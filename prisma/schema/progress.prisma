@@ -59,3 +59,22 @@ model UserBadge {
 	@@id([userId, badgeId])
 	@@map("user_badges")
 }
+
+// The user's best result per (game, model, mode) in timed games (DESIGN 10).
+// Numbers and model IDs only, never task text (R64). A run replaces the
+// numbers only when accuracy is higher, or equal with a lower time.
+model LeaderboardEntry {
+	userId    String   @map("user_id") @db.Uuid
+	gameId    String   @map("game_id")
+	modelId   String   @map("model_id")
+	mode      String
+	accuracy  Float
+	wallMs    Int      @map("wall_ms")
+	costUsd   Float?   @map("cost_usd")
+	runs      Int      @default(1)
+	updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+	user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+	@@id([userId, gameId, modelId, mode])
+	@@map("leaderboard_entries")
+}

@@ -7,7 +7,16 @@ import type { Recording } from '@/content/recording-schema'
 import type { Task } from '@/content/task-schema'
 import { ROUTES } from '@/lib/links'
 import { useMode } from '@/features/mode/mode-context'
-import { LEVEL_STATUS, LEVEL_STEPS, LEVEL_WIDGETS, MODES } from '@/lib/constants'
+import { gameRunInput } from '@/features/games/game-run'
+import { useRecordGameRun } from '@/features/games/use-record-game-run'
+import type { RaceResult } from '@/features/race/race-stage'
+import {
+	LEVEL_STATUS,
+	LEVEL_STEPS,
+	LEVEL_WIDGETS,
+	MODES,
+	SPEED_RACE_GAME_ID
+} from '@/lib/constants'
 import { ModeBanner } from './mode-banner'
 import { CheckStep } from './check-step'
 import { LearnStep } from './learn-step'
@@ -49,6 +58,12 @@ export function LevelStepper({
 		if (celebrate && step !== LEVEL_STEPS.reveal) consumeCelebration()
 	}, [celebrate, step, consumeCelebration])
 	useStepFocus(step)
+	// Speed Race is timed, so a finished race goes on the Leaderboard (DESIGN 8).
+	const { record } = useRecordGameRun()
+	const onRaceFinished = (results: RaceResult[]) => {
+		const input = gameRunInput({ gameId: level.id, mode, results })
+		if (input) record(input)
+	}
 	const stages = levelStages(level, tasks, recordings)
 	const opponentIds = sharedOpponentIds(stages)
 	const [opponentId, setOpponentId] = useState(() =>
@@ -93,6 +108,7 @@ export function LevelStepper({
 					hideRaces={level.widget === LEVEL_WIDGETS.router}
 					mode={mode}
 					onUseBeginner={() => setMode(MODES.beginner)}
+					onRaceFinished={level.id === SPEED_RACE_GAME_ID ? onRaceFinished : undefined}
 				>
 					{level.widget && <PlayWidget {...widgetProps} />}
 				</PlayStep>

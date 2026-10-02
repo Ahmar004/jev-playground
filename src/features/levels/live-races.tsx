@@ -1,7 +1,8 @@
 'use client'
 
 import { LiveSetupPanel } from '@/features/race/live-setup-panel'
-import { RaceStage } from '@/features/race/race-stage'
+import { RaceStage, type RaceResult } from '@/features/race/race-stage'
+import type { RaceState } from '@/features/race/race-state'
 import { useLiveSetup } from '@/features/race/use-live-config'
 import type { CombineArgs } from '@/runner/code/combine-fns'
 import type { LevelStage } from './lineup'
@@ -14,12 +15,16 @@ export function LiveRaces({
 	stages,
 	combineArgs,
 	showHeadings,
-	onUseBeginner
+	onUseBeginner,
+	scene,
+	onFinished
 }: {
 	stages: LevelStage[]
 	combineArgs?: CombineArgs
 	showHeadings: boolean
 	onUseBeginner: () => void
+	scene?: (perRacer: RaceState) => React.ReactNode
+	onFinished?: (results: RaceResult[]) => void
 }) {
 	const setup = useLiveSetup()
 	return (
@@ -41,6 +46,8 @@ export function LiveRaces({
 								combineArgs={combineArgs}
 								live={setup.config ?? undefined}
 								onUseBeginner={onUseBeginner}
+								scene={scene}
+								onFinished={onFinished}
 							/>
 						</div>
 					)

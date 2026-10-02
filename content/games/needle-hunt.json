@@ -1,0 +1,17 @@
+{
+	"id": "needle-hunt",
+	"title": "Needle Hunt",
+	"priority": "p0",
+	"taskId": "needle-hunt",
+	"blurb": "Find the lines that state a deadline in a long document.",
+	"animation": "lines",
+	"lesson": "Jev scores every line in one call, so it ranks many candidates at once, fast and cheaply.",
+	"why": [
+		"Jev gets every line as its own Noul in a single request, so all 30 lines are scored together. The LLM reads the whole document and writes back the line numbers it picked.",
+		"Credit is shared by how many of the right lines each racer found without picking wrong ones."
+	],
+	"docs": {
+		"path": "/cookbooks/semantic_find",
+		"title": "Semantic find"
+	}
+}

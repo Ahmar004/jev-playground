@@ -19,6 +19,7 @@ model User {
 	checkAnswers  CheckAnswer[]
 	xpEvents      XpEvent[]
 	badges        UserBadge[]
+	leaderboard   LeaderboardEntry[]
 
 	@@map("users")
 }

@@ -1,0 +1,68 @@
+{
+	"taskId": "needle-hunt",
+	"taskHash": "5caf4f5dd0854a8a23ff751c9be210327c4b1e8f4127526aa680a86469268c33",
+	"racer": "llm",
+	"modelId": "claude-sonnet-5-5",
+	"recordedAt": "2026-10-02T04:43:10.066Z",
+	"price": {
+		"inputPerM": 2,
+		"outputPerM": 10,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "office-move",
+			"ok": false,
+			"raw": "Lines that state a deadline someone has to meet:\n\n- Line 5: pack desks by Friday 14 March.\n- Line 10: keys handed in by 8 a.m. Saturday 15 March.\n- Line 15: monitor list to IT by Wednesday 12 March.\n- Line 21: the old office must be empty and cleaned before 31 March.\n\nLine 23 (cleaning company booked) has no deadline, and line 25 (\"later in the spring\") is not a firm one.\n\n{\"answer\": [5, 10, 15, 21]}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 1946.4061000000002,
+			"usage": { "inputTokens": 714, "outputTokens": 177 },
+			"costUsd": 0.003198,
+			"lane": 0,
+			"startMs": 0.008800000000064756,
+			"endMs": 1946.6824000000001
+		},
+		{
+			"itemId": "garden-newsletter",
+			"ok": false,
+			"raw": "Lines that state a deadline someone must meet:\n\n- Line 6: fees due by 1 April.\n- Line 12: collect key before 20 April.\n- Line 19: sign up by 5 April.\n- Line 25: replies needed by 15 June. (The 1 June date is when invitations go out, but the 15 June reply date is a deadline.)\n\nLine 13 (\"Members who cannot garden this year should tell us\") has no date, so it is not a deadline.\n\n{\"answer\": [6, 12, 19, 25]}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 2039.6979,
+			"usage": { "inputTokens": 648, "outputTokens": 168 },
+			"costUsd": 0.002976,
+			"lane": 1,
+			"startMs": 0.47260000000005675,
+			"endMs": 2040.3391000000001
+		},
+		{
+			"itemId": "warranty-terms",
+			"ok": false,
+			"raw": "Lines that state a deadline someone must meet:\n\n- 6: claims within 24 months of purchase.\n- 10: report a defect within 30 days of discovering it.\n- 17: return the faulty device within 14 days of receiving the label.\n- 24: refund requests within 60 days of purchase.\n\nLine 18 says late devices may be treated as a new request. That is a consequence of missing a deadline, not a deadline itself. Line 12 (\"get back to you soon\") is not a deadline someone must meet, and line 28 is not one either.\n\n{\"answer\": [6, 10, 17, 24]}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 2504.6297999999997,
+			"usage": { "inputTokens": 626, "outputTokens": 192 },
+			"costUsd": 0.003172,
+			"lane": 2,
+			"startMs": 0.7011999999999716,
+			"endMs": 2505.5011999999997
+		}
+	],
+	"totals": {
+		"items": 3,
+		"scored": 3,
+		"correct": 0,
+		"accuracy": 0,
+		"wallMs": 2505.4923999999996,
+		"costUsd": 0.009346,
+		"inputTokens": 1988,
+		"outputTokens": 537,
+		"parseFailures": 3
+	}
+}

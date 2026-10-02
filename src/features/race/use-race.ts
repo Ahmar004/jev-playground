@@ -6,6 +6,7 @@ import type { Task } from '@/content/task-schema'
 import {
 	RACE_STATUS,
 	RACERS,
+	RUN_EVENTS,
 	type ProviderErrorKind,
 	type Racer,
 	type RaceStatus
@@ -15,7 +16,7 @@ import { createCombineTap } from '@/runner/combine'
 import { ProviderError } from '@/runner/providers/provider-error'
 import { replaySource, type ReplayHandle } from '@/runner/replay'
 import { runItems } from '@/runner/run'
-import type { ItemRunner, RunEvent } from '@/runner/types'
+import type { ItemRunner, RunEvent, RunTotals } from '@/runner/types'
 import { initialRaceState, raceRacers, raceReducer, type RaceState } from './race-state'
 
 // How often the race clock refreshes while a race runs.
@@ -28,6 +29,9 @@ export type LiveRace = { jev: ItemRunner; llm: ItemRunner }
 
 // The run stopped on a failure that would repeat (a bad key, a rate limit, an outage).
 export type RaceFailure = { kind: ProviderErrorKind; racer: Racer }
+
+// Every racer's final totals, handed over when a run finishes (games record them).
+export type RaceFinish = Partial<Record<Racer, RunTotals>>
 
 export type RaceControls = {
 	status: RaceStatus
@@ -68,13 +72,16 @@ export function useRace({
 	task,
 	entries,
 	combineArgs,
-	live
+	live,
+	onFinished
 }: {
 	task: Task
 	entries: RaceEntry[]
 	live?: LiveRace
 	// Level 5's slider weights, read when the race starts.
 	combineArgs?: CombineArgs
+	// Called once when every racer has finished, not when a live run stops on a failure.
+	onFinished?: (finish: RaceFinish) => void
 }): RaceControls {
 	const racers = raceRacers(
 		task,
@@ -105,9 +112,13 @@ export function useRace({
 		setElapsedMs(0)
 		setStatus(RACE_STATUS.running)
 		// One tap per run: it accumulates Jev + Code results for their totals.
+		const finish: RaceFinish = {}
 		const onEvent = createCombineTap(
 			task,
-			(event) => setPerRacer((state) => raceReducer(state, event)),
+			(event) => {
+				if (event.type === RUN_EVENTS.runFinished) finish[event.racer] = event.totals
+				setPerRacer((state) => raceReducer(state, event))
+			},
 			combineArgs
 		)
 		setFailure(null)
@@ -129,6 +140,7 @@ export function useRace({
 				setElapsedMs(currentTime() - begunAt)
 				active.current.run = null
 				setStatus(RACE_STATUS.finished)
+				onFinished?.(finish)
 			})
 	}
 

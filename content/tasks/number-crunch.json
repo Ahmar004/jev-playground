@@ -1,0 +1,143 @@
+{
+	"id": "number-crunch",
+	"kind": "choice",
+	"version": 2,
+	"code": "solve_problem",
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "choice",
+				"instructions": "What is the answer to the problem?",
+				"criteria": {
+					"4": null,
+					"6": null,
+					"8": null,
+					"12": null,
+					"612": null,
+					"988": null
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "p1",
+			"state": {
+				"problem": "How many times does the letter e appear in the word nevertheless?",
+				"op": "count_letter",
+				"word": "nevertheless",
+				"letter": "e"
+			},
+			"label": "4"
+		},
+		{
+			"id": "p2",
+			"state": {
+				"problem": "How many times does the letter s appear in the word possessiveness?",
+				"op": "count_letter",
+				"word": "possessiveness",
+				"letter": "s"
+			},
+			"label": "6"
+		},
+		{
+			"id": "p3",
+			"state": {
+				"problem": "What is 76 times 13?",
+				"op": "multiply",
+				"a": 76,
+				"b": 13
+			},
+			"label": "988"
+		},
+		{
+			"id": "p4",
+			"state": {
+				"problem": "How many vowels (a, e, i, o, u) are in the word onomatopoeia?",
+				"op": "count_vowels",
+				"word": "onomatopoeia"
+			},
+			"label": "8"
+		},
+		{
+			"id": "p5",
+			"state": {
+				"problem": "What is 123 plus 489?",
+				"op": "add",
+				"a": 123,
+				"b": 489
+			},
+			"label": "612"
+		},
+		{
+			"id": "p6",
+			"state": {
+				"problem": "How many times does the letter t appear in the word tattletale?",
+				"op": "count_letter",
+				"word": "tattletale",
+				"letter": "t"
+			},
+			"label": "4"
+		},
+		{
+			"id": "p7",
+			"state": {
+				"problem": "What is 1000 minus 388?",
+				"op": "subtract",
+				"a": 1000,
+				"b": 388
+			},
+			"label": "612"
+		},
+		{
+			"id": "p8",
+			"state": {
+				"problem": "How many times does the letter i appear in the word indivisibility?",
+				"op": "count_letter",
+				"word": "indivisibility",
+				"letter": "i"
+			},
+			"label": "6"
+		},
+		{
+			"id": "p9",
+			"state": {
+				"problem": "What is 17 times 36?",
+				"op": "multiply",
+				"a": 17,
+				"b": 36
+			},
+			"label": "612"
+		},
+		{
+			"id": "p10",
+			"state": {
+				"problem": "What is 500 minus 488?",
+				"op": "subtract",
+				"a": 500,
+				"b": 488
+			},
+			"label": "12"
+		},
+		{
+			"id": "p11",
+			"state": {
+				"problem": "How many times does the letter r appear in the word referrer?",
+				"op": "count_letter",
+				"word": "referrer",
+				"letter": "r"
+			},
+			"label": "4"
+		},
+		{
+			"id": "p12",
+			"state": {
+				"problem": "What is 38 plus 950?",
+				"op": "add",
+				"a": 38,
+				"b": 950
+			},
+			"label": "988"
+		}
+	]
+}

@@ -35,6 +35,13 @@ export function isLevelStatus(value: string): value is LevelStatus {
 	return LEVEL_STATUS_VALUES.includes(value)
 }
 
+const MODE_VALUES: readonly string[] = Object.values(MODES)
+
+/** Narrows a database string; anything unknown is not a mode. */
+export function isMode(value: string): value is Mode {
+	return MODE_VALUES.includes(value)
+}
+
 export const CLAUDE_MODELS = {
 	opus: 'claude-opus-5-5',
 	sonnet: 'claude-sonnet-5-5',
@@ -77,7 +84,11 @@ export const RUN_EVENTS = {
 } as const
 
 // Code racer functions: item state in, answer out.
-export const CODE_FN_IDS = { compareDates: 'compare_dates', sumNumbers: 'sum_numbers' } as const
+export const CODE_FN_IDS = {
+	compareDates: 'compare_dates',
+	sumNumbers: 'sum_numbers',
+	solveProblem: 'solve_problem'
+} as const
 export type CodeFnId = (typeof CODE_FN_IDS)[keyof typeof CODE_FN_IDS]
 
 // combine functions: Jev's answers in, answer out (DESIGN 3.2).
@@ -169,6 +180,21 @@ export type ItemOutcome = (typeof ITEM_OUTCOMES)[keyof typeof ITEM_OUTCOMES]
 // Levels on the Path in the finished product; the pathfinder badge needs all of them (spec 6.1, DESIGN 10).
 export const LEVEL_COUNT = 8
 
+// VS games (spec 7). Each one has its own animation.
+export const GAME_ANIMATIONS = {
+	gate: 'gate',
+	lines: 'lines',
+	duel: 'duel',
+	rope: 'rope'
+} as const
+export type GameAnimation = (typeof GAME_ANIMATIONS)[keyof typeof GAME_ANIMATIONS]
+
+// Speed Race is also timed, so it writes Leaderboard entries (DESIGN 8).
+export const SPEED_RACE_GAME_ID = 'speed-race'
+
+// The P0 VS games; finishing all of them earns the gamer badge (DESIGN 10).
+export const P0_GAME_COUNT = 4
+
 // Level 1 is the one the first_race badge is for.
 export const FIRST_LEVEL_ID = 'speed-race'
 
@@ -230,7 +256,7 @@ export const BADGE_LABELS: Record<BadgeId, { name: string; description: string }
 	},
 	[BADGES.phishSpotter]: { name: 'Phish Spotter', description: 'Finish the phishing level.' },
 	[BADGES.trickster]: { name: 'Trickster', description: 'Fool Jev in the Arena.' },
-	[BADGES.gamer]: { name: 'Gamer', description: 'Finish a VS game.' },
+	[BADGES.gamer]: { name: 'Gamer', description: 'Finish all 4 VS games.' },
 	[BADGES.oracle]: { name: 'Oracle', description: 'Get 5 level predictions right.' },
 	[BADGES.quizClimber]: { name: 'Quiz Climber', description: 'Climb the quiz ladder.' },
 	[BADGES.liveWire]: { name: 'Live Wire', description: 'Run a live call in Developer mode.' },

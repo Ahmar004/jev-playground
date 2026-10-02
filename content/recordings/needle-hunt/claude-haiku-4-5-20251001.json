@@ -1,0 +1,68 @@
+{
+	"taskId": "needle-hunt",
+	"taskHash": "5caf4f5dd0854a8a23ff751c9be210327c4b1e8f4127526aa680a86469268c33",
+	"racer": "llm",
+	"modelId": "claude-haiku-4-5-20251001",
+	"recordedAt": "2026-10-02T04:43:09.259Z",
+	"price": {
+		"inputPerM": 1,
+		"outputPerM": 5,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "office-move",
+			"ok": true,
+			"raw": "```json\n{\"answer\": [5, 10, 15, 21, 25]}\n```",
+			"parsed": [5, 10, 15, 21, 25],
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 801.4168,
+			"usage": { "inputTokens": 527, "outputTokens": 26 },
+			"costUsd": 0.000657,
+			"lane": 0,
+			"startMs": 0.012300000000095679,
+			"endMs": 801.9492
+		},
+		{
+			"itemId": "garden-newsletter",
+			"ok": true,
+			"raw": "```json\n{\"answer\": [6, 12, 19, 25]}\n```",
+			"parsed": [6, 12, 19, 25],
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 776.7419,
+			"usage": { "inputTokens": 487, "outputTokens": 23 },
+			"costUsd": 0.000602,
+			"lane": 1,
+			"startMs": 0.8605000000000018,
+			"endMs": 778.9101
+		},
+		{
+			"itemId": "warranty-terms",
+			"ok": true,
+			"raw": "```json\n{\"answer\": [6, 10, 17, 24]}\n```",
+			"parsed": [6, 10, 17, 24],
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 796.0884000000001,
+			"usage": { "inputTokens": 483, "outputTokens": 23 },
+			"costUsd": 0.000598,
+			"lane": 2,
+			"startMs": 1.1572000000001026,
+			"endMs": 797.73
+		}
+	],
+	"totals": {
+		"items": 3,
+		"scored": 3,
+		"correct": 3,
+		"accuracy": 1,
+		"wallMs": 801.9368999999999,
+		"costUsd": 0.0018570000000000001,
+		"inputTokens": 1497,
+		"outputTokens": 72,
+		"parseFailures": 0
+	}
+}

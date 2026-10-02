@@ -248,7 +248,7 @@ Every game uses the race view from section 3.3. The opponent defaults to Opus 5.
 | ---------------------- | -------- | ----------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------- |
 | Guardrail Gauntlet     | P0       | 16 messages                         | Choice: pass / review / block                                          | messages rush a gate; each bouncer stamps its decision     |
 | Needle Hunt            | P0       | 3 documents x 30 lines              | `find_lines` (Jev: 30 Nouls in one call; LLM returns line numbers)     | lines light up as each racer answers                       |
-| Number Crunch Showdown | P0       | 12 counting and arithmetic problems | Choice from the same 6 numeric options for both; Code computes exactly | three-lane duel, Code included                             |
+| Number Crunch Showdown | P0       | 12 counting and arithmetic problems | Choice from the same 6 numeric options for both; Code computes exactly | two-lane duel; Code's result sits in the summary           |
 | Review Tug-of-War      | P0       | 20 reviews                          | Score, 5 levels                                                        | each correct score pulls the rope toward that racer        |
 | Smart Home Dash        | P1       | 12 voice commands                   | Choice from 6 devices                                                  | two robot runners reach the device before the next command |
 | Twin Finder            | P1       | 16 product pairs                    | Noul "same product?"                                                   | pairs on conveyor belts get stamped                        |

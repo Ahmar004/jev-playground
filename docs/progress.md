@@ -504,3 +504,18 @@ Next: Step-6, slice 8 (Developer mode: KeysProvider, Keys panel, OpenRouter/Open
   - The Rule-A/Rule-B relabel references in CLAUDE.md, spec, DESIGN and TECH-STACK (needs the user's OK).
 
 Next: Step-6, slice 9 (VS games P0 + Leaderboard).
+
+## Step-6 - slice 9: VS games (P0) + Leaderboard (2026-10-02) - done
+
+- Skills: no writing-plans file and no subagents (Rule-A). Gates by hand: lint, typecheck, format:check, check:secrets, check:standards 24/24, test (488 Vitest plus node:test), check:rls (7 tables), build, e2e 50/50 (run against `pnpm start` with `E2E_BASE_URL`, because the dev server hit a Turbopack panic, exit 0xc0000142, on this machine). The manual `local-review` pass was not run as a separate step.
+- User decisions: record all 4 games now; Code appears in the Number Crunch summary (same runner), not as a third race lane (DESIGN 8 updated).
+- Built:
+  - Content: tasks `guardrail-gauntlet`, `needle-hunt`, `number-crunch` (v2), `review-score`; `content/games/*.json` (`game-schema.ts`, `games.ts`); 16 recordings; `solve_problem` Code function.
+  - Pages: `/games`, `/games/[gameId]` (SSG), `/leaderboard`; header links Games and Leaderboard (hidden below `sm`, like Path) plus Home buttons.
+  - Race code: `useRace` and `RaceStage` take `onFinished` and `scene`; `GameScene` draws chips (gate, lines, duel) or a rope from live race state; `GameSummary` shows winner, runner numbers, lesson, docs link.
+  - Server: `LeaderboardEntry` table (migrations `leaderboard`, `leaderboard_rls`), `recordGameRun` (Beginner numbers recomputed from recordings; Developer numbers range-checked), `getLeaderboard`, `isBetterRun` (`src/runner/better-run.ts`). `game_done` XP (50) is Beginner-only and once per game and opponent; Developer runs only reach the user's own board. Speed Race also writes Leaderboard entries (no extra XP; level XP covers it). `gamer` badge: all 4 P0 games.
+- Recorded (real): Guardrail Gauntlet all four 15/16; Needle Hunt Jev and Haiku 3/3, Sonnet 0/3 and Opus 1/3 (text around the JSON counts as a miss); Review Tug-of-War Jev 19/20, Haiku 18, Sonnet 16, Opus 20/20; Number Crunch Jev 10/12, Haiku 12/12, Sonnet 4/12, Opus 9/12, Code 12/12.
+- Honesty note (spec 12.4): Number Crunch's first item set did not show Jev's weakness (Jev 12/12), so it was rewritten once (harder, v2) and recorded again; Methodology says so. Spend this slice about $0.1; all recordings on disk $0.357 of the $20 credit.
+- Left open: the manual local-review pass; animations are chip and rope scenes, not the richer metaphors in spec 7.2 (gate, bouncers); the Number Crunch lesson wording is neutral because Jev did well; `right_tool` and `trickster` badges still wait for later slices; the Rule-A/Rule-B relabel references in CLAUDE.md, spec, DESIGN and TECH-STACK (needs the user's OK); the dev server Turbopack panic (if it repeats, restart the PC or use `pnpm start`).
+
+Next: Step-6, slice 10 (Arena + Share): 8 presets (with the 3 tasks slice 13 reuses), custom task, model picker, share consent, `createShare` and `deleteShare`, `/s/[shareId]`.

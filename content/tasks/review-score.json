@@ -1,0 +1,122 @@
+{
+	"id": "review-score",
+	"kind": "score",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "score",
+				"instructions": "How positive is this product review?",
+				"criteria": [
+					"Very negative: the reviewer is angry or unhappy",
+					"Negative: the reviewer is disappointed",
+					"Neutral or mixed: good and bad in equal measure",
+					"Positive: the reviewer is happy with small reservations",
+					"Very positive: the reviewer loves it"
+				]
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "r1",
+			"state": "Arrived broken, support ignored me for two weeks, and the refund never came. Avoid at all costs.",
+			"label": 0
+		},
+		{
+			"id": "r2",
+			"state": "Absolutely love it! Best purchase of the year, works perfectly and looks gorgeous. Five stars.",
+			"label": 4
+		},
+		{
+			"id": "r3",
+			"state": "It is okay. Nice screen, but the speakers are weak. Fine for the price, nothing special.",
+			"label": 2
+		},
+		{
+			"id": "r4",
+			"state": "Disappointing. It works, but the battery barely lasts an hour and the strap feels cheap.",
+			"label": 1
+		},
+		{
+			"id": "r5",
+			"state": "Good value. Sturdy, easy to set up, and the battery lasts a full day. Only the case feels a bit plain.",
+			"label": 3
+		},
+		{
+			"id": "r6",
+			"state": "Worst purchase I have made this year. It stopped working after one day and smells like burnt plastic.",
+			"label": 0
+		},
+		{
+			"id": "r7",
+			"state": "Outstanding quality. It exceeded every expectation and my whole family fights over it.",
+			"label": 4
+		},
+		{
+			"id": "r8",
+			"state": "Average. Does what it says, no more. I would not buy it again, but I would not return it either.",
+			"label": 2
+		},
+		{
+			"id": "r9",
+			"state": "Not good. Too small for the price and it took a month to arrive.",
+			"label": 1
+		},
+		{
+			"id": "r10",
+			"state": "Happy with it. Works well and arrived on time. I would buy it again.",
+			"label": 3
+		},
+		{
+			"id": "r11",
+			"state": "Total waste of money. Nothing like the photos, and the seller was rude when I complained.",
+			"label": 0
+		},
+		{
+			"id": "r12",
+			"state": "Flawless. Fast delivery, perfect fit, and customer service even called to check I was happy.",
+			"label": 4
+		},
+		{
+			"id": "r13",
+			"state": "Mixed feelings: great design, slow software. Some days I like it, some days I do not.",
+			"label": 2
+		},
+		{
+			"id": "r14",
+			"state": "Below what I expected. The sound is tinny and the app keeps crashing.",
+			"label": 1
+		},
+		{
+			"id": "r15",
+			"state": "Really nice blender, powerful and quiet enough. Cleaning is a little fiddly, but I like it.",
+			"label": 3
+		},
+		{
+			"id": "r16",
+			"state": "Dangerous. The charger overheated and melted the plug. I want my money back.",
+			"label": 0
+		},
+		{
+			"id": "r17",
+			"state": "Brilliant! I have recommended it to everyone I know. Cannot imagine going back to my old one.",
+			"label": 4
+		},
+		{
+			"id": "r18",
+			"state": "Meh, I regret buying it. It does the job badly and looks worse than in the listing.",
+			"label": 1
+		},
+		{
+			"id": "r19",
+			"state": "Decent but unremarkable. Setup was easy and the quality is just acceptable.",
+			"label": 2
+		},
+		{
+			"id": "r20",
+			"state": "Solid headphones for the price. Comfortable and clear sound, though the bass could be stronger.",
+			"label": 3
+		}
+	]
+}

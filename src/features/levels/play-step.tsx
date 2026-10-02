@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { ArrowRightIcon, InfoIcon } from '@/components/ui/icons'
 import { OpponentPicker } from '@/features/race/opponent-picker'
-import { RaceStage } from '@/features/race/race-stage'
+import { RaceStage, type RaceResult } from '@/features/race/race-stage'
 import { MODES, type Mode } from '@/lib/constants'
 import type { CombineArgs } from '@/runner/code/combine-fns'
 import { LiveRaces } from './live-races'
@@ -33,6 +33,7 @@ export function PlayStep({
 	hideRaces = false,
 	mode = MODES.beginner,
 	onUseBeginner,
+	onRaceFinished,
 	children
 }: {
 	stages: LevelStage[]
@@ -46,6 +47,8 @@ export function PlayStep({
 	mode?: Mode
 	// Developer mode: switch back to the recorded version of the race.
 	onUseBeginner?: () => void
+	// A timed level (Speed Race) saves its finished race to the Leaderboard.
+	onRaceFinished?: (results: RaceResult[]) => void
 	children?: React.ReactNode
 }) {
 	const live = mode === MODES.developer
@@ -88,6 +91,7 @@ export function PlayStep({
 					combineArgs={combineArgs}
 					showHeadings={stages.length > 1 || Boolean(children)}
 					onUseBeginner={() => onUseBeginner?.()}
+					onFinished={onRaceFinished}
 				/>
 			)}
 			{!live &&
@@ -106,6 +110,7 @@ export function PlayStep({
 								jev={stage.jev}
 								opponent={opponent}
 								combineArgs={combineArgs}
+								onFinished={onRaceFinished}
 							/>
 						</div>
 					)

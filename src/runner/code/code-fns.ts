@@ -9,6 +9,14 @@ import { compareDateParts, type DateParts } from './dates'
 // added in the slice that writes their content.
 
 const sumPairSchema = z.object({ a: z.number().int(), b: z.number().int() })
+// Number Crunch Showdown: counting and arithmetic, solved exactly.
+const problemSchema = z.discriminatedUnion('op', [
+	z.object({ op: z.literal('count_letter'), word: z.string(), letter: z.string().length(1) }),
+	z.object({ op: z.literal('count_vowels'), word: z.string() }),
+	z.object({ op: z.literal('add'), a: z.number().int(), b: z.number().int() }),
+	z.object({ op: z.literal('subtract'), a: z.number().int(), b: z.number().int() }),
+	z.object({ op: z.literal('multiply'), a: z.number().int(), b: z.number().int() })
+])
 const isoDatePairSchema = z.object({ first: z.iso.date(), second: z.iso.date() })
 
 function partsOfIso(iso: string): DateParts {
@@ -28,5 +36,20 @@ export const CODE_FNS: Record<CodeFnId, (state: Structured) => LlmAnswer> = {
 	[CODE_FN_IDS.sumNumbers]: (state) => {
 		const { a, b } = sumPairSchema.parse(state)
 		return String(a + b)
+	},
+	[CODE_FN_IDS.solveProblem]: (state) => {
+		const problem = problemSchema.parse(state)
+		switch (problem.op) {
+			case 'count_letter':
+				return String(problem.word.toLowerCase().split(problem.letter.toLowerCase()).length - 1)
+			case 'count_vowels':
+				return String(problem.word.toLowerCase().replace(/[^aeiou]/g, '').length)
+			case 'add':
+				return String(problem.a + problem.b)
+			case 'subtract':
+				return String(problem.a - problem.b)
+			case 'multiply':
+				return String(problem.a * problem.b)
+		}
 	}
 }

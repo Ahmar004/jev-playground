@@ -179,6 +179,12 @@ export default function MethodologyPage() {
 					cancelling rather than a request) and recorded that set once. Only the second set is shown
 					in the level.
 				</p>
+				<p className={BODY}>
+					The Number Crunch Showdown game was rewritten once too. Its first set of counting and
+					arithmetic problems was easy for Jev (it answered all 12 correctly), so we wrote harder
+					ones (longer words, multi-digit arithmetic) and recorded that set once. Only the second
+					set is shown in the game.
+				</p>
 			</section>
 
 			<section className={SECTION}>

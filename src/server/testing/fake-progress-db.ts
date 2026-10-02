@@ -66,7 +66,8 @@ export function createFakeProgressDb() {
 	const checkAnswer = table(['userId', 'questionId'])
 	const xpEvent = table(['userId', 'source', 'sourceId'])
 	const userBadge = table(['userId', 'badgeId'])
-	const tx = { levelProgress, checkAnswer, xpEvent, userBadge }
+	const leaderboardEntry = { findMany: vi.fn(async () => []) }
+	const tx = { levelProgress, checkAnswer, xpEvent, userBadge, leaderboardEntry }
 	const db = {
 		...tx,
 		$transaction: vi.fn(async (fn: (client: typeof tx) => Promise<unknown>) => fn(tx))

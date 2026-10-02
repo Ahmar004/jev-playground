@@ -70,6 +70,22 @@ import routerSummaryJev from '../../content/recordings/router-summary/jev.json'
 import { recordingSchema, type Recording } from './recording-schema'
 import { taskHash } from './task-hash'
 import { getTask } from './tasks'
+import guardrailGauntletJev from '../../content/recordings/guardrail-gauntlet/jev.json'
+import guardrailGauntletHaiku from '../../content/recordings/guardrail-gauntlet/claude-haiku-4-5-20251001.json'
+import guardrailGauntletSonnet from '../../content/recordings/guardrail-gauntlet/claude-sonnet-5-5.json'
+import guardrailGauntletOpus from '../../content/recordings/guardrail-gauntlet/claude-opus-5-5.json'
+import needleHuntJev from '../../content/recordings/needle-hunt/jev.json'
+import needleHuntHaiku from '../../content/recordings/needle-hunt/claude-haiku-4-5-20251001.json'
+import needleHuntSonnet from '../../content/recordings/needle-hunt/claude-sonnet-5-5.json'
+import needleHuntOpus from '../../content/recordings/needle-hunt/claude-opus-5-5.json'
+import numberCrunchJev from '../../content/recordings/number-crunch/jev.json'
+import numberCrunchHaiku from '../../content/recordings/number-crunch/claude-haiku-4-5-20251001.json'
+import numberCrunchSonnet from '../../content/recordings/number-crunch/claude-sonnet-5-5.json'
+import numberCrunchOpus from '../../content/recordings/number-crunch/claude-opus-5-5.json'
+import reviewScoreJev from '../../content/recordings/review-score/jev.json'
+import reviewScoreHaiku from '../../content/recordings/review-score/claude-haiku-4-5-20251001.json'
+import reviewScoreSonnet from '../../content/recordings/review-score/claude-sonnet-5-5.json'
+import reviewScoreOpus from '../../content/recordings/review-score/claude-opus-5-5.json'
 
 // Every file in content/recordings/ is imported here. Server-only: a page's
 // server component loads only its own recordings and passes them down as
@@ -143,7 +159,23 @@ const RAW_RECORDINGS: unknown[] = [
 	routerSummaryHaiku,
 	routerSummaryOpus,
 	routerSummarySonnet,
-	routerSummaryJev
+	routerSummaryJev,
+	guardrailGauntletJev,
+	guardrailGauntletHaiku,
+	guardrailGauntletSonnet,
+	guardrailGauntletOpus,
+	needleHuntJev,
+	needleHuntHaiku,
+	needleHuntSonnet,
+	needleHuntOpus,
+	numberCrunchJev,
+	numberCrunchHaiku,
+	numberCrunchSonnet,
+	numberCrunchOpus,
+	reviewScoreJev,
+	reviewScoreHaiku,
+	reviewScoreSonnet,
+	reviewScoreOpus
 ]
 
 export const RECORDINGS: Recording[] = RAW_RECORDINGS.map((raw) => recordingSchema.parse(raw))

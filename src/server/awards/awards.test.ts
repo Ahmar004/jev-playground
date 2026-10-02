@@ -17,6 +17,7 @@ function fakeTx(options: {
 			findMany: vi.fn(async () => (options.doneLevelIds ?? []).map((levelId) => ({ levelId }))),
 			count: vi.fn(async () => options.correct ?? 0)
 		},
+		leaderboardEntry: { findMany: vi.fn(async () => []) },
 		userBadge: { createMany: vi.fn(async () => ({ count: badgeCounts.shift() ?? 1 })) }
 	}
 	return { tx, asTx: tx as unknown as Tx }

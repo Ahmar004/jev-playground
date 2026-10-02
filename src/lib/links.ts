@@ -6,7 +6,10 @@ export const ROUTES = {
 	path: '/path',
 	glossary: '/glossary',
 	methodology: '/methodology',
-	level: (levelId: string) => `/levels/${levelId}`
+	level: (levelId: string) => `/levels/${levelId}`,
+	games: '/games',
+	game: (gameId: string) => `/games/${gameId}`,
+	leaderboard: '/leaderboard'
 } as const
 
 // Shared results (/s/<id>) are the only pages reachable without signing in

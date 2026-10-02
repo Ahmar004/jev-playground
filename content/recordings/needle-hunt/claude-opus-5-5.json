@@ -1,0 +1,68 @@
+{
+	"taskId": "needle-hunt",
+	"taskHash": "5caf4f5dd0854a8a23ff751c9be210327c4b1e8f4127526aa680a86469268c33",
+	"racer": "llm",
+	"modelId": "claude-opus-5-5",
+	"recordedAt": "2026-10-02T04:43:12.577Z",
+	"price": {
+		"inputPerM": 4,
+		"outputPerM": 20,
+		"source": "https://platform.claude.com/docs/en/about-claude/pricing"
+	},
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "office-move",
+			"ok": false,
+			"raw": "Lines that state a deadline:\n- Line 5: desks must be packed by Friday 14 March.\n- Line 10: keys must be handed in by 8 a.m. on Saturday 15 March.\n- Line 15: IT needs the monitor list by Wednesday 12 March.\n- Line 21: the old office must be empty and cleaned before 31 March.\n\n{\"answer\": [5, 10, 15, 21]}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 5545.8614,
+			"usage": { "inputTokens": 714, "outputTokens": 137 },
+			"costUsd": 0.005596,
+			"lane": 0,
+			"startMs": 0.008499999999912689,
+			"endMs": 5546.0914999999995
+		},
+		{
+			"itemId": "garden-newsletter",
+			"ok": false,
+			"raw": "Lines 6, 12, 19 and 25 each set a date by which something must be done:\n- 6: plot fees due by 1 April.\n- 12: collect the new key before 20 April.\n- 19: sign up for a work day by 5 April.\n- 25: barbecue replies needed by 15 June.\n\n{\"answer\": [6, 12, 19, 25]}",
+			"parsed": null,
+			"credit": 0,
+			"correct": false,
+			"latencyMs": 2538.036,
+			"usage": { "inputTokens": 648, "outputTokens": 117 },
+			"costUsd": 0.004932,
+			"lane": 1,
+			"startMs": 0.41679999999996653,
+			"endMs": 2538.621
+		},
+		{
+			"itemId": "warranty-terms",
+			"ok": true,
+			"raw": "{\"answer\": [6, 10, 17, 24]}",
+			"parsed": [6, 10, 17, 24],
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 5833.964600000001,
+			"usage": { "inputTokens": 626, "outputTokens": 138 },
+			"costUsd": 0.005264,
+			"lane": 2,
+			"startMs": 0.5805000000000291,
+			"endMs": 5835.2007
+		}
+	],
+	"totals": {
+		"items": 3,
+		"scored": 3,
+		"correct": 1,
+		"accuracy": 0.3333333333333333,
+		"wallMs": 5835.1922,
+		"costUsd": 0.015792,
+		"inputTokens": 1988,
+		"outputTokens": 392,
+		"parseFailures": 2
+	}
+}

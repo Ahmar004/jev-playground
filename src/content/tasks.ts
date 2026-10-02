@@ -15,6 +15,10 @@ import routerPoem from '../../content/tasks/router-poem.json'
 import routerPhish from '../../content/tasks/router-phish.json'
 import routerDates from '../../content/tasks/router-dates.json'
 import routerSummary from '../../content/tasks/router-summary.json'
+import guardrailGauntlet from '../../content/tasks/guardrail-gauntlet.json'
+import needleHunt from '../../content/tasks/needle-hunt.json'
+import numberCrunch from '../../content/tasks/number-crunch.json'
+import reviewScore from '../../content/tasks/review-score.json'
 import { taskSchema, type Task } from './task-schema'
 
 // Every file in content/tasks/ is imported here, so content renders at build
@@ -36,7 +40,11 @@ const RAW_TASKS: unknown[] = [
 	routerPoem,
 	routerPhish,
 	routerDates,
-	routerSummary
+	routerSummary,
+	guardrailGauntlet,
+	needleHunt,
+	numberCrunch,
+	reviewScore
 ]
 
 // Parsed at import, so a malformed file fails the build at prerender.
