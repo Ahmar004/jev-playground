@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { Level } from '@/content/level-schema'
 import type { Recording } from '@/content/recording-schema'
 import type { Task } from '@/content/task-schema'
@@ -38,10 +38,12 @@ export function LevelStepper({
 }) {
 	const { step, goTo } = useLevelStep()
 	const router = useRouter()
-	const { progress, celebrate, pendingQuestionId, lockIn, reveal, answer } = useLevelProgress(
-		level.id,
-		initialProgress
-	)
+	const { progress, celebrate, pendingQuestionId, lockIn, reveal, answer, consumeCelebration } =
+		useLevelProgress(level.id, initialProgress, level.check.questions)
+	// Confetti is for the first Reveal only: leaving Reveal uses the celebration up.
+	useEffect(() => {
+		if (celebrate && step !== LEVEL_STEPS.reveal) consumeCelebration()
+	}, [celebrate, step, consumeCelebration])
 	useStepFocus(step)
 	const lineup = raceLineup(recordings)
 	const [opponentId, setOpponentId] = useState(() => defaultOpponentId(lineup.opponents))
@@ -100,6 +102,7 @@ export function LevelStepper({
 					pendingQuestionId={pendingQuestionId}
 					levelDone={progress.status === LEVEL_STATUS.done}
 					onAnswer={answer}
+					onGoToReveal={() => goTo(LEVEL_STEPS.reveal)}
 					onBackToPath={() => router.push(ROUTES.path)}
 				/>
 			)}

@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { levelSchema } from '@/content/level-schema'
@@ -16,7 +16,8 @@ vi.mock('next/navigation', () => ({
 	usePathname: () => '/levels/test-level',
 	useSearchParams: () => search
 }))
-vi.mock('canvas-confetti', () => ({ default: vi.fn() }))
+const confetti = vi.fn()
+vi.mock('canvas-confetti', () => ({ default: (options: unknown) => confetti(options) }))
 vi.mock('@/lib/toast', () => ({ toast: vi.fn() }))
 vi.mock('@/lib/analytics/track', () => ({ track: vi.fn() }))
 vi.mock('@/server/actions/progress', () => ({
@@ -110,6 +111,19 @@ describe('LevelStepper', () => {
 		search = new URLSearchParams('step=reveal')
 		rerender(stepper())
 		expect(screen.getByRole('list', { name: 'Your prediction' })).toHaveTextContent('You got it')
+	})
+
+	it('fires confetti once: not again when returning to Reveal', async () => {
+		confetti.mockReset()
+		search = new URLSearchParams('step=reveal')
+		const { rerender } = renderStepper()
+		await waitFor(() => expect(confetti).toHaveBeenCalledTimes(1))
+		search = new URLSearchParams('step=check')
+		rerender(stepper())
+		search = new URLSearchParams('step=reveal')
+		rerender(stepper())
+		await new Promise((resolve) => setTimeout(resolve, 30))
+		expect(confetti).toHaveBeenCalledTimes(1)
 	})
 
 	it('lists all five steps', () => {

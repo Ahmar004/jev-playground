@@ -2,7 +2,7 @@
 
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
-import { getLevel } from '@/content/levels'
+import type { CheckQuestion } from '@/content/level-schema'
 import { ANALYTICS_EVENTS } from '@/lib/analytics/events'
 import { track } from '@/lib/analytics/track'
 import { LEVEL_STATUS } from '@/lib/constants'
@@ -29,7 +29,11 @@ function errorMessage(error: unknown): string {
  * failure, XP and badge toasts, and analytics. The server decides every result;
  * the client only shows it sooner.
  */
-export function useLevelProgress(levelId: string, initial: LevelProgressView) {
+export function useLevelProgress(
+	levelId: string,
+	initial: LevelProgressView,
+	questions: CheckQuestion[]
+) {
 	const [progress, setProgress] = useState(initial)
 	const [celebrate, setCelebrate] = useState(false)
 	const [pendingQuestionId, setPendingQuestionId] = useState<string | null>(null)
@@ -92,9 +96,7 @@ export function useLevelProgress(levelId: string, initial: LevelProgressView) {
 			unwrap(await submitCheck({ levelId, ...input })),
 		onMutate: ({ questionId, optionId }) => {
 			setPendingQuestionId(questionId)
-			const answerId = getLevel(levelId)?.check.questions.find(
-				(question) => question.id === questionId
-			)?.answerId
+			const answerId = questions.find((question) => question.id === questionId)?.answerId
 			setProgress((current) => ({
 				...current,
 				status: nextStatusOnActivity(current.status),
@@ -118,6 +120,7 @@ export function useLevelProgress(levelId: string, initial: LevelProgressView) {
 		progress,
 		celebrate,
 		pendingQuestionId,
+		consumeCelebration: () => setCelebrate(false),
 		lockIn: (prediction: Prediction) => lock.mutate(prediction),
 		reveal: (opponentModelId: string) => {
 			if (progress.revealed || revealMutation.isPending) return

@@ -1,12 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { SuccessIcon, WrongIcon } from '@/components/ui/icons'
 import type { CheckQuestion } from '@/content/level-schema'
 import type { LevelProgressView } from './level-progress'
 
 const PRACTICE_NOTE = 'Practice only: your first answer is the one that counts.'
+
+const resultId = (questionId: string) => `${questionId}-result`
+const optionId = (questionId: string, id: string) => `${questionId}-option-${id}`
 
 type Retry = { optionId: string | null }
 
@@ -17,6 +20,7 @@ export function CheckStep({
 	pendingQuestionId,
 	levelDone,
 	onAnswer,
+	onGoToReveal,
 	onBackToPath
 }: {
 	questions: CheckQuestion[]
@@ -24,11 +28,23 @@ export function CheckStep({
 	pendingQuestionId: string | null
 	levelDone: boolean
 	onAnswer: (questionId: string, optionId: string) => void
+	onGoToReveal: () => void
 	onBackToPath: () => void
 }) {
 	const [picks, setPicks] = useState<Record<string, string>>({})
 	// A question in practice: optionId null while picking, then the local pick once checked.
 	const [retries, setRetries] = useState<Record<string, Retry>>({})
+	// The element to focus once it exists: the control that held focus goes away, and
+	// the result it leads to may only render on a later pass.
+	const pendingFocus = useRef<string | null>(null)
+	useEffect(() => {
+		const id = pendingFocus.current
+		const element = id ? document.getElementById(id) : null
+		if (element) {
+			element.focus()
+			pendingFocus.current = null
+		}
+	}, [answers, retries, picks])
 	const allAnswered = questions.every((question) => answers[question.id] !== undefined)
 
 	return (
@@ -44,6 +60,7 @@ export function CheckStep({
 				const shownRight = shownOptionId === question.answerId
 				const answerText = question.options.find((option) => option.id === question.answerId)?.text
 				const pick = picks[question.id]
+				const [firstOption] = question.options
 				return (
 					<form
 						key={question.id}
@@ -54,6 +71,7 @@ export function CheckStep({
 							if (stored)
 								setRetries((current) => ({ ...current, [question.id]: { optionId: pick } }))
 							else onAnswer(question.id, pick)
+							pendingFocus.current = resultId(question.id)
 							setPicks((current) => ({ ...current, [question.id]: '' }))
 						}}
 					>
@@ -65,6 +83,7 @@ export function CheckStep({
 									className="border-border has-[:checked]:border-accent has-[:checked]:bg-surface-hover has-[:focus-visible]:outline-accent flex cursor-pointer items-center gap-2 rounded-lg border p-3 has-[:focus-visible]:outline has-[:focus-visible]:outline-2"
 								>
 									<input
+										id={optionId(question.id, option.id)}
 										type="radio"
 										name={question.id}
 										value={option.id}
@@ -79,44 +98,63 @@ export function CheckStep({
 								</label>
 							))}
 						</fieldset>
-						{picking ? (
+						{picking && (
 							<div>
 								<Button type="submit" disabled={!pick || pendingQuestionId === question.id}>
 									Check answer
 								</Button>
 							</div>
-						) : (
-							<div className="flex flex-col gap-2" aria-live="polite">
-								<p
-									className={`inline-flex items-center gap-2 font-bold ${shownRight ? 'text-success' : 'text-danger'}`}
-								>
-									{shownRight ? <SuccessIcon /> : <WrongIcon />}
-									{shownRight ? 'Right' : 'Not quite'}
-								</p>
-								<p className="text-text font-bold">The answer: {answerText}</p>
-								<p className="text-text-muted">{question.explanation}</p>
-								{retry && <p className="text-text-muted text-sm">{PRACTICE_NOTE}</p>}
-								{!shownRight && (
-									<div>
-										<Button
-											type="button"
-											variant="outline"
-											onClick={() =>
-												setRetries((current) => ({ ...current, [question.id]: { optionId: null } }))
-											}
-										>
-											Try again
-										</Button>
-									</div>
-								)}
-							</div>
 						)}
+						<div className="flex flex-col gap-2" aria-live="polite">
+							{!picking && (
+								<>
+									<p
+										id={resultId(question.id)}
+										tabIndex={-1}
+										className={`inline-flex items-center gap-2 font-bold ${shownRight ? 'text-success' : 'text-danger'}`}
+									>
+										{shownRight ? <SuccessIcon /> : <WrongIcon />}
+										{shownRight ? 'Right' : 'Not quite'}
+									</p>
+									<p className="text-text font-bold">The answer: {answerText}</p>
+									<p className="text-text-muted">{question.explanation}</p>
+									{retry && <p className="text-text-muted text-sm">{PRACTICE_NOTE}</p>}
+									{!shownRight && (
+										<div>
+											<Button
+												type="button"
+												variant="outline"
+												onClick={() => {
+													setRetries((current) => ({
+														...current,
+														[question.id]: { optionId: null }
+													}))
+													if (firstOption)
+														pendingFocus.current = optionId(question.id, firstOption.id)
+												}}
+											>
+												Try again
+											</Button>
+										</div>
+									)}
+								</>
+							)}
+						</div>
 					</form>
 				)
 			})}
 			{allAnswered && (
 				<div className="flex flex-col gap-3">
-					{levelDone && <p className="text-text text-xl font-bold">Level complete</p>}
+					{levelDone ? (
+						<p className="text-text text-xl font-bold">Level complete</p>
+					) : (
+						<div className="flex flex-wrap items-center gap-3">
+							<p className="text-text-muted">Reach Reveal to finish this level.</p>
+							<Button type="button" variant="outline" onClick={onGoToReveal}>
+								Go to Reveal
+							</Button>
+						</div>
+					)}
 					<div>
 						<Button type="button" onClick={onBackToPath}>
 							Back to Path

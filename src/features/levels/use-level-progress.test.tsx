@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { act, renderHook, waitFor } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { getLevel } from '@/content/levels'
 import { LEVEL_STATUS } from '@/lib/constants'
 import type { LevelProgressView } from './level-progress'
 
@@ -28,6 +29,7 @@ const LEVEL_ID = 'speed-race'
 const QUESTION_ID = 'speed-race-tool-fit'
 const RIGHT_OPTION = 'jev'
 const WRONG_OPTION = 'code'
+const QUESTIONS = getLevel(LEVEL_ID)?.check.questions ?? []
 const NO_AWARDS = { xp: 0, badges: [] }
 
 const fresh: LevelProgressView = {
@@ -44,7 +46,7 @@ function render(initial: LevelProgressView = fresh) {
 	const wrapper = ({ children }: { children: ReactNode }) => (
 		<QueryClientProvider client={client}>{children}</QueryClientProvider>
 	)
-	return renderHook(() => useLevelProgress(LEVEL_ID, initial), { wrapper })
+	return renderHook(() => useLevelProgress(LEVEL_ID, initial, QUESTIONS), { wrapper })
 }
 
 beforeEach(() => {
@@ -145,6 +147,20 @@ describe('useLevelProgress reveal', () => {
 		const { result } = render()
 		act(() => result.current.reveal('opus'))
 		await waitFor(() => expect(toast).toHaveBeenCalledWith({ title: '+25 XP' }))
+	})
+})
+
+describe('useLevelProgress celebration', () => {
+	it('is cleared once consumed', async () => {
+		revealPrediction.mockResolvedValue({
+			ok: true,
+			data: { firstReveal: true, predictionCorrect: true, awards: NO_AWARDS, levelDone: false }
+		})
+		const { result } = render()
+		act(() => result.current.reveal('opus'))
+		await waitFor(() => expect(result.current.celebrate).toBe(true))
+		act(() => result.current.consumeCelebration())
+		expect(result.current.celebrate).toBe(false)
 	})
 })
 

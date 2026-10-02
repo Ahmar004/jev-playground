@@ -17,6 +17,7 @@ function renderCheck(
 ) {
 	const onAnswer = vi.fn()
 	const onBackToPath = vi.fn()
+	const onGoToReveal = vi.fn()
 	render(
 		<CheckStep
 			questions={only}
@@ -24,10 +25,11 @@ function renderCheck(
 			pendingQuestionId={extra.pendingQuestionId ?? null}
 			levelDone={extra.levelDone ?? false}
 			onAnswer={onAnswer}
+			onGoToReveal={onGoToReveal}
 			onBackToPath={onBackToPath}
 		/>
 	)
-	return { onAnswer, onBackToPath }
+	return { onAnswer, onBackToPath, onGoToReveal }
 }
 
 describe('CheckStep', () => {
@@ -86,5 +88,31 @@ describe('CheckStep', () => {
 		renderCheck({ [first.id]: { optionId: 'a', correct: true } }, { levelDone: false })
 		expect(screen.queryByText('Level complete')).not.toBeInTheDocument()
 		expect(screen.getByRole('button', { name: 'Back to Path' })).toBeInTheDocument()
+	})
+
+	it('points to Reveal when every question is answered but the level is not done', async () => {
+		const { onGoToReveal } = renderCheck({ [first.id]: { optionId: 'a', correct: true } })
+		expect(screen.getByText('Reach Reveal to finish this level.')).toBeInTheDocument()
+		await userEvent.click(screen.getByRole('button', { name: 'Go to Reveal' }))
+		expect(onGoToReveal).toHaveBeenCalled()
+	})
+
+	it('puts the result in a polite live region and moves focus to it after answering', async () => {
+		const onAnswer = vi.fn()
+		const props = {
+			questions: only,
+			pendingQuestionId: null,
+			levelDone: false,
+			onAnswer,
+			onGoToReveal: () => undefined,
+			onBackToPath: () => undefined
+		}
+		const { rerender } = render(<CheckStep {...props} answers={{}} />)
+		await userEvent.click(screen.getByRole('radio', { name: 'Option B' }))
+		await userEvent.click(screen.getByRole('button', { name: 'Check answer' }))
+		rerender(<CheckStep {...props} answers={{ [first.id]: { optionId: 'b', correct: false } }} />)
+		const result = screen.getByText('Not quite')
+		expect(result.closest('[aria-live="polite"]')).not.toBeNull()
+		expect(result).toHaveFocus()
 	})
 })
