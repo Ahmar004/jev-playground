@@ -1,10 +1,12 @@
 'use client'
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import { Card } from '@/components/ui/card'
 import { useMode } from '@/features/mode/mode-context'
 import { cn } from '@/lib/cn'
 import { MODES } from '@/lib/constants'
+import { ROUTES } from '@/lib/links'
 import { BeginnerPanel } from './beginner-panel'
 import { CustomDeveloperPanel, PresetDeveloperPanel } from './developer-panel'
 import type { ArenaPresetView } from './snapshot'
@@ -99,6 +101,17 @@ export function ArenaView({ views }: { views: ArenaPresetView[] }) {
 								</span>
 							</p>
 						</div>
+						{selected.batchItems !== null && (
+							<p className="text-text-muted text-sm">
+								Want to see it at scale?{' '}
+								<Link
+									href={ROUTES.arenaBatch(selected.preset.id)}
+									className="text-accent underline"
+								>
+									Run all {selected.batchItems} items as a batch
+								</Link>
+							</p>
+						)}
 						{/* Remounting on a new preset or mode drops the old run. */}
 						{developer ? (
 							<PresetDeveloperPanel

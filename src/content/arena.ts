@@ -7,11 +7,13 @@ import {
 	type ArenaPresetView,
 	type ArenaSide
 } from '@/features/arena/snapshot'
+import { ARENA_BATCH_MIN_ITEMS } from '@/lib/constants'
 import { raceLineup } from '@/features/levels/lineup'
 import { valueText } from '@/features/race/answer-text'
 import { arenaPresetSchema, type ArenaPreset } from './arena-schema'
 import { currentRecordings } from './recordings'
 import type { Recording } from './recording-schema'
+import type { Task } from './task-schema'
 import { TASKS } from './tasks'
 
 /** Parses the presets and checks that each names a real task and item, keyed by id in listed order. */
@@ -44,6 +46,10 @@ export function sideOf(recording: Recording, itemId: string): ArenaSide | null {
 	})
 }
 
+function isBatchable(task: Task): boolean {
+	return task.items.length >= ARENA_BATCH_MIN_ITEMS
+}
+
 function viewOf(preset: ArenaPreset): ArenaPresetView {
 	const task = TASKS.get(preset.taskId)
 	const item = task?.items.find((candidate) => candidate.id === preset.itemId)
@@ -57,7 +63,8 @@ function viewOf(preset: ArenaPreset): ArenaPresetView {
 		state: stateText(item.state),
 		expected: item.label === undefined ? null : valueText(item.label),
 		jev: jev ? sideOf(jev, item.id) : null,
-		opponents: opponents.flatMap((recording) => sideOf(recording, item.id) ?? [])
+		opponents: opponents.flatMap((recording) => sideOf(recording, item.id) ?? []),
+		batchItems: isBatchable(task) ? task.items.length : null
 	}
 }
 
@@ -70,4 +77,24 @@ export function presetViews(): ArenaPresetView[] {
 export function presetView(presetId: string): ArenaPresetView | undefined {
 	const preset = PRESETS.get(presetId)
 	return preset ? viewOf(preset) : undefined
+}
+
+/** The ids of the presets that can run as a batch (R45). */
+export function batchPresetIds(): string[] {
+	return [...PRESETS.values()]
+		.filter((preset) => {
+			const task = TASKS.get(preset.taskId)
+			return task !== undefined && isBatchable(task)
+		})
+		.map((preset) => preset.id)
+}
+
+/** A batchable preset with its whole task and recordings, or undefined. Only this task's recordings reach the client (R79). */
+export function batchView(
+	presetId: string
+): { preset: ArenaPreset; task: Task; recordings: Recording[] } | undefined {
+	const preset = PRESETS.get(presetId)
+	const task = preset ? TASKS.get(preset.taskId) : undefined
+	if (!preset || !task || !isBatchable(task)) return undefined
+	return { preset, task, recordings: currentRecordings(task.id) }
 }

@@ -314,6 +314,10 @@ export const SHARE_LIMITS = {
 	windowMs: 24 * 60 * 60 * 1000
 } as const
 
+// Arena batch mode (R45): a preset whose task has at least this many items can
+// run as a batch. Smaller tasks are too short to show speed and cost at scale.
+export const ARENA_BATCH_MIN_ITEMS = 12
+
 // The start and end quizzes (spec 10.2). Each has one question per level topic.
 export const QUIZ_IDS = { start: 'start', end: 'end' } as const
 export type QuizId = (typeof QUIZ_IDS)[keyof typeof QUIZ_IDS]

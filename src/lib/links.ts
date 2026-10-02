@@ -12,6 +12,7 @@ export const ROUTES = {
 	leaderboard: '/leaderboard',
 	arena: '/arena',
 	arenaPreset: (presetId: string) => `/arena?preset=${presetId}`,
+	arenaBatch: (presetId: string) => `/arena/batch/${presetId}`,
 	sandbox: '/sandbox',
 	quizzes: '/quizzes',
 	quiz: (quizId: string) => `/quizzes/${quizId}`,

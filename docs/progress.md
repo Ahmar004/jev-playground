@@ -582,4 +582,14 @@ Next: Step-6, slice 13 (VS games P1: Smart Home Dash, Twin Finder, Confidence Ca
 - Tests: `threshold.test.ts`; `e2e/games.spec.ts` plays all four P1 games, checks their Leaderboard sections and drives the slider.
 - Left open: the manual local-review pass; no screenshots checked for the new scenes in both themes; animations are chip scenes, not the richer metaphors in spec 7.2; `right_tool`, `trickster` and `live_wire` badges; `recordDevRun`; the Rule-A/Rule-B relabel references in CLAUDE.md, spec, DESIGN and TECH-STACK (needs the user's OK).
 
-Next: Step-6, slice 14 (Arena batch mode, P1: the 25-item batch task and the race view in Arena).
+## Step-6 - slice 14: Arena batch mode (2026-10-02) - done
+
+- Skills: no writing-plans file and no subagents (Rule-A; one small change). Gates by hand: lint, typecheck, format:check, check:secrets, check:standards 24/24, test (558 Vitest plus 114 node:test), build, e2e (new `e2e/arena-batch.spec.ts` 2/2 and `arena.spec.ts` against `pnpm start` with `E2E_BASE_URL`). The manual `local-review` pass was not run as a separate step.
+- User decision: batch mode reuses each preset's existing recorded task (no new 25-item tasks, $0 spend). Spec and DESIGN 9 said "25-item batch task"; DESIGN 9 now says what is built.
+- Built:
+  - `/arena/batch/[presetId]` (SSG, `generateStaticParams` from `batchPresetIds()`), `BatchPlay` (`src/features/arena/batch-play.tsx`): the race view over the whole task, Beginner replay with the opponent picker or Developer live via `LiveRaces`, plus the preset's lesson. Nothing is saved, shared or scored for XP.
+  - Batch is offered when the task has at least `ARENA_BATCH_MIN_ITEMS` (12) items: ticket triage (40), prompt-injection (16), review rating (20), product match (16), citation check (12), intent routing (12). Date comparison (4) and phishing (3) have none. `ArenaPresetView.batchItems` drives the "Run all N items as a batch" link in the Arena; `ROUTES.arenaBatch`; `batchView` in `src/content/arena.ts` ships only that task's recordings to the page (R79).
+- Left open: the manual local-review pass; no screenshots checked for the batch page in both themes; `right_tool`, `trickster` and `live_wire` badges; `recordDevRun`; the Rule-A/Rule-B relabel references in CLAUDE.md, spec, DESIGN and TECH-STACK (needs the user's OK).
+- Run `corepack pnpm exec next typegen` after adding a route if `PageProps<...>` types error in typecheck.
+
+Next: Step-6 is complete after slice 14. Then Step-7 (hardening: systematic-debugging, e2e for every flow, the k6 load test published on Methodology). Worth deciding before then: level 6 and 8 Developer mode live runs, the missing badges and `recordDevRun`.

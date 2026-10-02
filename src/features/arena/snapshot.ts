@@ -49,6 +49,8 @@ export type ArenaPresetView = {
 	expected: string | null
 	jev: ArenaSide | null
 	opponents: ArenaSide[]
+	// The size of the whole task when it can run as a batch (R45), else null.
+	batchItems: number | null
 }
 
 /** An item's state as plain text: a string as it is, anything else as indented JSON. */

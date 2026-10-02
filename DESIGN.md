@@ -264,7 +264,7 @@ Level 1 (Speed Race) is also timed, so it writes Leaderboard entries under the g
 - 8 single-item presets: ticket triage, prompt-injection check, review rating, product match, citation check, intent routing, date extraction and phishing fan-out. Product match, citation check and intent routing come from P1 games, so slice 10 writes and records those three tasks, and slice 13's games reuse them.
 - A result shows each answer, Jev's probabilities and confidence, latency, cost and the mode label. An unparseable LLM output shows the raw text with a "couldn't parse" note.
 - Developer mode can edit the preset inputs, or write a custom task (state plus one question), and pick the LLM.
-- P1 batch mode runs one preset over its 25-item batch task through the race view (R45).
+- P1 batch mode (`/arena/batch/[presetId]`) runs a preset's whole recorded task through the race view in both modes (R45). It is offered when the task has at least 12 items (`ARENA_BATCH_MIN_ITEMS`), so 6 of the 8 presets have it; there is no separate 25-item task, because the existing recordings already show speed and cost at scale. Batch runs are not scored for XP, saved or shared.
 - Share: see section 11.
 
 **Sandbox (R47-R54):**
