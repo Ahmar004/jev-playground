@@ -97,7 +97,7 @@ Beginner mode needs no model keys. The `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY
 - **No provider SDKs.** Hand-written `fetch` modules cost more code, but they give exact timing and payloads that match the real APIs.
 - **Hand-built SVG charts and CSS animations** instead of a chart library, to keep client bundles small.
 - **Known gaps:**
-  - Level 8 still shows recorded results in Developer mode.
+  - After a Developer mode run, Reveal still shows the recorded runs.
   - Jev through an OpenRouter key is not built: its response shape could not be verified without a real key.
   - OpenAI and Google models show "price unknown".
   - There is no password reset yet.

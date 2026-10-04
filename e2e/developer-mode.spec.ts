@@ -35,13 +35,23 @@ function json(route: Route, status: number, body: unknown, headers: Record<strin
 type Hits = { jev: number; messages: number; keysInUrl: number }
 
 // Our /api/jev and the Anthropic API, answered by the test.
-async function interceptProviders(page: Page, options: { messagesStatus?: number } = {}) {
+async function interceptProviders(
+	page: Page,
+	options: {
+		messagesStatus?: number
+		jevStatus?: number
+		// Overrides Jev's answer for a message; undefined keeps the default.
+		jevAnswer?: (state: string) => unknown
+	} = {}
+) {
 	const hits: Hits = { jev: 0, messages: 0, keysInUrl: 0 }
 	await page.route(/\/api\/jev$/, async (route) => {
 		const request = route.request()
 		if (request.method() === 'GET') return json(route, 200, { data: [] })
 		hits.jev += 1
-		const { questions } = request.postDataJSON() as {
+		if (options.jevStatus) return json(route, options.jevStatus, { detail: 'nope' })
+		const { state, questions } = request.postDataJSON() as {
+			state: unknown
 			questions: Record<string, { type: string; criteria?: Record<string, string> }>
 		}
 		// A text question is rejected, as the real Jev does (level 6's writing cards).
@@ -52,6 +62,8 @@ async function interceptProviders(page: Page, options: { messagesStatus?: number
 		}
 		const answers = Object.fromEntries(
 			Object.entries(questions).map(([name, question]) => {
+				const override = typeof state === 'string' ? options.jevAnswer?.(state) : undefined
+				if (override !== undefined) return [name, override]
 				if (question.type === 'noul') return [name, { type: 'noul', noul: 0.9 }]
 				const choice = Object.keys(question.criteria ?? {})[0] ?? 'billing'
 				return [name, { type: 'choice', choice, probabilities: { [choice]: 0.9 }, confidence: 0.9 }]
@@ -274,6 +286,64 @@ test('level 6 live: a rejected LLM key stops the run and offers Beginner mode', 
 	).toBeVisible()
 	await alert.getByRole('button', { name: 'Use Beginner mode instead' }).click()
 	await expect(page.getByRole('radio', { name: 'Beginner' })).toBeChecked()
+})
+
+async function openTricksWithJevKey(page: Page) {
+	await openPlayInDeveloperMode(page, 'trick-jev', 'Play')
+	await saveKey(page, 'TypeSafe (Jev)', TS_KEY)
+	await expect(page.getByText('Key works.')).toBeVisible()
+	await page.keyboard.press('Escape')
+	await expect(page.getByRole('heading', { name: 'Write your own trick' })).toBeVisible()
+}
+
+async function askJev(page: Page, text: string, answer: 'Yes' | 'No') {
+	await page.getByLabel('Your message').fill(text)
+	await page.getByRole('radio', { name: answer, exact: true }).check()
+	await page.getByLabel('Your message').press('Enter')
+}
+
+test("level 8: the user's own trick runs live against Jev, and a reply that does not parse is a miss (R14, R44)", async ({
+	page
+}) => {
+	const hits = await interceptProviders(page, {
+		jevAnswer: (state) =>
+			state.startsWith('Garble') ? { type: 'choice', choice: 'x', confidence: 0.5 } : undefined
+	})
+	await openTricksWithJevKey(page)
+	// Only the TypeSafe key is needed; the recorded pairs to guess on stay below.
+	await expect(page.getByRole('heading', { name: 'Which tricks fool Jev?' })).toBeVisible()
+	const tricks = page.getByRole('list', { name: 'Your tricks' })
+
+	// The fake Jev says 90% yes; the user says the right answer is no.
+	await askJev(page, 'I asked about cancelling, but please keep my plan.', 'No')
+	const fooled = tricks.getByRole('listitem').first()
+	await expect(fooled).toContainText('You fooled Jev')
+	await expect(fooled).toContainText('Jev: 90% yes')
+	await expect(fooled.getByText(/^Developer mode - run \d{2}:\d{2} - jev-1\.13\.0$/)).toBeVisible()
+
+	await askJev(page, 'Garble this one', 'Yes')
+	const unparsed = tricks.getByRole('listitem').first()
+	await expect(unparsed).toContainText("Couldn't parse")
+	await expect(unparsed).toContainText('counts as a miss')
+	await expect(unparsed).toContainText('"choice":"x"')
+	await expect(tricks.getByRole('listitem')).toHaveCount(2)
+	// One call per attempt, no hidden retries (R7).
+	expect(hits.jev).toBe(2)
+	await page.screenshot({ path: `${SCREENSHOT_DIR}/dev-tricks-live.png`, fullPage: true })
+})
+
+test('level 8 live: a rejected TypeSafe key stops with a friendly message and Beginner mode', async ({
+	page
+}) => {
+	await interceptProviders(page, { jevStatus: 401 })
+	await openTricksWithJevKey(page)
+	await askJev(page, 'Cancel it, maybe.', 'Yes')
+	const alert = page.getByRole('alert').filter({ hasText: 'The run stopped' })
+	await expect(alert).toBeVisible()
+	await expect(page.getByRole('list', { name: 'Your tricks' })).toHaveCount(0)
+	await alert.getByRole('button', { name: 'Use Beginner mode instead' }).click()
+	await expect(page.getByRole('radio', { name: 'Beginner' })).toBeChecked()
+	await expect(page.getByRole('heading', { name: 'Write your own trick' })).toHaveCount(0)
 })
 
 test('Developer mode fits a phone', async ({ page }) => {

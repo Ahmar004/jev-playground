@@ -4,12 +4,12 @@ import { useState } from 'react'
 import { PRICES, type PriceTable } from '@/content/prices'
 import { useKeys } from '@/features/keys/keys-context'
 import { useModelList } from '@/features/keys/use-model-list'
-import { LLM_PROVIDERS, PROVIDERS, type LlmProvider } from '@/lib/constants'
+import { JEV_MODEL_ALIAS, LLM_PROVIDERS, PROVIDERS, type LlmProvider } from '@/lib/constants'
 import { buildAnthropicBody, callAnthropic } from '@/runner/providers/anthropic'
 import { callGoogle } from '@/runner/providers/google'
 import { callOpenAi, callOpenRouter } from '@/runner/providers/openai-compat'
 import { callTypeSafe, JEV_PROXY_URL } from '@/runner/providers/typesafe'
-import type { LlmCall } from '@/runner/racers'
+import type { JevCall, LlmCall } from '@/runner/racers'
 import type { ProviderResult } from '@/runner/types'
 import type { LiveConfig } from './live-config'
 
@@ -38,6 +38,8 @@ export type LiveSetup = {
 	// What is still missing before a live run can start, in plain words; null when ready.
 	missing: string | null
 	config: LiveConfig | null
+	// Jev alone, for a level that asks only Jev (level 8's own trick); null without a TypeSafe key.
+	jev: { call: JevCall; modelId: string } | null
 }
 
 /**
@@ -68,8 +70,16 @@ export function useLiveSetup(): LiveSetup {
 	else if (!modelId)
 		missing = list.isFetching ? 'Loading your models...' : 'No model is available for this key.'
 
+	const jevCall: JevCall | null = jevKey
+		? async (body, signal) => {
+				const result = await callTypeSafe(body, jevKey.key, signal, JEV_PROXY_URL)
+				noteAnswered('jev', result)
+				return result
+			}
+		: null
+
 	let config: LiveConfig | null = null
-	if (!missing && jevKey && provider && llmKey && modelId) {
+	if (!missing && jevCall && provider && llmKey && modelId) {
 		const picked = models.find((model) => model.id === modelId)
 		// Only OpenRouter publishes prices with its model list; the rest are "price unknown" unless stored.
 		const prices: PriceTable =
@@ -88,11 +98,7 @@ export function useLiveSetup(): LiveSetup {
 				: PRICES
 		const llmCall = llmCallFor(provider, modelId, llmKey.key)
 		config = {
-			jevCall: async (body, signal) => {
-				const result = await callTypeSafe(body, jevKey.key, signal, JEV_PROXY_URL)
-				noteAnswered('jev', result)
-				return result
-			},
+			jevCall,
 			llmCall: async (prompt, signal) => {
 				const result = await llmCall(prompt, signal)
 				noteAnswered('llm', result)
@@ -120,6 +126,7 @@ export function useLiveSetup(): LiveSetup {
 		modelId,
 		setModelId,
 		missing,
-		config
+		config,
+		jev: jevCall ? { call: jevCall, modelId: answered.jev ?? JEV_MODEL_ALIAS } : null
 	}
 }

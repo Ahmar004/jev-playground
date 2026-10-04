@@ -18,6 +18,7 @@ import { RouterResults } from './router/router-results'
 import { useCodeResults } from './router/use-code-results'
 import { SignalPanel } from './signals/signal-panel'
 import { trickPairs, type Guesses } from './tricks/pairs'
+import { TrickLivePlay } from './tricks/trick-live-play'
 import { TrickPicker } from './tricks/trick-picker'
 import { TrickResults } from './tricks/trick-results'
 import { defaultWeights, type Weights } from './weights/composite'
@@ -145,6 +146,31 @@ function RouterPlay({
 	)
 }
 
+/** Level 8 Play: the guesses on the recorded pairs, and in Developer mode the user's own trick first (R14). */
+function TricksPlay({ stages, opponentId, state }: Omit<WidgetProps, 'level'>) {
+	const { mode, setMode } = useMode()
+	const data = trickData(stages, opponentId)
+	if (!data) return null
+	const question = trickQuestion(data.stage.task)
+	return (
+		<>
+			{mode === MODES.developer && (
+				<TrickLivePlay
+					task={data.stage.task}
+					question={question}
+					onUseBeginner={() => setMode(MODES.beginner)}
+				/>
+			)}
+			<TrickPicker
+				pairs={data.pairs}
+				question={question}
+				guesses={state.guesses}
+				onGuess={state.guess}
+			/>
+		</>
+	)
+}
+
 /** What a level adds to Play, above its races (or in place of them for the Router). */
 export function PlayWidget({ level, stages, opponentId, state }: WidgetProps) {
 	switch (level.widget) {
@@ -169,17 +195,8 @@ export function PlayWidget({ level, stages, opponentId, state }: WidgetProps) {
 			return level.router ? (
 				<RouterPlay cards={level.router} stages={stages} opponentId={opponentId} state={state} />
 			) : null
-		case LEVEL_WIDGETS.tricks: {
-			const data = trickData(stages, opponentId)
-			return data ? (
-				<TrickPicker
-					pairs={data.pairs}
-					question={trickQuestion(data.stage.task)}
-					guesses={state.guesses}
-					onGuess={state.guess}
-				/>
-			) : null
-		}
+		case LEVEL_WIDGETS.tricks:
+			return <TricksPlay stages={stages} opponentId={opponentId} state={state} />
 		default:
 			return null
 	}

@@ -6,17 +6,16 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: $19.47 left, and recordings so far cost $0.49.
 
-**Built (Steps 0-11):**
+**Built (Steps 0-12):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
-- Tests: 591 Vitest, 114 node:test and 70 Playwright e2e, covering every flow in DESIGN 15.
+- Tests: 608 Vitest, 114 node:test and 72 Playwright e2e, covering every flow in DESIGN 15.
 - k6 locally: 400 users median 266 ms; 1,000 users median 6.2 s (one Node process is CPU-bound).
 - The public README.
 
 **Open (each is a ROADMAP step, 11-35):**
 
-- Level 8 still shows recordings in Developer mode (level 6 runs live since Step-11).
 - A provider call that never answers leaves a live run waiting: there is no client-side timeout (seen while writing the Step-11 e2e fake). Worth a fix with Step-15's real-key check.
 - Live results don't show in Reveal.
 - OpenAI and Google prices are unknown.
@@ -35,7 +34,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-12 (level 8 in Developer mode).
+**Next:** Step-13 (live results in Reveal).
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -722,3 +721,12 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Reveal still shows the recorded runs after a live run (Step-13). Live results reset when the user leaves Play, the same as the live races.
 - Tests: `use-live-router.test.ts` (7), live and recorded labels in `level-widgets.test.ts`; e2e `developer-mode.spec.ts` level 6 live run (6 Jev plus 6 LLM calls, 12 labels, Jev's real rejection of the writing cards shown as a miss) and a rejected-key stop with the Beginner fallback. The e2e Jev fake now rejects text questions with the 400 the real Jev sends, and answers Noul questions.
 - Gates: lint, typecheck, format:check, check:env, check:secrets, check:standards 24/24, check:rls, test (114 node:test plus 591 Vitest), build, e2e developer-mode 6/6 and levels-5-8 9/9 against `pnpm start`.
+
+## Step-12 - level 8 in Developer mode (2026-10-04) - done
+
+- Skills: test-driven-development (tests written first, by hand), local-review. No subagents, no Anthropic spend (intercepted providers only).
+- User decisions: the writer goes above the recorded pairs, which stay, so Reveal and the Trickster badge work as before; only Jev answers the user's trick (TypeSafe key only).
+- Built: `tricks/use-live-trick.ts` (one call per attempt, newest first, `lastInput` for Retry, abort on unmount, text up to `TRICK_TEXT_MAX` 2000 chars), `tricks/trick-writer.tsx` (pure form: Enter submits, Shift+Enter adds a line; each attempt shows "You fooled Jev" or "Jev saw through it", Jev's % yes, the outcome, latency and cost, the Developer mode label), `tricks/trick-live-play.tsx` (binds `jevRacer` plus `stopOnProviderFailure`, records the dev run for `live_wire`). `pairs.ts` gained `jevProbability` and `trickFooled` (a miss, parsed or not, counts as fooled, R44). `useLiveSetup` now exposes `jev` (call plus model id) without needing an LLM key.
+- The attempts reset when the user leaves Play, like the live races; Reveal does not show them (Step-13 decides).
+- Tests: `use-live-trick.test.ts` (11), `trick-writer.test.tsx` (6); e2e `developer-mode.spec.ts`: a live trick that fools the fake Jev plus an unparsed reply shown as a miss with its raw text (2 calls, no retries), and a rejected TypeSafe key with the Beginner fallback. The e2e Jev fake takes `jevStatus` and `jevAnswer` options.
+- Gates: lint, typecheck, format:check, check:env, check:secrets, check:standards 24/24, check:rls, test (114 node:test plus 608 Vitest), build, e2e developer-mode and levels-5-8 17/17 against `pnpm start`.

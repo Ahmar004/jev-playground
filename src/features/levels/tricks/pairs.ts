@@ -4,6 +4,7 @@ import type { Task, TaskItem } from '@/content/task-schema'
 import { valueText } from '@/features/race/answer-text'
 import { QUESTION_KINDS } from '@/lib/constants'
 import { jevAnswerSchema } from '@/runner/parse'
+import type { ItemResult } from '@/runner/types'
 
 const ITEM_ID = /^(.+)-(plain|tricked)$/
 const jevAnswersSchema = z.record(z.string(), jevAnswerSchema)
@@ -28,16 +29,26 @@ export type TrickPair = {
 /** The user's guesses: true means "Jev will be fooled by the tricky wording". */
 export type Guesses = Record<string, boolean>
 
+/** Jev's probability of "yes" from its parsed answers; null when the reply did not parse to a Noul. */
+export function jevProbability(parsed: unknown): number | null {
+	const answers = jevAnswersSchema.safeParse(parsed)
+	const answer = answers.success ? answers.data.answer : undefined
+	return answer?.type === QUESTION_KINDS.noul ? answer.noul : null
+}
+
+/** A trick fools Jev when its answer is not right; a reply that did not parse counts as a miss (R44). */
+export function trickFooled(result: ItemResult): boolean {
+	return result.correct !== true
+}
+
 function side(item: TaskItem, jev: Recording, opponent: Recording | undefined): TrickSide {
 	const jevEvent = jev.events.find((event) => event.itemId === item.id)
-	const answers = jevAnswersSchema.safeParse(jevEvent?.parsed)
-	const answer = answers.success ? answers.data.answer : undefined
 	const llmEvent = opponent?.events.find((event) => event.itemId === item.id)
 	const llmYes = typeof llmEvent?.parsed === 'boolean' ? llmEvent.parsed : null
 	return {
 		itemId: item.id,
 		text: valueText(item.state),
-		jevProbability: answer?.type === QUESTION_KINDS.noul ? answer.noul : null,
+		jevProbability: jevProbability(jevEvent?.parsed),
 		jevRight: jevEvent?.ok ? (jevEvent.correct ?? null) : null,
 		llmYes,
 		llmRight: llmEvent?.ok ? (llmEvent.correct ?? null) : null
