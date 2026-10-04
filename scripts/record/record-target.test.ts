@@ -13,8 +13,18 @@ import { recordTarget, type ProviderCalls } from './record-target'
 const prices: PriceTable = {
 	checkedOn: '2026-10-01',
 	models: {
-		'jev-1.13.0': { inputPerM: 0.042, outputPerM: 0, source: 'https://docs.typesafe.ai/models' },
-		'claude-opus-5-5': { inputPerM: 4, outputPerM: 20, source: 'https://example.com/pricing' }
+		'jev-1.13.0': {
+			provider: 'typesafe',
+			inputPerM: 0.042,
+			outputPerM: 0,
+			source: 'https://docs.typesafe.ai/models'
+		},
+		'claude-opus-5-5': {
+			provider: 'anthropic',
+			inputPerM: 4,
+			outputPerM: 20,
+			source: 'https://example.com/pricing'
+		}
 	}
 }
 // t3 has no label (not scored); any valid option will do for it.
@@ -84,7 +94,8 @@ describe('recordTarget', () => {
 			racer: 'jev',
 			modelId: 'jev-1.13.0',
 			recordedAt: '2026-10-01T12:00:00.000Z',
-			price: prices.models['jev-1.13.0'],
+			// The saved price keeps only the numbers and their source.
+			price: { inputPerM: 0.042, outputPerM: 0, source: 'https://docs.typesafe.ai/models' },
 			lanes: 4
 		})
 		expect(recording.events.map((event) => event.itemId)).toEqual(

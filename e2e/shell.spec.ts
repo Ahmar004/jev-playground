@@ -57,6 +57,14 @@ test('the footer links to the Methodology page', async ({ page }) => {
 	await expect(page.getByRole('heading', { name: 'Methodology', level: 1 })).toBeVisible()
 	await expect(page.getByRole('heading', { name: 'Same inputs, same format' })).toBeVisible()
 	await expect(page.getByRole('heading', { name: 'Cost' })).toBeVisible()
+	// Every provider's prices are grouped under its name, with the page they came from.
+	for (const provider of ['TypeSafe (Jev)', 'Anthropic', 'OpenAI', 'Google']) {
+		await expect(page.getByRole('columnheader', { name: `${provider} - https://` })).toBeVisible()
+	}
+	await expect(page.getByRole('rowheader', { name: 'gpt-5.4-mini' })).toBeVisible()
+	await expect(
+		page.getByRole('rowheader', { name: 'gemini-3.8-flash promotional price until 2026-12-31' })
+	).toBeVisible()
 })
 
 test('the header stays one row and the sidebar reaches every page', async ({ page }) => {

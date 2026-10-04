@@ -1,26 +1,64 @@
 import { describe, expect, it } from 'vitest'
 import type { Recording } from '@/content/recording-schema'
-import { priceRows, recordingRows } from './methodology-data'
+import { priceGroups, recordingRows } from './methodology-data'
 
-describe('priceRows', () => {
-	it('lists every stored price, sorted by model id', () => {
-		const rows = priceRows({
-			checkedOn: '2026-10-01',
+describe('priceGroups', () => {
+	it('groups prices by provider, Jev first, each group sorted by model id', () => {
+		const groups = priceGroups({
+			checkedOn: '2026-10-04',
 			models: {
+				'gpt-5': {
+					provider: 'openai',
+					inputPerM: 1.25,
+					outputPerM: 10,
+					source: 'https://developers.openai.com/api/docs/pricing'
+				},
+				'claude-opus-5-5': {
+					provider: 'anthropic',
+					inputPerM: 4,
+					outputPerM: 20,
+					source: 'https://example.com/p'
+				},
+				'gemini-3.8-flash': {
+					provider: 'google',
+					inputPerM: 0.75,
+					outputPerM: 3.75,
+					source: 'https://ai.google.dev/gemini-api/docs/pricing',
+					validUntil: '2026-12-31'
+				},
 				'jev-1.13.0': {
+					provider: 'typesafe',
 					inputPerM: 0.042,
 					outputPerM: 0,
 					source: 'https://docs.typesafe.ai/models'
 				},
-				'claude-opus-5-5': { inputPerM: 4, outputPerM: 20, source: 'https://example.com/p' }
+				'gpt-4o': {
+					provider: 'openai',
+					inputPerM: 2.5,
+					outputPerM: 10,
+					source: 'https://developers.openai.com/api/docs/pricing'
+				}
 			}
 		})
-		expect(rows.map((row) => row.modelId)).toEqual(['claude-opus-5-5', 'jev-1.13.0'])
-		expect(rows[1]).toEqual({
-			modelId: 'jev-1.13.0',
-			inputPerM: 0.042,
-			outputPerM: 0,
-			source: 'https://docs.typesafe.ai/models'
+		expect(groups.map((group) => group.provider)).toEqual([
+			'typesafe',
+			'anthropic',
+			'openai',
+			'google'
+		])
+		expect(groups[2]).toEqual({
+			provider: 'openai',
+			sources: ['https://developers.openai.com/api/docs/pricing'],
+			rows: [
+				{ modelId: 'gpt-4o', inputPerM: 2.5, outputPerM: 10 },
+				{ modelId: 'gpt-5', inputPerM: 1.25, outputPerM: 10 }
+			]
+		})
+		expect(groups[3]?.rows[0]).toEqual({
+			modelId: 'gemini-3.8-flash',
+			inputPerM: 0.75,
+			outputPerM: 3.75,
+			validUntil: '2026-12-31'
 		})
 	})
 })

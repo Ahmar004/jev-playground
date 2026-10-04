@@ -4,8 +4,8 @@ import { currentRecordings } from '@/content/recordings'
 import { TASKS } from '@/content/tasks'
 import { LOAD_TESTS } from '@/features/methodology/load-test'
 import { LoadTestSection } from '@/features/methodology/load-test-section'
-import { priceRows, recordingRows } from '@/features/methodology/methodology-data'
-import { CLAUDE_MODELS, NOUL_THRESHOLD, RACE_LANES } from '@/lib/constants'
+import { priceGroups, recordingRows } from '@/features/methodology/methodology-data'
+import { CLAUDE_MODELS, NOUL_THRESHOLD, PROVIDER_LABELS, RACE_LANES } from '@/lib/constants'
 import { ANTHROPIC_MAX_TOKENS } from '@/runner/providers/anthropic'
 import { FIND_LINES_F1_BAR, SCORE_TOLERANCE } from '@/runner/score'
 
@@ -22,6 +22,7 @@ const TABLE = 'w-full text-left text-sm'
 const CAPTION = 'text-text-muted pb-2 text-left text-sm'
 const HEAD_CELL = 'text-text border-border border-b py-2 pr-4 font-bold'
 const CELL = 'border-border text-text-muted border-b py-2 pr-4'
+const GROUP_CELL = 'border-border text-text-muted border-b pt-4 pb-2 pr-4 text-left'
 
 const SCORING_RULES: { term: string; rule: string }[] = [
 	{ term: 'Choice', rule: 'Correct when the answer equals the correct option.' },
@@ -45,7 +46,6 @@ const SCORING_RULES: { term: string; rule: string }[] = [
 ]
 
 export default function MethodologyPage() {
-	const prices = priceRows(PRICES)
 	const recordings = recordingRows([...TASKS.keys()].flatMap(currentRecordings))
 
 	return (
@@ -111,15 +111,26 @@ export default function MethodologyPage() {
 					&quot;price unknown&quot; and is never estimated.
 				</p>
 				<p className={BODY}>
-					Developer mode uses the same runner and the same math, with your own keys. A model from
-					OpenRouter is priced from OpenRouter&apos;s published list; Anthropic models use the table
-					below; any other model shows &quot;price unknown&quot;. Jev&apos;s time in Developer mode
-					is the time our server measured for its call to TypeSafe, so the hop from your browser to
-					our server is not counted.
+					Developer mode uses the same runner and the same math, with your own keys. Jev, Anthropic,
+					OpenAI and Google models use the table below, matched by the exact model ID; a model from
+					OpenRouter is priced from OpenRouter&apos;s published list; any other model shows
+					&quot;price unknown&quot;. Jev&apos;s time in Developer mode is the time our server
+					measured for its call to TypeSafe, so the hop from your browser to our server is not
+					counted.
+				</p>
+				<p className={BODY}>
+					OpenAI and Google charge more for very long prompts (over 272,000 tokens at OpenAI, over
+					200,000 at Google). This site never sends a prompt that long, so the table holds only the
+					standard price. A discount a provider gives for a repeated prompt (cached input) is not
+					applied, so a cost can read slightly high, never low. A promotional price shows its last
+					day; after that day the model shows &quot;price unknown&quot; until the table is checked
+					again.
 				</p>
 				<div className={TABLE_WRAPPER}>
 					<table className={TABLE}>
-						<caption className={CAPTION}>Prices checked on {PRICES.checkedOn}.</caption>
+						<caption className={CAPTION}>
+							Prices checked on {PRICES.checkedOn}, from each provider&apos;s official pricing page.
+						</caption>
 						<thead>
 							<tr>
 								<th scope="col" className={HEAD_CELL}>
@@ -131,34 +142,47 @@ export default function MethodologyPage() {
 								<th scope="col" className={HEAD_CELL}>
 									Output $/M
 								</th>
-								<th scope="col" className={HEAD_CELL}>
-									Source
-								</th>
 							</tr>
 						</thead>
-						<tbody>
-							{prices.map((row) => (
-								<tr key={row.modelId}>
-									<th scope="row" className={`${CELL} font-medium break-all`}>
-										{row.modelId}
+						{priceGroups(PRICES).map((group) => (
+							<tbody key={group.provider}>
+								<tr>
+									<th scope="colgroup" colSpan={3} className={`${GROUP_CELL} break-all`}>
+										<span className="text-text font-bold">{PROVIDER_LABELS[group.provider]}</span>{' '}
+										<span className="font-normal">
+											-{' '}
+											{group.sources.map((source) =>
+												source.startsWith(TYPESAFE_DOCS_PREFIX) ? (
+													<a
+														key={source}
+														href={source}
+														className="text-accent focus-visible:outline-accent rounded underline underline-offset-4 focus-visible:outline focus-visible:outline-2"
+													>
+														{source}
+													</a>
+												) : (
+													<span key={source}>{source}</span>
+												)
+											)}
+										</span>
 									</th>
-									<td className={CELL}>{row.inputPerM}</td>
-									<td className={CELL}>{row.outputPerM}</td>
-									<td className={`${CELL} break-all`}>
-										{row.source.startsWith(TYPESAFE_DOCS_PREFIX) ? (
-											<a
-												href={row.source}
-												className="text-accent focus-visible:outline-accent rounded underline underline-offset-4 focus-visible:outline focus-visible:outline-2"
-											>
-												{row.source}
-											</a>
-										) : (
-											row.source
-										)}
-									</td>
 								</tr>
-							))}
-						</tbody>
+								{group.rows.map((row) => (
+									<tr key={row.modelId}>
+										<th scope="row" className={`${CELL} font-medium`}>
+											<span className="break-all">{row.modelId}</span>
+											{row.validUntil ? (
+												<span className="block font-normal">
+													promotional price until {row.validUntil}
+												</span>
+											) : null}
+										</th>
+										<td className={CELL}>{row.inputPerM}</td>
+										<td className={CELL}>{row.outputPerM}</td>
+									</tr>
+								))}
+							</tbody>
+						))}
 					</table>
 				</div>
 			</section>

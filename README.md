@@ -98,7 +98,7 @@ Beginner mode needs no model keys. The `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY
 - **Hand-built SVG charts and CSS animations** instead of a chart library, to keep client bundles small.
 - **Known gaps:**
   - Jev through an OpenRouter key is not built: its response shape could not be verified without a real key.
-  - OpenAI and Google models show "price unknown".
+  - Prices are stored by hand from each provider's pricing page. A model not in `content/prices.json` shows "price unknown", and so does a promotional price after its last day, until someone checks the pages again.
   - There is no password reset yet.
 
 ## How AI was used to build it

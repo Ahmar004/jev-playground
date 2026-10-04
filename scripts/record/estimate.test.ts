@@ -14,8 +14,18 @@ import {
 const prices: PriceTable = {
 	checkedOn: '2026-10-01',
 	models: {
-		'jev-1.13.0': { inputPerM: 0.042, outputPerM: 0, source: 'https://docs.typesafe.ai/models' },
-		'claude-opus-5-5': { inputPerM: 4, outputPerM: 20, source: 'https://example.com/pricing' }
+		'jev-1.13.0': {
+			provider: 'typesafe',
+			inputPerM: 0.042,
+			outputPerM: 0,
+			source: 'https://docs.typesafe.ai/models'
+		},
+		'claude-opus-5-5': {
+			provider: 'anthropic',
+			inputPerM: 4,
+			outputPerM: 20,
+			source: 'https://example.com/pricing'
+		}
 	}
 }
 

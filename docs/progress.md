@@ -6,19 +6,20 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: $19.47 left, and recordings so far cost $0.49.
 
-**Built (Steps 0-13):**
+**Built (Steps 0-14):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
 - After a Developer mode run, Reveal shows the last finished live run beside the recordings (races, level 6 cards, level 8 tricks), labelled; tab memory only.
-- Tests: 619 Vitest, 114 node:test and 72 Playwright e2e, covering every flow in DESIGN 15.
+- `content/prices.json` prices Jev, the Claude models and every OpenAI and Google text model (56 entries, checked 2026-10-04); OpenRouter models use OpenRouter's live list.
+- Tests: 626 Vitest, 114 node:test and 72 Playwright e2e, covering every flow in DESIGN 15.
 - k6 locally: 400 users median 266 ms; 1,000 users median 6.2 s (one Node process is CPU-bound).
 - The public README.
 
 **Open (each is a ROADMAP step, 11-35):**
 
 - A provider call that never answers leaves a live run waiting: there is no client-side timeout (seen while writing the Step-11 e2e fake). Worth a fix with Step-15's real-key check.
-- OpenAI and Google prices are unknown.
+- Promotional prices end: gpt-5.6-sol on 2026-11-21, gemini-3.6/3.7/3.8-flash on 2026-12-31. After that those models show "price unknown" until someone rechecks the pricing pages and updates `content/prices.json`.
 - Jev through an OpenRouter key isn't built.
 - No real-key test has been run.
 - The Sandbox form lacks Noul criteria and Choice option descriptions.
@@ -34,7 +35,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-14 (OpenAI and Google prices).
+**Next:** Step-15 (real-key check, part 1: TypeSafe and Anthropic, with the owner at the PC).
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -740,3 +741,14 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - The Developer mode banner now says Reveal shows the last live run beside the recordings.
 - Tests: `raceResults` (3), latest-callback tests for `useRace` and `useLiveRouter`, `RouterReveal` (2), `RevealStep` live rows (2), per-attempt model labels, Jev + Code left off the Leaderboard; e2e `developer-mode.spec.ts` checks Reveal after the level 1 race, the level 6 run and the level 8 tricks, with no extra calls.
 - Gates: lint, typecheck, test (114 node:test plus 619 Vitest), build, e2e developer-mode, levels-5-8, level-1 and games 29/29 against `pnpm start`.
+
+## Step-14 - OpenAI and Google prices (2026-10-04) - done
+
+- Skills: test-driven-development (tests first, by hand), local-review. No subagents, no Anthropic spend.
+- User decisions: price every text model on both official pages (not a curated list); a promotional price carries its last day and counts as "price unknown" after it, so the app never shows an old number. The owner first asked to drop prices, then kept them because cost is part of every Jev vs LLM comparison.
+- Sources: OpenAI `https://developers.openai.com/api/docs/pricing` (the old platform.openai.com URL redirects there), Standard tier, short context; numbers were read from the page's own embedded data, not a summary. Google `https://ai.google.dev/gemini-api/docs/pricing`, Paid tier, text input, prompts up to 200k tokens; its output price includes thinking tokens, which `google.ts` already counts as output. Anthropic and Jev were rechecked the same day and are unchanged, so `checkedOn` is 2026-10-04 for the whole table. Image, video, embedding, music, Live and Realtime models are left out: the app can't call them.
+- Built: `priceTableEntrySchema` adds `provider` to each table entry; `validUntil` (optional, UTC date) on `priceEntrySchema`. `priceFor(table, ids, on = new Date())` skips an expired entry and falls through to the next id. Recordings still save only the price numbers and source (the recording schema drops `provider`). Methodology groups the table by provider with each group's source page, marks promotional rows, and says why only the short-context price is stored (every prompt here is under 64k tokens) and that cached-input discounts are not applied (cost can read slightly high, never low).
+- Matching is by exact model ID: an OpenAI dated snapshot the user picks directly (for example `gpt-4o-2024-08-06`) shows "price unknown"; a snapshot that answers for an alias the user picked is priced by the alias.
+- Tests: `cost.test.ts` (expiry on the last day, the next day, no end date), `prices.test.ts` (OpenAI and Google entries, each source equals its provider's page, promo end dates), `priceGroups`, `llmRacer` pricing an OpenAI answer from the shipped table; e2e `shell.spec.ts` checks the four provider groups and a promotional row on Methodology.
+- Claude-in-Chrome was not connected this session, so the Cost section was checked by Playwright element screenshots instead (desktop and phone, theme key set, both themes). That caught `break-all` splitting "until" mid-word on phones; now only the model ID breaks.
+- Gates: lint, typecheck, format:check, check:env, check:secrets, check:standards 24/24, check:rls, test (114 node:test plus 626 Vitest), build, e2e shell, developer-mode, level-1, arena, arena-batch, sandbox and games 44/44 against `pnpm start`.

@@ -81,7 +81,7 @@ export function useLiveSetup(): LiveSetup {
 	let config: LiveConfig | null = null
 	if (!missing && jevCall && provider && llmKey && modelId) {
 		const picked = models.find((model) => model.id === modelId)
-		// Only OpenRouter publishes prices with its model list; the rest are "price unknown" unless stored.
+		// Only OpenRouter publishes prices with its model list; other models use content/prices.json.
 		const prices: PriceTable =
 			picked?.inputPerM !== undefined && picked.outputPerM !== undefined
 				? {
@@ -89,6 +89,7 @@ export function useLiveSetup(): LiveSetup {
 						models: {
 							...PRICES.models,
 							[modelId]: {
+								provider: PROVIDERS.openrouter,
 								inputPerM: picked.inputPerM,
 								outputPerM: picked.outputPerM,
 								source: 'https://openrouter.ai/api/v1/models'

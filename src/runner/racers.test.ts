@@ -1,14 +1,25 @@
 import { describe, expect, it, vi } from 'vitest'
+import { PRICES as STORED_PRICES, type PriceTable } from '@/content/prices'
 import { PROVIDER_ERROR_KINDS } from '@/lib/constants'
 import { ProviderError } from './providers/provider-error'
 import { codeRacer, jevRacer, llmRacer } from './racers'
 import { choiceTask, codeDatesTask, item } from './testing/tasks'
 
-const PRICES = {
+const PRICES: PriceTable = {
 	checkedOn: '2026-10-01',
 	models: {
-		'jev-1.13.0': { inputPerM: 0.042, outputPerM: 0, source: 'https://docs.typesafe.ai/models' },
-		'claude-opus-5-5': { inputPerM: 4, outputPerM: 20, source: 'https://platform.claude.com/x' }
+		'jev-1.13.0': {
+			provider: 'typesafe',
+			inputPerM: 0.042,
+			outputPerM: 0,
+			source: 'https://docs.typesafe.ai/models'
+		},
+		'claude-opus-5-5': {
+			provider: 'anthropic',
+			inputPerM: 4,
+			outputPerM: 20,
+			source: 'https://platform.claude.com/x'
+		}
 	}
 }
 const SIGNAL = new AbortController().signal
@@ -109,6 +120,22 @@ describe('llmRacer', () => {
 			prices: PRICES
 		})(item(choiceTask, 't1'), SIGNAL)
 		expect(result).toMatchObject({ ok: true, credit: 1, costUsd: null })
+	})
+
+	it('prices an OpenAI snapshot by the model the user picked, from the stored table', async () => {
+		const call = vi.fn(async () => ({
+			text: '{"answer": "billing"}',
+			latencyMs: 1,
+			usage: { inputTokens: 1000, outputTokens: 100 },
+			modelId: 'gpt-5.4-mini-2026-03-17'
+		}))
+		const result = await llmRacer({
+			task: choiceTask,
+			modelId: 'gpt-5.4-mini',
+			call,
+			prices: STORED_PRICES
+		})(item(choiceTask, 't1'), SIGNAL)
+		expect(result.costUsd).toBeCloseTo((1000 * 0.75 + 100 * 4.5) / 1_000_000)
 	})
 })
 
