@@ -113,12 +113,18 @@ export function RouterGame({
 	cards,
 	assignments,
 	onAssign,
-	onRun
+	onRun,
+	blocked = false,
+	note
 }: {
 	cards: RouterCard[]
 	assignments: Assignments
 	onAssign: (taskId: string, tool: RouterTool | null) => void
 	onRun: () => void
+	// Developer mode: no keys yet, or a live run is in flight.
+	blocked?: boolean
+	// What the run will do or is doing, under the button (R80).
+	note?: string
 }) {
 	const sensors = useSensors(
 		useSensor(PointerSensor, { activationConstraint: { distance: DRAG_DISTANCE_PX } }),
@@ -162,11 +168,16 @@ export function RouterGame({
 				</div>
 			</DndContext>
 			<div>
-				<Button type="button" disabled={unsorted.length > 0} onClick={onRun}>
+				<Button type="button" disabled={unsorted.length > 0 || blocked} onClick={onRun}>
 					Run the pipeline
 				</Button>
 				{unsorted.length > 0 && (
 					<p className="text-text-muted mt-2 text-sm">Sort every card to run the pipeline.</p>
+				)}
+				{note && (
+					<p role="status" className="text-text-muted mt-2 text-sm">
+						{note}
+					</p>
 				)}
 			</div>
 		</section>

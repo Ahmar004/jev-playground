@@ -3,11 +3,12 @@ import type { LevelStage } from '@/features/levels/lineup'
 import { OUTCOME_COPY } from '@/features/levels/item-results'
 import { answerText, itemOutcome } from '@/features/race/answer-text'
 import { formatCost, formatDuration } from '@/features/race/format'
+import { ModeLabel } from '@/features/race/mode-label'
 import { racerName } from '@/features/race/racer-names'
 import { RacerTag } from '@/features/race/racer-tag'
 import { cn } from '@/lib/cn'
 import type { ItemResult } from '@/runner/types'
-import { toolOutcomes, type Assignments, type ToolOutcome } from './outcomes'
+import type { Assignments, ToolOutcome } from './outcomes'
 
 function ResultBody({ tool, result }: { tool: ToolOutcome; result: ItemResult }) {
 	const copy = OUTCOME_COPY[itemOutcome(result)]
@@ -35,6 +36,13 @@ function ToolResult({ outcome, chosen }: { outcome: ToolOutcome; chosen: boolean
 			)}
 		>
 			<RacerTag racer={outcome.tool} modelId={outcome.modelId} />
+			{outcome.source && outcome.modelId && (
+				<ModeLabel
+					modelId={outcome.modelId}
+					recordedAt={outcome.source.at}
+					mode={outcome.source.mode}
+				/>
+			)}
 			{chosen && <p className="text-accent font-bold">Your pick</p>}
 			{outcome.result ? (
 				<ResultBody tool={outcome} result={outcome.result} />
@@ -51,19 +59,20 @@ function verdictText(card: RouterCard, pick: Assignments[string] | undefined): s
 	return `You chose ${racerName(pick)}. ${racerName(card.best)} suits this job best.`
 }
 
-/** Level 6: for each card, what Jev, the LLM and Code really did, with the user's pick marked. */
+/**
+ * Level 6: for each card, what Jev, the LLM and Code really did, with the
+ * user's pick marked. `outcomesFor` gives a card's results: recorded or live.
+ */
 export function RouterResults({
 	cards,
 	stages,
-	opponentId,
 	assignments,
-	codeResults
+	outcomesFor
 }: {
 	cards: RouterCard[]
 	stages: LevelStage[]
-	opponentId: string | undefined
 	assignments: Assignments
-	codeResults: Record<string, ItemResult>
+	outcomesFor: (stage: LevelStage) => ToolOutcome[]
 }) {
 	return (
 		<ol className="flex flex-col gap-4" aria-label="Results for each card">
@@ -81,7 +90,7 @@ export function RouterResults({
 							{verdictText(card, pick)} {card.why}
 						</p>
 						<div className="grid gap-3 sm:grid-cols-3">
-							{toolOutcomes(stage, opponentId, codeResults).map((outcome) => (
+							{outcomesFor(stage).map((outcome) => (
 								<ToolResult key={outcome.tool} outcome={outcome} chosen={pick === outcome.tool} />
 							))}
 						</div>

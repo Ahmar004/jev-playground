@@ -6,17 +6,18 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: $19.47 left, and recordings so far cost $0.49.
 
-**Built (Steps 0-8):**
+**Built (Steps 0-11):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
-- Tests: 582 Vitest, 114 node:test and 68 Playwright e2e, covering every flow in DESIGN 15.
+- Tests: 591 Vitest, 114 node:test and 70 Playwright e2e, covering every flow in DESIGN 15.
 - k6 locally: 400 users median 266 ms; 1,000 users median 6.2 s (one Node process is CPU-bound).
 - The public README.
 
 **Open (each is a ROADMAP step, 11-35):**
 
-- Levels 6 and 8 still show recordings in Developer mode.
+- Level 8 still shows recordings in Developer mode (level 6 runs live since Step-11).
+- A provider call that never answers leaves a live run waiting: there is no client-side timeout (seen while writing the Step-11 e2e fake). Worth a fix with Step-15's real-key check.
 - Live results don't show in Reveal.
 - OpenAI and Google prices are unknown.
 - Jev through an OpenRouter key isn't built.
@@ -34,7 +35,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-11 (level 6 in Developer mode).
+**Next:** Step-12 (level 8 in Developer mode).
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -711,3 +712,13 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Stale references fixed in CLAUDE.md, spec.md (3.3, 14), DESIGN.md (4.2), TECH-STACK.md (constraints, password reset, Vercel readiness) and docs/rules/deployment.md. `.superpowers/` is untracked (files kept on disk) and gitignored.
 - CLAUDE.md gained a "Known pitfalls" section, a session-start reading rule, the no-domain rule, and a rule to update README.md when a step changes what is built.
 - Added the "Current state" block at the top of this file.
+
+## Step-11 - level 6 in Developer mode (2026-10-04) - done
+
+- Skills: test-driven-development (read by hand), local-review. No subagents, no Anthropic spend (every test uses intercepted providers).
+- Built: in Developer mode the Router's "Run the pipeline" runs every card live. `router/use-live-router.ts` runs each card's first item for Jev and the LLM through `liveRunners` (`jevRacer`/`llmRacer` plus `stopOnProviderFailure`, now in `race/live-config.ts`), RACE_LANES calls at a time per tool, 12 paid calls in all. Code still runs in the browser. `router/router-live-play.tsx` adds the setup panel, a progress note ("Running live: n of 12 calls done"), the results and the failure alert, and remounts when the model changes so no result carries another model's label.
+- Every Router result now shows a mode label: "Beginner mode - recorded <date> - <model>" or "Developer mode - run <time> - <model>" (`ToolOutcome.source`). `RouterResults` takes `outcomesFor`, so recorded and live results share one view.
+- Refactors: `LiveFailureAlert` extracted from `RaceStage`; `liveModelId` helper. The Play step's "still uses recorded results" notice for level 6 is gone.
+- Reveal still shows the recorded runs after a live run (Step-13). Live results reset when the user leaves Play, the same as the live races.
+- Tests: `use-live-router.test.ts` (7), live and recorded labels in `level-widgets.test.ts`; e2e `developer-mode.spec.ts` level 6 live run (6 Jev plus 6 LLM calls, 12 labels, Jev's real rejection of the writing cards shown as a miss) and a rejected-key stop with the Beginner fallback. The e2e Jev fake now rejects text questions with the 400 the real Jev sends, and answers Noul questions.
+- Gates: lint, typecheck, format:check, check:env, check:secrets, check:standards 24/24, check:rls, test (114 node:test plus 591 Vitest), build, e2e developer-mode 6/6 and levels-5-8 9/9 against `pnpm start`.

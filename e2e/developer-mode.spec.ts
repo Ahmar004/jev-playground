@@ -42,11 +42,18 @@ async function interceptProviders(page: Page, options: { messagesStatus?: number
 		if (request.method() === 'GET') return json(route, 200, { data: [] })
 		hits.jev += 1
 		const { questions } = request.postDataJSON() as {
-			questions: Record<string, { criteria: Record<string, string> }>
+			questions: Record<string, { type: string; criteria?: Record<string, string> }>
+		}
+		// A text question is rejected, as the real Jev does (level 6's writing cards).
+		if (Object.values(questions).some((question) => question.type === 'text')) {
+			return json(route, 400, {
+				detail: { error_type: 'api_usage_error', message: 'Invalid request.' }
+			})
 		}
 		const answers = Object.fromEntries(
 			Object.entries(questions).map(([name, question]) => {
-				const choice = Object.keys(question.criteria)[0] ?? 'billing'
+				if (question.type === 'noul') return [name, { type: 'noul', noul: 0.9 }]
+				const choice = Object.keys(question.criteria ?? {})[0] ?? 'billing'
 				return [name, { type: 'choice', choice, probabilities: { [choice]: 0.9 }, confidence: 0.9 }]
 			})
 		)
@@ -77,10 +84,10 @@ async function interceptProviders(page: Page, options: { messagesStatus?: number
 	return hits
 }
 
-async function openPlayInDeveloperMode(page: Page) {
+async function openPlayInDeveloperMode(page: Page, levelId = 'speed-race', heading = 'Race') {
 	await signIn(page, EMAIL)
-	await page.goto('/levels/speed-race?step=play')
-	await expect(page.getByRole('heading', { name: 'Race', exact: true })).toBeVisible()
+	await page.goto(`/levels/${levelId}?step=play`)
+	await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible()
 	await page.getByRole('radio', { name: 'Developer' }).click()
 	// Switching with no keys opens the Keys panel (spec 3.1).
 	await expect(page.getByRole('dialog', { name: 'Your API keys' })).toBeVisible()
@@ -187,6 +194,86 @@ test('flow 8: a rejected key stops the run with a friendly message and a Beginne
 	await alert.getByRole('button', { name: 'Use Beginner mode instead' }).click()
 	await expect(page.getByRole('radio', { name: 'Beginner' })).toBeChecked()
 	await expect(page.getByText(/Beginner mode - recorded 2026-/).first()).toBeVisible()
+})
+
+// The tool each Router card suits best, as the level's content says.
+const ROUTER_PICKS = [
+	['Sort a support message', 'Jev'],
+	['Add two numbers', 'Code'],
+	['Write a poem', 'LLM'],
+	['Spot a scam message', 'Jev'],
+	['Which date is first', 'Code'],
+	['Summarize a paragraph', 'LLM']
+] as const
+
+test('level 6 runs every router card live, labelled with the mode, model and run time (R14)', async ({
+	page
+}) => {
+	const hits = await interceptProviders(page)
+	await openPlayInDeveloperMode(page, 'the-router', 'Play')
+	await saveKey(page, 'TypeSafe (Jev)', TS_KEY)
+	await expect(page.getByText('Key works.')).toBeVisible()
+	await saveKey(page, 'Anthropic', ANTHROPIC_KEY)
+	await expect(page.getByText(/1 models available/)).toBeVisible()
+	await page.keyboard.press('Escape')
+	await expect(page.getByText(/still uses recorded results/)).toHaveCount(0)
+
+	for (const [title, tool] of ROUTER_PICKS) {
+		await page.getByRole('button', { name: `Send ${title} to ${tool}` }).click()
+	}
+	await expect(
+		page.getByText(/^Every card runs live: Jev and the LLM make one call each/)
+	).toBeVisible()
+	await page.getByRole('button', { name: 'Run the pipeline' }).click()
+
+	const results = page.getByRole('list', { name: 'Results for each card' })
+	await expect(results.getByText(/^Right tool:/)).toHaveCount(6)
+	await expect(results.getByText('Waiting for the live call...')).toHaveCount(0, {
+		timeout: 30_000
+	})
+	// One call per card per tool, no hidden retries (R7), and no key in a URL (Rule-8).
+	expect(hits.jev).toBe(6)
+	expect(hits.messages).toBe(6)
+	expect(hits.keysInUrl).toBe(0)
+	await expect(results.getByText(/^Developer mode - run \d{2}:\d{2} - jev-1\.13\.0$/)).toHaveCount(
+		6
+	)
+	await expect(
+		results.getByText(/^Developer mode - run \d{2}:\d{2} - claude-opus-5-5$/)
+	).toHaveCount(6)
+	await expect(results.getByText(/Beginner mode - recorded/)).toHaveCount(0)
+	// Jev's real rejection of a writing card is shown as a miss (R44); Code still has no rule for it.
+	await expect(results.getByText(/Invalid request\./).first()).toBeVisible()
+	await expect(results.getByText('Code has no rule for this job.').first()).toBeVisible()
+	await expect(page.getByText('Badge earned: Right Tool', { exact: true })).toBeVisible()
+	await page.screenshot({ path: `${SCREENSHOT_DIR}/dev-router-live.png`, fullPage: true })
+})
+
+test('level 6 live: a rejected LLM key stops the run and offers Beginner mode', async ({
+	page
+}) => {
+	const hits = await interceptProviders(page, { messagesStatus: 401 })
+	await openPlayInDeveloperMode(page, 'the-router', 'Play')
+	await saveKey(page, 'TypeSafe (Jev)', TS_KEY)
+	await expect(page.getByText('Key works.')).toBeVisible()
+	await saveKey(page, 'Anthropic', ANTHROPIC_KEY)
+	await expect(page.getByText(/1 models available/)).toBeVisible()
+	await page.keyboard.press('Escape')
+	for (const [title, tool] of ROUTER_PICKS) {
+		await page.getByRole('button', { name: `Send ${title} to ${tool}` }).click()
+	}
+	await page.getByRole('button', { name: 'Run the pipeline' }).click()
+	const alert = page.getByRole('alert').filter({ hasText: 'The run stopped' })
+	await expect(alert).toContainText('Anthropic did not accept this key', { timeout: 30_000 })
+	expect(hits.messages).toBeLessThan(6)
+	await expect(
+		page
+			.getByRole('list', { name: 'Results for each card' })
+			.getByText('Not run: the live run stopped first.')
+			.first()
+	).toBeVisible()
+	await alert.getByRole('button', { name: 'Use Beginner mode instead' }).click()
+	await expect(page.getByRole('radio', { name: 'Beginner' })).toBeChecked()
 })
 
 test('Developer mode fits a phone', async ({ page }) => {

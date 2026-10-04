@@ -79,12 +79,6 @@ export function PlayStep({
 				)}
 			</div>
 			{children}
-			{live && hideRaces && (
-				<NotRecorded>
-					This level&apos;s interactive part still uses recorded results in Developer mode. Live
-					runs are on the levels that race Jev against an LLM.
-				</NotRecorded>
-			)}
 			{live && !hideRaces && (
 				<LiveRaces
 					stages={stages}

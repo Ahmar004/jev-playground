@@ -2,11 +2,18 @@ import { describe, expect, it } from 'vitest'
 import { LEVELS } from '@/content/levels'
 import { currentRecordings } from '@/content/recordings'
 import { getTask } from '@/content/tasks'
-import { RACERS } from '@/lib/constants'
+import { MODES, RACERS } from '@/lib/constants'
 import type { ItemResult } from '@/runner/types'
 import { codeRacer } from '@/runner/racers'
 import { levelStages } from './lineup'
-import { rightToolCount, toolOutcomes, CODE_HAS_NO_RULE } from './router/outcomes'
+import {
+	rightToolCount,
+	toolOutcomes,
+	liveToolOutcomes,
+	CODE_HAS_NO_RULE,
+	LIVE_NOT_RUN,
+	LIVE_PENDING
+} from './router/outcomes'
 import { signalRows } from './signals/signal-rows'
 import { guessesRight, trickPairs } from './tricks/pairs'
 import { compositeRows, defaultWeights, weightsAreEmpty } from './weights/composite'
@@ -74,6 +81,52 @@ describe('level 6 router', () => {
 			if (stage.task.code) expect(codeOutcome?.result?.correct).toBe(true)
 			else expect(codeOutcome?.missing).toBe(CODE_HAS_NO_RULE)
 		}
+	})
+	it('labels recorded results with Beginner mode and the recording date', () => {
+		if (!level) throw new Error('no level')
+		const tasks = level.tasks.map((entry) => getTask(entry.id))
+		const [stage] = levelStages(
+			level,
+			tasks,
+			tasks.flatMap((task) => recordingsOf(task.id))
+		)
+		if (!stage?.jev) throw new Error('no stage')
+		const [jev, , codeOutcome] = toolOutcomes(stage, 'claude-opus-5-5', {})
+		expect(jev?.source).toEqual({ mode: MODES.beginner, at: stage.jev.recordedAt })
+		expect(codeOutcome?.source).toBeNull()
+	})
+	it('shows live results with Developer mode, the run time and the answering model', () => {
+		if (!level) throw new Error('no level')
+		const tasks = level.tasks.map((entry) => getTask(entry.id))
+		const [stage] = levelStages(level, tasks, [])
+		if (!stage) throw new Error('no stage')
+		const item = stage.task.items[0]
+		if (!item) throw new Error('no item')
+		const result: ItemResult = {
+			itemId: item.id,
+			ok: true,
+			raw: 'live answer',
+			parsed: null,
+			credit: 1,
+			correct: true,
+			latencyMs: 12,
+			usage: { inputTokens: 1, outputTokens: 1 },
+			costUsd: 0
+		}
+		const run = {
+			startedAt: '2026-10-04T14:02:00.000Z',
+			jevModelId: 'jev-1.13.0',
+			llmModelId: 'gpt-x'
+		}
+		const running = liveToolOutcomes(stage, { jev: result }, run, {}, true)
+		expect(running[0]).toMatchObject({
+			modelId: 'jev-1.13.0',
+			result,
+			source: { mode: MODES.developer, at: run.startedAt }
+		})
+		expect(running[1]).toMatchObject({ modelId: 'gpt-x', result: null, missing: LIVE_PENDING })
+		const stopped = liveToolOutcomes(stage, { jev: result }, run, {}, false)
+		expect(stopped[1]?.missing).toBe(LIVE_NOT_RUN)
 	})
 	it('counts the cards sent to the best tool', () => {
 		if (!level?.router) throw new Error('no router')

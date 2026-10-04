@@ -81,7 +81,7 @@ Beginner mode needs no model keys. The `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY
 
 ## Numbers so far
 
-- **Tests:** 582 Vitest and 114 `node:test` tests, plus 68 Playwright end-to-end tests that cover every user flow.
+- **Tests:** 591 Vitest and 114 `node:test` tests, plus 70 Playwright end-to-end tests that cover every user flow.
 - **Recordings:** 31 tasks recorded for real. They cost $0.49 of Anthropic credit, and Jev cost under a cent in total.
 - **Load (k6, local production build, one Node process on one PC):**
   - 400 simultaneous users: 0 failures, median 266 ms, p95 703 ms.
@@ -97,7 +97,7 @@ Beginner mode needs no model keys. The `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY
 - **No provider SDKs.** Hand-written `fetch` modules cost more code, but they give exact timing and payloads that match the real APIs.
 - **Hand-built SVG charts and CSS animations** instead of a chart library, to keep client bundles small.
 - **Known gaps:**
-  - Levels 6 and 8 still show recorded results in Developer mode.
+  - Level 8 still shows recorded results in Developer mode.
   - Jev through an OpenRouter key is not built: its response shape could not be verified without a real key.
   - OpenAI and Google models show "price unknown".
   - There is no password reset yet.

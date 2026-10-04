@@ -172,7 +172,7 @@ The mode lives in a React context and is not saved. Every page load starts in Be
     The panel also has "Remove all" (R20).
 - `useModelList(provider)` fetches the provider's model list with TanStack Query, keyed on `[provider, keyId]` (R10, R42).
 - Jev provider: a TypeSafe key only, through `/api/jev`. OpenRouter serves Jev too (it allows browser calls to `/api/v1/systemone`), but its response shape could not be verified without a real key, so it is not built (user decision, slice 8). OpenRouter is an LLM provider here (chat completions, with prices from its model list).
-- Slice 8 built the live path for the races on the Play step. Level 6's router cards and level 8's trick writing still use recorded results in Developer mode, and the Play step says so.
+- Slice 8 built the live path for the races on the Play step. Level 6 runs live too (ROADMAP Step-11): after the sort, `useLiveRouter` runs each card's first item for Jev and the LLM through `liveRunners` (the shared runner), RACE_LANES calls at a time per tool, and Code runs in the browser. Level 8's trick writing still uses recorded results in Developer mode.
 
 ### 5.3 TypeSafe pass-through (`POST /api/jev`, Node runtime)
 

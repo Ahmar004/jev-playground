@@ -1,17 +1,19 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import type { Level, RouterTool } from '@/content/level-schema'
+import type { Level, RouterCard, RouterTool } from '@/content/level-schema'
 import type { Task } from '@/content/task-schema'
-import { COMBINE_FN_IDS, LEVEL_WIDGETS } from '@/lib/constants'
+import { useMode } from '@/features/mode/mode-context'
+import { COMBINE_FN_IDS, LEVEL_WIDGETS, MODES } from '@/lib/constants'
 import type { CombineArgs } from '@/runner/code/combine-fns'
 import type { FirstPlay } from '@/server/progress/first-play'
 import { CalibrationChart } from './calibration/calibration-chart'
 import { CalibrationForm } from './calibration/calibration-form'
 import type { Rating, Ratings } from './calibration/ratings'
 import type { LevelStage } from './lineup'
-import type { Assignments } from './router/outcomes'
+import { toolOutcomes, type Assignments } from './router/outcomes'
 import { RouterGame } from './router/router-game'
+import { RouterLivePlay } from './router/router-live-play'
 import { RouterResults } from './router/router-results'
 import { useCodeResults } from './router/use-code-results'
 import { SignalPanel } from './signals/signal-panel'
@@ -102,6 +104,47 @@ function trickQuestion(task: Task): string {
 	return typeof instructions === 'string' ? instructions : ''
 }
 
+/** Level 6 Play: the sort, then the recorded results, or a live run in Developer mode (R14). */
+function RouterPlay({
+	cards,
+	stages,
+	opponentId,
+	state
+}: Omit<WidgetProps, 'level'> & { cards: RouterCard[] }) {
+	const { mode, setMode } = useMode()
+	if (mode === MODES.developer) {
+		return (
+			<RouterLivePlay
+				cards={cards}
+				stages={stages}
+				assignments={state.assignments}
+				codeResults={state.codeResults}
+				onAssign={state.assign}
+				onRun={state.run}
+				onUseBeginner={() => setMode(MODES.beginner)}
+			/>
+		)
+	}
+	return (
+		<>
+			<RouterGame
+				cards={cards}
+				assignments={state.assignments}
+				onAssign={state.assign}
+				onRun={state.run}
+			/>
+			{state.ran && (
+				<RouterResults
+					cards={cards}
+					stages={stages}
+					assignments={state.assignments}
+					outcomesFor={(stage) => toolOutcomes(stage, opponentId, state.codeResults)}
+				/>
+			)}
+		</>
+	)
+}
+
 /** What a level adds to Play, above its races (or in place of them for the Router). */
 export function PlayWidget({ level, stages, opponentId, state }: WidgetProps) {
 	switch (level.widget) {
@@ -124,23 +167,7 @@ export function PlayWidget({ level, stages, opponentId, state }: WidgetProps) {
 		}
 		case LEVEL_WIDGETS.router:
 			return level.router ? (
-				<>
-					<RouterGame
-						cards={level.router}
-						assignments={state.assignments}
-						onAssign={state.assign}
-						onRun={state.run}
-					/>
-					{state.ran && (
-						<RouterResults
-							cards={level.router}
-							stages={stages}
-							opponentId={opponentId}
-							assignments={state.assignments}
-							codeResults={state.codeResults}
-						/>
-					)}
-				</>
+				<RouterPlay cards={level.router} stages={stages} opponentId={opponentId} state={state} />
 			) : null
 		case LEVEL_WIDGETS.tricks: {
 			const data = trickData(stages, opponentId)
@@ -172,9 +199,8 @@ export function RevealWidget({ level, stages, opponentId, state }: WidgetProps) 
 				<RouterResults
 					cards={level.router}
 					stages={stages}
-					opponentId={opponentId}
 					assignments={state.assignments}
-					codeResults={state.codeResults}
+					outcomesFor={(stage) => toolOutcomes(stage, opponentId, state.codeResults)}
 				/>
 			) : null
 		case LEVEL_WIDGETS.signals: {
