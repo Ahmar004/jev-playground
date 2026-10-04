@@ -20,6 +20,9 @@ export type LiveTool = (typeof LIVE_TOOLS)[number]
 // Each card's live results, by task id, as the calls finish.
 export type LiveCardResults = Record<string, Partial<Record<LiveTool, ItemResult>>>
 
+// A finished run, whole: every card's results and when the run started.
+export type LiveRouterFinish = { results: LiveCardResults; startedAt: string }
+
 type Job = { task: Task; item: TaskItem; run: ItemRunner }
 
 // Read in event handlers only; a named helper keeps the purity lint from reading start() as render code.
@@ -61,13 +64,24 @@ async function runLanes(
  * tool. `start` takes the runners with the keys already bound. A failure that
  * would repeat stops the run and keeps the results so far (R21, R82).
  */
-export function useLiveRouter({ tasks, onFinished }: { tasks: Task[]; onFinished?: () => void }) {
+export function useLiveRouter({
+	tasks,
+	onFinished
+}: {
+	tasks: Task[]
+	onFinished?: (finish: LiveRouterFinish) => void
+}) {
 	const [status, setStatus] = useState<RaceStatus>(RACE_STATUS.idle)
 	const [results, setResults] = useState<LiveCardResults>({})
 	const [startedAt, setStartedAt] = useState<string | null>(null)
 	const [failure, setFailure] = useState<RaceFailure | null>(null)
 	// A stable box, so the unmount cleanup sees the run that is live then.
 	const active = useRef<{ controller: AbortController | null }>({ controller: null })
+	// The latest callback, so a finish sees the props of now, not those from when the run started.
+	const latestOnFinished = useRef(onFinished)
+	useEffect(() => {
+		latestOnFinished.current = onFinished
+	})
 	const cards = tasks.filter((task) => task.items[0] !== undefined)
 	const total = cards.length * LIVE_TOOLS.length
 
@@ -89,7 +103,10 @@ export function useLiveRouter({ tasks, onFinished }: { tasks: Task[]; onFinished
 		setResults({})
 		setFailure(null)
 		setStatus(RACE_STATUS.running)
-		setStartedAt(new Date(currentTime()).toISOString())
+		const runStartedAt = new Date(currentTime()).toISOString()
+		setStartedAt(runStartedAt)
+		// The same results as the state, kept here too so the finish hands over all of them.
+		let finished: LiveCardResults = {}
 		const runners = new Map(cards.map((task) => [task.id, runnersFor(task)]))
 		const lanes = LIVE_TOOLS.map((tool) => {
 			const jobs = cards.flatMap((task) => {
@@ -106,10 +123,12 @@ export function useLiveRouter({ tasks, onFinished }: { tasks: Task[]; onFinished
 					throw error instanceof ProviderError ? new RouterFailure(error.kind, tool) : error
 				}
 				if (stop.signal.aborted) return
-				setResults((current) => ({
+				const add = (current: LiveCardResults): LiveCardResults => ({
 					...current,
 					[task.id]: { ...current[task.id], [tool]: result }
-				}))
+				})
+				finished = add(finished)
+				setResults(add)
 			})
 		})
 		void Promise.all(lanes)
@@ -126,7 +145,7 @@ export function useLiveRouter({ tasks, onFinished }: { tasks: Task[]; onFinished
 				active.current.controller = null
 				setStatus(RACE_STATUS.finished)
 				// A stopped run is not a finish.
-				if (completed) onFinished?.()
+				if (completed) latestOnFinished.current?.({ results: finished, startedAt: runStartedAt })
 			})
 	}
 

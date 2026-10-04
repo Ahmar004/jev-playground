@@ -23,7 +23,9 @@ export function gameRunInput({
 	if (mode === MODES.beginner) {
 		return opponent ? { mode, gameId, opponentModelId: opponent.modelId } : null
 	}
-	const scored = results.flatMap(({ modelId, totals }): RunResult[] =>
+	// Jev + Code shares Jev's model, so only Jev and the LLM go on the Leaderboard.
+	const raced = results.filter(({ racer }) => racer === RACERS.jev || racer === RACERS.llm)
+	const scored = raced.flatMap(({ modelId, totals }): RunResult[] =>
 		totals.accuracy === null
 			? []
 			: [

@@ -81,7 +81,8 @@ export function useRace({
 	// Level 5's slider weights, read when the race starts.
 	combineArgs?: CombineArgs
 	// Called once when every racer has finished, not when a live run stops on a failure.
-	onFinished?: (finish: RaceFinish) => void
+	// `startedAt` is the live run's start (its Developer mode label), null for a replay.
+	onFinished?: (finish: RaceFinish, startedAt: string | null) => void
 }): RaceControls {
 	const racers = raceRacers(
 		task,
@@ -95,6 +96,12 @@ export function useRace({
 	const [failure, setFailure] = useState<RaceFailure | null>(null)
 	// A stable box, so the unmount cleanup sees the run that is live then.
 	const active = useRef<{ run: ActiveRun | null }>({ run: null })
+	// The latest callback, so a finish sees the props of now, not those from when the race started
+	// (a live run learns the answering model ids while it runs).
+	const latestOnFinished = useRef(onFinished)
+	useEffect(() => {
+		latestOnFinished.current = onFinished
+	})
 
 	useEffect(() => {
 		const box = active.current
@@ -122,7 +129,8 @@ export function useRace({
 			combineArgs
 		)
 		setFailure(null)
-		setStartedAt(live ? new Date(currentTime()).toISOString() : null)
+		const runStartedAt = live ? new Date(currentTime()).toISOString() : null
+		setStartedAt(runStartedAt)
 		const handles = live
 			? startLive(task, live, onEvent, controller.signal)
 			: replay(onEvent, controller.signal)
@@ -145,7 +153,7 @@ export function useRace({
 				active.current.run = null
 				setStatus(RACE_STATUS.finished)
 				// A stopped run is not a finish: its partial totals must not be recorded.
-				if (completed) onFinished?.(finish)
+				if (completed) latestOnFinished.current?.(finish, runStartedAt)
 			})
 	}
 

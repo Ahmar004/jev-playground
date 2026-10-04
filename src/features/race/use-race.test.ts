@@ -185,6 +185,33 @@ describe('useRace with a live source', () => {
 		act(() => result.current.start())
 		await advance(10)
 		expect(onFinished).toHaveBeenCalledTimes(1)
+		// The run's start goes with the totals, for its Developer mode label in Reveal.
+		expect(onFinished.mock.calls[0]?.[1]).toBe(result.current.startedAt)
+		expect(onFinished.mock.calls[0]?.[0].jev?.items).toBe(3)
+	})
+
+	it('reports the finish to the latest callback, not the one from when the race started', async () => {
+		const first = vi.fn()
+		const latest = vi.fn()
+		let release: () => void = () => undefined
+		const gate = new Promise<void>((resolve) => {
+			release = resolve
+		})
+		const slow: ItemRunner = async (item) => {
+			await gate
+			return liveResult(item.id)
+		}
+		const { result, rerender } = renderHook(
+			({ onFinished }: { onFinished: () => void }) =>
+				useRace({ task: choiceTask, entries, live: { jev: slow, llm: slow }, onFinished }),
+			{ initialProps: { onFinished: first } }
+		)
+		act(() => result.current.start())
+		rerender({ onFinished: latest })
+		release()
+		await advance(10)
+		expect(first).not.toHaveBeenCalled()
+		expect(latest).toHaveBeenCalledTimes(1)
 	})
 
 	it('clears a failure when the race starts again', async () => {

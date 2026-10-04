@@ -74,6 +74,8 @@ export function LevelStepper({
 	// A level's own widget (ratings, weights, sorted cards, guesses) lives in the page, never saved.
 	const widget = useWidgetState(level, stages, tasks)
 	const widgetProps = { level, stages, opponentId, state: widget }
+	// The last finished live race per task, for Reveal; tab memory only, never saved.
+	const [liveRuns, setLiveRuns] = useState<Record<string, RaceResult[]>>({})
 
 	return (
 		<main className="mx-auto flex w-full max-w-4xl flex-col gap-6">
@@ -110,6 +112,9 @@ export function LevelStepper({
 					mode={mode}
 					onUseBeginner={() => setMode(MODES.beginner)}
 					onRaceFinished={level.id === SPEED_RACE_GAME_ID ? onRaceFinished : undefined}
+					onLiveRun={(taskId, results) =>
+						setLiveRuns((previous) => ({ ...previous, [taskId]: results }))
+					}
 				>
 					{level.widget && <PlayWidget {...widgetProps} />}
 				</PlayStep>
@@ -135,6 +140,8 @@ export function LevelStepper({
 					onRaceAgain={() => goTo(LEVEL_STEPS.play)}
 					combineArgs={widget.combineArgs}
 					showStages={level.widget !== LEVEL_WIDGETS.router}
+					liveRuns={liveRuns}
+					liveInWidget={widget.liveRouter !== null || widget.trickAttempts.length > 0}
 				>
 					<RevealWidget {...widgetProps} />
 				</RevealStep>

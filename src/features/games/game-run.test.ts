@@ -16,9 +16,10 @@ function totals(accuracy: number | null): RunTotals {
 		parseFailures: 0
 	}
 }
+const run = { recordedAt: '2026-10-04T10:00:00.000Z', mode: MODES.developer }
 const results = [
-	{ racer: RACERS.jev, modelId: 'jev-1.13.0', totals: totals(0.75) },
-	{ racer: RACERS.llm, modelId: 'claude-opus-5-5', totals: totals(1) }
+	{ racer: RACERS.jev, modelId: 'jev-1.13.0', totals: totals(0.75), ...run },
+	{ racer: RACERS.llm, modelId: 'claude-opus-5-5', totals: totals(1), ...run }
 ]
 
 describe('gameRunInput', () => {
@@ -38,6 +39,14 @@ describe('gameRunInput', () => {
 				{ modelId: 'claude-opus-5-5', accuracy: 1, wallMs: 1235, costUsd: 0.01 }
 			]
 		})
+	})
+	it('records only Jev and the LLM, never Jev + Code', () => {
+		const withCode = [
+			...results,
+			{ racer: RACERS.jevCode, modelId: 'jev-1.13.0', totals: totals(0.5), ...run }
+		]
+		const input = gameRunInput({ gameId: 'g', mode: MODES.developer, results: withCode })
+		expect(input?.mode === MODES.developer && input.results).toHaveLength(2)
 	})
 	it('skips racers with nothing scored and records nothing when none remain', () => {
 		const none = results.map((result) => ({ ...result, totals: totals(null) }))

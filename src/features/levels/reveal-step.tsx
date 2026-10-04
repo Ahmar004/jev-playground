@@ -6,6 +6,7 @@ import { ExternalLinkIcon } from '@/components/ui/icons'
 import type { Level } from '@/content/level-schema'
 import type { Recording } from '@/content/recording-schema'
 import type { CombineArgs } from '@/runner/code/combine-fns'
+import type { RaceResult } from '@/features/race/race-stage'
 import { jevCodeRecording, type RaceRecording } from '@/runner/combine'
 import { racerName } from '@/features/race/racer-names'
 import { Scoreboard } from '@/features/race/scoreboard'
@@ -55,6 +56,8 @@ export function RevealStep({
 	onRaceAgain,
 	combineArgs,
 	showStages = true,
+	liveRuns = {},
+	liveInWidget = false,
 	children
 }: {
 	level: Level
@@ -74,6 +77,10 @@ export function RevealStep({
 	combineArgs?: CombineArgs
 	// Level 6 shows its own per-card table instead of one scoreboard per card.
 	showStages?: boolean
+	// The last finished live race per task id (Developer mode), shown beside the recordings.
+	liveRuns?: Record<string, RaceResult[]>
+	// The level's widget shows a live run of its own (level 6's cards, level 8's tricks).
+	liveInWidget?: boolean
 	children?: React.ReactNode
 }) {
 	const recorded: Recording[] = stages
@@ -88,6 +95,7 @@ export function RevealStep({
 		if (shownModelId) reveal(shownModelId)
 	}, [shownModelId])
 
+	const liveRaces = showStages && stages.some((stage) => liveRuns[stage.task.id]?.length)
 	if (!totals || !opponentId) {
 		return <NotRecorded>The results appear here once this race is recorded.</NotRecorded>
 	}
@@ -101,6 +109,12 @@ export function RevealStep({
 				verdicts={verdicts}
 				opponentModelId={opponentId}
 			/>
+			{(liveRaces || liveInWidget) && (
+				<p className="text-text-muted text-sm">
+					Your prediction is scored against the recordings, which every player sees. Your live run
+					is shown beside them, labelled with its mode, model and run time.
+				</p>
+			)}
 			{scoredAgainst && scoredAgainst !== opponentId && (
 				<p className="text-text-muted text-sm">
 					Your prediction was scored against {racerName(RACERS.llm, scoredAgainst)} on your first
@@ -110,17 +124,26 @@ export function RevealStep({
 			{showStages &&
 				stages.map((stage) => {
 					const recordings = stageRecordings(stage, opponentId, combineArgs)
+					const live = liveRuns[stage.task.id] ?? []
+					const items = stage.task.items.length
 					return (
 						<div key={stage.task.id} className="flex flex-col gap-4">
 							{stages.length > 1 && <h3 className={SECTION_TITLE}>{stage.title}</h3>}
 							<Scoreboard
-								caption={`Every recorded model on the same ${stage.task.items.length} items`}
-								rows={recordings.map((recording) => ({
-									racer: recording.racer,
-									modelId: recording.modelId,
-									recordedAt: recording.recordedAt,
-									totals: recording.totals
-								}))}
+								caption={
+									live.length > 0
+										? `Your live run and every recorded model on the same ${items} items`
+										: `Every recorded model on the same ${items} items`
+								}
+								rows={[
+									...live,
+									...recordings.map((recording) => ({
+										racer: recording.racer,
+										modelId: recording.modelId,
+										recordedAt: recording.recordedAt,
+										totals: recording.totals
+									}))
+								]}
 							/>
 							<ItemResults task={stage.task} recordings={recordings} />
 						</div>

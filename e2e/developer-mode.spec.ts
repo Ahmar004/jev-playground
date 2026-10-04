@@ -147,6 +147,25 @@ test('flow 4: keys panel, live race, labels, then Remove all', async ({ page }) 
 	await expect(page.getByText(/Beginner mode - recorded/)).toHaveCount(0)
 	await page.screenshot({ path: `${SCREENSHOT_DIR}/dev-live-race.png`, fullPage: true })
 
+	// Reveal shows the live run's numbers beside the recorded ones, each labelled (Step-13).
+	await page.getByRole('button', { name: 'See the result' }).click()
+	const scoreboard = page.getByRole('table', {
+		name: 'Your live run and every recorded model on the same 40 items'
+	})
+	await expect(
+		scoreboard.getByText(/^Developer mode - run \d{2}:\d{2} - jev-1\.13\.0$/)
+	).toBeVisible()
+	await expect(
+		scoreboard.getByText(/^Developer mode - run \d{2}:\d{2} - claude-opus-5-5$/)
+	).toBeVisible()
+	await expect(scoreboard.getByText(/^Beginner mode - recorded /).first()).toBeVisible()
+	await expect(page.getByText(/Your prediction is scored against the recordings/)).toBeVisible()
+	await page.screenshot({ path: `${SCREENSHOT_DIR}/dev-reveal-live.png`, fullPage: true })
+	// Nothing new was called or saved for Reveal.
+	expect(hits.jev).toBe(40)
+	expect(hits.messages).toBe(40)
+	await page.getByRole('button', { name: 'Race again' }).click()
+
 	// Rule-8: no key in any browser storage.
 	const stored = await page.evaluate(async () => {
 		const databases = (await indexedDB.databases?.()) ?? []
@@ -259,6 +278,19 @@ test('level 6 runs every router card live, labelled with the mode, model and run
 	await expect(results.getByText('Code has no rule for this job.').first()).toBeVisible()
 	await expect(page.getByText('Badge earned: Right Tool', { exact: true })).toBeVisible()
 	await page.screenshot({ path: `${SCREENSHOT_DIR}/dev-router-live.png`, fullPage: true })
+
+	// Reveal shows the live run above the recorded one, each card labelled (Step-13).
+	await page.getByRole('button', { name: 'See the result' }).click()
+	const live = page.getByRole('list', { name: 'Your live run, for each card' })
+	const recorded = page.getByRole('list', { name: 'Recorded runs, for each card' })
+	await expect(live.getByText(/^Developer mode - run \d{2}:\d{2} - claude-opus-5-5$/)).toHaveCount(
+		6
+	)
+	await expect(live.getByText(/Beginner mode/)).toHaveCount(0)
+	await expect(recorded.getByText(/^Beginner mode - recorded /).first()).toBeVisible()
+	await expect(recorded.getByText(/Developer mode/)).toHaveCount(0)
+	expect(hits.jev).toBe(6)
+	expect(hits.messages).toBe(6)
 })
 
 test('level 6 live: a rejected LLM key stops the run and offers Beginner mode', async ({
@@ -330,6 +362,20 @@ test("level 8: the user's own trick runs live against Jev, and a reply that does
 	// One call per attempt, no hidden retries (R7).
 	expect(hits.jev).toBe(2)
 	await page.screenshot({ path: `${SCREENSHOT_DIR}/dev-tricks-live.png`, fullPage: true })
+
+	// Reveal lists the live tricks above the recorded pairs, and they stay for Play (Step-13).
+	await page.getByRole('button', { name: 'See the result' }).click()
+	const revealed = page.getByRole('list', { name: 'Your live tricks' })
+	await expect(revealed.getByRole('listitem')).toHaveCount(2)
+	await expect(revealed.getByText(/^Developer mode - run \d{2}:\d{2} - jev-1\.13\.0$/)).toHaveCount(
+		2
+	)
+	await expect(
+		page.getByRole('heading', { name: 'Your guesses against what happened' })
+	).toBeVisible()
+	await page.getByRole('button', { name: 'Race again' }).click()
+	await expect(tricks.getByRole('listitem')).toHaveCount(2)
+	expect(hits.jev).toBe(2)
 })
 
 test('level 8 live: a rejected TypeSafe key stops with a friendly message and Beginner mode', async ({

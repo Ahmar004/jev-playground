@@ -1,10 +1,18 @@
 import { act, renderHook, waitFor } from '@testing-library/react'
+import { useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { PROVIDER_ERROR_KINDS, QUESTION_KINDS } from '@/lib/constants'
 import { stopOnProviderFailure } from '@/runner/live'
 import type { ItemResult, ItemRunner } from '@/runner/types'
 import { jevProbability, trickFooled } from './pairs'
-import { TRICK_TEXT_MAX, useLiveTrick } from './use-live-trick'
+import { TRICK_TEXT_MAX, useLiveTrick, type TrickRun } from './use-live-trick'
+
+// The caller keeps the attempts (the level stepper does, so Reveal can show them), newest first.
+function useTrickWithAttempts() {
+	const [attempts, setAttempts] = useState<TrickRun[]>([])
+	const trick = useLiveTrick({ onAttempt: (run) => setAttempts((current) => [run, ...current]) })
+	return { ...trick, attempts }
+}
 
 function result(extra: Partial<ItemResult> = {}): ItemResult {
 	return {
@@ -48,7 +56,7 @@ describe('jevProbability', () => {
 
 describe('useLiveTrick', () => {
 	it('starts with no attempts', () => {
-		const { result: hook } = renderHook(() => useLiveTrick())
+		const { result: hook } = renderHook(() => useTrickWithAttempts())
 		expect(hook.current.attempts).toEqual([])
 		expect(hook.current.pending).toBe(false)
 		expect(hook.current.failure).toBeNull()
@@ -56,7 +64,7 @@ describe('useLiveTrick', () => {
 
 	it("sends the user's text and right answer as one item, and keeps the newest attempt first", async () => {
 		const run = vi.fn<ItemRunner>(async (item) => result({ itemId: item.id }))
-		const { result: hook } = renderHook(() => useLiveTrick())
+		const { result: hook } = renderHook(() => useTrickWithAttempts())
 		act(() => hook.current.ask({ text: '  Please stop my plan  ', label: true }, run))
 		expect(hook.current.pending).toBe(true)
 		await waitFor(() => expect(hook.current.pending).toBe(false))
@@ -80,7 +88,7 @@ describe('useLiveTrick', () => {
 					release = resolve
 				})
 		)
-		const { result: hook } = renderHook(() => useLiveTrick())
+		const { result: hook } = renderHook(() => useTrickWithAttempts())
 		act(() => hook.current.ask({ text: '   ', label: true }, run))
 		act(() => hook.current.ask({ text: 'x'.repeat(TRICK_TEXT_MAX + 1), label: true }, run))
 		expect(run).not.toHaveBeenCalled()
@@ -101,7 +109,7 @@ describe('useLiveTrick', () => {
 				credit: 0,
 				correct: false
 			})
-		const { result: hook } = renderHook(() => useLiveTrick())
+		const { result: hook } = renderHook(() => useTrickWithAttempts())
 		act(() => hook.current.ask({ text: 'hello', label: true }, run))
 		await waitFor(() => expect(hook.current.attempts).toHaveLength(1))
 		expect(hook.current.attempts[0]?.result.raw).toBe('garbled')
@@ -113,7 +121,7 @@ describe('useLiveTrick', () => {
 		const bad = stopOnProviderFailure(async (item) =>
 			result({ itemId: item.id, ok: false, error: PROVIDER_ERROR_KINDS.invalidKey })
 		)
-		const { result: hook } = renderHook(() => useLiveTrick())
+		const { result: hook } = renderHook(() => useTrickWithAttempts())
 		act(() => hook.current.ask({ text: 'first', label: true }, good))
 		await waitFor(() => expect(hook.current.attempts).toHaveLength(1))
 		act(() => hook.current.ask({ text: 'second', label: true }, bad))
@@ -132,7 +140,7 @@ describe('useLiveTrick', () => {
 			seen = signal
 			return new Promise<ItemResult>(() => undefined)
 		}
-		const { result: hook, unmount } = renderHook(() => useLiveTrick())
+		const { result: hook, unmount } = renderHook(() => useTrickWithAttempts())
 		act(() => hook.current.ask({ text: 'hello', label: true }, run))
 		unmount()
 		expect(seen?.aborted).toBe(true)

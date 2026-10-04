@@ -11,16 +11,19 @@ import { CalibrationChart } from './calibration/calibration-chart'
 import { CalibrationForm } from './calibration/calibration-form'
 import type { Rating, Ratings } from './calibration/ratings'
 import type { LevelStage } from './lineup'
-import { toolOutcomes, type Assignments } from './router/outcomes'
+import { toolOutcomes, type Assignments, type LiveRouterRun } from './router/outcomes'
 import { RouterGame } from './router/router-game'
 import { RouterLivePlay } from './router/router-live-play'
 import { RouterResults } from './router/router-results'
+import { RouterReveal } from './router/router-reveal'
 import { useCodeResults } from './router/use-code-results'
 import { SignalPanel } from './signals/signal-panel'
 import { trickPairs, type Guesses } from './tricks/pairs'
 import { TrickLivePlay } from './tricks/trick-live-play'
 import { TrickPicker } from './tricks/trick-picker'
 import { TrickResults } from './tricks/trick-results'
+import { TrickAttemptList } from './tricks/trick-writer'
+import type { TrickAttempt } from './tricks/use-live-trick'
 import { defaultWeights, type Weights } from './weights/composite'
 import { WeightsPanel } from './weights/weights-panel'
 import { useFirstPlay } from './use-first-play'
@@ -28,7 +31,8 @@ import { useFirstPlay } from './use-first-play'
 /**
  * The state of a level's own widget, kept in the stepper so it survives moving
  * between steps. It is the user's play, not progress; only the first Router
- * sort and the trick guesses go to the server, for their badges.
+ * sort and the trick guesses go to the server, for their badges. Live runs
+ * stay here too, in tab memory only, so Reveal can show them.
  */
 export function useWidgetState(level: Level, stages: LevelStage[], tasks: Task[]) {
 	const combineStage = stages.find(
@@ -41,6 +45,8 @@ export function useWidgetState(level: Level, stages: LevelStage[], tasks: Task[]
 	const [assignments, setAssignments] = useState<Assignments>({})
 	const [ran, setRan] = useState(false)
 	const [guesses, setGuesses] = useState<Guesses>({})
+	const [liveRouter, setLiveRouter] = useState<LiveRouterRun | null>(null)
+	const [trickAttempts, setTrickAttempts] = useState<TrickAttempt[]>([])
 	const firstPlay = useFirstPlay(level.id)
 	const sortSent = useRef(false)
 	const codeResults = useCodeResults(tasks, level.widget === LEVEL_WIDGETS.router)
@@ -73,7 +79,13 @@ export function useWidgetState(level: Level, stages: LevelStage[], tasks: Task[]
 		guess: (pairId: string, fooled: boolean) =>
 			setGuesses((previous) => ({ ...previous, [pairId]: fooled })),
 		codeResults,
-		combineArgs
+		combineArgs,
+		liveRouter,
+		setLiveRouter,
+		trickAttempts,
+		// Newest first.
+		addTrickAttempt: (attempt: TrickAttempt) =>
+			setTrickAttempts((previous) => [attempt, ...previous])
 	}
 }
 export type WidgetState = ReturnType<typeof useWidgetState>
@@ -122,6 +134,7 @@ function RouterPlay({
 				codeResults={state.codeResults}
 				onAssign={state.assign}
 				onRun={state.run}
+				onLiveRun={state.setLiveRouter}
 				onUseBeginner={() => setMode(MODES.beginner)}
 			/>
 		)
@@ -158,6 +171,8 @@ function TricksPlay({ stages, opponentId, state }: Omit<WidgetProps, 'level'>) {
 				<TrickLivePlay
 					task={data.stage.task}
 					question={question}
+					attempts={state.trickAttempts}
+					onAttempt={state.addTrickAttempt}
 					onUseBeginner={() => setMode(MODES.beginner)}
 				/>
 			)}
@@ -213,11 +228,13 @@ export function RevealWidget({ level, stages, opponentId, state }: WidgetProps) 
 		}
 		case LEVEL_WIDGETS.router:
 			return level.router ? (
-				<RouterResults
+				<RouterReveal
 					cards={level.router}
 					stages={stages}
 					assignments={state.assignments}
-					outcomesFor={(stage) => toolOutcomes(stage, opponentId, state.codeResults)}
+					codeResults={state.codeResults}
+					opponentId={opponentId}
+					liveRun={state.liveRouter}
 				/>
 			) : null
 		case LEVEL_WIDGETS.signals: {
@@ -229,9 +246,18 @@ export function RevealWidget({ level, stages, opponentId, state }: WidgetProps) 
 		}
 		case LEVEL_WIDGETS.tricks: {
 			const data = trickData(stages, opponentId)
-			return data ? (
-				<TrickResults pairs={data.pairs} guesses={state.guesses} opponentModelId={opponentId} />
-			) : null
+			if (!data) return null
+			return (
+				<>
+					{state.trickAttempts.length > 0 && (
+						<div className="flex flex-col gap-3">
+							<h3 className="text-text text-xl font-bold">Your live tricks</h3>
+							<TrickAttemptList attempts={state.trickAttempts} label="Your live tricks" />
+						</div>
+					)}
+					<TrickResults pairs={data.pairs} guesses={state.guesses} opponentModelId={opponentId} />
+				</>
+			)
 		}
 		default:
 			return null

@@ -13,7 +13,11 @@ export const TRICK_TEXT_MAX = 2000
 /** The user's own trick: the message, and whether the sender really is asking the question's "yes". */
 export type TrickInput = { text: string; label: boolean }
 
-export type TrickAttempt = TrickInput & { id: string; ranAt: string; result: ItemResult }
+// One reply from Jev to the user's trick.
+export type TrickRun = TrickInput & { id: string; ranAt: string; result: ItemResult }
+
+// A reply with the model that gave it, for its Developer mode label.
+export type TrickAttempt = TrickRun & { modelId: string }
 
 // Read in event handlers only; a named helper keeps the purity lint from reading ask() as render code.
 function currentTime(): number {
@@ -23,11 +27,11 @@ function currentTime(): number {
 /**
  * Level 8 in Developer mode (R14): sends the user's own trick text to Jev,
  * one call per attempt, through the runner the caller binds (R92). Every
- * reply is kept, a reply that did not parse included (R44); a failure that
- * would repeat (a bad key, a rate limit) stops with `failure` instead.
+ * reply goes to `onAttempt`, a reply that did not parse included (R44); the
+ * caller keeps them, so they outlive Play. A failure that would repeat (a bad
+ * key, a rate limit) stops with `failure` instead.
  */
-export function useLiveTrick() {
-	const [attempts, setAttempts] = useState<TrickAttempt[]>([])
+export function useLiveTrick({ onAttempt }: { onAttempt: (run: TrickRun) => void }) {
 	const [pending, setPending] = useState(false)
 	const [failure, setFailure] = useState<RaceFailure | null>(null)
 	// The latest input sent, so Retry after a failure resends exactly that.
@@ -61,10 +65,8 @@ export function useLiveTrick() {
 			.then(
 				(result) => {
 					if (controller.signal.aborted) return
-					setAttempts((current) => [
-						{ id: item.id, text, label: input.label, ranAt, result },
-						...current
-					])
+					// The count restarts when Play remounts, so the run time keeps kept attempts' ids apart.
+					onAttempt({ id: `${item.id}-${ranAt}`, text, label: input.label, ranAt, result })
 				},
 				(error: unknown) => {
 					if (controller.signal.aborted) return
@@ -79,6 +81,6 @@ export function useLiveTrick() {
 			})
 	}
 
-	return { attempts, pending, failure, lastInput, ask }
+	return { pending, failure, lastInput, ask }
 }
 export type LiveTrick = ReturnType<typeof useLiveTrick>

@@ -6,18 +6,18 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: $19.47 left, and recordings so far cost $0.49.
 
-**Built (Steps 0-12):**
+**Built (Steps 0-13):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
-- Tests: 608 Vitest, 114 node:test and 72 Playwright e2e, covering every flow in DESIGN 15.
+- After a Developer mode run, Reveal shows the last finished live run beside the recordings (races, level 6 cards, level 8 tricks), labelled; tab memory only.
+- Tests: 619 Vitest, 114 node:test and 72 Playwright e2e, covering every flow in DESIGN 15.
 - k6 locally: 400 users median 266 ms; 1,000 users median 6.2 s (one Node process is CPU-bound).
 - The public README.
 
 **Open (each is a ROADMAP step, 11-35):**
 
 - A provider call that never answers leaves a live run waiting: there is no client-side timeout (seen while writing the Step-11 e2e fake). Worth a fix with Step-15's real-key check.
-- Live results don't show in Reveal.
 - OpenAI and Google prices are unknown.
 - Jev through an OpenRouter key isn't built.
 - No real-key test has been run.
@@ -34,7 +34,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-13 (live results in Reveal).
+**Next:** Step-14 (OpenAI and Google prices).
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -730,3 +730,13 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - The attempts reset when the user leaves Play, like the live races; Reveal does not show them (Step-13 decides).
 - Tests: `use-live-trick.test.ts` (11), `trick-writer.test.tsx` (6); e2e `developer-mode.spec.ts`: a live trick that fools the fake Jev plus an unparsed reply shown as a miss with its raw text (2 calls, no retries), and a rejected TypeSafe key with the Beginner fallback. The e2e Jev fake takes `jevStatus` and `jevAnswer` options.
 - Gates: lint, typecheck, format:check, check:env, check:secrets, check:standards 24/24, check:rls, test (114 node:test plus 608 Vitest), build, e2e developer-mode and levels-5-8 17/17 against `pnpm start`.
+
+## Step-13 - live results in Reveal (2026-10-04) - done
+
+- Skills: test-driven-development (tests first, by hand), local-review. No subagents, no Anthropic spend (intercepted providers only).
+- User decisions: all three kinds of live run go to Reveal (races, level 6, level 8); only the scoreboard numbers, not the per-item list; a run stays until a new finished run replaces it or the user leaves the level, and keeps its Developer mode label after a switch to Beginner mode.
+- Built: `RaceResult` now carries `recordedAt` and `mode` and includes Jev + Code (`raceResults` is exported and tested); `gameRunInput` sends only Jev and the LLM. `LevelStepper` keeps the last finished live race per task and `RevealStep` puts those rows above the recorded ones, with a note that the prediction is still scored against the recordings. Level 6: `useLiveRouter` hands the whole finished run to `onFinished`, kept in widget state and shown by `router/router-reveal.tsx` above the recorded cards. Level 8: `useLiveTrick` reports each attempt through `onAttempt`; the attempts (each with the model that answered it) live in widget state, so they show in Reveal and survive leaving Play.
+- Bug fixed on the way: `useRace` and `useLiveRouter` called the `onFinished` from the render that started the run, so a live result could carry the model alias instead of the answering model id. Both now call the latest callback (a ref set in an effect). Scoreboard row keys include the mode, since a live and a recorded Jev share a model id.
+- The Developer mode banner now says Reveal shows the last live run beside the recordings.
+- Tests: `raceResults` (3), latest-callback tests for `useRace` and `useLiveRouter`, `RouterReveal` (2), `RevealStep` live rows (2), per-attempt model labels, Jev + Code left off the Leaderboard; e2e `developer-mode.spec.ts` checks Reveal after the level 1 race, the level 6 run and the level 8 tricks, with no extra calls.
+- Gates: lint, typecheck, test (114 node:test plus 619 Vitest), build, e2e developer-mode, levels-5-8, level-1 and games 29/29 against `pnpm start`.

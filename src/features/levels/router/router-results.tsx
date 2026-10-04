@@ -67,15 +67,17 @@ export function RouterResults({
 	cards,
 	stages,
 	assignments,
-	outcomesFor
+	outcomesFor,
+	label = 'Results for each card'
 }: {
 	cards: RouterCard[]
 	stages: LevelStage[]
 	assignments: Assignments
 	outcomesFor: (stage: LevelStage) => ToolOutcome[]
+	label?: string
 }) {
 	return (
-		<ol className="flex flex-col gap-4" aria-label="Results for each card">
+		<ol className="flex flex-col gap-4" aria-label={label}>
 			{cards.map((card) => {
 				const stage = stages.find((candidate) => candidate.task.id === card.taskId)
 				if (!stage) return null

@@ -34,6 +34,7 @@ export function PlayStep({
 	mode = MODES.beginner,
 	onUseBeginner,
 	onRaceFinished,
+	onLiveRun,
 	children
 }: {
 	stages: LevelStage[]
@@ -49,6 +50,8 @@ export function PlayStep({
 	onUseBeginner?: () => void
 	// A timed level (Speed Race) saves its finished race to the Leaderboard.
 	onRaceFinished?: (results: RaceResult[]) => void
+	// Developer mode: a finished live race, kept for Reveal.
+	onLiveRun?: (taskId: string, results: RaceResult[]) => void
 	children?: React.ReactNode
 }) {
 	const live = mode === MODES.developer
@@ -85,7 +88,10 @@ export function PlayStep({
 					combineArgs={combineArgs}
 					showHeadings={stages.length > 1 || Boolean(children)}
 					onUseBeginner={() => onUseBeginner?.()}
-					onFinished={onRaceFinished}
+					onFinished={(results, taskId) => {
+						onRaceFinished?.(results)
+						onLiveRun?.(taskId, results)
+					}}
 				/>
 			)}
 			{!live &&

@@ -1,4 +1,4 @@
-import type { Mode, Racer } from '@/lib/constants'
+import { MODES, type Mode, type Racer } from '@/lib/constants'
 import type { RunTotals } from '@/runner/types'
 import { formatAccuracy, formatCost, formatDuration } from './format'
 import { ModeLabel } from './mode-label'
@@ -42,7 +42,7 @@ export function Scoreboard({ rows, caption }: { rows: ScoreboardRow[]; caption: 
 				</thead>
 				<tbody>
 					{rows.map(({ racer, modelId, recordedAt, mode, totals }) => (
-						<tr key={`${racer}-${modelId}`}>
+						<tr key={`${mode ?? MODES.beginner}-${racer}-${modelId}`}>
 							<th scope="row" className={`${CELL} font-normal`}>
 								<RacerTag racer={racer} modelId={modelId} />
 								<ModeLabel modelId={modelId} recordedAt={recordedAt} mode={mode} />

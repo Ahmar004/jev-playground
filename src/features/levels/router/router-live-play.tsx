@@ -9,7 +9,7 @@ import { useRecordDevRun } from '@/features/race/use-record-dev-run'
 import { RACE_LANES, RACE_STATUS, RACERS } from '@/lib/constants'
 import type { ItemResult } from '@/runner/types'
 import type { LevelStage } from '../lineup'
-import { liveToolOutcomes, type Assignments } from './outcomes'
+import { liveToolOutcomes, type Assignments, type LiveRouterRun } from './outcomes'
 import { RouterGame } from './router-game'
 import { RouterResults } from './router-results'
 import { useLiveRouter, type LiveRouter } from './use-live-router'
@@ -22,6 +22,8 @@ type Props = {
 	onAssign: (taskId: string, tool: RouterTool | null) => void
 	// The first sort goes to the server for its badge, as in Beginner mode.
 	onRun: () => void
+	// A finished run, kept for Reveal; a run stopped by a failure is not reported.
+	onLiveRun: (run: LiveRouterRun) => void
 	onUseBeginner: () => void
 }
 
@@ -38,7 +40,16 @@ function LiveRun({ config, ...props }: Props & { config: LiveConfig | null }) {
 	const devRun = useRecordDevRun()
 	const router = useLiveRouter({
 		tasks: props.stages.map((stage) => stage.task),
-		onFinished: () => devRun.record()
+		onFinished: ({ results, startedAt }) => {
+			devRun.record()
+			if (!config) return
+			props.onLiveRun({
+				results,
+				startedAt,
+				jevModelId: liveModelId(config, RACERS.jev),
+				llmModelId: liveModelId(config, RACERS.llm)
+			})
+		}
 	})
 	function run(): void {
 		if (!config) return

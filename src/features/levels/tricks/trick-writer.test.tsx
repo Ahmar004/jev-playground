@@ -14,6 +14,7 @@ function attempt(id: string, extra: Partial<ItemResult>, label = true): TrickAtt
 		text: `Message ${id}`,
 		label,
 		ranAt: '2026-10-04T14:02:00.000Z',
+		modelId: 'jev-1',
 		result: {
 			itemId: id,
 			ok: true,
@@ -38,7 +39,6 @@ function renderWriter(props: Partial<React.ComponentProps<typeof TrickWriter>> =
 			missing={null}
 			attempts={[]}
 			pending={false}
-			modelId="jev-1"
 			onAsk={onAsk}
 			onOpenKeys={onOpenKeys}
 			{...props}
@@ -79,6 +79,15 @@ describe('TrickWriter', () => {
 		expect(items[0]).toHaveTextContent(/Developer mode - run .+ - jev-1/)
 		expect(items[1]).toHaveTextContent('Jev saw through it')
 		expect(items[1]).toHaveTextContent('Right')
+	})
+
+	it('labels each attempt with the model that answered it', () => {
+		renderWriter({
+			attempts: [{ ...attempt('a', {}), modelId: 'jev-1.14.0' }, attempt('b', {})]
+		})
+		const items = screen.getAllByRole('listitem')
+		expect(items[0]).toHaveTextContent(/- jev-1\.14\.0$/)
+		expect(items[1]).toHaveTextContent(/- jev-1$/)
 	})
 
 	it('shows a reply that did not parse as a miss, with its raw output as plain text (R44, R86)', () => {

@@ -4,6 +4,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { levelSchema } from '@/content/level-schema'
 import { testLevel } from '@/content/testing/levels'
 import { jevRecording, opusRecording, sonnetRecording } from '@/features/race/testing/recordings'
+import type { RaceResult } from '@/features/race/race-stage'
+import { MODES, RACERS } from '@/lib/constants'
 import { choiceTask } from '@/runner/testing/tasks'
 import { RevealStep } from './reveal-step'
 
@@ -23,6 +25,7 @@ function renderReveal(
 		scoredAgainst?: string | null
 		onCheck?: () => void
 		onCelebrated?: () => void
+		liveRuns?: Record<string, RaceResult[]>
 	} = {}
 ) {
 	return render(
@@ -45,9 +48,27 @@ function renderReveal(
 			onReveal={() => undefined}
 			onCheck={extra.onCheck ?? (() => undefined)}
 			onRaceAgain={() => undefined}
+			liveRuns={extra.liveRuns}
 		/>
 	)
 }
+
+const liveRun: RaceResult[] = [
+	{
+		racer: RACERS.jev,
+		modelId: 'jev-live',
+		recordedAt: '2026-10-04T14:02:00.000Z',
+		mode: MODES.developer,
+		totals: { ...jevRecording.totals, costUsd: 0.0042 }
+	},
+	{
+		racer: RACERS.llm,
+		modelId: 'gpt-live',
+		recordedAt: '2026-10-04T14:02:00.000Z',
+		mode: MODES.developer,
+		totals: opusRecording.totals
+	}
+]
 
 describe('RevealStep', () => {
 	it('marks each prediction against the recorded numbers', () => {
@@ -74,6 +95,26 @@ describe('RevealStep', () => {
 			'href',
 			'https://docs.typesafe.ai/concepts/system-one'
 		)
+	})
+
+	it("shows a live run's numbers beside the recorded ones, each with its own label", () => {
+		renderReveal({}, { liveRuns: { [choiceTask.id]: liveRun } })
+		const table = screen.getByRole('table', { name: /Your live run and every recorded model/ })
+		const live = within(table).getByRole('row', { name: /gpt-live/ })
+		expect(live).toHaveTextContent(/Developer mode - run .+ - gpt-live/)
+		expect(within(table).getByRole('row', { name: /jev-live/ })).toHaveTextContent('$0.0042')
+		const recorded = within(table).getByRole('row', { name: /Claude Sonnet 5.5/ })
+		expect(recorded).toHaveTextContent(/Beginner mode - recorded/)
+		// 2 live rows plus Jev, Opus and Sonnet from the recordings, under the header row.
+		expect(within(table).getAllByRole('row')).toHaveLength(6)
+		expect(screen.getByText(/Your prediction is scored against the recordings/)).toBeInTheDocument()
+	})
+
+	it('shows only the recordings, with no live note, before any live run', () => {
+		renderReveal({}, { liveRuns: { 'another-task': liveRun } })
+		expect(screen.getByRole('table', { name: /^Every recorded model/ })).toBeInTheDocument()
+		expect(screen.queryByText(/Developer mode/)).not.toBeInTheDocument()
+		expect(screen.queryByText(/scored against the recordings/)).not.toBeInTheDocument()
 	})
 
 	it("shows every item, with a couldn't parse note and the raw output for misses (R44)", async () => {

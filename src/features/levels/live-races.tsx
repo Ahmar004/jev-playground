@@ -24,7 +24,8 @@ export function LiveRaces({
 	showHeadings: boolean
 	onUseBeginner: () => void
 	scene?: (perRacer: RaceState) => React.ReactNode
-	onFinished?: (results: RaceResult[]) => void
+	// A finished race's results, with the task it ran.
+	onFinished?: (results: RaceResult[], taskId: string) => void
 }) {
 	const setup = useLiveSetup()
 	return (
@@ -47,7 +48,7 @@ export function LiveRaces({
 								live={setup.config ?? undefined}
 								onUseBeginner={onUseBeginner}
 								scene={scene}
-								onFinished={onFinished}
+								onFinished={(results) => onFinished?.(results, stage.task.id)}
 							/>
 						</div>
 					)

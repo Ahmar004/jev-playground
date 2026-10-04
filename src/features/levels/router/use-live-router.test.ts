@@ -52,6 +52,25 @@ describe('useLiveRouter', () => {
 		expect(result.current.results[choiceTask.id]?.jev?.raw).toBe('live')
 		expect(result.current.results[noulTask.id]?.llm?.raw).toBe('live')
 		expect(onFinished).toHaveBeenCalledTimes(1)
+		// The finished run goes out whole, for Reveal: every card's results and the start.
+		expect(onFinished).toHaveBeenCalledWith({
+			results: result.current.results,
+			startedAt: result.current.startedAt
+		})
+	})
+
+	it('reports the finish to the latest callback, not the one from when the run started', async () => {
+		const first = vi.fn()
+		const latest = vi.fn()
+		const { result, rerender } = renderHook(
+			({ onFinished }: { onFinished: () => void }) => useLiveRouter({ tasks, onFinished }),
+			{ initialProps: { onFinished: first } }
+		)
+		act(() => result.current.start(() => ({ jev: ok, llm: ok })))
+		rerender({ onFinished: latest })
+		await waitFor(() => expect(result.current.status).toBe('finished'))
+		expect(first).not.toHaveBeenCalled()
+		expect(latest).toHaveBeenCalledTimes(1)
 	})
 
 	it(`keeps at most ${RACE_LANES} calls in flight per racer`, async () => {

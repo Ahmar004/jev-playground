@@ -68,6 +68,9 @@ export function toolOutcomes(
 // A live run's start and the models that answered it.
 export type LiveRunInfo = { startedAt: string; jevModelId: string; llmModelId: string }
 
+// A finished live run, kept for Reveal.
+export type LiveRouterRun = LiveRunInfo & { results: LiveCardResults }
+
 /** Developer mode: what Jev and the LLM did on one card in this live run, and Code from the runner. */
 export function liveToolOutcomes(
 	stage: LevelStage,

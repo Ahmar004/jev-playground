@@ -20,7 +20,7 @@ const ANSWERS = [
 	{ value: false, label: 'No' }
 ] as const
 
-function AttemptCard({ attempt, modelId }: { attempt: TrickAttempt; modelId: string }) {
+function AttemptCard({ attempt }: { attempt: TrickAttempt }) {
 	const { result } = attempt
 	const fooled = trickFooled(result)
 	const outcome = itemOutcome(result)
@@ -55,8 +55,19 @@ function AttemptCard({ attempt, modelId }: { attempt: TrickAttempt; modelId: str
 			<p className="text-text-muted text-xs tabular-nums">
 				{formatDuration(result.latencyMs)} - {formatCost(result.costUsd)}
 			</p>
-			<ModeLabel mode={MODES.developer} modelId={modelId} recordedAt={attempt.ranAt} />
+			<ModeLabel mode={MODES.developer} modelId={attempt.modelId} recordedAt={attempt.ranAt} />
 		</li>
+	)
+}
+
+/** The user's live tricks, newest first, each with Jev's answer and its Developer mode label. */
+export function TrickAttemptList({ attempts, label }: { attempts: TrickAttempt[]; label: string }) {
+	return (
+		<ol aria-label={label} className="flex flex-col gap-3">
+			{attempts.map((attempt) => (
+				<AttemptCard key={attempt.id} attempt={attempt} />
+			))}
+		</ol>
 	)
 }
 
@@ -70,7 +81,6 @@ export function TrickWriter({
 	missing,
 	attempts,
 	pending,
-	modelId,
 	onAsk,
 	onOpenKeys,
 	children
@@ -80,7 +90,6 @@ export function TrickWriter({
 	missing: string | null
 	attempts: TrickAttempt[]
 	pending: boolean
-	modelId: string
 	onAsk: (input: TrickInput) => void
 	onOpenKeys: () => void
 	// The failure alert, shown under the form.
@@ -166,13 +175,7 @@ export function TrickWriter({
 				</div>
 			</form>
 			{children}
-			{attempts.length > 0 && (
-				<ol aria-label="Your tricks" className="flex flex-col gap-3">
-					{attempts.map((attempt) => (
-						<AttemptCard key={attempt.id} attempt={attempt} modelId={modelId} />
-					))}
-				</ol>
-			)}
+			{attempts.length > 0 && <TrickAttemptList attempts={attempts} label="Your tricks" />}
 		</section>
 	)
 }

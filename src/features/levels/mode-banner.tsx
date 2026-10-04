@@ -11,7 +11,7 @@ export function ModeBanner({ mode }: { mode: Mode }) {
 				<span>
 					<span className="text-text font-bold">Developer mode.</span> Races on the Play step call
 					the real providers live, with your own keys, and cost you real money at their prices. The
-					Reveal step still shows the recorded runs, and says so.
+					Reveal step shows your last live run beside the recorded runs, each labelled.
 				</span>
 			) : (
 				<span>
