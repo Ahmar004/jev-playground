@@ -60,3 +60,6 @@ pnpm-debug.log*
 
 # k6 load test session cookie (a live session token)
 load/.session
+
+# superpowers skill scratch (drafts, logs)
+.superpowers/

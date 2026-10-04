@@ -8,7 +8,7 @@ Keep sessions short: one ROADMAP step per session, and save progress and hand-of
 
 ## What this project is
 
-Jev's Playground is an interactive website that teaches where System One models like Jev work well, where they break, and where a frontier LLM or plain code is the better tool. It teaches through levels, VS games, an Arena, a Sandbox and quizzes, in Beginner mode (replays of real recordings, no keys) and Developer mode (live calls with the user's own keys). It runs on localhost only.
+Jev's Playground is an interactive website that teaches where System One models like Jev work well, where they break, and where a frontier LLM or plain code is the better tool. It teaches through levels, VS games, an Arena, a Sandbox and quizzes, in Beginner mode (replays of real recordings, no keys) and Developer mode (live calls with the user's own keys). It runs on localhost until the Vercel deploy (ROADMAP Step-29), and then launches to TypeSafe's Discord community (100k+ people), so it must be fast, scalable, reliable and secure (Rule-0.01).
 
 ## Stack and commands
 
@@ -46,7 +46,9 @@ Prisma 7 reads its CLI settings from `prisma.config.ts`, which loads `.env.local
 
 ## Time budget and right-sizing
 
-- The hard deadline is 2026-10-03 (Rule-1). The remaining project budget is 7000 PKR, about $25 (Rule-0.1), and all Anthropic spend for the whole build, every Recording included, stays within the $20 credit on the owner key (Rule-A). There is no top-up, so dry-run every recording first and record only what changed. Build complete, working flows before polish, and every P0 item before any P1 (spec 15). Flag early any requirement that puts the deadline or the budget at risk.
+- There is no deadline now (Rule-1), but ship each step fast. The remaining project budget is 10,000 PKR (Rule-0.3), and all Anthropic spend, every Recording included, stays within the $20 credit on the owner key (Rule-0.1); the top of `ROADMAP.md` holds the current balances. There is no top-up, so dry-run every recording first and record only what changed. Build complete, working flows before polish (spec 15). Flag early any requirement that puts the budget at risk.
+- No custom domain is bought for now: the app is served at its free `vercel.app` URL, so nothing may depend on owning a domain (an email sender of our own, password reset emails).
+- Save tokens (Rule-0.0): at a session start read only the "Current state" block of `docs/progress.md` and the doc sections the step needs; find headings with grep before reading a whole file.
 - Size each solution to its problem. When a simple solution fully solves the problem, use it, and don't build for needs we only foresee (YAGNI, `docs/rules/feature-approach.md`). When no simple solution solves it, build what the problem actually needs. A simple fix that leaves the problem unsolved, or solves it the wrong way, is not simpler.
 - Every dependency and service must be free or fit the remaining 7000 PKR budget. Ask before adding anything that needs a paid plan or billing details.
 
@@ -106,11 +108,25 @@ These restate spec rules that code can break silently. The spec section holds th
 - Invoke the skill a ROADMAP step names before starting that step, and say which skill is in use. The superpowers skills (brainstorming, writing-plans, test-driven-development, subagent-driven-development, systematic-debugging) are installed but not listed in the session, so read `~/.claude/plugins/cache/claude-plugins-official/superpowers/<version>/skills/<name>/SKILL.md` and follow it by hand.
 - Testing: write tests first (TDD) for the runner, parsing, scoring, cost math, key handling, API routes, server actions and hooks. Check presentational components with screenshots in both themes at desktop and phone widths. Every user flow gets a Playwright e2e test. App tests run in Vitest; the template's `node:test` stays only for its `scripts/*.test.mjs` and `src/**/*.test.mts` tests, and `pnpm test` runs both.
 - Subagents (Step-6): Opus 5.5 for the main agent, Sonnet 5.5 for subagents, at most one subagent at a time.
-- Git: one commit per finished slice, with a Conventional Commits message (`docs/rules/commits.md`). Run the `local-review` skill before every commit and push; GitHub CI is disabled, so it is the only gate. Never commit `.env.local` or any secret.
+- Git: one commit per finished slice, with a Conventional Commits message (`docs/rules/commits.md`). Run the `local-review` skill before every commit and push; GitHub CI is disabled until ROADMAP Step-22, so until then it is the only gate, and afterwards it stays the gate before a commit. Never commit `.env.local` or any secret.
+- Once a step changes what is built, how to run it or a known gap, update `README.md` in the same step.
 - Use current docs, not memory. Next.js 16 ships its docs in `node_modules/next/dist/docs/`; for any other library or API, fetch its current docs.
 - To check, debug or verify anything on localhost, use the Claude-in-Chrome extension (ROADMAP Rule-11).
 - Ask questions with full context, never briefly: say exactly where to look (our app on localhost, or an external site such as sentry.io or posthog.com, with the URL and the click path), what to look for, and what each answer means (ROADMAP Rule-0.2).
 - On this Windows machine, use `python`, not `python3`.
+
+## Known pitfalls
+
+Each of these cost a past session time; `docs/progress.md` has the details.
+
+- The dev server can hit a Turbopack panic (exit 0xc0000142) on this machine, so run e2e against a production build: `corepack pnpm build`, `corepack pnpm start`, then e2e with `E2E_BASE_URL`. A `pnpm start` server serves the last build, so UI changes need a rebuild first.
+- Stop `pnpm start` before `build`, because the build replaces `.next` under the running server. Stopping `pnpm dev` through `TaskStop` leaves node on port 3000, so free the port (`Get-NetTCPConnection -LocalPort 3000`) before starting another server.
+- A level page that renders blank in dev usually means a crashed static-params worker: restart `pnpm dev`.
+- Supabase rate-limits sign-ins, so a full e2e run can fail on `toHaveURL('/')` in a cluster. Wait a minute and rerun.
+- Run `corepack pnpm exec next typegen` after adding a route if `PageProps<...>` types fail in typecheck.
+- Python `open(..., 'w')` writes CRLF on Windows; pass `newline=''` when a script edits files.
+- Run the k6 load test on an otherwise idle PC; a build or the test suite running alongside skews it. k6 is not on PATH: `winget install k6 --source winget`.
+- next-themes ignores the emulated color scheme, so to check dark mode by screenshot set the `theme` local storage key and wait about 1.5 s for the rise-in animation.
 
 ## Session logs
 
@@ -135,7 +151,7 @@ See `.claude/skills/*/SKILL.md` for full detail. In short:
 
 ## Local now, Vercel later
 
-The app runs on localhost (spec R95). Never deploy from this repo: 8x owns it. Build everything so it deploys to Vercel unchanged later, from the owner's personal repo (ROADMAP Rule-9, `docs/rules/deployment.md`):
+The app runs on localhost until ROADMAP Step-29 deploys it to Vercel at its free `vercel.app` URL (spec R95). This repo is now the owner's personal repo. Deploy only inside that step, or when the owner asks, and only to Vercel (ROADMAP Rule-9, `docs/rules/deployment.md`). Build everything so it runs on Vercel unchanged:
 
 - No file writes at runtime. Recordings are build-time JSON that only the local CLI writes.
 - No state kept in one process's memory. Rate limits and counters live in Postgres.

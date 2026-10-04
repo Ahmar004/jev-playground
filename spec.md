@@ -95,7 +95,7 @@ A Beginner/Developer switch sits in the header on every page. Anyone can switch 
 - The recording tool is a local CLI the owner runs. The owner checks the results by playing them in Beginner mode on localhost. Owner keys live only in the owner's `.env.local`, only while recording, and never reach the browser or the repo. When recording is done, the owner removes them. [R22]
 - Recording and Developer mode share one runner (the same tasks, provider calls and scoring), so recorded and live results come from the same code. [R92]
 - Each recording run prints its total cost against the budget.
-- Every recording run, together, must fit in the $20 Anthropic credit (ROADMAP Rule-A).
+- Every recording run, together, must fit in the $20 Anthropic credit (ROADMAP Rule-0.1).
 
 ### 3.4 Developer mode [R9-R14]
 
@@ -322,12 +322,12 @@ Level status, quiz attempts, XP, badges and leaderboard entries are saved to the
 
 ## 14. Constraints [R94-R98]
 
-- Built and shipped within the 8x Playmakers sprint, hard deadline 2026-10-03. [R94]
-- Runs locally on localhost for now. 8x provides only the GitHub repo. Every service is our own free account: Supabase (Postgres and Auth), Sentry and PostHog (`TECH-STACK.md`). No deployment from this repo; the code is built to deploy on Vercel later from the owner's personal repo (ROADMAP Rule-9). [R95]
+- First built for the 8x Playmakers sprint (deadline 2026-10-03, submitted). It is now being made robust for a public launch to the TypeSafe Discord community (ROADMAP Rule-0.01); there is no deadline. [R94]
+- Runs on localhost until ROADMAP Step-29 deploys it to Vercel at its free `vercel.app` URL; no custom domain is bought. The GitHub repo is the owner's personal repo. Every service is our own free account: Supabase (Postgres and Auth), Sentry and PostHog (`TECH-STACK.md`) (ROADMAP Rule-9). [R95]
 - Jev accepts text only and performs best in English. [R96]
 - Jev's rate and context limits apply to Developer mode Jev calls. [R97]
 - AI coding-agent logs are kept in `.claude-logs/` during development (8x evaluates them). [R98]
-- Total project spend stays within the remaining 7000 PKR, about $25 (ROADMAP Rule-0.1), and Anthropic spend within the $20 credit (Rule-A).
+- Total project spend stays within the remaining 10,000 PKR (ROADMAP Rule-0.3), and Anthropic spend within the $20 credit (Rule-0.1).
 - Keys never go to browser storage (ROADMAP Rule-8).
 
 ## 15. Priorities

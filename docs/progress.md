@@ -1,5 +1,41 @@
 # Progress
 
+## Current state (read this first; update it at the end of every step)
+
+Read only this block and the sections a step needs (Rule-0.0). The dated entries below it are the full history; nothing in them is removed.
+
+**Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: $19.47 left, and recordings so far cost $0.49.
+
+**Built (Steps 0-8):**
+
+- All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
+- Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
+- Tests: 582 Vitest, 114 node:test and 68 Playwright e2e, covering every flow in DESIGN 15.
+- k6 locally: 400 users median 266 ms; 1,000 users median 6.2 s (one Node process is CPU-bound).
+- The public README.
+
+**Open (each is a ROADMAP step, 11-35):**
+
+- Levels 6 and 8 still show recordings in Developer mode.
+- Live results don't show in Reveal.
+- OpenAI and Google prices are unknown.
+- Jev through an OpenRouter key isn't built.
+- No real-key test has been run.
+- The Sandbox form lacks Noul criteria and Choice option descriptions.
+- No rate limits on `/api/jev` or sign-in/sign-up (shares have a per-user daily limit).
+- No account deletion and no Privacy page.
+- CI is off.
+- e2e dark screenshots render light.
+- The header runs 3+ queries a page.
+- No accessibility or Lighthouse audit has been run.
+- No production Supabase project and no Vercel deploy yet.
+- No password reset (it needs a domain, and none is bought).
+- The database pool (40 per process) is too large for Vercel, where each function instance opens its own (Step-30).
+
+**Pitfalls:** see CLAUDE.md "Known pitfalls".
+
+**Next:** Step-11 (level 6 in Developer mode).
+
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
 - Session logging is installed at user level: `~/.claude/extract-log.py` plus `UserPromptSubmit`/`Stop` hooks in `~/.claude/settings.json`. It writes to `.claude-logs/` in the repo. Details, Windows fixes and canary proof are in `CAPTURE-TEST.md`.
@@ -660,3 +696,18 @@ Next: Step-7 (hardening), as before.
 - Left open: level 6 and 8 still use recorded results in Developer mode; Arena "trickster" in Developer mode is not a thing any more (the badge is level 8's); the Rule-A/Rule-B relabel references in CLAUDE.md, spec, DESIGN and TECH-STACK (needs the user's OK); the untracked `.superpowers/` folder from an earlier session is not committed; the e2e "dark" screenshots render light since the light default (next-themes ignores the emulated color scheme now) and many are taken mid rise-in animation, so they prove little. Wait about 1.5 s and set the `theme` local storage key to check screens by screenshot, as this session did.
 
 Next: Step-8 (README for submission, plus the Loom talking points).
+
+## Step-8 - README (2026-10-03) - done, not committed
+
+- Owner decision: the README is for the public (users and contributors), not the 8x submission, and has no Loom outline.
+- `README.md` replaces the 8x template README. It covers what the app does, the two modes and key handling, how the runner works, the stack, local setup, scripts, test and load numbers, trade-offs and known gaps, how AI built it, and a map of the docs.
+- Not run: `prettier --check README.md` fails here because `prettier-plugin-tailwindcss` is missing from this copy's `node_modules`. Run `corepack pnpm install`, then `format:check`, before the commit.
+- Rule-0.01 is now the global launch (TypeSafe Discord, 100k+ people): fast, scalable, reliable, secure.
+
+## Step-9 and Step-10 - docs and repo hygiene, current state (2026-10-04) - done, not committed
+
+- Done in the same session as Step-8 at the owner's request, docs only; the app is unchanged.
+- ROADMAP (approved by the owner): Rule-0.3 (10,000 PKR, Rule-0.1, personal repo), Rule-1 (no deadline) and Rule-9 (Vercel at the free `vercel.app` URL, no custom domain) updated. Steps 9-35 appended (Step-30, the serverless database pool, was added after the first draft at the owner's request). The proposed "domain, Resend and password reset" step was dropped by the owner, and Steps 28, 29 and 31 say what follows from having no domain: email confirmation stays off, and Open Graph and the sitemap use the `vercel.app` URL.
+- Stale references fixed in CLAUDE.md, spec.md (3.3, 14), DESIGN.md (4.2), TECH-STACK.md (constraints, password reset, Vercel readiness) and docs/rules/deployment.md. `.superpowers/` is untracked (files kept on disk) and gitignored.
+- CLAUDE.md gained a "Known pitfalls" section, a session-start reading rule, the no-domain rule, and a rule to update README.md when a step changes what is built.
+- Added the "Current state" block at the top of this file.

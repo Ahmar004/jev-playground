@@ -6,29 +6,33 @@ A playground to learn System 1 models like Jev through games, experiements, quiz
 
 Checkout @spec.md at root for the full product spec (it replaces docs/requirements.md, which stays as the verbatim brief).
 
-Current Reamining Budget for this project: 7000 pkr
+Current Reamining Budget for this project: 10,000 pkr
+Current remaining Anthropic API credits: $19.47 USD
+Current Usage of Jev: $0.0047 for 130, 831 tokens
 
 
 ## Rules:
 
-### Rule-A:
-Do efficient utilization of tokens, to avoid hitting limits, without compromizing on the quality of the system we are shipping. we have to ship fast and solid stuff.
-currently, 39% usage is done, and the 5 hour limit resets at 11:20, we need to ensure that we don't hit the limit by doing effective utlization of tokens.
+### Rule-0.01:
+We are now shipping this to the world, I would share this project once its solid enough into TypeSafe.ai's discord community which has about 100k+ people, I had already submitted the 8x hackathon version (before the deadline), now there's no such deadline, we have to make this system robust so that its fast, scalable, reliable, and secure.
 
-### Rule-B:
-Paid Anthrpoic API with 20 usd credits has been added in the .env.local, we have to make sure and ensure that we build the whole app without utilizing more than 20 usd, work in a way that we do all our work of recording for beginners and still the usage does not finish, so we don't have to buy more usage. Funds are limited...
-
-### Rule-0:
-This doc is not allowed to be edited without the approval user to maintain the well planned strategies that I had devised, feel free to ask questions and give proposals for any edits and then edit if approved by myself. Goal is just to make this app loved by millions across the globe one day I.A.
+### Rule-0.0:
+Do efficient utilization of tokens, to avoid hitting limits, without compromizing on the quality of the system we are shipping. we have to ship fast and solid stuff. Efficient utilization does not mean neglecting important stuff, just consume tokens efficiently.
 
 ### Rule-0.1:
-We have to stay within the current remaining budget for this project: 7000 pkr (about 25 usd, see the top of this doc), and Anthropic spend stays within the 20 usd credit (Rule-A). Only the GitHub repo is by 8x, rest all tools and apis are upon us to manage, we can utilize this payment for this project. Claude Code is already there, I have one week of Claude Code with me already. Lesser cost would be better for this project, unless it impacts the quality of the project (then we can even utilize all the remaining budget to make it as best as possible)
+Paid Anthrpoic API with 20 usd credits has been added in the .env.local, we have to make sure and ensure that we build the whole app without utilizing more than 20 usd, work in a way that we do all our work of recording for beginners and still the usage does not finish, so we don't have to buy more usage. Funds are limited...
 
 ### Rule-0.2:
+This doc is not allowed to be edited without the approval user to maintain the well planned strategies that I had devised, feel free to ask questions and give proposals for any edits and then edit if approved by myself. Goal is just to make this app loved by millions across the globe one day I.A.
+
+### Rule-0.3:
+We have to stay within the current remaining budget for this project: 10,000 pkr (see the top of this doc), and Anthropic spend stays within the 20 usd credit (Rule-0.1). The GitHub repo is now my personal repo, and all tools and apis are upon us to manage, we can utilize this payment for this project. Claude Code is already there, I have one week of Claude Code with me already. Lesser cost would be better for this project, unless it impacts the quality of the project (then we can even utilize all the remaining budget to make it as best as possible)
+
+### Rule-0.4:
 Ask questions from user with clarity, don't be brief when asking questions, otherwise user ends up understanding the qs in the wrong way.
 
 ### Rule-1:
-We have to ship fast, Remaining days in deadline: 2
+We have to ship fast. The 8x hackathon deadline (2026-10-03) has passed, so there is no deadline now (Rule-0.01), but every step still ships fast and solid.
 
 ### Rule-2:
 Maintain .claude-logs setup throughout the project.
@@ -52,7 +56,7 @@ If you come across any other feasible rules that we shall add here to make the s
 Never store API keys/secrets in browser's local storage, local storage is highly vulnerable, even a small injection by a hacker can steal those keys.
 
 ### Rule-9:
-localhost only for now, build everything for shipping it as a robust system one day (I would probably deploy it at Vercel later on by pushing the project to a personal repo of mine, and then connecting that to a Vercel domain and deploying it from there), hackathon does not requires it, but I am planning to do it in future, to let the amazing app available to users across the globe.
+localhost only until the Vercel deploy step (Step-29). This repo is now my personal repo, and the app will be hosted on Vercel at its free `vercel.app` URL; no custom domain is bought for now. Build everything so it runs on Vercel unchanged: no runtime file writes, no state in one process's memory, pooled database connections.
 
 ### Rule-10:
 Write clear, step-by-step setup instructions for every API and external service used in this project under @docs/api-setup-guide.md: creating the account and project, the settings to change, and which values go into .env.local. Add a service's section in the same step that adds the service.
@@ -105,5 +109,95 @@ Hardening: use systematic-debugging skill and end-to-end tests for testing all w
 
 ### Step-8:
 Write the README at root for submission: what is built, how to run it locally, the trade-offs made, and how AI was used to build it, and a talking-point outline for me for the Loom walkthrough video of this project at the end of the readme.
+
+<hr style="height:4px; background-color:Grey; border:none;">
+
+## Global launch phase (Rule-0.01)
+
+### Step-9:
+Docs and repo hygiene, no app code. Update the stale references in CLAUDE.md, spec.md, DESIGN.md, TECH-STACK.md and docs/rules/deployment.md: the $20 credit is "Rule-0.1", not "Rule-A"; the 2026-10-03 deadline is gone; "8x owns this repo, never deploy" is gone, because the repo is now the owner's; the budget matches the top of this doc. Stop tracking `.superpowers/` (the files stay on disk) and add it to `.gitignore`. The app behaves exactly the same afterwards.
+
+### Step-10:
+Shorter session starts, docs only. Add a "Current state" block (about 40 lines) at the top of docs/progress.md: what is built, what is open, the next step. Nothing below it is removed. Move the pitfalls scattered through progress.md into a short "Known pitfalls" section in CLAUDE.md.
+
+### Step-11:
+Level 6 in Developer mode (R14). With keys pasted, the router cards run live through the shared runner instead of showing recordings, labelled with the mode, model ID and run time. Tests first, plus an e2e test against intercepted providers. No Anthropic spend.
+
+### Step-12:
+Level 8 in Developer mode (R14). The user's own trick text runs live against Jev with their key; Jev's real answer is shown, and an unparseable reply counts as a miss (R44). Tests first, plus an e2e test against intercepted providers.
+
+### Step-13:
+Live results in Reveal. After a Developer mode run, Reveal shows the live run's numbers beside the recorded ones, each with its mode label, model ID and run time. Nothing new is saved.
+
+### Step-14:
+Prices for OpenAI and Google models. Add per-token prices from each provider's official pricing page to content/prices.json, with the date they were checked, so Developer mode shows a cost instead of "price unknown". Methodology names each price's source.
+
+### Step-15:
+Real-key check, part 1, with the owner at the PC: TypeSafe and Anthropic keys. Run one level live on localhost, check it through Claude-in-Chrome, and fix any response shape the faked tests missed. Costs cents of the credit (Rule-0.1).
+
+### Step-16:
+Real-key check, part 2: OpenAI, Google and OpenRouter (LLMs), only for the providers the owner has keys for. Note any skipped provider in progress.md.
+
+### Step-17:
+Jev through an OpenRouter key (spec 3.4). Send one real request, build the provider from the real response shape, then add tests and the Keys panel option like the other providers. Needs the owner's OpenRouter key.
+
+### Step-18:
+Sandbox form gaps. Add Form fields for Noul criteria and Choice option descriptions, which only the JSON view can set today, kept in sync with the JSON view.
+
+### Step-19:
+Rate limits in Postgres. Limit the `/api/jev` pass-through and sign-up/sign-in per user and per IP, with counters in a table (no in-memory state, so it works on Vercel). Shares already have a per-user daily limit. A limited request shows a clear toast. Tests first.
+
+### Step-20:
+Security review. Run the security-review skill over the whole app and fix the findings: auth and ownership guards on every Server Action and route, CSP and security headers (HSTS, Referrer-Policy, frame-ancestors), `pnpm audit`, and a key-leak recheck (Rule-8).
+
+### Step-21:
+Account self-service and privacy. "Delete my account" on Profile removes progress, attempts, XP, badges, shares and the Supabase Auth user, behind a confirm dialog. A Privacy page says what we store and never store (spec 13). Server-side ownership checks and an e2e test.
+
+### Step-22:
+GitHub CI. The repo is the owner's now, so add a free GitHub Actions workflow that runs lint, typecheck, format:check, check:secrets, the unit tests and the build on every push. local-review stays the gate before a commit.
+
+### Step-23:
+Stable e2e auth. Sign in once in a Playwright setup project and reuse the stored session, so a full run no longer trips Supabase's sign-in rate limit. Also fix the theme screenshots: set the theme key and wait for the rise-in animation, so both themes are actually proven.
+
+### Step-24:
+Fewer database calls per page (R75). Merge the header's 3+ progress queries into one, or reuse data the page already loads. Unit test plus a manual page-load check. No load test in this step.
+
+### Step-25:
+Rerun the local load test (R78). On an idle PC, run k6 at 400 and 1,000 users against a fresh build, replace the results on Methodology, and add one honest line on what a single Node process can serve.
+
+### Step-26:
+Accessibility audit (R88-R91). Run axe through Playwright on every page, in both themes, at desktop and phone width, and fix what it reports.
+
+### Step-27:
+Page-load check (R79, under 2 s on a phone). Run Lighthouse mobile on Home, one Level, one VS game, Arena and Sandbox from the production build. Fix the worst 2-3 causes and record before and after numbers.
+
+### Step-28:
+Production Supabase. Create a separate free Supabase project for production, apply the migrations, run db:run-once and check:rls against it. Email confirmation stays off: without a custom domain there is no email sender of our own, and Supabase's built-in sender allows only a few emails an hour; Step-19's rate limits guard sign-ups instead. Add the steps to docs/api-setup-guide.md.
+
+### Step-29:
+Vercel deploy on the free `vercel.app` URL (no custom domain). Import the repo into Vercel, set the env vars (`NEXT_PUBLIC_APP_URL` is the `vercel.app` URL, also added to Supabase's allowed redirect URLs), put the function region next to the database, and point Sentry and PostHog at production. Update CLAUDE.md "Local now, Vercel later" and docs/rules/deployment.md. Smoke-test every flow on the live URL through Claude-in-Chrome.
+
+### Step-30:
+Database connection pool for serverless. Each Vercel function instance opens its own pool of up to 40 connections (`POOL_MAX_CONNECTIONS` in `src/server/db/client.ts`, raised from 10 in Step-7 because one local process served every user). A few busy instances together could pass the free Supabase pooler's limit of about 200 clients, and new requests would then fail with "too many clients" during a Discord traffic spike. The real Postgres connections behind the pooler are few anyway, so a large pool per instance only uses up client slots faster. The fix is small and free:
+- Read the pool size from an env var. Keep 40 locally and use about 5 on Vercel.
+- Close idle connections quickly.
+- Use Vercel's recommended helper (`attachDatabasePool` from `@vercel/functions`), so an instance releases its connections when it is suspended. That is a new package, so ask the owner before adding it.
+- Step-24 (fewer queries per page) also helps, because each page holds a connection for less time.
+No Supabase upgrade is needed for this. Upgrade to Pro ($25 a month, about 7,000 PKR) only if the Vercel load test (Step-32) or real launch traffic shows the database maxed out (pooler errors, CPU stuck at 100%).
+
+### Step-31:
+SEO and sharing basics for the `vercel.app` URL: page titles and descriptions, Open Graph images (so links shared on Discord show a card), `sitemap.xml` and `robots.txt` built from `NEXT_PUBLIC_APP_URL`. Shared result pages stay noindex (R87).
+
+### Step-32:
+Load test on Vercel. Run k6 against the live `vercel.app` URL, inside the free-tier limits, and publish the numbers on Methodology next to the local ones.
+
+### Step-33:
+Runbook and monitoring, docs plus config. Write docs/runbook.md: free Supabase projects pause after 7 days without activity and how to restore one, key rotation, what to do when the Anthropic credit runs low, and where Sentry alerts go. Set up Sentry alert rules and one PostHog funnel (posthog-funnel-builder skill).
+
+### Step-34:
+Richer scenes for the 4 P0 VS games (spec 7.2). Replace the chip animations with each game's own metaphor, built in Motion, reduced-motion safe, checked by screenshot in both themes at desktop and phone width.
+
+### Step-35:
+The same richer scenes for the 4 P1 VS games.
 
 <hr style="height:4px; background-color:Grey; border:none;">

@@ -149,7 +149,7 @@ Recordings ship per page, not in a shared bundle (R79). A page's server componen
 - It reads `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY` from `.env.local`. These are owner-only, documented in `.env.example`, and never read by app code.
 - It records Jev plus Haiku 4.5, Sonnet 5.5 and Opus 5.5 for every item, at 4 lanes, skipping tasks whose `taskHash` is unchanged.
 - `--dry-run` estimates input tokens (characters / 4) times price, plus an output allowance of 500 tokens per LLM call, and spends nothing.
-- A real run prints each call, then this run's cost and the cost of every recording on disk against the $20 Anthropic credit (ROADMAP Rule-A). The CLI refuses to start a run whose dry-run estimate would push that total past $20.
+- A real run prints each call, then this run's cost and the cost of every recording on disk against the $20 Anthropic credit (ROADMAP Rule-0.1). The CLI refuses to start a run whose dry-run estimate would push that total past $20.
 - A run never edits a result: an unparseable or malformed answer is stored as it happened. A provider-side failure (rate limit, overload, network) stops that model's run and writes nothing, because it measures the account, not the model.
 - The owner removes the keys from `.env.local` when recording is done (R22).
 - Every recording run costs money, so Step-6 asks the user before each one and shows the dry-run cost first.
