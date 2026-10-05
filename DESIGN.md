@@ -183,6 +183,7 @@ The mode lives in a React context and is not saved. Every page load starts in Be
 - It logs only status and duration. It never logs, stores or sends to Sentry the key or the body (R18).
 - It is a hand-written handler, not `createApiRoute`, because the factory's error path reads the body. It runs on Node, the default: `export const runtime` is not allowed with `cacheComponents`.
 - `GET /api/jev` forwards to `https://api.typesafe.ai/v1/models` for the Keys panel's Test.
+- Rate limits (Step-19): each call counts against the user (600 a minute) and the caller's IP (1,200 a minute) in the `rate_limit_counters` table (`src/server/lib/rate-limit.ts`, fixed windows, one atomic upsert, keys stored as SHA-256 hashes). Over a limit it answers 429 with `Retry-After`, before any call to TypeSafe. Sign-in is limited per email and per IP, sign-up per IP (`RATE_LIMITS` in `src/lib/constants.ts`). A database failure lets the request through. The machine's own loopback address is never limited.
 
 ### 5.4 Browser hardening
 

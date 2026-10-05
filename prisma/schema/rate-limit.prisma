@@ -1,0 +1,14 @@
+// Fixed-window request counters for the rate limits (spec R77, ROADMAP Step-19).
+// They live in Postgres, not in a process, so every Vercel instance shares
+// them. `key_hash` is a SHA-256 of the user id, email or IP, so no raw email
+// or address is stored. Rows older than a day are purged on the next new window.
+model RateLimitCounter {
+	bucket      String
+	keyHash     String   @map("key_hash")
+	windowStart DateTime @map("window_start") @db.Timestamptz(6)
+	count       Int
+
+	@@id([bucket, keyHash, windowStart])
+	@@index([windowStart])
+	@@map("rate_limit_counters")
+}

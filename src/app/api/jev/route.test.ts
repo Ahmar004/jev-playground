@@ -12,13 +12,23 @@ vi.mock('@/server/lib/logger', () => ({
 	}
 }))
 
+const limiter = vi.hoisted(() => ({ check: vi.fn() }))
+vi.mock('@/server/lib/rate-limit', () => ({ checkRateLimit: limiter.check }))
+
+import { RATE_LIMITS } from '@/lib/constants'
 import { GET, POST } from './route'
 
 const KEY = 'ts-secret-key-987'
 const BODY = JSON.stringify({ model: 'jev-latest', state: 'secret ticket text', questions: {} })
 
-function request(init: { method: string; auth?: string | null; body?: string }): Request {
+function request(init: {
+	method: string
+	auth?: string | null
+	body?: string
+	ip?: string
+}): Request {
 	const headers: Record<string, string> = {}
+	if (init.ip) headers['x-forwarded-for'] = init.ip
 	if (init.auth !== null) headers.authorization = init.auth ?? `Bearer ${KEY}`
 	return new Request('http://localhost:3000/api/jev', {
 		method: init.method,
@@ -30,6 +40,8 @@ function request(init: { method: string; auth?: string | null; body?: string }):
 beforeEach(() => {
 	state.signedIn = true
 	logged.lines = []
+	limiter.check.mockReset()
+	limiter.check.mockResolvedValue({ allowed: true, retryAfterSec: 0 })
 })
 afterEach(() => vi.unstubAllGlobals())
 
@@ -117,4 +129,37 @@ describe('/api/jev', () => {
 		expect(text).not.toContain('secret ticket text')
 		expect(text).toContain('200')
 	})
+
+	it('counts each call against the user and, when the IP is known, the IP', async () => {
+		vi.stubGlobal(
+			'fetch',
+			vi.fn(async () => new Response('{}', { status: 200 }))
+		)
+		await POST(request({ method: 'POST', body: BODY, ip: '203.0.113.7' }))
+		expect(limiter.check).toHaveBeenCalledWith(RATE_LIMITS.jevPerUser, 'u1')
+		expect(limiter.check).toHaveBeenCalledWith(RATE_LIMITS.jevPerIp, '203.0.113.7')
+		limiter.check.mockClear()
+		await POST(request({ method: 'POST', body: BODY }))
+		expect(limiter.check).toHaveBeenCalledTimes(1)
+	})
+
+	it.each([
+		['user', RATE_LIMITS.jevPerUser.bucket],
+		['IP', RATE_LIMITS.jevPerIp.bucket]
+	])(
+		'answers 429 with Retry-After when the %s is over its limit, without calling TypeSafe',
+		async (_who, bucket) => {
+			limiter.check.mockImplementation(async (rule: { bucket: string }) =>
+				rule.bucket === bucket
+					? { allowed: false, retryAfterSec: 17 }
+					: { allowed: true, retryAfterSec: 0 }
+			)
+			const fetchMock = vi.fn()
+			vi.stubGlobal('fetch', fetchMock)
+			const response = await POST(request({ method: 'POST', body: BODY, ip: '203.0.113.7' }))
+			expect(response.status).toBe(429)
+			expect(response.headers.get('retry-after')).toBe('17')
+			expect(fetchMock).not.toHaveBeenCalled()
+		}
+	)
 })

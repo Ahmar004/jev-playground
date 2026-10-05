@@ -6,7 +6,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.46 left (Step-15's live check spent about $0.011), and recordings so far cost $0.49.
 
-**Built (Steps 0-16 and 18; 17 is blocked):**
+**Built (Steps 0-16, 18 and 19; 17 is blocked):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
@@ -22,7 +22,6 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 - Promotional prices end: gpt-5.6-sol on 2026-11-21, gemini-3.6/3.7/3.8-flash on 2026-12-31. After that those models show "price unknown" until someone rechecks the pricing pages and updates `content/prices.json`.
 - Jev through an OpenRouter key isn't built (Step-17 is blocked on the owner's OpenRouter key; see its entry below).
 - No real-key test for OpenAI, Google or OpenRouter (Step-16 skipped them: no keys), and none for level 8's live trick. Run these when a key or the owner is available.
-- No rate limits on `/api/jev` or sign-in/sign-up (shares have a per-user daily limit).
 - No account deletion and no Privacy page.
 - CI is off.
 - e2e dark screenshots render light.
@@ -34,7 +33,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-19 (rate limits in Postgres). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
+**Next:** Step-20 (security review). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -786,4 +785,16 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - The Form now has a "When is the answer true / false? (optional)" field pair on a Noul and a "What does <option> mean? (optional)" field per Choice option. They edit the same `SandboxDoc` as the JSON view (R48). A blank Noul field removes its key, and no criteria at all removes `criteria`; a blank option description is `null`. Typed JSON that starts with { or [ is stored as structured data, like the state field.
 - Helpers in `src/features/sandbox/doc.ts`: `criterionText`, `withCriterion`, `optionDescriptionText`, `withOptionDescription`. Tests: `doc.test.ts` (4 new), new `form-editor.test.tsx` (4), and an e2e test in `e2e/sandbox.spec.ts` (Form to JSON and back). Score levels already were their own descriptions, so they needed nothing.
 - Gates: lint, typecheck, format:check, check:secrets, 640 Vitest plus node:test, Sandbox e2e 8/8 including the four theme and width screenshots (no horizontal scroll).
+- Real-API check added after the keys went into the owner's tab: a real Jev call (`jev-1.13.0`, about $0.00002) accepted a Noul with both criteria, a Noul with only `false`, and a Choice with mixed descriptions and `null`, and the answers kept their usual shape. The keyed tab itself still runs the 09:08 build (before Steps 16-19), so a click-through of the new Form fields in it waits for a rebuild.
 - NOT run: a production `pnpm build`. The owner's `pnpm start` server on port 3000 serves the keyed tab (Rule-XYZ) and a build replaces `.next` under it. Instead the e2e ran against `next dev -p 3100` (Next 16 keeps dev output in `.next/dev`, so it coexists with a running `next start`), then that dev server was stopped. Run the build when the owner is back, or in a step that may restart the server.
+
+## Step-19 - rate limits in Postgres (2026-10-05) - done
+
+- Skills: test-driven-development (tests first, by hand), local-review gates by hand. No subagents, no Anthropic spend. ROADMAP Rule-XYZ was rewritten at the owner's request (four tabs stay open, the localhost tab holds the keys, no clearing).
+- New table `rate_limit_counters` (`prisma/schema/rate-limit.prisma`, migrations `rate_limit` and `rate_limit_rls`, applied to the dev database; `check:rls` passes on 10 tables). One row per bucket, key hash and fixed window; `checkRateLimit` in `src/server/lib/rate-limit.ts` does one atomic Prisma upsert and returns allowed or the seconds to wait. Keys are SHA-256 hashes, so no raw email or IP is stored. Rows older than 24 h are deleted when a key starts a new window. A database error lets the request through and logs a warning.
+- Limits (`RATE_LIMITS`, `src/lib/constants.ts`): `/api/jev` 600 a minute per user and 1,200 per IP (answers 429 with `Retry-After`, before any TypeSafe call; the client shows its existing rate-limit alert); sign-in 10 per 15 min per email and 30 per IP; sign-up 20 an hour per IP. A rate-limited sign-in or sign-up shows its message and a toast.
+- Surprise found by e2e: the dev and local production servers add `x-forwarded-for: ::1`, so localhost does have an "IP". `clientIp` now treats loopback (`127.0.0.1`, `::1`, `::ffff:127.0.0.1`) as no address, so local runs and the e2e suite are never IP-limited; the per-email limit still is (an e2e test proves the 11th attempt is stopped).
+- Checked against the real database with a temporary test (deleted): sequential hits block at the limit, and 10 parallel hits let exactly 4 through at a limit of 4.
+- Tests: `rate-limit.test.ts`, `client-ip.test.ts`, new cases in the `/api/jev` route test, `auth.test.ts` and `use-auth-form.test.ts`; e2e `shell.spec.ts` (limit plus toast). Gates: lint, typecheck, format:check, check:secrets, check:env, check:standards (24), 662 Vitest plus node:test, shell and developer-mode e2e 20/20 against `next dev -p 3100`. No production build (see Step-18: the owner's `pnpm start` serves the keyed tab).
+- For Step-21's Privacy page: counters hold hashed user ids, emails and IPs for at most a day.
+- Left alone: `error-copy.ts` now says "Too many requests were sent to <provider>" because the same 429 can come from our limit or the provider's.

@@ -105,6 +105,22 @@ test('wrong password shows a plain-English error', async ({ page }) => {
 	)
 })
 
+test('too many sign-in attempts for one email are limited, with a toast', async ({ page }) => {
+	await page.goto('/sign-in')
+	await page.getByLabel('Email').fill(freshEmail())
+	await page.getByLabel('Password').fill('not-the-password')
+	// The limit is 10 attempts per email in 15 minutes (RATE_LIMITS.signInPerEmail); the 11th is stopped.
+	for (let attempt = 0; attempt < 11; attempt += 1) {
+		const answered = page.waitForResponse((response) => response.request().method() === 'POST')
+		await page.getByRole('button', { name: 'Sign in' }).click()
+		await answered
+	}
+	await expect(page.getByRole('alert').filter({ hasText: /\S/ }).first()).toContainText(
+		/Too many attempts\. Wait \d+ seconds/
+	)
+	await expect(page.getByText('Slow down a little', { exact: true })).toBeVisible()
+})
+
 test('the theme switch flips between light and dark', async ({ page }) => {
 	await page.emulateMedia({ colorScheme: 'light' })
 	await page.goto('/sign-in')

@@ -329,6 +329,22 @@ export const SHARE_LIMITS = {
 	windowMs: 24 * 60 * 60 * 1000
 } as const
 
+// Rate limits (ROADMAP Step-19), counted per fixed window in Postgres. The Jev
+// pass-through allows far more than a race or batch needs (about 80 calls); the
+// limits stop a script, not a player. Sign-up and sign-in are limited per IP and
+// per email, and an IP the server cannot see (or that is this machine's own) is not limited.
+const MINUTE_MS = 60 * 1000
+const HOUR_MS = 60 * MINUTE_MS
+export const RATE_LIMITS = {
+	jevPerUser: { bucket: 'jev_user', limit: 600, windowMs: MINUTE_MS },
+	jevPerIp: { bucket: 'jev_ip', limit: 1200, windowMs: MINUTE_MS },
+	signInPerEmail: { bucket: 'sign_in_email', limit: 10, windowMs: 15 * MINUTE_MS },
+	signInPerIp: { bucket: 'sign_in_ip', limit: 30, windowMs: 15 * MINUTE_MS },
+	signUpPerIp: { bucket: 'sign_up_ip', limit: 20, windowMs: HOUR_MS }
+} as const
+/** Counter rows older than this are deleted (they can no longer matter to any window). */
+export const RATE_LIMIT_PURGE_MS = 24 * HOUR_MS
+
 // Arena batch mode (R45): a preset whose task has at least this many items can
 // run as a batch. Smaller tasks are too short to show speed and cost at scale.
 export const ARENA_BATCH_MIN_ITEMS = 12

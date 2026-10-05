@@ -14,7 +14,7 @@ export function providerErrorMessage(kind: ProviderErrorKind, provider: Provider
 		case PROVIDER_ERROR_KINDS.forbidden:
 			return `This ${name} key is not allowed to do that. It may lack permission for this model.`
 		case PROVIDER_ERROR_KINDS.rateLimited:
-			return `${name} says you have made too many requests. Wait a moment, then retry.`
+			return `Too many requests were sent to ${name}. Wait a moment, then retry.`
 		case PROVIDER_ERROR_KINDS.overloaded:
 			return `${name} is overloaded right now. Retry in a moment.`
 		case PROVIDER_ERROR_KINDS.malformed:

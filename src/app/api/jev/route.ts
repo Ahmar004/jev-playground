@@ -1,7 +1,10 @@
+import { RATE_LIMITS } from '@/lib/constants'
 import { PROVIDER_TIMEOUT_MS } from '@/runner/providers/provider-error'
 import { TYPESAFE_URL } from '@/runner/providers/typesafe'
 import { getSession } from '@/server/auth/session'
+import { clientIp } from '@/server/lib/client-ip'
 import { log } from '@/server/lib/logger'
+import { checkRateLimit } from '@/server/lib/rate-limit'
 
 // The pass-through for TypeSafe-key Jev calls: TypeSafe blocks browser calls
 // (spec 2.3), so the browser sends them here (DESIGN 5.3, R18). It forwards to
@@ -14,6 +17,7 @@ const MAX_BODY_BYTES = 256 * 1024
 const HTTP = {
 	badRequest: 400,
 	unauthorized: 401,
+	tooManyRequests: 429,
 	tooLarge: 413,
 	badGateway: 502,
 	gatewayTimeout: 504
@@ -25,9 +29,27 @@ function jsonError(message: string, status: number): Response {
 }
 
 async function forward(request: Request, url: string, method: 'GET' | 'POST'): Promise<Response> {
-	if (!(await getSession())) return jsonError('Please sign in to continue.', HTTP.unauthorized)
+	const session = await getSession()
+	if (!session) return jsonError('Please sign in to continue.', HTTP.unauthorized)
 	const authorization = request.headers.get('authorization')
 	if (!authorization) return jsonError('Add your TypeSafe key first.', HTTP.badRequest)
+
+	// Per user and per IP (Step-19), counted in Postgres; an IP we cannot see is not limited.
+	const ip = clientIp(request.headers)
+	const limits = await Promise.all([
+		checkRateLimit(RATE_LIMITS.jevPerUser, session.userId),
+		ip ? checkRateLimit(RATE_LIMITS.jevPerIp, ip) : { allowed: true, retryAfterSec: 0 }
+	])
+	const blocked = limits.find((limit) => !limit.allowed)
+	if (blocked) {
+		return new Response(
+			JSON.stringify({ error: 'Too many requests. Wait a moment and try again.' }),
+			{
+				status: HTTP.tooManyRequests,
+				headers: { ...JSON_HEADERS, 'Retry-After': String(blocked.retryAfterSec) }
+			}
+		)
+	}
 
 	let body: string | undefined
 	if (method === 'POST') {

@@ -1,12 +1,15 @@
 'use server'
 
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
-import { PASSWORD_MIN_LENGTH } from '@/lib/constants'
+import { PASSWORD_MIN_LENGTH, RATE_LIMITS } from '@/lib/constants'
 import { AppError } from '@/lib/errors/app-error'
 import { ROUTES } from '@/lib/links'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { provisionUser } from '@/server/auth/provision-user'
+import { clientIp } from '@/server/lib/client-ip'
+import { assertWithinLimit, type RateLimitRule } from '@/server/lib/rate-limit'
 import { validatedAction } from './validated-action'
 
 const email = z.string().trim().toLowerCase().email()
@@ -47,9 +50,24 @@ function toAppError(failure: AuthFailure): Error {
 	return new Error(`Supabase auth failed: ${failure.code ?? 'unknown'} ${failure.message}`)
 }
 
+/** The caller's IP, or null where the platform gives none (or it is this machine's own). */
+async function callerIp(): Promise<string | null> {
+	return clientIp(await headers())
+}
+
+/** Counts one attempt against the IP's limit; no IP, no limit. */
+async function limitByIp(rule: RateLimitRule): Promise<void> {
+	const ip = await callerIp()
+	if (ip) await assertWithinLimit(rule, ip)
+}
+
 export const signIn = validatedAction({
 	input: signInCredentials,
 	handler: async (input): Promise<never> => {
+		await Promise.all([
+			assertWithinLimit(RATE_LIMITS.signInPerEmail, input.email),
+			limitByIp(RATE_LIMITS.signInPerIp)
+		])
 		const supabase = await createServerSupabaseClient()
 		const { data, error } = await supabase.auth.signInWithPassword(input)
 		if (error || !data.user?.email) throw toAppError(error ?? { message: 'no user returned' })
@@ -61,6 +79,7 @@ export const signIn = validatedAction({
 export const signUp = validatedAction({
 	input: signUpCredentials,
 	handler: async (input): Promise<never> => {
+		await limitByIp(RATE_LIMITS.signUpPerIp)
 		const supabase = await createServerSupabaseClient()
 		const { data, error } = await supabase.auth.signUp(input)
 		if (error || !data.user?.email) throw toAppError(error ?? { message: 'no user returned' })
