@@ -21,7 +21,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 - Promotional prices end: gpt-5.6-sol on 2026-11-21, gemini-3.6/3.7/3.8-flash on 2026-12-31. After that those models show "price unknown" until someone rechecks the pricing pages and updates `content/prices.json`.
 - Jev through an OpenRouter key isn't built.
-- No real-key test yet for OpenAI, Google or OpenRouter (Step-16), or for level 8's live trick (Step-15 could not drive it).
+- No real-key test for OpenAI, Google or OpenRouter (Step-16 skipped them: no keys), and none for level 8's live trick. Run these when a key or the owner is available.
 - The Sandbox form lacks Noul criteria and Choice option descriptions.
 - No rate limits on `/api/jev` or sign-in/sign-up (shares have a per-user daily limit).
 - No account deletion and no Privacy page.
@@ -35,7 +35,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-16 (real-key check, part 2: OpenAI, Google and OpenRouter, only for the providers the owner has keys for). The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it.
+**Next:** Step-17 (Jev through an OpenRouter key; it needs the owner's OpenRouter key, so ask first or move on if there is none). The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -766,3 +766,11 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Tests: `provider-error.test.ts` (timeout, own abort, in-time answer, 504 mapping, run stops), `/api/jev` 504 on a hung upstream, the `limit=1000` URL in `live-providers.test.ts` and `keys.test.tsx`.
 - Gates: lint, typecheck, format:check, test (114 node:test plus 632 Vitest), build, e2e developer-mode and arena 12/12 against `pnpm start`.
 - ROADMAP gained Rule-XYZ (owner's exact request): the owner is away, the localhost tab holds the keys, and the Supabase, Sentry and PostHog tabs are open for checks.
+
+## Step-16 - real-key check, part 2: OpenAI, Google, OpenRouter (2026-10-05) - skipped for lack of keys
+
+- No key for any of the three: `.env.local` holds only TypeSafe and Anthropic (the recording keys), and Rule-XYZ says only those two were pasted into the localhost tab. Per the step ("only for the providers the owner has keys for"), OpenAI, Google and OpenRouter LLM calls were not run live. Nothing was spent.
+- Not checked live, so the faked-test shapes are still unproven against the real APIs: OpenAI chat and model list, Google generateContent and model list (`x-goog-api-key` header), OpenRouter chat completions.
+- Free check done: OpenRouter's public `GET /api/v1/models` (no key) returned 200 with `access-control-allow-origin: *`, and all 466 models pass `openRouterSchema` in `src/runner/providers/model-list.ts`. 7 routers carry a negative price, which `perMillion` already maps to no price.
+- Claude-in-Chrome limit found: this session's tools opened their own empty tab group and could not see the owner's keyed localhost tab, Supabase, Sentry or PostHog tabs. Nothing was navigated, reloaded or closed.
+- No code or content changed. To finish this step later, the owner needs a key for each provider (or a cheap test key) and the Keys panel in a tab the agent can drive.
