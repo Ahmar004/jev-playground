@@ -54,6 +54,13 @@ export function getLevel(id: string): Level | undefined {
 	return LEVELS.get(id)
 }
 
+/** The level after this one in path order, or undefined after the last level. */
+export function nextLevel(levels: ReadonlyMap<string, Level>, id: string): Level | undefined {
+	const ordered = [...levels.values()]
+	const index = ordered.findIndex((level) => level.id === id)
+	return index === -1 ? undefined : ordered[index + 1]
+}
+
 export function getCheckQuestion(
 	questionId: string
 ): { level: Level; question: CheckQuestion } | undefined {

@@ -6,21 +6,22 @@ Read only this block and all the relevant sections a step needs (Rule-0.0). The 
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.46 left (Step-15's live check spent about $0.011), and recordings so far cost $0.49.
 
-**Built (Steps 0-35, all done; Step-16 skipped real-key checks of OpenAI, Google and OpenRouter-as-LLM for lack of keys; Step-17 was blocked first and finished later the same day, see its "done" entry):**
+**Built (Steps 0-36, all done; Step-16 skipped real-key checks of OpenAI, Google and OpenRouter-as-LLM for lack of keys; Step-17 was blocked first and finished later the same day, see its "done" entry):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports Jev through a TypeSafe key or an OpenRouter key (TypeSafe wins when both are set), and LLMs through Anthropic, OpenAI, Google and OpenRouter (Step-17).
 - After a Developer mode run, Reveal shows the last finished live run beside the recordings (races, level 6 cards, level 8 tricks), labelled; tab memory only.
 - `content/prices.json` prices Jev, the Claude models and every OpenAI and Google text model (57 entries, checked 2026-10-04; Step-17 added the dated OpenRouter Jev build on 2026-10-05); OpenRouter models use OpenRouter's live list.
-- Tests: 754 Vitest, 114 node:test and 114 Playwright e2e, covering every flow in DESIGN 15.
+- Tests: 782 Vitest, 114 node:test and 115 Playwright e2e, covering every flow in DESIGN 15.
 - k6 locally (2026-10-05): 400 users median 214 ms, p95 583 ms, target met; 1,000 users median 6.7 s, p95 10.1 s, no failed requests but the target is missed (one Node process is CPU-bound at about 86 pages a second).
 - The public README.
 - A first-visit guide (Step-35, `src/features/guide/`): a 6-step welcome tour on Home that ends on "Start here: Play level 1", and one-time tips on a level's Predict, Reveal ("See every item") and Check tabs. Saved per account in `users.guide_seen`; replay from the account menu ("Take the tour") or Home ("Take a guide tour").
+- A level's Check tab ends with "Play next level" beside "Back to Path" once both questions are answered (Step-36); level 8, the last, shows only Back to Path.
 - Every VS game has its own scene (Steps 33 and 34), drawn from the race state only: gate, document, duel and rope for the P0 games; runners, belts, falling answers (with the live threshold slider) and checkpoint for the P1 games. `docs/runbook.md` and a PostHog funnel cover launch operations (Step-32).
 - SEO and link previews (Step-31): every page has a title, the root layout sets the description and the Open Graph and Twitter card, `src/app/opengraph-image.tsx` draws the 1200x630 image, and `robots.txt` and `sitemap.xml` are built from `NEXT_PUBLIC_APP_URL`.
 - Real keys checked (Step-15): TypeSafe and Anthropic, level 1 live on localhost, every call 200 with no shape fixes needed. A provider call now times out after 60 s (`PROVIDER_TIMEOUT_MS`) and stops the run with a `timeout` error; `/api/jev` answers 504 on a hung TypeSafe call.
 
-**Open (ROADMAP Steps 0-35 are done; these are the loose ends):**
+**Open (ROADMAP Steps 0-36 are done; these are the loose ends):**
 
 - Step-35's database change is on production (migration `guide_seen`, run-once backfill, `check:rls` 10 tables, 2026-10-05) and the code is pushed (auto-deploys); the owner tests the live URL.
 
@@ -32,7 +33,7 @@ Read only this block and all the relevant sections a step needs (Rule-0.0). The 
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** ROADMAP Step-36 ("Play next level" on a level's Check tab). Steps 31-35 are pushed to `main`, which deploys; then paste the live URL into a Discord channel and check the card. Remaining ideas are the loose ends above (a smaller initial bundle for Lighthouse, a manual accessibility pass).
+**Next:** ROADMAP Step-37 (an info note beside "See every item" on Reveal). Steps 31-36 are pushed to `main`, which deploys; then paste the live URL into a Discord channel and check the card. Remaining ideas are the loose ends above (a smaller initial bundle for Lighthouse, a manual accessibility pass).
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -942,3 +943,10 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - e2e: `signUp` skips the tour (and waits for the save) unless `{ keepTour: true }`, so older tests are unaffected. New `e2e/guide.spec.ts`: the full tour into level 1 with all three tips and persistence after reload, skip plus replay from the account menu, and screenshots of two steps at desktop and phone in both themes. The axe audit scans the open tour too.
 - Verified on a production build: Vitest 778/778, Playwright 124/124 (axe included), lint, typecheck and format clean. The Chrome extension was not connected, so the visual check used Playwright screenshots.
 - Shipped with the owner's approval: production got the migration, the run-once backfill and a passing `check:rls` (10 tables) first, then the push to `main` deployed it. The owner tests the live URL.
+
+## Step-36 - Play next level on Check (2026-10-06) - done
+
+- `nextLevel(levels, id)` in `src/content/levels.ts` returns the level after one in path order. The level page passes it to `LevelStepper`, and `CheckStep` shows "Play next level" (a link, primary) beside "Back to Path" (now outline) once every question is answered. Level 8 has no next level, so it shows Back to Path alone, as before.
+- `LevelStepper` is now keyed by user and level, so going from one level straight to the next always starts with fresh widget, opponent and live-run state.
+- The Check tip now says "Then play the next level, or go back to the path."
+- Tests: unit tests for `nextLevel` and the Check buttons, and an e2e test in `e2e/progress.spec.ts` that clicks Play next level and lands on level 2's Learn. Screenshots checked in both themes at desktop and phone width. No database change, so nothing to apply on production.

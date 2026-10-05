@@ -65,6 +65,7 @@ function stepper(initialProgress: LevelProgressView = freshProgress) {
 				recordings={[jevRecording, opusRecording]}
 				initialProgress={initialProgress}
 				guideSeen={[...GUIDE_PART_LIST]}
+				nextLevel={null}
 			/>
 		</QueryClientProvider>
 	)

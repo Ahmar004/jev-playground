@@ -44,13 +44,15 @@ export function LevelStepper({
 	tasks,
 	recordings,
 	initialProgress,
-	guideSeen
+	guideSeen,
+	nextLevel
 }: {
 	level: Level
 	tasks: Task[]
 	recordings: Recording[]
 	initialProgress: LevelProgressView
 	guideSeen: GuidePart[]
+	nextLevel: { id: string; title: string } | null
 }) {
 	const { step, goTo } = useLevelStep()
 	const { mode, setMode } = useMode()
@@ -159,6 +161,7 @@ export function LevelStepper({
 					onAnswer={answer}
 					onGoToReveal={() => goTo(LEVEL_STEPS.reveal)}
 					onBackToPath={() => router.push(ROUTES.path)}
+					nextLevel={nextLevel}
 				/>
 			)}
 			<LevelTips step={step} seen={guideSeen} />

@@ -13,7 +13,11 @@ const only = [first]
 
 function renderCheck(
 	answers: LevelProgressView['answers'] = {},
-	extra: { levelDone?: boolean; pendingQuestionId?: string | null } = {}
+	extra: {
+		levelDone?: boolean
+		pendingQuestionId?: string | null
+		nextLevel?: { id: string; title: string } | null
+	} = {}
 ) {
 	const onAnswer = vi.fn()
 	const onBackToPath = vi.fn()
@@ -27,6 +31,7 @@ function renderCheck(
 			onAnswer={onAnswer}
 			onGoToReveal={onGoToReveal}
 			onBackToPath={onBackToPath}
+			nextLevel={extra.nextLevel ?? null}
 		/>
 	)
 	return { onAnswer, onBackToPath, onGoToReveal }
@@ -90,6 +95,24 @@ describe('CheckStep', () => {
 		expect(screen.getByRole('button', { name: 'Back to Path' })).toBeInTheDocument()
 	})
 
+	it('offers Play next level as a link to the next level once every question is answered', () => {
+		const nextLevel = { id: 'write-me-a-poem', title: 'Write me a poem' }
+		renderCheck({}, { nextLevel })
+		expect(screen.queryByRole('link', { name: 'Play next level' })).not.toBeInTheDocument()
+		renderCheck({ [first.id]: { optionId: 'a', correct: true } }, { levelDone: true, nextLevel })
+		expect(screen.getByRole('link', { name: 'Play next level' })).toHaveAttribute(
+			'href',
+			'/levels/write-me-a-poem'
+		)
+		expect(screen.getByRole('button', { name: 'Back to Path' })).toBeInTheDocument()
+	})
+
+	it('offers no Play next level on the last level', () => {
+		renderCheck({ [first.id]: { optionId: 'a', correct: true } }, { levelDone: true })
+		expect(screen.queryByRole('link', { name: 'Play next level' })).not.toBeInTheDocument()
+		expect(screen.getByRole('button', { name: 'Back to Path' })).toBeInTheDocument()
+	})
+
 	it('points to Reveal when every question is answered but the level is not done', async () => {
 		const { onGoToReveal } = renderCheck({ [first.id]: { optionId: 'a', correct: true } })
 		expect(screen.getByText('Reach Reveal to finish this level.')).toBeInTheDocument()
@@ -105,7 +128,8 @@ describe('CheckStep', () => {
 			levelDone: false,
 			onAnswer,
 			onGoToReveal: () => undefined,
-			onBackToPath: () => undefined
+			onBackToPath: () => undefined,
+			nextLevel: null
 		}
 		const { rerender } = render(<CheckStep {...props} answers={{}} />)
 		await userEvent.click(screen.getByRole('radio', { name: 'Option B' }))

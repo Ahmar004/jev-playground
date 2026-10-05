@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildLevelMap, getCheckQuestion } from './levels'
+import { buildLevelMap, getCheckQuestion, nextLevel } from './levels'
 import { testLevel } from './testing/levels'
 
 const TASK_IDS = new Set(['test-choice'])
@@ -44,5 +44,19 @@ describe('getCheckQuestion', () => {
 
 	it('returns undefined for an unknown id', () => {
 		expect(getCheckQuestion('nope')).toBeUndefined()
+	})
+})
+
+describe('nextLevel', () => {
+	const second = { ...testLevel, id: 'test-second', order: 5, check: otherCheck }
+	const map = buildLevelMap([second, testLevel], TASK_IDS)
+
+	it('returns the level after the given one in path order', () => {
+		expect(nextLevel(map, 'test-level')?.id).toBe('test-second')
+	})
+
+	it('returns undefined after the last level or for an unknown id', () => {
+		expect(nextLevel(map, 'test-second')).toBeUndefined()
+		expect(nextLevel(map, 'nope')).toBeUndefined()
 	})
 })

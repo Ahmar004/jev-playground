@@ -93,7 +93,7 @@ const LEVEL_TIPS: Partial<Record<LevelStep, LevelTip>> = {
 		part: GUIDE_PARTS.check,
 		targets: [GUIDE_TARGETS.check],
 		title: 'Lock in what you learned',
-		body: 'Answer these questions to finish the level. Then go back to the path for the next one.'
+		body: 'Answer these questions to finish the level. Then play the next level, or go back to the path.'
 	}
 }
 

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import { Suspense } from 'react'
-import { getLevel, LEVELS } from '@/content/levels'
+import { getLevel, LEVELS, nextLevel } from '@/content/levels'
 import { currentRecordings } from '@/content/recordings'
 import { getTask } from '@/content/tasks'
 import type { Level } from '@/content/level-schema'
@@ -44,14 +44,17 @@ async function LevelProgressLoader({
 		getLevelProgress(session.userId, level.id),
 		getGuideSeen(session.userId)
 	])
+	const next = nextLevel(LEVELS, level.id)
 	return (
 		<LevelStepper
-			key={session.userId}
+			// Keyed by level too, so Play next level starts the next level with fresh state.
+			key={`${session.userId}-${level.id}`}
 			level={level}
 			tasks={tasks}
 			recordings={recordings}
 			initialProgress={progress}
 			guideSeen={guideSeen}
+			nextLevel={next ? { id: next.id, title: next.title } : null}
 		/>
 	)
 }

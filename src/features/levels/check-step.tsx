@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { QuestionCard } from '@/components/ui/question-card'
@@ -7,6 +8,7 @@ import { SuccessIcon, WrongIcon } from '@/components/ui/icons'
 import type { CheckQuestion } from '@/content/level-schema'
 import type { LevelProgressView } from './level-progress'
 import { GUIDE_TARGETS } from '@/features/guide/guide'
+import { ROUTES } from '@/lib/links'
 
 const PRACTICE_NOTE = 'Practice only: your first answer is the one that counts.'
 
@@ -23,7 +25,8 @@ export function CheckStep({
 	levelDone,
 	onAnswer,
 	onGoToReveal,
-	onBackToPath
+	onBackToPath,
+	nextLevel
 }: {
 	questions: CheckQuestion[]
 	answers: LevelProgressView['answers']
@@ -32,6 +35,8 @@ export function CheckStep({
 	onAnswer: (questionId: string, optionId: string) => void
 	onGoToReveal: () => void
 	onBackToPath: () => void
+	/** The level after this one in path order; null on the last level. */
+	nextLevel: { id: string; title: string } | null
 }) {
 	const [picks, setPicks] = useState<Record<string, string>>({})
 	// A question in practice: optionId null while picking, then the local pick once checked.
@@ -161,8 +166,17 @@ export function CheckStep({
 							</Button>
 						</div>
 					)}
-					<div>
-						<Button type="button" onClick={onBackToPath}>
+					<div className="flex flex-wrap items-center gap-3">
+						{nextLevel && (
+							<Button asChild>
+								<Link href={ROUTES.level(nextLevel.id)}>Play next level</Link>
+							</Button>
+						)}
+						<Button
+							type="button"
+							variant={nextLevel ? 'outline' : 'primary'}
+							onClick={onBackToPath}
+						>
 							Back to Path
 						</Button>
 					</div>

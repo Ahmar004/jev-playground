@@ -118,6 +118,15 @@ test.describe('flow 1: first level, prediction, check, XP and badge', () => {
 		).toBeVisible()
 	})
 
+	test('Play next level on Check opens level 2 at Learn', async ({ page }) => {
+		await signIn(page, email)
+		await page.goto(`${LEVEL_URL}?step=check`)
+		await page.getByRole('link', { name: 'Play next level' }).click()
+		await expect(page).toHaveURL('/levels/write-me-a-poem')
+		await expect(page.getByRole('heading', { level: 1, name: 'Write Me a Poem' })).toBeVisible()
+		await expect(page.getByRole('heading', { level: 2, name: 'Learn' })).toBeVisible()
+	})
+
 	test('a replay awards nothing again', async ({ page }) => {
 		await signIn(page, email)
 		// The picks were fixed at the first Reveal, so Predict shows them locked.
