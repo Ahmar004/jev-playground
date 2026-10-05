@@ -1,9 +1,11 @@
 import { expect, test, type Page, type Route } from '@playwright/test'
 import {
+	captureScheme,
 	COLOR_SCHEMES,
 	expectNoHorizontalScroll,
 	freshEmail,
 	SCREENSHOT_DIR,
+	setColorScheme,
 	signUp,
 	VIEWPORTS
 } from './helpers'
@@ -29,7 +31,7 @@ test.afterAll(async () => {
 test.beforeEach(async () => {
 	await page.unrouteAll()
 	await page.setViewportSize(VIEWPORTS.desktop)
-	await page.emulateMedia({ colorScheme: 'light' })
+	await setColorScheme(page, 'light')
 	await page.goto('/')
 })
 
@@ -232,13 +234,13 @@ for (const scheme of COLOR_SCHEMES) {
 	for (const [name, viewport] of Object.entries(VIEWPORTS)) {
 		test(`screenshot and no horizontal scroll: ${scheme} ${name}`, async () => {
 			await page.setViewportSize(viewport)
-			await page.emulateMedia({ colorScheme: scheme })
+			await setColorScheme(page, scheme)
 			await page.goto('/sandbox?template=support-ticket')
 			await expect(page.getByRole('heading', { name: 'Support ticket' })).toBeVisible()
 			await page.getByRole('button', { name: "Show Jev's answer" }).click()
 			await expect(page.getByText('Picked: billing')).toBeVisible({ timeout: 15_000 })
 			await expectNoHorizontalScroll(page)
-			await page.screenshot({
+			await captureScheme(page, scheme, {
 				path: `${SCREENSHOT_DIR}/sandbox-${scheme}-${name}.png`,
 				fullPage: true
 			})

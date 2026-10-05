@@ -1,8 +1,10 @@
 import { expect, test } from '@playwright/test'
 import {
+	captureScheme,
 	expectNoHorizontalScroll,
 	freshEmail,
 	SCREENSHOT_DIR,
+	setColorScheme,
 	signIn,
 	signUp,
 	VIEWPORTS
@@ -47,7 +49,8 @@ test('sign up, browse, sign out and sign back in', async ({ page }) => {
 	await page.goto('/')
 	await expect(page).toHaveURL('/sign-in')
 
-	await signIn(page, email)
+	// Signing out ended the saved session, so this one is a real sign-in.
+	await signIn(page, email, { fresh: true })
 })
 
 test('the footer links to the Methodology page', async ({ page }) => {
@@ -146,28 +149,28 @@ for (const [name, viewport] of Object.entries(VIEWPORTS)) {
 	for (const scheme of ['light', 'dark'] as const) {
 		test(`screenshots: ${name} ${scheme}`, async ({ page }) => {
 			await page.setViewportSize(viewport)
-			await page.emulateMedia({ colorScheme: scheme })
+			await setColorScheme(page, scheme)
 			await page.goto('/sign-in')
 			await expectNoHorizontalScroll(page)
-			await page.screenshot({
+			await captureScheme(page, scheme, {
 				path: `${SCREENSHOT_DIR}/sign-in-${name}-${scheme}.png`,
 				fullPage: true
 			})
 			await signIn(page, SHARED_EMAIL)
 			await expectNoHorizontalScroll(page)
-			await page.screenshot({
+			await captureScheme(page, scheme, {
 				path: `${SCREENSHOT_DIR}/home-${name}-${scheme}.png`,
 				fullPage: true
 			})
 			await page.goto('/glossary')
 			await expectNoHorizontalScroll(page)
-			await page.screenshot({
+			await captureScheme(page, scheme, {
 				path: `${SCREENSHOT_DIR}/glossary-${name}-${scheme}.png`,
 				fullPage: true
 			})
 			await page.goto('/methodology')
 			await expectNoHorizontalScroll(page)
-			await page.screenshot({
+			await captureScheme(page, scheme, {
 				path: `${SCREENSHOT_DIR}/methodology-${name}-${scheme}.png`,
 				fullPage: true
 			})

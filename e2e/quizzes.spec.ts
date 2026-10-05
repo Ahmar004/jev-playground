@@ -2,10 +2,12 @@ import { expect, test, type Page } from '@playwright/test'
 import endQuiz from '../content/quizzes/end.json'
 import startQuiz from '../content/quizzes/start.json'
 import {
+	captureScheme,
 	COLOR_SCHEMES,
 	expectNoHorizontalScroll,
 	freshEmail,
 	SCREENSHOT_DIR,
+	setColorScheme,
 	signUp,
 	VIEWPORTS
 } from './helpers'
@@ -34,7 +36,7 @@ test.afterAll(async () => {
 })
 test.beforeEach(async () => {
 	await page.setViewportSize(VIEWPORTS.desktop)
-	await page.emulateMedia({ colorScheme: 'light' })
+	await setColorScheme(page, 'light')
 })
 
 // Answers every question: `pickFor` names the tool to pick; the last step submits.
@@ -109,14 +111,14 @@ test('screenshots in both themes at desktop and phone width', async () => {
 	for (const scheme of COLOR_SCHEMES) {
 		for (const [name, size] of Object.entries(VIEWPORTS)) {
 			await page.setViewportSize(size)
-			await page.emulateMedia({ colorScheme: scheme })
+			await setColorScheme(page, scheme)
 			for (const route of ['/quizzes', '/quizzes/start', '/profile']) {
 				await page.goto(route)
 				await expect(
 					page.getByRole('heading', { name: LOADED_HEADINGS[route] ?? '' })
 				).toBeVisible()
 				await expectNoHorizontalScroll(page)
-				await page.screenshot({
+				await captureScheme(page, scheme, {
 					path: `${SCREENSHOT_DIR}/quizzes-${route.replaceAll('/', '_')}-${scheme}-${name}.png`
 				})
 			}

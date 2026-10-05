@@ -1,10 +1,12 @@
 import { expect, test } from '@playwright/test'
 import {
+	captureScheme,
 	COLOR_SCHEMES,
 	expectNoHorizontalScroll,
 	freshEmail,
 	PASSWORD,
 	SCREENSHOT_DIR,
+	setColorScheme,
 	signUp,
 	VIEWPORTS
 } from './helpers'
@@ -23,11 +25,11 @@ test('the Privacy page says what is stored, and the footer links to it', async (
 	for (const scheme of COLOR_SCHEMES) {
 		for (const [name, viewport] of Object.entries(VIEWPORTS)) {
 			await page.setViewportSize(viewport)
-			await page.emulateMedia({ colorScheme: scheme })
+			await setColorScheme(page, scheme)
 			await page.goto('/privacy')
 			await expect(page.getByRole('heading', { name: 'Privacy', exact: true })).toBeVisible()
 			await expectNoHorizontalScroll(page)
-			await page.screenshot({
+			await captureScheme(page, scheme, {
 				path: `${SCREENSHOT_DIR}/privacy-${scheme}-${name}.png`,
 				fullPage: true
 			})

@@ -124,11 +124,11 @@ Each of these cost a past session time; `docs/progress.md` has the details.
 - Stop `pnpm start` before `build`, because the build replaces `.next` under the running server. Stopping `pnpm dev` through `TaskStop` leaves node on port 3000, so free the port (`Get-NetTCPConnection -LocalPort 3000`) before starting another server.
 - A level page that renders blank in dev usually means a crashed static-params worker: restart `pnpm dev`.
 - Localhost has an IP: the dev and local production servers send `x-forwarded-for: ::1`. `clientIp` ignores loopback addresses on purpose, so IP rate limits never hit local runs or e2e; the per-email sign-in limit (10 per 15 min) still does.
-- Supabase rate-limits sign-ins, so a full e2e run can fail on `toHaveURL('/')` in a cluster. Wait a minute and rerun.
+- Supabase rate-limits sign-ins and sign-ups (about 30 per 5 minutes per IP). `e2e/helpers.ts` keeps each email's session cookies after the first sign-up or sign-in, so `signIn(page, email)` only signs in for real once per email in a worker; pass `{ fresh: true }` for a test of signing in itself or after a sign-out. A cluster of `toHaveURL('/')` failures still means the limit was hit: wait a few minutes.
 - Run `corepack pnpm exec next typegen` after adding a route if `PageProps<...>` types fail in typecheck.
 - Python `open(..., 'w')` writes CRLF on Windows; pass `newline=''` when a script edits files.
 - Run the k6 load test on an otherwise idle PC; a build or the test suite running alongside skews it. k6 is not on PATH: `winget install k6 --source winget`.
-- next-themes ignores the emulated color scheme, so to check dark mode by screenshot set the `theme` local storage key and wait about 1.5 s for the rise-in animation.
+- next-themes ignores the emulated color scheme. In e2e use `setColorScheme(page, scheme)` before navigating (it sets the `theme` local storage key) and `captureScheme(page, scheme, options)` for a themed screenshot (it checks the html class, then waits 1.5 s for the rise-in animation). Don't use it in a test that reloads and expects its own theme choice to persist.
 
 ## Session logs
 

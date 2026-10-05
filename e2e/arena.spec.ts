@@ -1,9 +1,11 @@
 import { expect, test, type Page, type Route } from '@playwright/test'
 import {
+	captureScheme,
 	COLOR_SCHEMES,
 	expectNoHorizontalScroll,
 	freshEmail,
 	SCREENSHOT_DIR,
+	setColorScheme,
 	signIn,
 	signUp,
 	VIEWPORTS
@@ -207,13 +209,16 @@ test('the Arena and a shared result fit a phone in both themes', async ({ page }
 	await page.setViewportSize(VIEWPORTS.phone)
 	await signIn(page, EMAIL)
 	for (const scheme of COLOR_SCHEMES) {
-		await page.emulateMedia({ colorScheme: scheme })
+		await setColorScheme(page, scheme)
 		await page.goto('/arena?preset=ticket-triage')
 		await expect(page.getByRole('button', { name: 'Run both' })).toBeVisible()
 		await expectNoHorizontalScroll(page)
 		await page.getByRole('button', { name: 'Run both' }).click()
 		await expect(page.getByText('Expected answer:')).toBeVisible({ timeout: 15_000 })
 		await expectNoHorizontalScroll(page)
-		await page.screenshot({ path: `${SCREENSHOT_DIR}/arena-phone-${scheme}.png`, fullPage: true })
+		await captureScheme(page, scheme, {
+			path: `${SCREENSHOT_DIR}/arena-phone-${scheme}.png`,
+			fullPage: true
+		})
 	}
 })

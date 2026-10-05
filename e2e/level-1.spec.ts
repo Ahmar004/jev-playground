@@ -1,9 +1,11 @@
 import { expect, test, type Page } from '@playwright/test'
 import {
+	captureScheme,
 	COLOR_SCHEMES,
 	expectNoHorizontalScroll,
 	freshEmail,
 	SCREENSHOT_DIR,
+	setColorScheme,
 	signIn,
 	signUp,
 	VIEWPORTS
@@ -122,11 +124,11 @@ for (const [name, viewport] of Object.entries(VIEWPORTS)) {
 	for (const scheme of COLOR_SCHEMES) {
 		test(`screenshots: level 1 ${name} ${scheme}`, async ({ page }) => {
 			await page.setViewportSize(viewport)
-			await page.emulateMedia({ colorScheme: scheme })
+			await setColorScheme(page, scheme)
 			await signIn(page, EMAIL)
 			const shot = async (step: string) => {
 				await expectNoHorizontalScroll(page)
-				await page.screenshot({
+				await captureScheme(page, scheme, {
 					path: `${SCREENSHOT_DIR}/level-1-${step}-${name}-${scheme}.png`,
 					fullPage: true
 				})
