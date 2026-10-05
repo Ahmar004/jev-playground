@@ -88,7 +88,7 @@ export function buildScript({ hash, sqlText }) {
 
 async function findApplied({ url, hash }) {
 	const prisma = new PrismaClient({
-		adapter: new PrismaPg({ connectionString: url, ssl: databaseSsl() })
+		adapter: new PrismaPg({ connectionString: url, ssl: databaseSsl(url) })
 	})
 	try {
 		return await prisma.runOnceSql.findUnique({ where: { hash }, select: { appliedAt: true } })

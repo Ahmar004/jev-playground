@@ -23,7 +23,7 @@ function createClient(): PrismaClient {
 	// verified against the Supabase CA (src/server/db/tls.ts).
 	const adapter = new PrismaPg({
 		connectionString: process.env.DATABASE_URL,
-		ssl: databaseSsl(),
+		ssl: databaseSsl(process.env.DATABASE_URL),
 		max: POOL_MAX_CONNECTIONS
 	})
 	return new PrismaClient({ adapter })

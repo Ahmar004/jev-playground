@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs'
 import { sep } from 'node:path'
 import { defineConfig } from 'prisma/config'
-import { SUPABASE_CA_PATH } from './src/server/db/tls'
+import { isLoopbackDatabase, SUPABASE_CA_PATH } from './src/server/db/tls'
 
 // Prisma 7 no longer reads env files. Load .env.local like Next.js does. A
 // variable already set in the environment wins, which is how the migration
@@ -13,7 +13,8 @@ if (existsSync('.env.local')) process.loadEnvFile('.env.local')
 // chain to, and sslaccept=strict enforces that. Without it the CLI accepted a
 // certificate from an unrelated CA in testing, so it must stay explicit.
 function withTls(url: string | undefined): string | undefined {
-	if (!url) return url
+	// A Postgres on this machine (CI's throwaway one) has no TLS to verify.
+	if (!url || isLoopbackDatabase(url)) return url
 	const parsed = new URL(url)
 	parsed.searchParams.set('sslmode', 'require')
 	parsed.searchParams.set('sslcert', SUPABASE_CA_PATH.split(sep).join('/'))

@@ -91,7 +91,10 @@ async function main() {
 	}
 
 	const db = new PrismaClient({
-		adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL, ssl: databaseSsl() })
+		adapter: new PrismaPg({
+			connectionString: process.env.DATABASE_URL,
+			ssl: databaseSsl(process.env.DATABASE_URL)
+		})
 	})
 	let tables
 	try {
