@@ -97,6 +97,18 @@ Check the database lines before moving on:
 
 Don't create tables or users in the SQL editor. Migrations create every table (`docs/rules/migrations.md`).
 
+### Production project (Step-28)
+
+The deployed app uses its own free Supabase project, `jevs-playground-prod`, so the dev project's test users and data never mix with real players. Its values live in `.env.production.local` (gitignored, like every `.env*.local`), never in `.env.local`, and from Step-29 on in Vercel's environment variables.
+
+1. Create it as in "Create and configure the project" above, with these differences: name `jevs-playground-prod`; region **East US (North Virginia)** (`us-east-1`), the closest to Vercel's default function region `iad1` and to most of the audience, so a page's database round trip stays short; on the form, untick **Enable Data API** (and leave **Enable automatic RLS** unticked), like the dev project. The free plan allows two projects per organization, and this uses the second.
+2. Use **Generate a password** for the database password and copy it at once: Supabase never shows it again, and a lost one is replaced from **Database > Settings > Reset database password**. Keep it only in `.env.production.local`, never in a chat, ticket or commit.
+3. Connection strings: **Connect > Direct**, then the **Session pooler** (port 5432) for `DIRECT_URL` and the **Transaction pooler** (port 6543, `?pgbouncer=true`) for `DATABASE_URL`, built exactly as steps 7 and 8 above. The production host is `aws-0-us-east-1.pooler.supabase.com`, and the user is `postgres.<project-ref>`.
+4. Copy `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and `SUPABASE_SECRET_KEY` from the production project as in steps 9 to 11.
+5. Apply the schema to production only from this machine, with the production values for that command alone (they override `.env.local`: a variable already set wins, see `prisma.config.ts`): load `.env.production.local` into the shell, then run `pnpm exec prisma migrate deploy`, `pnpm db:run-once` and `pnpm check:rls`. Expect 13 migrations applied (all of them at the time of Step-28), "nothing to run" for the run-once file, and "RLS enabled with no policies on all 10 table(s)". The CLI and the scripts verify TLS against the same Supabase CA as the app. Never run `prisma migrate dev` or `reset` against it.
+6. **Authentication > Sign In / Providers > Confirm email must be off**, as on the dev project: without a custom domain there is no email sender of our own, Supabase's built-in sender allows only a few emails an hour, and the app expects a session right after sign-up. New projects start with it on, so switch it off and press **Save changes**. Step-19's rate limits guard sign-ups instead.
+7. In Step-29, add the Vercel URL to **Authentication > URL Configuration** (Site URL and Redirect URLs).
+
 ## 2. Sentry (error tracking)
 
 Free Developer plan.
