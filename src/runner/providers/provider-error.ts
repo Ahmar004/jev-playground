@@ -4,6 +4,10 @@ import { PROVIDER_ERROR_KINDS, type ProviderErrorKind } from '@/lib/constants'
 // Enough of an error body to show what went wrong (level 2 shows a 422 body).
 const MAX_ERROR_BODY_CHARS = 2000
 
+// A call that hasn't answered by now never will, so the run stops instead of
+// waiting forever. The slowest recorded call took about 9 s.
+export const PROVIDER_TIMEOUT_MS = 60_000
+
 const KIND_BY_STATUS: Record<number, ProviderErrorKind> = {
 	400: PROVIDER_ERROR_KINDS.malformed,
 	401: PROVIDER_ERROR_KINDS.invalidKey,
@@ -11,7 +15,9 @@ const KIND_BY_STATUS: Record<number, ProviderErrorKind> = {
 	422: PROVIDER_ERROR_KINDS.malformed,
 	429: PROVIDER_ERROR_KINDS.rateLimited,
 	503: PROVIDER_ERROR_KINDS.overloaded,
-	529: PROVIDER_ERROR_KINDS.overloaded
+	529: PROVIDER_ERROR_KINDS.overloaded,
+	// Our /api/jev pass-through gave up waiting for TypeSafe.
+	504: PROVIDER_ERROR_KINDS.timeout
 }
 
 export function errorKindForStatus(status: number): ProviderErrorKind {
@@ -45,15 +51,24 @@ export type TimedResponse = { text: string; latencyMs: number; serverTiming: str
 export async function timedFetch(
 	url: string,
 	init: RequestInit,
-	signal?: AbortSignal
+	signal?: AbortSignal,
+	timeoutMs: number = PROVIDER_TIMEOUT_MS
 ): Promise<TimedResponse> {
 	const start = performance.now()
+	const timeout = AbortSignal.timeout(timeoutMs)
 	let response: Response
 	let text: string
 	try {
-		response = await fetch(url, { ...init, signal })
+		response = await fetch(url, {
+			...init,
+			signal: signal ? AbortSignal.any([signal, timeout]) : timeout
+		})
 		text = await response.text()
 	} catch (error) {
+		if (signal?.aborted) throw error
+		if (timeout.aborted) {
+			throw new ProviderError(PROVIDER_ERROR_KINDS.timeout, null, '', performance.now() - start)
+		}
 		if (isAbort(error, signal)) throw error
 		throw new ProviderError(PROVIDER_ERROR_KINDS.network, null, '', performance.now() - start)
 	}

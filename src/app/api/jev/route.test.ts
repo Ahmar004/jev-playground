@@ -96,6 +96,16 @@ describe('/api/jev', () => {
 		expect(response.status).toBe(502)
 	})
 
+	it('gives up on a TypeSafe call that never answers with a 504', async () => {
+		const fetchMock = vi.fn<typeof fetch>(async () => {
+			throw new DOMException('The operation timed out.', 'TimeoutError')
+		})
+		vi.stubGlobal('fetch', fetchMock)
+		const response = await POST(request({ method: 'POST', body: BODY }))
+		expect(fetchMock.mock.calls[0]?.[1]?.signal).toBeInstanceOf(AbortSignal)
+		expect(response.status).toBe(504)
+	})
+
 	it('logs neither the key nor the body (R18)', async () => {
 		vi.stubGlobal(
 			'fetch',

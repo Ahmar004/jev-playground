@@ -13,6 +13,9 @@ Current Usage of Jev: $0.0047 for 130, 831 tokens
 
 ## Rules:
 
+### Rule-XYZ:
+The developer is away from their PC for some hours (from 2026-10-05). The Jev (TypeSafe) and Anthropic keys have been pasted into the open localhost tab (http://localhost:3000/levels/trick-jev?step=play), and three related tabs are open in the same Chrome: the Supabase project, Sentry and PostHog. Keep access to these through the Claude-in-Chrome extension and never close or reload the localhost tab, because the keys live only in that tab's memory (Rule-8) and closing it loses them. The developer clears the session from their phone once a step is done and continues the later steps of this ROADMAP over remote-control in a single session. All remaining steps are to be finished today.
+
 ### Rule-0.01:
 We are now shipping this to the world, I would share this project once its solid enough into TypeSafe.ai's discord community which has about 100k+ people, I had already submitted the 8x hackathon version (before the deadline), now there's no such deadline, we have to make this system robust so that its fast, scalable, reliable, and secure.
 

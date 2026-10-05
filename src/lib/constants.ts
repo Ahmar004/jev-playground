@@ -75,6 +75,7 @@ export const PROVIDER_ERROR_KINDS = {
 	overloaded: 'overloaded',
 	malformed: 'malformed',
 	network: 'network',
+	timeout: 'timeout',
 	unknown: 'unknown'
 } as const
 export type ProviderErrorKind = (typeof PROVIDER_ERROR_KINDS)[keyof typeof PROVIDER_ERROR_KINDS]
@@ -316,7 +317,8 @@ export const RUN_STOPPING_ERRORS: readonly ProviderErrorKind[] = [
 	PROVIDER_ERROR_KINDS.forbidden,
 	PROVIDER_ERROR_KINDS.rateLimited,
 	PROVIDER_ERROR_KINDS.overloaded,
-	PROVIDER_ERROR_KINDS.network
+	PROVIDER_ERROR_KINDS.network,
+	PROVIDER_ERROR_KINDS.timeout
 ]
 
 // Share limits (DESIGN 11.3, R87): a snapshot is capped, and a user can create

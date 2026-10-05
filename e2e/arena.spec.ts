@@ -52,7 +52,7 @@ async function interceptProviders(page: Page) {
 	await page.route('https://api.anthropic.com/**', async (route) => {
 		const request = route.request()
 		if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: CORS })
-		if (request.url().endsWith('/v1/models')) {
+		if (new URL(request.url()).pathname === '/v1/models') {
 			return json(route, 200, {
 				data: [{ id: 'claude-opus-5-5', display_name: 'Claude Opus 5.5' }]
 			})

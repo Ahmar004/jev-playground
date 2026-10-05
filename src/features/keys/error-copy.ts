@@ -21,6 +21,8 @@ export function providerErrorMessage(kind: ProviderErrorKind, provider: Provider
 			return `${name} could not read the request.`
 		case PROVIDER_ERROR_KINDS.network:
 			return `Could not reach ${name}. Check your connection, or whether ${name} is down.`
+		case PROVIDER_ERROR_KINDS.timeout:
+			return `${name} took too long to answer, so the call was stopped. Retry in a moment.`
 		case PROVIDER_ERROR_KINDS.unknown:
 			return `${name} gave an answer we could not read.`
 	}

@@ -52,7 +52,9 @@ describe('Keys panel', () => {
 		await user.click(screen.getByRole('button', { name: 'Open' }))
 		await user.type(screen.getByLabelText('Anthropic key'), `${SECRET}{Enter}`)
 		await waitFor(() => expect(screen.getByText(/1 models available/)).toBeInTheDocument())
-		expect(String(fetchMock.mock.calls[0]?.[0])).toBe('https://api.anthropic.com/v1/models')
+		expect(String(fetchMock.mock.calls[0]?.[0])).toBe(
+			'https://api.anthropic.com/v1/models?limit=1000'
+		)
 	})
 
 	it('shows a friendly message with Retry when the key is rejected, never the key', async () => {

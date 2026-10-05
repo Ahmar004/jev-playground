@@ -156,6 +156,8 @@ describe('fetchModels', () => {
 		])
 		const headers = new Headers(fetchMock.mock.calls[0]?.[1]?.headers)
 		expect(headers.get('anthropic-dangerous-direct-browser-access')).toBe('true')
+		// The API returns 20 models a page by default; one page of up to 1000 covers them all.
+		expect(new URL(String(fetchMock.mock.calls[0]?.[0])).searchParams.get('limit')).toBe('1000')
 	})
 
 	it('tests a TypeSafe key through /api/jev', async () => {

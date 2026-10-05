@@ -5,7 +5,8 @@ import { GOOGLE_BASE_URL } from './google'
 import { parseProviderJson, timedFetch } from './provider-error'
 import { JEV_PROXY_URL } from './typesafe'
 
-const ANTHROPIC_MODELS_URL = ANTHROPIC_URL.replace('/messages', '/models')
+// The API returns 20 models a page by default; 1000 is its page maximum.
+const ANTHROPIC_MODELS_URL = `${ANTHROPIC_URL.replace('/messages', '/models')}?limit=1000`
 const OPENAI_MODELS_URL = 'https://api.openai.com/v1/models'
 const OPENROUTER_MODELS_URL = 'https://openrouter.ai/api/v1/models'
 const GOOGLE_MODELS_URL = `${GOOGLE_BASE_URL}/models?pageSize=1000`

@@ -4,9 +4,9 @@
 
 Read only this block and the sections a step needs (Rule-0.0). The dated entries below it are the full history; nothing in them is removed.
 
-**Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: $19.47 left, and recordings so far cost $0.49.
+**Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.46 left (Step-15's live check spent about $0.011), and recordings so far cost $0.49.
 
-**Built (Steps 0-14):**
+**Built (Steps 0-15):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
@@ -15,13 +15,13 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 - Tests: 626 Vitest, 114 node:test and 72 Playwright e2e, covering every flow in DESIGN 15.
 - k6 locally: 400 users median 266 ms; 1,000 users median 6.2 s (one Node process is CPU-bound).
 - The public README.
+- Real keys checked (Step-15): TypeSafe and Anthropic, level 1 live on localhost, every call 200 with no shape fixes needed. A provider call now times out after 60 s (`PROVIDER_TIMEOUT_MS`) and stops the run with a `timeout` error; `/api/jev` answers 504 on a hung TypeSafe call.
 
 **Open (each is a ROADMAP step, 11-35):**
 
-- A provider call that never answers leaves a live run waiting: there is no client-side timeout (seen while writing the Step-11 e2e fake). Worth a fix with Step-15's real-key check.
 - Promotional prices end: gpt-5.6-sol on 2026-11-21, gemini-3.6/3.7/3.8-flash on 2026-12-31. After that those models show "price unknown" until someone rechecks the pricing pages and updates `content/prices.json`.
 - Jev through an OpenRouter key isn't built.
-- No real-key test has been run.
+- No real-key test yet for OpenAI, Google or OpenRouter (Step-16), or for level 8's live trick (Step-15 could not drive it).
 - The Sandbox form lacks Noul criteria and Choice option descriptions.
 - No rate limits on `/api/jev` or sign-in/sign-up (shares have a per-user daily limit).
 - No account deletion and no Privacy page.
@@ -35,7 +35,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-15 (real-key check, part 1: TypeSafe and Anthropic, with the owner at the PC).
+**Next:** Step-16 (real-key check, part 2: OpenAI, Google and OpenRouter, only for the providers the owner has keys for). The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it.
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -752,3 +752,17 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Tests: `cost.test.ts` (expiry on the last day, the next day, no end date), `prices.test.ts` (OpenAI and Google entries, each source equals its provider's page, promo end dates), `priceGroups`, `llmRacer` pricing an OpenAI answer from the shipped table; e2e `shell.spec.ts` checks the four provider groups and a promotional row on Methodology.
 - Claude-in-Chrome was not connected this session, so the Cost section was checked by Playwright element screenshots instead (desktop and phone, theme key set, both themes). That caught `break-all` splitting "until" mid-word on phones; now only the model ID breaks.
 - Gates: lint, typecheck, format:check, check:env, check:secrets, check:standards 24/24, check:rls, test (114 node:test plus 626 Vitest), build, e2e shell, developer-mode, level-1, arena, arena-batch, sandbox and games 44/44 against `pnpm start`.
+
+## Step-15 - real-key check, part 1: TypeSafe and Anthropic (2026-10-05) - done
+
+- Skills: test-driven-development (tests first, by hand), local-review. No subagents. Anthropic spend about $0.011 (one level 1 race on Claude Haiku 4.5, owner-approved); Jev cost $0.00074.
+- Free probes first, from Node with the owner keys in `.env.local` (only shapes printed): TypeSafe `/v1/models` 200 (`jev-latest`, `jev-preview`); Anthropic `/v1/models` 200 with 12 models and `has_more: false`; Anthropic's CORS preflight from `http://localhost:3000` allows the three headers we send.
+- Live check through Claude-in-Chrome against `pnpm start`: the owner pasted both keys into the Keys panel (never typed by the agent, so they stay out of the logs); both Test buttons passed. Level 1 race, Jev vs Claude Haiku 4.5: 80 calls (40 `/api/jev`, 40 Anthropic), all 200, no retries, 0 unparsed; Jev 39/40 in 4.3 s for $0.00074, Haiku 40/40 in 8.3 s for $0.0108, close to the 2026-10-01 recordings. Labels carry the answering model ids (`jev-1.13.0`, `claude-haiku-4-5-20251001`). Reveal showed both live rows above the recordings. No console errors. The server log has 41 `jev pass-through` lines with method, status and duration only; no key or body.
+- No response shape needed a fix. Hardening found on the way:
+  - Client timeout (owner-approved): `timedFetch` aborts after `PROVIDER_TIMEOUT_MS` (60 s; the slowest recorded call took 8.7 s) and throws a new `timeout` error kind, which is in `RUN_STOPPING_ERRORS` and has its own friendly copy. The caller's own abort is still rethrown as is. `/api/jev` gives its upstream fetch the same timeout and answers 504, which maps to `timeout`.
+  - The Anthropic model list asks for `?limit=1000`: the API returns 20 a page by default, so a key with more than 20 models would have lost some. The e2e fakes now match the model list by path.
+- Not checked live: the level 8 trick. After the server restart the tab was in Beginner mode, and the auto-mode classifier denied the agent switching it to Developer mode. Step-16 or the owner can run one trick (one Jev call).
+- Observation, not changed: the Play step's Anthropic model picker defaults to the first model alphabetically (Claude Fable 5), not the cheapest. Worth an owner decision.
+- Tests: `provider-error.test.ts` (timeout, own abort, in-time answer, 504 mapping, run stops), `/api/jev` 504 on a hung upstream, the `limit=1000` URL in `live-providers.test.ts` and `keys.test.tsx`.
+- Gates: lint, typecheck, format:check, test (114 node:test plus 632 Vitest), build, e2e developer-mode and arena 12/12 against `pnpm start`.
+- ROADMAP gained Rule-XYZ (owner's exact request): the owner is away, the localhost tab holds the keys, and the Supabase, Sentry and PostHog tabs are open for checks.

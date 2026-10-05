@@ -1,3 +1,4 @@
+import { PROVIDER_TIMEOUT_MS } from '@/runner/providers/provider-error'
 import { TYPESAFE_URL } from '@/runner/providers/typesafe'
 import { getSession } from '@/server/auth/session'
 import { log } from '@/server/lib/logger'
@@ -10,7 +11,13 @@ import { log } from '@/server/lib/logger'
 
 const TYPESAFE_MODELS_URL = TYPESAFE_URL.replace('/systemone', '/models')
 const MAX_BODY_BYTES = 256 * 1024
-const HTTP = { badRequest: 400, unauthorized: 401, tooLarge: 413, badGateway: 502 } as const
+const HTTP = {
+	badRequest: 400,
+	unauthorized: 401,
+	tooLarge: 413,
+	badGateway: 502,
+	gatewayTimeout: 504
+} as const
 const JSON_HEADERS = { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
 
 function jsonError(message: string, status: number): Response {
@@ -36,9 +43,15 @@ async function forward(request: Request, url: string, method: 'GET' | 'POST'): P
 		upstream = await fetch(url, {
 			method,
 			headers: { Authorization: authorization, 'Content-Type': 'application/json' },
-			body
+			body,
+			// A hung upstream would otherwise hold this function open until the platform kills it.
+			signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS)
 		})
-	} catch {
+	} catch (error) {
+		if (error instanceof DOMException && error.name === 'TimeoutError') {
+			log.warn('jev pass-through timed out', { method })
+			return jsonError('TypeSafe took too long to answer.', HTTP.gatewayTimeout)
+		}
 		log.warn('jev pass-through could not reach TypeSafe', { method })
 		return jsonError('Could not reach TypeSafe.', HTTP.badGateway)
 	}
