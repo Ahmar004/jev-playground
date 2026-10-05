@@ -71,6 +71,42 @@ export function withOptions(question: Question, text: string): Question {
 	return question
 }
 
+/** The two answers a Noul can describe. */
+export type NoulAnswer = 'true' | 'false'
+
+/** What a Noul's criterion for one answer says, as text; empty when it has none. */
+export function criterionText(question: Question, answer: NoulAnswer): string {
+	if (question.type !== QUESTION_KINDS.noul) return ''
+	const value = question.criteria?.[answer]
+	return value === undefined ? '' : textOf(value)
+}
+
+/** The same Noul with one answer's criterion set from text; a blank text removes it, and no criteria at all removes the key. */
+export function withCriterion(question: Question, answer: NoulAnswer, text: string): Question {
+	if (question.type !== QUESTION_KINDS.noul) return question
+	const { criteria: current, ...rest } = question
+	const criteria = { ...current }
+	if (text.trim() === '') delete criteria[answer]
+	else criteria[answer] = structuredOf(text)
+	return Object.keys(criteria).length === 0 ? rest : { ...rest, criteria }
+}
+
+/** What a Choice option's description says, as text; empty when it has none. */
+export function optionDescriptionText(question: Question, option: string): string {
+	if (question.type !== QUESTION_KINDS.choice) return ''
+	const value = question.criteria[option]
+	return value === null || value === undefined ? '' : textOf(value)
+}
+
+/** The same Choice with one option's description set from text; a blank text means none (null). */
+export function withOptionDescription(question: Question, option: string, text: string): Question {
+	if (question.type !== QUESTION_KINDS.choice) return question
+	return {
+		...question,
+		criteria: { ...question.criteria, [option]: text.trim() === '' ? null : structuredOf(text) }
+	}
+}
+
 /** A question of another kind, keeping its instructions. */
 export function withKind(question: Question, kind: QuestionKind): Question {
 	const { instructions } = question

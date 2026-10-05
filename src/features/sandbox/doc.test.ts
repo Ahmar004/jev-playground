@@ -4,10 +4,14 @@ import {
 	bodyToDoc,
 	buildSandboxTask,
 	docToBody,
+	optionDescriptionText,
 	optionsText,
+	criterionText,
 	serializeBody,
 	structuredOf,
+	withCriterion,
 	withKind,
+	withOptionDescription,
 	withOptions,
 	type SandboxDoc,
 	type SandboxQuestion
@@ -84,5 +88,49 @@ describe('sandbox doc', () => {
 			questions: [{ ...TOPIC, question: withOptions(TOPIC.question, 'food') }]
 		}
 		expect(buildSandboxTask(oneOption).ok).toBe(false)
+	})
+
+	it('sets a Noul criterion for one answer and leaves the other out', () => {
+		const withTrue = withCriterion(HAPPY.question, 'true', 'Yes only if they praise it')
+		expect(withTrue).toEqual({
+			type: QUESTION_KINDS.noul,
+			instructions: 'Happy?',
+			criteria: { true: 'Yes only if they praise it' }
+		})
+		expect(criterionText(withTrue, 'true')).toBe('Yes only if they praise it')
+		expect(criterionText(withTrue, 'false')).toBe('')
+		const both = withCriterion(withTrue, 'false', '{"anything":"else"}')
+		expect(both).toMatchObject({
+			criteria: { true: expect.any(String), false: { anything: 'else' } }
+		})
+	})
+
+	it('drops a cleared Noul criterion, and the whole criteria when none is left', () => {
+		const set = withCriterion(HAPPY.question, 'true', 'x')
+		expect(withCriterion(set, 'true', '  ')).toEqual(HAPPY.question)
+		expect('criteria' in withCriterion(set, 'true', '')).toBe(false)
+		const both = withCriterion(withCriterion(set, 'false', 'y'), 'true', '')
+		expect(both).toMatchObject({ criteria: { false: 'y' } })
+	})
+
+	it('sets a Choice option description, and null means none', () => {
+		const next = withOptionDescription(TOPIC.question, 'food', 'Anything about the meal')
+		expect(next).toMatchObject({ criteria: { food: 'Anything about the meal', speed: null } })
+		expect(optionDescriptionText(next, 'food')).toBe('Anything about the meal')
+		expect(optionDescriptionText(next, 'speed')).toBe('')
+		expect(withOptionDescription(next, 'food', ' ')).toEqual(TOPIC.question)
+	})
+
+	it('keeps criteria through the JSON view and the build', () => {
+		const rich: SandboxDoc = {
+			state: 'x',
+			questions: [
+				{ ...HAPPY, question: withCriterion(HAPPY.question, 'false', 'Not praise') },
+				{ ...TOPIC, question: withOptionDescription(TOPIC.question, 'speed', 'Waiting time') }
+			]
+		}
+		const parsed = bodyToDoc(serializeBody(rich))
+		expect(parsed.ok && docToBody(parsed.doc)).toEqual(docToBody(rich))
+		expect(buildSandboxTask(rich).ok).toBe(true)
 	})
 })

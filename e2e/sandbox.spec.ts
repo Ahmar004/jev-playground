@@ -161,6 +161,38 @@ test('flow 6: a template replays, the Form and JSON stay in sync, the checks war
 	await expect(page.getByLabel('Name').first()).toHaveValue('category')
 })
 
+test('the Form sets Noul criteria and Choice option descriptions, in sync with the JSON view', async () => {
+	await page.goto('/sandbox?template=blank')
+	await page.getByLabel(/^State/).fill('The pasta was lovely but slow.')
+	const json = page.getByLabel('Request JSON')
+
+	// A Noul criterion lands in the JSON view, and clearing it removes the key again.
+	await page.getByLabel('When is the answer true? (optional)').fill('They praise the food')
+	await expect(json).toHaveValue(/"criteria": \{\s*"true": "They praise the food"/)
+	await page.getByLabel('When is the answer true? (optional)').fill('')
+	await expect(json).not.toHaveValue(/"criteria"/)
+
+	// A Choice option description lands in the JSON view too.
+	await page.getByLabel('Answer type').selectOption('choice')
+	await page.getByLabel(/^Options, one per line/).fill('food\nspeed')
+	await page.getByLabel('What does "speed" mean? (optional)').fill('How long it took')
+	await expect(json).toHaveValue(/"speed": "How long it took"/)
+	await expect(json).toHaveValue(/"food": null/)
+
+	// An edit in the JSON view shows up in the Form fields.
+	const body = {
+		state: 'Hello',
+		questions: {
+			friendly: { type: 'noul', instructions: 'Friendly?', criteria: { false: 'Any insult' } },
+			topic: { type: 'choice', instructions: 'Topic?', criteria: { a: 'First', b: null } }
+		}
+	}
+	await json.fill(JSON.stringify(body))
+	await expect(page.getByLabel('When is the answer false? (optional)')).toHaveValue('Any insult')
+	await expect(page.getByLabel('What does "a" mean? (optional)')).toHaveValue('First')
+	await expect(page.getByLabel('What does "b" mean? (optional)')).toHaveValue('')
+})
+
 test('Developer mode runs the setup on Jev with your TypeSafe key, and explains a rejection', async () => {
 	await interceptJev(page)
 	await page.goto('/sandbox?template=moderation')

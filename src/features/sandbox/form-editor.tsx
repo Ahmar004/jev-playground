@@ -7,12 +7,17 @@ import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/cn'
 import { QUESTION_KINDS, type QuestionKind } from '@/lib/constants'
 import {
+	criterionText,
 	newQuestion,
+	optionDescriptionText,
 	optionsText,
 	structuredOf,
 	textOf,
+	withCriterion,
 	withKind,
+	withOptionDescription,
 	withOptions,
+	type NoulAnswer,
 	type SandboxDoc,
 	type SandboxQuestion
 } from './doc'
@@ -33,6 +38,8 @@ const KINDS = [QUESTION_KINDS.noul, QUESTION_KINDS.choice, QUESTION_KINDS.score]
 function isKind(value: string): value is QuestionKind {
 	return KINDS.some((kind) => kind === value)
 }
+
+const NOUL_ANSWERS: readonly NoulAnswer[] = ['true', 'false']
 
 const asText = (text: string) => textOf(structuredOf(text))
 const asLines = (text: string) =>
@@ -109,6 +116,37 @@ function QuestionCard({
 					onValue={(text) => onChange({ ...entry, question: withOptions(question, text) })}
 				/>
 			)}
+			{question.type === QUESTION_KINDS.noul && (
+				<div className="grid gap-3 sm:grid-cols-2">
+					{NOUL_ANSWERS.map((answer) => (
+						<SyncedTextarea
+							key={answer}
+							id={`${prefix}-criterion-${answer}`}
+							className="min-h-14"
+							label={`When is the answer ${answer}? (optional)`}
+							value={criterionText(question, answer)}
+							normalize={asText}
+							onValue={(text) =>
+								onChange({ ...entry, question: withCriterion(question, answer, text) })
+							}
+						/>
+					))}
+				</div>
+			)}
+			{question.type === QUESTION_KINDS.choice &&
+				Object.keys(question.criteria).map((option, optionIndex) => (
+					<SyncedTextarea
+						key={option}
+						id={`${prefix}-option-${optionIndex}`}
+						className="min-h-14"
+						label={`What does "${option}" mean? (optional)`}
+						value={optionDescriptionText(question, option)}
+						normalize={asText}
+						onValue={(text) =>
+							onChange({ ...entry, question: withOptionDescription(question, option, text) })
+						}
+					/>
+				))}
 			<div>
 				<Button type="button" size="sm" variant="outline" onClick={onRemove}>
 					<CloseIcon /> Remove question {index + 1}
