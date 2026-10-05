@@ -6,7 +6,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.46 left (Step-15's live check spent about $0.011), and recordings so far cost $0.49.
 
-**Built (Steps 0-16 and 18-21; 17 is blocked):**
+**Built (Steps 0-16 and 18-22; 17 is blocked):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
@@ -22,7 +22,6 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 - Promotional prices end: gpt-5.6-sol on 2026-11-21, gemini-3.6/3.7/3.8-flash on 2026-12-31. After that those models show "price unknown" until someone rechecks the pricing pages and updates `content/prices.json`.
 - Jev through an OpenRouter key isn't built (Step-17 is blocked on the owner's OpenRouter key; see its entry below).
 - No real-key test for OpenAI, Google or OpenRouter (Step-16 skipped them: no keys). Level 8's live trick was checked live in Step-20.
-- CI is off.
 - e2e dark screenshots render light.
 - The header runs 3+ queries a page.
 - No accessibility or Lighthouse audit has been run.
@@ -32,7 +31,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-22 (GitHub CI). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
+**Next:** Step-23 (stable e2e auth and dark screenshots). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -818,3 +817,10 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Verified for real: the e2e creates a user, cancels once, deletes, lands on sign-in, and the same credentials are then rejected ("do not match an account"), so the Supabase user and the rows are gone. A temporary real-database probe was started but not needed after that.
 - Analytics are anonymous (nothing calls `identify`), so deleting an account leaves no PostHog person to remove; the Privacy page says the anonymous events stay.
 - Tests: `account.test.ts` (6), `use-delete-account.test.ts` (3), `delete-account.test.tsx` (4), nav test; e2e `account.spec.ts` (2, with Privacy screenshots in both themes at both widths; the dark ones still render light until Step-23). Gates: lint, typecheck, format, secrets, standards, Vitest plus node:test, production build (separate dir), and 23 e2e (account, progress, shell) on that build.
+
+## Step-22 - GitHub CI (2026-10-05) - done
+
+- The template's `.github/workflows/ci.yml` was re-enabled (`gh workflow enable CI`) and now runs on every push (any branch), on pull requests and by hand. It keeps `check` (lint, typecheck, format:check, check:env, check:secrets, check:standards, test), `build`, `migrations` (a throwaway Postgres 16: replay migrations, run-once SQL, drift check, `check:rls`) and the PR-only `commits` job; `check:standards` requires those. The `e2e` job was removed: the Playwright suite signs up real users on Supabase, which CI has no credentials for (and must not). e2e stays a local check.
+- Two real failures fixed on the way (found by the first run): `typecheck` is now `next typegen && tsc --noEmit`, because a clean checkout has no generated `PageProps` types; and `databaseSsl(url)`, `isLoopbackDatabase` and `prisma.config.ts` skip TLS for a database on this machine (CI's throwaway Postgres has none), while every remote host keeps verified TLS. The app's client, `check-rls` and `run-once-sql` pass their URL to the helper.
+- Result: run 37271351416 is green (check, migrations, build; commits skipped off PRs). The migrations job also proves every migration so far replays on plain Postgres. The Sentry plugin and Supabase env vars are not set in CI and the build still passes.
+- Docs updated to match: CLAUDE.md, AGENTS.md, both skills, `docs/rules/deployment.md`, `migrations.md`, TECH-STACK.md.

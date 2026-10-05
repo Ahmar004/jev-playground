@@ -82,4 +82,4 @@ feature approach, commits, pull requests, and deployment. Read
 before you push anything: **don't commit once per fix while iterating**,
 and don't write a PR's real title/description until the work is actually
 done (open it draft if it needs to exist earlier) — run `local-review`
-before committing. GitHub CI is disabled, so `local-review` is the only gate.
+before committing. GitHub CI re-runs the same gates on every push, but `local-review` is the gate before a commit.

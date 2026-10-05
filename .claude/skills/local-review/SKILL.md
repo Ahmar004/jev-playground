@@ -1,13 +1,13 @@
 ---
 name: local-review
-description: Run the full local pre-push gate (lint, typecheck, format, env-var check, unit tests, build) and a manual review pass against this repo's AGENTS.md/docs/rules rules. GitHub CI is disabled on this project, so this is the only gate before a commit and push. Use when the user says "/local-review", "review this before I push", "is this ready", or has finished a change and wants it validated before committing.
+description: Run the full local pre-push gate (lint, typecheck, format, env-var check, unit tests, build) and a manual review pass against this repo's AGENTS.md/docs/rules rules. GitHub CI re-runs the same gates on every push, but this is the gate before a commit. Use when the user says "/local-review", "review this before I push", "is this ready", or has finished a change and wants it validated before committing.
 ---
 
 # Local review
 
 A pre-push gate: the same checks `.github/workflows/ci.yml` defines (CI itself is disabled on GitHub), plus a manual rule-compliance pass. Run this once a change is functionally done, not after every edit.
 
-**GitHub CI is disabled, so this is the only gate.** Nothing else catches a lint error, a type error, or a broken build before it lands on `main`. If it's clean, commit once — not once per fix as you iterate.
+**This is the gate before a commit.** GitHub CI re-runs the same gates on every push, but only after the change has landed on `main`. If it's clean, commit once — not once per fix as you iterate.
 
 ## 1. Automated gates, in order
 

@@ -10,9 +10,11 @@ Build everything so it runs on Vercel unchanged (ROADMAP Rule-9): no runtime
 file writes, no state kept in one process's memory, pooled database
 connections. `TECH-STACK.md` > Vercel readiness lists the rules.
 
-GitHub CI is disabled until ROADMAP Step-22. `.github/workflows/ci.yml` stays
-in the repo because `pnpm check:standards` reads it, but nothing runs it yet;
-the `local-review` skill runs the same gates on this machine before every
-commit and push, and stays the gate after CI is on.
+GitHub CI has run `.github/workflows/ci.yml` on every push since ROADMAP
+Step-22 (check, build, a throwaway-Postgres migrations replay with the RLS
+check, and the commit-message check on PRs). It has no e2e job: the Playwright
+suite needs real Supabase credentials, which CI must not hold. The
+`local-review` skill runs the same gates on this machine before every commit
+and push, and stays the gate.
 
 Database changes are applied locally too: see `docs/rules/migrations.md`.

@@ -107,8 +107,8 @@ of one monolithic instructions file.
   prioritize test/edge-case coverage over scope-minimization once a
   feature already exists and you're adjusting it.
 - **[Commits](docs/rules/commits.md)** - verify locally with
-  `local-review` before committing (GitHub CI is disabled, so it is the only
-  gate), plus Conventional Commits message format, enforced by a shared
+  `local-review` before committing (GitHub CI re-runs the same gates on every
+  push, but this is the gate before a commit), plus Conventional Commits message format, enforced by a shared
   commit-msg hook.
 - **[Pull requests](docs/rules/pull-requests.md)** — write the title and
   description last, once the work is actually done, not at PR-creation

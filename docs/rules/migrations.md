@@ -3,7 +3,7 @@
 **The generator writes the migration. You write the schema.**
 
 On this project migrations are generated and applied locally, against our
-own database (8x confirmed this; GitHub CI is disabled).
+own database (8x confirmed this; CI replays them on a throwaway Postgres on every push).
 
 Prisma 7 takes the database from `prisma.config.ts`, which loads `.env.local`
 and uses `DIRECT_URL` (the session pooler, port 5432), so `migrate deploy`

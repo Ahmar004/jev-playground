@@ -108,7 +108,7 @@ These restate spec rules that code can break silently. The spec section holds th
 - Invoke the skill a ROADMAP step names before starting that step, and say which skill is in use. The superpowers skills (brainstorming, writing-plans, test-driven-development, subagent-driven-development, systematic-debugging) are installed but not listed in the session, so read `~/.claude/plugins/cache/claude-plugins-official/superpowers/<version>/skills/<name>/SKILL.md` and follow it by hand.
 - Testing: write tests first (TDD) for the runner, parsing, scoring, cost math, key handling, API routes, server actions and hooks. Check presentational components with screenshots in both themes at desktop and phone widths. Every user flow gets a Playwright e2e test. App tests run in Vitest; the template's `node:test` stays only for its `scripts/*.test.mjs` and `src/**/*.test.mts` tests, and `pnpm test` runs both.
 - Subagents (Step-6): Opus 5.5 for the main agent, Sonnet 5.5 for subagents, at most one subagent at a time.
-- Git: one commit per finished slice, with a Conventional Commits message (`docs/rules/commits.md`). Run the `local-review` skill before every commit and push; GitHub CI is disabled until ROADMAP Step-22, so until then it is the only gate, and afterwards it stays the gate before a commit. Never commit `.env.local` or any secret.
+- Git: one commit per finished slice, with a Conventional Commits message (`docs/rules/commits.md`). Run the `local-review` skill before every commit and push; GitHub CI (on since Step-22) re-runs the gates on every push, but `local-review` stays the gate before a commit. Never commit `.env.local` or any secret.
 - Once a step changes what is built, how to run it or a known gap, update `README.md` in the same step.
 - Use current docs, not memory. Next.js 16 ships its docs in `node_modules/next/dist/docs/`; for any other library or API, fetch its current docs.
 - To check, debug or verify anything on localhost, use the Claude-in-Chrome extension (ROADMAP Rule-11).
@@ -143,7 +143,7 @@ Capture is automatic: user-level `UserPromptSubmit` and `Stop` hooks in `~/.clau
 See `.claude/skills/*/SKILL.md` for full detail. In short:
 
 - `dev-onboarding`: get a local environment running on this project.
-- `local-review`: before every commit and push. GitHub CI is disabled, so this is the only gate (`docs/rules/commits.md`).
+- `local-review`: before every commit and push. the gate before a commit; GitHub CI re-runs the same gates on every push (`docs/rules/commits.md`).
 - `typesafe`: audits the type assertions this branch introduced (the no-`any` rule, `docs/rules/code-quality.md`). Despite the name, it has nothing to do with TypeSafe, Jev's maker.
 - `e2e-review`: before pushing a UI or flow change.
 - `dogfood`: exploratory QA of the running app (Step-7).
