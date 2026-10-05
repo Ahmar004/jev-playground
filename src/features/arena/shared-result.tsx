@@ -36,7 +36,7 @@ export function SharedResult({ snapshot }: { snapshot: ArenaSnapshot }) {
 			</section>
 			<div className="grid gap-4 md:grid-cols-2">
 				{snapshot.sides.map((side) => (
-					<SideCard key={side.racer} side={side} mode={snapshot.mode} />
+					<SideCard key={side.racer} side={side} mode={snapshot.mode} utc />
 				))}
 			</div>
 			{snapshot.expected && (

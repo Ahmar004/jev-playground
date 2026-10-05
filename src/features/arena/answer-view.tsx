@@ -78,10 +78,11 @@ function JevAnswerBlock({
 		)
 	}
 	const isChoice = answer.type === QUESTION_KINDS.choice
-	const picked = isChoice ? answer.choice : String(answer.score)
+	// Jev's Score is a probability-weighted value such as 3.76, so its words come from the nearest level.
+	const picked = isChoice ? answer.choice : String(Math.round(answer.score))
 	const headline = isChoice
 		? `Picked: ${label ? label(answer.choice) : answer.choice}`
-		: `Score ${answer.score}: ${answer.legend[String(answer.score)] ?? ''}`
+		: `Score ${answer.score}: ${answer.legend[picked] ?? ''}`
 	return (
 		<div className="flex flex-col gap-2">
 			<p className="text-text font-bold wrap-anywhere">{headline}</p>

@@ -56,6 +56,12 @@ describe('answerLabel', () => {
 		expect(answerLabel(needle.game.items, needle.task, [10, 5])).toBe('Lines 5 and 10')
 		expect(answerLabel(needle.game.items, needle.task, [])).toBe('No lines')
 	})
+
+	it("names the nearest level of Jev's in-between Score and keeps the score itself", () => {
+		const reviews = game('review-tug-of-war')
+		expect(answerLabel(reviews.game.items, reviews.task, 2.2)).toBe('Neutral or mixed (score 2.2)')
+		expect(answerLabel(reviews.game.items, reviews.task, 3.76)).toBe('Very positive (score 3.76)')
+	})
 })
 
 describe('answerValue and jevNote', () => {

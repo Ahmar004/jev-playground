@@ -33,6 +33,16 @@ export function runTime(iso: string): string {
 	return new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
 }
 
+/** A run's date and time in UTC, like 2026-10-05 22:03 UTC, for a page read in any zone (a share). */
+export function runTimeUtc(iso: string): string {
+	const time = new Date(iso).toLocaleTimeString('en-GB', {
+		hour: '2-digit',
+		minute: '2-digit',
+		timeZone: 'UTC'
+	})
+	return `${recordedOn(new Date(iso).toISOString())} ${time} UTC`
+}
+
 export function recordedOn(iso: string): string {
 	return iso.slice(0, DATE_LENGTH)
 }

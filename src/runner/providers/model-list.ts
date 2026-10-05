@@ -1,5 +1,7 @@
 import { z } from 'zod'
+import type { PriceTable } from '@/content/prices'
 import { PROVIDERS, type Provider } from '@/lib/constants'
+import { priceFor } from '@/runner/cost'
 import { ANTHROPIC_URL, ANTHROPIC_VERSION } from './anthropic'
 import { GOOGLE_BASE_URL } from './google'
 import { parseProviderJson, timedFetch } from './provider-error'
@@ -14,6 +16,13 @@ const TOKENS_PER_MILLION = 1_000_000
 // OpenAI's list also holds embeddings, speech, images and moderation, which can't answer a prompt.
 const OPENAI_NON_CHAT =
 	/embedding|whisper|tts|dall-e|moderation|image|audio|realtime|transcribe|search/
+// Google's list also marks speech, image, music, agent, research, computer-use, robotics and live
+// audio models as able to generate content, but none answers a text question with text.
+const GOOGLE_NON_TEXT =
+	/tts|image|banana|lyria|robotics|computer.use|deep.research|antigravity|transcribe|embedding|aqa|imagen|veo|live/
+// TypeSafe's own models are Jev, which races the LLM rather than playing it.
+const TYPESAFE_PREFIX = 'typesafe/'
+const TEXT_MODALITY = 'text'
 
 /** A model a key can reach. Prices are per million tokens, set only when the provider publishes them. */
 export type ModelOption = { id: string; label: string; inputPerM?: number; outputPerM?: number }
@@ -36,7 +45,8 @@ const openRouterSchema = z.object({
 		z.object({
 			id: z.string(),
 			name: z.string().optional(),
-			pricing: z.object({ prompt: z.string(), completion: z.string() }).optional()
+			pricing: z.object({ prompt: z.string(), completion: z.string() }).optional(),
+			architecture: z.object({ output_modalities: z.array(z.string()).optional() }).optional()
 		})
 	)
 })
@@ -77,6 +87,36 @@ function byLabel(a: ModelOption, b: ModelOption): number {
 	return a.label.localeCompare(b.label)
 }
 
+// An image or audio model also lists text among its outputs, so only a text-only one can race.
+function answersInTextOnly(outputs: string[] | undefined): boolean {
+	return outputs === undefined || (outputs.length === 1 && outputs[0] === TEXT_MODALITY)
+}
+
+function pricePerM(model: ModelOption, prices: PriceTable, on: Date): number | undefined {
+	if (model.inputPerM !== undefined && model.outputPerM !== undefined)
+		return model.inputPerM + model.outputPerM
+	const entry = priceFor(prices, [model.id], on)
+	return entry ? entry.inputPerM + entry.outputPerM : undefined
+}
+
+/**
+ * The model a live run starts with: the cheapest one with a known, non-zero price, so a first run
+ * costs a fraction of a cent and always shows its cost. Falls back to the first model.
+ */
+export function cheapestPricedModel(
+	models: ModelOption[],
+	prices: PriceTable,
+	on: Date = new Date()
+): string | undefined {
+	let cheapest: { id: string; price: number } | undefined
+	for (const model of models) {
+		const price = pricePerM(model, prices, on)
+		if (price !== undefined && price > 0 && (!cheapest || price < cheapest.price))
+			cheapest = { id: model.id, price }
+	}
+	return cheapest?.id ?? models[0]?.id
+}
+
 /**
  * The models a key can reach, from the provider's own list (R10, R42). It is
  * also the cheap real call behind each key's Test button. TypeSafe's Test goes
@@ -101,7 +141,12 @@ export async function fetchModels(
 				.sort(byLabel)
 		case PROVIDERS.openrouter:
 			return parseProviderJson(text, openRouterSchema, latencyMs)
-				.data.map((model) => ({
+				.data.filter(
+					(model) =>
+						!model.id.startsWith(TYPESAFE_PREFIX) &&
+						answersInTextOnly(model.architecture?.output_modalities)
+				)
+				.map((model) => ({
 					id: model.id,
 					label: model.name ?? model.id,
 					inputPerM: perMillion(model.pricing?.prompt),
@@ -115,6 +160,7 @@ export async function fetchModels(
 					const id = model.name.replace(/^models\//, '')
 					return { id, label: model.displayName ?? id }
 				})
+				.filter((model) => !GOOGLE_NON_TEXT.test(`${model.id} ${model.label}`.toLowerCase()))
 				.sort(byLabel)
 		case PROVIDERS.typesafe:
 			return []

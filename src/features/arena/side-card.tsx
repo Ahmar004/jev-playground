@@ -41,11 +41,14 @@ export function PendingCard({ racer, modelId }: { racer: Racer; modelId: string 
 export function SideCard({
 	side,
 	mode,
-	label
+	label,
+	utc = false
 }: {
 	side: ArenaSide
 	mode: Mode
 	label?: AnswerLabel
+	// A shared result is rendered on the server and read in any zone, so it dates the run in UTC.
+	utc?: boolean
 }) {
 	const { racer, modelId, at, result } = side
 	const outcome = itemOutcome(result)
@@ -91,7 +94,7 @@ export function SideCard({
 					</dd>
 				</div>
 			</dl>
-			<ModeLabel modelId={modelId} recordedAt={at} mode={mode} />
+			<ModeLabel modelId={modelId} recordedAt={at} mode={mode} utc={utc} />
 		</Card>
 	)
 }

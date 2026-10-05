@@ -7,8 +7,8 @@ A playground to learn System 1 models like Jev through games, experiements, quiz
 Checkout @spec.md at root for the full product spec (it replaces docs/requirements.md, which stays as the verbatim brief).
 
 Current Reamining Budget for this project: 10,000 pkr
-Current remaining Anthropic API credits: $19.47 USD
-Current Usage of Jev: $0.0047 for 130, 831 tokens
+Current remaining Anthropic API credits: $19.30 USD
+Current Usage of Jev: $0.0069 for 130, 831 tokens
 
 
 ## Rules:
@@ -225,9 +225,9 @@ Add an option to retry a quiz
 Add 4-5 even more interesting and fun games to the app, that have more visuals and are happening more visually and giving the user a real-time experience through visuals, make sure to give context to the user about the game, and make sure that its visible to user that what was expected from Jev and LLM and what are they actually doing, how are they playing the game.
 
 ### step-44:
-Make profile page shareable to others (both signed-in and unsgned-in users)
+final testing via systematic-debugging skill and end-to-end tests of all workflows and for the flows which require putting in the api keys in the live site, open up site in claude-in-chrome and ask me to type in the keys, and then you test all the developer mode workflows as well, don't perform load tests on prod db, we have to keep this db for real users only.
 
 ### step-45:
-final testing via systematic-debugging skill and end-to-end tests of all workflows except for the flows which require putting in the api keys in the live site (open up site in claude-in-chrome and ask me to type in the keys, and then you test all the developer mode workflows as well)
+Hardening: focusing again on scalability, reliability, faster response times, optimizing things that could be done, and the ability to withstand a huge traffic, after being shared inside the discord community of Typesafe.ai, which has 100k+members and atleast 1000 members could possilby visit the site at once. Don't cut off any functionality, UI, feature or anything important.
 
 <hr style="height:4px; background-color:Grey; border:none;">

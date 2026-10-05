@@ -59,8 +59,12 @@ function isTags(value: unknown): value is Record<string, unknown> {
 /** A right answer or a racer's answer in the page's own words: an option name, a level name, yes or no, or lines. */
 export function answerLabel(words: ItemWords, task: Task, value: unknown): string {
 	if (typeof value === 'boolean') return value ? (words.yes ?? 'Yes') : (words.no ?? 'No')
-	if (task.kind === TASK_KINDS.score && typeof value === 'number')
-		return scoreLevelNames(task)[value] ?? String(value)
+	if (task.kind === TASK_KINDS.score && typeof value === 'number') {
+		// Jev's Score is a probability-weighted value such as 2.2, so it is named by the nearest level.
+		const name = scoreLevelNames(task)[Math.round(value)]
+		if (name === undefined) return String(value)
+		return Number.isInteger(value) ? name : `${name} (score ${value})`
+	}
 	if (task.kind === TASK_KINDS.findLines && Array.isArray(value))
 		return linesText(value.filter((line): line is number => typeof line === 'number'))
 	if (task.kind === TASK_KINDS.choice && typeof value === 'string') return optionLabel(value)

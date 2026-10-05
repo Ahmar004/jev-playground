@@ -166,6 +166,9 @@ test('axe finds no WCAG 2.1 AA violations in the opened new context, in both the
 })
 
 test('screenshots of the new context in both themes at desktop and phone width', async () => {
+	// Each scheme and width pair replays two presets at recorded speed and takes
+	// three themed captures (about 15 s), so four pairs pass the 60 s default.
+	test.setTimeout(180_000)
 	for (const scheme of COLOR_SCHEMES) {
 		for (const [name, size] of Object.entries(VIEWPORTS)) {
 			await page.setViewportSize(size)

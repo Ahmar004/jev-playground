@@ -13,6 +13,7 @@ import {
 } from '@/lib/constants'
 import { buildAnthropicBody, callAnthropic } from '@/runner/providers/anthropic'
 import { callGoogle } from '@/runner/providers/google'
+import { cheapestPricedModel } from '@/runner/providers/model-list'
 import { callOpenAi, callOpenRouter } from '@/runner/providers/openai-compat'
 import type { JevCall, LlmCall } from '@/runner/racers'
 import type { ProviderResult } from '@/runner/types'
@@ -67,7 +68,9 @@ export function useLiveSetup(): LiveSetup {
 	const list = useModelList(provider ?? PROVIDERS.anthropic)
 	const models = provider ? (list.data ?? []) : []
 	const modelId =
-		chosenModel && models.some((model) => model.id === chosenModel) ? chosenModel : models[0]?.id
+		chosenModel && models.some((model) => model.id === chosenModel)
+			? chosenModel
+			: cheapestPricedModel(models, PRICES)
 
 	const jevAccess = jevAccessFor(keys)
 	const llmKey = provider ? keys[provider] : undefined

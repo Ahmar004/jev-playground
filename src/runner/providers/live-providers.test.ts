@@ -169,14 +169,40 @@ describe('fetchModels', () => {
 				JSON.stringify({
 					data: [
 						{ id: 'a/b', name: 'A: B', pricing: { prompt: '0.000003', completion: '0.000015' } },
-						{ id: 'typesafe/jev-router', pricing: { prompt: '-1', completion: '-1' } }
+						{ id: 'openrouter/router', pricing: { prompt: '-1', completion: '-1' } }
 					]
 				})
 			)
 		)
 		const models = await fetchModels(PROVIDERS.openrouter, KEY)
 		expect(models.find((m) => m.id === 'a/b')).toMatchObject({ inputPerM: 3, outputPerM: 15 })
-		expect(models.find((m) => m.id === 'typesafe/jev-router')?.inputPerM).toBeUndefined()
+		expect(models.find((m) => m.id === 'openrouter/router')?.inputPerM).toBeUndefined()
+	})
+
+	it('keeps only OpenRouter models that answer in text alone, and never Jev as the LLM', async () => {
+		const text = { output_modalities: ['text'] }
+		mockFetch(
+			new Response(
+				JSON.stringify({
+					data: [
+						{ id: 'a/chat', architecture: text },
+						{
+							id: 'google/gemini-2.5-flash-image',
+							architecture: { output_modalities: ['image', 'text'] }
+						},
+						{
+							id: 'google/lyria-3-pro-preview',
+							architecture: { output_modalities: ['text', 'audio'] }
+						},
+						{ id: 'typesafe/jev-router', architecture: text },
+						{ id: OPENROUTER_JEV_MODEL, architecture: text },
+						{ id: 'b/older' }
+					]
+				})
+			)
+		)
+		const models = await fetchModels(PROVIDERS.openrouter, KEY)
+		expect(models.map((m) => m.id)).toEqual(['a/chat', 'b/older'])
 	})
 
 	it('keeps only chat-capable OpenAI models', async () => {
@@ -205,6 +231,36 @@ describe('fetchModels', () => {
 		expect(models.map((m) => m.id)).toEqual(['gemini-2.5-pro'])
 		expect(String(fetchMock.mock.calls[0]?.[0])).not.toContain('key=')
 		expect(new Headers(fetchMock.mock.calls[0]?.[1]?.headers).get('x-goog-api-key')).toBe(KEY)
+	})
+
+	it('drops Gemini models that generate content but cannot answer a text question', async () => {
+		const generate = ['generateContent']
+		const model = (name: string, displayName: string) => ({
+			name: `models/${name}`,
+			displayName,
+			supportedGenerationMethods: generate
+		})
+		mockFetch(
+			new Response(
+				JSON.stringify({
+					models: [
+						model('gemini-3.5-flash-lite', 'Gemini 3.5 Flash Lite'),
+						model('gemma-4-31b-it', 'Gemma 4 31B IT'),
+						model('antigravity-preview-05-2026', 'Antigravity Agent Preview'),
+						model('deep-research-preview', 'Deep Research Preview'),
+						model('gemini-2.5-computer-use-preview', 'Gemini 2.5 Computer Use Preview'),
+						model('gemini-2.5-flash-preview-tts', 'Gemini 2.5 Flash Preview TTS'),
+						model('gemini-2.5-flash-image', 'Nano Banana'),
+						model('lyria-3-clip-preview', 'Lyria 3 Clip Preview'),
+						model('gemini-robotics-er-2-preview', 'Gemini Robotics-ER 2 Preview'),
+						model('gemini-3.5-transcribe', 'Gemini 3.5 Transcribe'),
+						model('gemini-live-2.5-flash', 'Gemini Live 2.5 Flash')
+					]
+				})
+			)
+		)
+		const models = await fetchModels(PROVIDERS.google, KEY)
+		expect(models.map((m) => m.id)).toEqual(['gemini-3.5-flash-lite', 'gemma-4-31b-it'])
 	})
 
 	it('lists Anthropic models with the browser-access header', async () => {

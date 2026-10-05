@@ -16,6 +16,27 @@ describe('answerText', () => {
 		expect(answerText('jev_code', { ...jevT1, parsed: { answer: '3' } })).toBe('3')
 	})
 
+	it("reads Jev's Noul as yes or no against the scorer's bar, with its probability", () => {
+		const noul = (value: number) => ({
+			...jevT1,
+			parsed: { answer: { type: 'noul', noul: value } }
+		})
+		expect(answerText('jev', noul(0.96))).toBe('yes (96% likely yes)')
+		expect(answerText('jev', noul(0.03))).toBe('no (3% likely yes)')
+		expect(answerText('jev', noul(0.5))).toBe('yes (50% likely yes)')
+	})
+
+	it("reads Jev's Score as its number, like the LLM's, with its confidence", () => {
+		const score = {
+			type: 'score',
+			score: 3,
+			legend: { '3': 'Positive', '4': 'Very positive' },
+			probabilities: { '3': 0.82, '4': 0.18 },
+			confidence: 0.82
+		}
+		expect(answerText('jev', { ...jevT1, parsed: { answer: score } })).toBe('3 (82% sure)')
+	})
+
 	it('has no answer when the output did not parse', () => {
 		expect(answerText('llm', opusT2)).toBeNull()
 	})

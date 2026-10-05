@@ -65,6 +65,28 @@ describe('SideCard', () => {
 		expect(screen.getByText('Sure! The answer is billing.')).toBeInTheDocument()
 	})
 
+	it("names the nearest level of Jev's in-between Score and bolds that level's bar", () => {
+		const side: ArenaSide = {
+			...jevChoice,
+			result: {
+				...result,
+				parsed: {
+					answer: {
+						type: 'score',
+						score: 3.76,
+						legend: { '3': 'Positive', '4': 'Very positive' },
+						probabilities: { '3': 0.24, '4': 0.76 },
+						confidence: 0.8
+					}
+				}
+			}
+		}
+		render(<SideCard side={side} mode={MODES.developer} />)
+		expect(screen.getByText('Score 3.76: Very positive')).toBeInTheDocument()
+		expect(screen.getByText('4')).toHaveClass('font-bold')
+		expect(screen.getByText('3')).not.toHaveClass('font-bold')
+	})
+
 	it('says "not scored" and "price unknown" instead of inventing a verdict or a cost', () => {
 		const side: ArenaSide = {
 			...jevChoice,
@@ -91,6 +113,13 @@ describe('SharedResult', () => {
 		expect(screen.getByText(/Developer mode, run by a user/)).toBeInTheDocument()
 		expect(screen.getByText('<img src=x onerror=alert(1)>')).toBeInTheDocument()
 		expect(container.querySelector('img')).toBeNull()
+	})
+
+	it("dates a Developer share's run time in UTC, since the server and every viewer may sit in another zone", () => {
+		render(<SharedResult snapshot={snapshot} />)
+		expect(
+			screen.getByText('Developer mode - run 2026-10-02 06:00 UTC - jev-1.13.0')
+		).toBeInTheDocument()
 	})
 
 	it('keeps the Beginner mode label on a Beginner share', () => {
