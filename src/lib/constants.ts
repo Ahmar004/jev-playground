@@ -199,6 +199,10 @@ export const GAME_ANIMATIONS = {
 } as const
 export type GameAnimation = (typeof GAME_ANIMATIONS)[keyof typeof GAME_ANIMATIONS]
 
+// The three decisions a bouncer makes in Guardrail Gauntlet (the task's option keys).
+export const GATE_DECISIONS = { pass: 'pass', review: 'review', block: 'block' } as const
+export type GateDecision = (typeof GATE_DECISIONS)[keyof typeof GATE_DECISIONS]
+
 // Speed Race is also timed, so it writes Leaderboard entries (DESIGN 8).
 export const SPEED_RACE_GAME_ID = 'speed-race'
 

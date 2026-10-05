@@ -1,5 +1,15 @@
 import { expect, test } from '@playwright/test'
-import { expectNoHorizontalScroll, freshEmail, signIn, signUp, VIEWPORTS } from './helpers'
+import {
+	captureScheme,
+	COLOR_SCHEMES,
+	expectNoHorizontalScroll,
+	freshEmail,
+	setColorScheme,
+	SCREENSHOT_DIR,
+	signIn,
+	signUp,
+	VIEWPORTS
+} from './helpers'
 
 // One account for the whole file keeps real sign-ups at one per run.
 const EMAIL = freshEmail()
@@ -37,10 +47,10 @@ test('flow 3: play a game, switch the opponent, skip to the result, see the Lead
 
 	await page.getByRole('button', { name: 'Start the race' }).click()
 	await page.getByRole('button', { name: 'Skip to result' }).click()
-	await expect(page.getByRole('region', { name: 'Result' })).toBeVisible()
+	await expect(page.getByRole('region', { name: 'Result', exact: true })).toBeVisible()
 	await expect(
 		page
-			.getByRole('region', { name: 'Result' })
+			.getByRole('region', { name: 'Result', exact: true })
 			.getByText(/Beginner|won|tie/i)
 			.first()
 	).toBeVisible()
@@ -50,7 +60,7 @@ test('flow 3: play a game, switch the opponent, skip to the result, see the Lead
 
 	await page.getByRole('link', { name: 'See your Leaderboard' }).click()
 	await expect(page).toHaveURL('/leaderboard')
-	const section = page.getByRole('region', { name: 'Review Tug-of-War' })
+	const section = page.getByRole('region', { name: 'Review Tug-of-War', exact: true })
 	await expect(section.getByRole('row', { name: /Jev/ })).toContainText('Beginner mode')
 	await expect(section.getByRole('row', { name: /Claude Sonnet 5\.5/ })).toContainText(
 		'Beginner mode'
@@ -62,7 +72,7 @@ test('number crunch shows Code beside the models in its summary', async ({ page 
 	await page.goto('/games/number-crunch')
 	await page.getByRole('button', { name: 'Start the race' }).click()
 	await page.getByRole('button', { name: 'Skip to result' }).click()
-	const result = page.getByRole('region', { name: 'Result' })
+	const result = page.getByRole('region', { name: 'Result', exact: true })
 	await expect(result.getByRole('row', { name: /^Code/ })).toContainText('12 of 12')
 })
 
@@ -73,7 +83,7 @@ test('a game works at phone width without horizontal scroll', async ({ page }) =
 	await expectNoHorizontalScroll(page)
 	await page.getByRole('button', { name: 'Start the race' }).click()
 	await page.getByRole('button', { name: 'Skip to result' }).click()
-	await expect(page.getByRole('region', { name: 'Result' })).toBeVisible()
+	await expect(page.getByRole('region', { name: 'Result', exact: true })).toBeVisible()
 	await expectNoHorizontalScroll(page)
 	await page.goto('/leaderboard')
 	await expectNoHorizontalScroll(page)
@@ -93,7 +103,7 @@ test('the four P1 games play and write Leaderboard entries; Confidence Catch has
 		await page.goto(`/games/${slug}`)
 		await page.getByRole('button', { name: 'Start the race' }).click()
 		await page.getByRole('button', { name: 'Skip to result' }).click()
-		await expect(page.getByRole('region', { name: 'Result' })).toBeVisible()
+		await expect(page.getByRole('region', { name: 'Result', exact: true })).toBeVisible()
 		await expect(page.getByText('Saved to your Leaderboard', { exact: true }).first()).toBeVisible()
 	}
 	// Confidence Catch: the slider re-sorts Jev's recorded answers.
@@ -109,6 +119,37 @@ test('the four P1 games play and write Leaderboard entries; Confidence Catch has
 
 	await page.goto('/leaderboard')
 	for (const title of titles) {
-		await expect(page.getByRole('region', { name: title })).toBeVisible()
+		await expect(page.getByRole('region', { name: title, exact: true })).toBeVisible()
 	}
 })
+
+// Each P0 game draws its own scene from the finished race (ROADMAP Step-33).
+const P0_SCENES = [
+	{ slug: 'guardrail-gauntlet', title: 'Guardrail Gauntlet', text: /Threats stopped \d+ of \d+/ },
+	{ slug: 'needle-hunt', title: 'Needle Hunt', text: /picked \d+ lines/ },
+	{ slug: 'number-crunch', title: 'Number Crunch Showdown', text: /\d+ of 12 hit points/ },
+	{ slug: 'review-tug-of-war', title: 'Review Tug-of-War', text: /\d+ pulls/ }
+]
+
+for (const scene of P0_SCENES) {
+	for (const [size, viewport] of Object.entries(VIEWPORTS)) {
+		for (const scheme of COLOR_SCHEMES) {
+			test(`${scene.slug} scene at ${size} width in ${scheme}`, async ({ page }) => {
+				await page.setViewportSize(viewport)
+				await setColorScheme(page, scheme)
+				await signIn(page, EMAIL)
+				await page.goto(`/games/${scene.slug}`)
+				await page.getByRole('button', { name: 'Start the race' }).click()
+				await page.getByRole('button', { name: 'Skip to result' }).click()
+				const picture = page.getByRole('group', { name: new RegExp(`^${scene.title} scene`) })
+				await expect(picture.getByText(scene.text).first()).toBeVisible()
+				await expect(page.getByRole('region', { name: 'Result', exact: true })).toBeVisible()
+				await expectNoHorizontalScroll(page)
+				await picture.scrollIntoViewIfNeeded()
+				await captureScheme(page, scheme, {
+					path: `${SCREENSHOT_DIR}/${scene.slug}-scene-${size}-${scheme}.png`
+				})
+			})
+		}
+	}
+}
