@@ -10,6 +10,11 @@
 		"Each claim comes with its source text. One Noul question asks whether the source supports the claim. Jev answers with a probability.",
 		"The LLM reads the same pair. The race is usually close, so the lesson is in the time and cost columns as much as in accuracy."
 	],
+	"items": {
+		"plural": "claims",
+		"yes": "Supported",
+		"no": "Not supported"
+	},
 	"docs": {
 		"path": "/primitives/noul",
 		"title": "Noul"

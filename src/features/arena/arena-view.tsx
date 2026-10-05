@@ -7,10 +7,10 @@ import { useMode } from '@/features/mode/mode-context'
 import { cn } from '@/lib/cn'
 import { MODES } from '@/lib/constants'
 import { ROUTES } from '@/lib/links'
+import { ArenaBrief } from './arena-brief'
 import { BeginnerPanel } from './beginner-panel'
 import { CustomDeveloperPanel, PresetDeveloperPanel } from './developer-panel'
 import type { ArenaPresetView } from './snapshot'
-import { ScrollRegion } from '@/components/ui/scroll-region'
 
 const PRESET_PARAM = 'preset'
 // A pseudo preset id in ?preset=: the Developer mode "Custom task" tab.
@@ -86,27 +86,7 @@ export function ArenaView({ views }: { views: ArenaPresetView[] }) {
 				selected && (
 					<Card className="flex flex-col gap-4 p-5">
 						<h2 className="text-text text-2xl font-bold">{selected.preset.title}</h2>
-						<div className="flex flex-col gap-1">
-							{!developer && (
-								<>
-									<p className="text-text-muted text-sm">Input</p>
-									<ScrollRegion
-										label="Input text"
-										className="bg-surface-hover max-h-64 overflow-auto rounded"
-									>
-										<pre className="text-text p-3 text-sm wrap-anywhere whitespace-pre-wrap">
-											{selected.state}
-										</pre>
-									</ScrollRegion>
-								</>
-							)}
-							<p className="text-text-muted text-sm">
-								Question:{' '}
-								<span className="text-text wrap-anywhere whitespace-pre-line">
-									{selected.question}
-								</span>
-							</p>
-						</div>
+						<ArenaBrief task={selected.task} words={selected.preset.items} showInput={!developer} />
 						{selected.batchItems !== null && (
 							<p className="text-text-muted text-sm">
 								Want to see it at scale?{' '}

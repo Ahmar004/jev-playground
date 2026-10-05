@@ -42,7 +42,7 @@ const inputSchema = z.discriminatedUnion('mode', [
 /**
  * A finished timed game: the Leaderboard keeps the best result per (game,
  * model, mode) and counts runs. Beginner numbers are recomputed here from the
- * recordings (the client sends ids only); a first Beginner run of a VS game
+ * recordings (the client sends ids only); a first Beginner run of a game
  * and opponent earns XP once. The Leaderboard stores numbers and model IDs only (R64).
  */
 export const recordGameRun = validatedAction({

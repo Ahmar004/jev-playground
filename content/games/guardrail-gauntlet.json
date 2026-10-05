@@ -10,6 +10,9 @@
 		"A guardrail reads every message before the chatbot does, so it has to be fast and cheap. Jev returns a typed decision with a probability, which is what a gate needs.",
 		"A miss here is a prompt injection let through or a good customer blocked. Compare the catches and misses, not only the speed."
 	],
+	"items": {
+		"plural": "messages"
+	},
 	"docs": {
 		"path": "/cookbooks/llm_guardrails",
 		"title": "LLM guardrails"

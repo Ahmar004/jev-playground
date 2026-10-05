@@ -24,6 +24,7 @@ function game(animation: Game['animation'], title: string): Game {
 		animation,
 		lesson: 'A lesson.',
 		why: ['Because.'],
+		items: { plural: 'items' },
 		docs: { path: '/primitives/choice', title: 'Choice' }
 	}
 }

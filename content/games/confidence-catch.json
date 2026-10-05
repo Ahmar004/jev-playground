@@ -10,6 +10,9 @@
 		"Each message is a Choice question. Jev returns its pick with a confidence. After the race, set a threshold: answers at or above it are acted on, the rest go to a human.",
 		"A good threshold sends the doubtful answers to a person and lets the sure ones through. The slider only re-sorts Jev's recorded answers; it runs nothing new."
 	],
+	"items": {
+		"plural": "customer messages"
+	},
 	"docs": {
 		"path": "/primitives/choice",
 		"title": "Choice"

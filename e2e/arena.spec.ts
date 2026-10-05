@@ -174,6 +174,21 @@ test('Developer mode: edit a preset input, or write a custom task, and run live'
 	await page.getByRole('button', { name: 'Share this result' }).click()
 	await expect(page.getByRole('dialog', { name: 'Link created' })).toBeVisible()
 	await page.keyboard.press('Escape')
+	// Step-41: live answers read in the preset's words.
+	await expect(page.getByText('Probability yes (Supported)')).toBeVisible()
+	await expect(page.getByText('Expected answer:')).toContainText('Not supported')
+
+	// Step-41: a live fan-out run is scored question by question; the LLM's reply here has the
+	// wrong shape, so every row says Couldn't parse instead of hiding it (R44).
+	await page.getByRole('button', { name: /Phishing signals/ }).click()
+	await expect(page).toHaveURL(/preset=phishing-fan-out/)
+	await expect(page.getByRole('heading', { name: 'Phishing signals' })).toBeVisible()
+	await page.getByRole('button', { name: 'Run live' }).click()
+	const fanOut = page.getByRole('region', { name: 'Question by question' })
+	await expect(fanOut).toBeVisible({ timeout: 20_000 })
+	await expect(fanOut.locator('ol > li')).toHaveCount(10)
+	await expect(fanOut.getByText('Yes (82% likely yes)')).toHaveCount(10)
+	await expect(fanOut.getByText("Couldn't parse", { exact: true })).toHaveCount(10)
 
 	// A custom task has no stored answer, and sharing it asks for consent first.
 	await page.getByRole('button', { name: /Custom task/ }).click()
@@ -203,6 +218,23 @@ test('Developer mode: edit a preset input, or write a custom task, and run live'
 	expect(await shared.evaluate(() => '__xss' in window)).toBe(false)
 	expect(await shared.locator('img').count()).toBe(0)
 	await visitor.close()
+
+	// Step-40: a live game race fills the item list (in-app links keep the keys in tab memory).
+	await page.keyboard.press('Escape')
+	await expect(page.getByRole('dialog')).toHaveCount(0)
+	await page.getByRole('link', { name: 'Games', exact: true }).first().click()
+	await page
+		.getByRole('link', { name: /Citation Cop/ })
+		.first()
+		.click()
+	await page.getByRole('button', { name: 'Start the race' }).click()
+	await expect(page.getByText('Finished. These numbers come from live calls.')).toBeVisible({
+		timeout: 30_000
+	})
+	const items = page.locator('details').filter({ hasText: 'See all 12 claims' })
+	await items.locator('summary').click()
+	await expect(items.getByText('Not answered yet')).toHaveCount(0)
+	await expect(items.getByText('Supported (82% likely yes)').first()).toBeVisible()
 })
 
 test('the Arena and a shared result fit a phone in both themes', async ({ page }) => {

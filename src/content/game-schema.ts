@@ -6,6 +6,15 @@ const text = z.string().min(1)
 const DOCS_PATH = /^\/[a-z0-9/_.-]+(#[a-z0-9-]+)?$/
 const MAX_WHY_PARAGRAPHS = 3
 
+// What a task's items are called on the page ("messages"), and for a yes or no task the words
+// for each answer ("Supported"), so item lists and answers read in the page's own terms.
+export const itemWordsSchema = z.strictObject({
+	plural: text,
+	yes: text.optional(),
+	no: text.optional()
+})
+export type ItemWords = z.infer<typeof itemWordsSchema>
+
 // content/games/<gameId>.json (DESIGN 8). Words only: the numbers come from
 // the Recordings at render time, so content never states a result.
 export const gameSchema = z.strictObject({
@@ -18,6 +27,7 @@ export const gameSchema = z.strictObject({
 	// The lesson in one sentence, shown before the run and in the summary.
 	lesson: text,
 	why: z.array(text).min(1).max(MAX_WHY_PARAGRAPHS),
+	items: itemWordsSchema,
 	docs: z.strictObject({ path: z.string().regex(DOCS_PATH), title: text })
 })
 export type Game = z.infer<typeof gameSchema>

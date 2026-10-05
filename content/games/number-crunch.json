@@ -10,6 +10,9 @@
 		"Counting letters and multi-digit arithmetic are known weak spots for System One models, and LLMs miss too, often by writing text around the answer, which counts as a miss.",
 		"All three get the same problems and the same six numeric options. Code runs through the same runner, so its time and cost are measured the same way. Compare the models' misses with Code's exact answers."
 	],
+	"items": {
+		"plural": "problems"
+	},
 	"docs": {
 		"path": "/model-jaggedness/jev-1.13#math-and-numbers",
 		"title": "Math and numbers"

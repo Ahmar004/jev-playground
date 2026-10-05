@@ -222,12 +222,12 @@ Like Step-40, give context under the options at Arena page as well, if there are
 Add an option to retry a quiz
 
 ### step-43:
-Add 4-5 even more interesting and fun games to the app, that have more visuals and are happening more visually and giving the user a real-time experience through visuals.
+Add 4-5 even more interesting and fun games to the app, that have more visuals and are happening more visually and giving the user a real-time experience through visuals, make sure to give context to the user about the game, and make sure that its visible to user that what was expected from Jev and LLM and what are they actually doing, how are they playing the game.
 
 ### step-44:
 Make profile page shareable to others (both signed-in and unsgned-in users)
 
 ### step-45:
-final testing via systematic-debugging skill and end-to-end tests of all workflows except for the flows which require putting in the api keys in the live site (leave those to me, I would test that myself)
+final testing via systematic-debugging skill and end-to-end tests of all workflows except for the flows which require putting in the api keys in the live site (open up site in claude-in-chrome and ask me to type in the keys, and then you test all the developer mode workflows as well)
 
 <hr style="height:4px; background-color:Grey; border:none;">

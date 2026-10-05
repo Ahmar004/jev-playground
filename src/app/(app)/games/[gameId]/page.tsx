@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { GAMES, getGame } from '@/content/games'
+import { Button } from '@/components/ui/button'
+import { GAMES, getGame, nextGame } from '@/content/games'
 import { currentRecordings } from '@/content/recordings'
 import { getTask } from '@/content/tasks'
 import { GamePlay } from '@/features/games/game-play'
@@ -27,6 +28,7 @@ export default async function GamePage({ params }: PageProps<'/games/[gameId]'>)
 	const task = getTask(game.taskId)
 	// Only this game's recordings reach the client (R79).
 	const recordings = currentRecordings(task.id)
+	const next = nextGame(GAMES, game.id)
 	return (
 		<main className="flex flex-col gap-4">
 			<Link href={ROUTES.games} className="text-accent w-fit text-sm underline">
@@ -34,7 +36,18 @@ export default async function GamePage({ params }: PageProps<'/games/[gameId]'>)
 			</Link>
 			<h1 className="text-text text-3xl font-extrabold">{game.title}</h1>
 			<p className="text-text-muted max-w-2xl text-lg">{game.blurb}</p>
-			<GamePlay game={game} task={task} recordings={recordings} />
+			{/* Keyed by game, so Play next game starts the next one with fresh race state. */}
+			<GamePlay key={game.id} game={game} task={task} recordings={recordings} />
+			<nav aria-label="More games" className="flex flex-wrap items-center gap-3 pt-2">
+				{next && (
+					<Button asChild>
+						<Link href={ROUTES.game(next.id)}>Play next game</Link>
+					</Button>
+				)}
+				<Button asChild variant={next ? 'outline' : 'primary'}>
+					<Link href={ROUTES.games}>All games</Link>
+				</Button>
+			</nav>
 		</main>
 	)
 }

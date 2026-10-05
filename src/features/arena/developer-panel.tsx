@@ -47,6 +47,7 @@ export function PresetDeveloperPanel({
 					unchangedState={view.state}
 					buildTask={() => withEditedState(view.task, text)}
 					onUseBeginner={onUseBeginner}
+					words={view.preset.items}
 				>
 					<div className="flex flex-col gap-1">
 						<Label htmlFor="arena-input">Input (you can edit it)</Label>

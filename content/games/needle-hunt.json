@@ -10,6 +10,9 @@
 		"Jev gets every line as its own Noul in a single request, so all 30 lines are scored together. The LLM reads the whole document and writes back the line numbers it picked.",
 		"Credit is shared by how many of the right lines each racer found without picking wrong ones."
 	],
+	"items": {
+		"plural": "documents"
+	},
 	"docs": {
 		"path": "/cookbooks/semantic_find",
 		"title": "Semantic find"

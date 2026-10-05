@@ -18,7 +18,7 @@ describe('GLOSSARY', () => {
 			'Developer mode',
 			'Recording',
 			'Level',
-			'VS game',
+			'Game',
 			'Arena',
 			'Sandbox',
 			'Racer'

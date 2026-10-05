@@ -107,6 +107,75 @@ test('end quiz: improvement shows, Profile holds the badge and the XP', async ()
 	await expect(page.getByText('You have not shared anything yet.')).toBeVisible()
 })
 
+// Step-42: a retry replaces the attempt, and the score, improvement, XP and badge follow it.
+test('retry a quiz: Cancel and Esc go back; the latest attempt counts for XP and badges', async () => {
+	const startJevRight = startQuiz.questions.filter((question) => question.answer === 'jev').length
+	const answers = endQuiz.questions.map((question) => question.answer)
+	const endJevRight = answers.filter((answer) => answer === 'jev').length
+	await page.goto('/quizzes/end')
+	await expect(
+		page.getByText('Your latest attempt counts for your score, XP and badges.')
+	).toBeVisible()
+
+	// Cancel retry, then Esc, both return to the saved results.
+	await page.getByRole('button', { name: 'Retry quiz' }).first().click()
+	await expect(page.getByText(`Question 1 of ${answers.length}`)).toBeVisible()
+	await expect(page.getByText('You are retrying this quiz.')).toBeVisible()
+	await page.getByRole('button', { name: 'Cancel retry' }).click()
+	await expect(
+		page.getByRole('heading', { name: `You scored ${answers.length} of ${answers.length}` })
+	).toBeVisible()
+	await page.getByRole('button', { name: 'Retry quiz' }).last().click()
+	await page.getByRole('radio', { name: 'Jev', exact: true }).check()
+	await page.keyboard.press('Escape')
+	await expect(
+		page.getByRole('heading', { name: `You scored ${answers.length} of ${answers.length}` })
+	).toBeVisible()
+
+	// A worse retry: the score drops to the start score, XP is taken back, Quiz Climber is lost.
+	await page.getByRole('button', { name: 'Retry quiz' }).first().click()
+	for (const [index] of answers.entries()) {
+		await expect(page.getByText(`Question ${index + 1} of ${answers.length}`)).toBeVisible()
+		await page.getByRole('radio', { name: 'Jev', exact: true }).check()
+		await page
+			.getByRole('button', { name: index === answers.length - 1 ? 'Submit quiz' : 'Next' })
+			.click()
+	}
+	await expect(
+		page.getByRole('heading', { name: `You scored ${endJevRight} of ${answers.length}` })
+	).toBeVisible()
+	await expect(
+		page.getByText(`Retry saved: you scored ${endJevRight} of ${answers.length}`, { exact: true })
+	).toBeVisible()
+	const lost = (answers.length - endJevRight) * XP_PER_RIGHT
+	await expect(
+		page.getByText(new RegExp(`${lost} XP from answers you missed`)).first()
+	).toBeVisible()
+	await expect(page.getByText('the same score both times.')).toBeVisible()
+	await page.goto('/profile')
+	await expect(
+		page.getByText(`${(startJevRight + endJevRight) * XP_PER_RIGHT} XP`, { exact: true })
+	).toBeVisible()
+	const climber = page.getByRole('listitem').filter({ hasText: 'Quiz Climber' })
+	await expect(climber.getByText(/^Earned /)).toHaveCount(0)
+
+	// A better retry earns them back.
+	await page.goto('/quizzes/end')
+	await page.getByRole('button', { name: 'Retry quiz' }).first().click()
+	for (const [index, answer] of answers.entries()) {
+		await expect(page.getByText(`Question ${index + 1} of ${answers.length}`)).toBeVisible()
+		await page.getByRole('radio', { name: LABELS[answer] ?? '', exact: true }).check()
+		await page
+			.getByRole('button', { name: index === answers.length - 1 ? 'Submit quiz' : 'Next' })
+			.click()
+	}
+	await expect(
+		page.getByRole('heading', { name: `You scored ${answers.length} of ${answers.length}` })
+	).toBeVisible()
+	await expect(page.getByText(`+${lost} XP`, { exact: true })).toBeVisible()
+	await expect(page.getByText('Badge earned: Quiz Climber', { exact: true })).toBeVisible()
+})
+
 test('screenshots in both themes at desktop and phone width', async () => {
 	for (const scheme of COLOR_SCHEMES) {
 		for (const [name, size] of Object.entries(VIEWPORTS)) {

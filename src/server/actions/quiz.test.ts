@@ -1,13 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { getQuiz } from '@/content/quizzes'
-import { QUIZ_IDS, XP_AMOUNTS, XP_SOURCES } from '@/lib/constants'
+import { BADGES, QUIZ_IDS, XP_AMOUNTS, XP_SOURCES } from '@/lib/constants'
 import { submitQuiz } from './quiz'
 
 const USER_ID = '3f2a4c1e-0b7d-4e55-9a10-2c6f1d8e9b42'
 
 const state = vi.hoisted(() => ({
-	attemptCreate: vi.fn(),
+	attemptFind: vi.fn(),
+	attemptUpsert: vi.fn(),
+	attemptRows: vi.fn(),
 	xpCreate: vi.fn(),
+	xpDelete: vi.fn(),
+	badgeDelete: vi.fn(),
 	refresh: vi.fn()
 }))
 
@@ -15,11 +19,15 @@ vi.mock('@/server/db/client', () => ({
 	db: {
 		$transaction: async (run: (tx: unknown) => Promise<unknown>) =>
 			run({
-				quizAttempt: { createMany: state.attemptCreate, findMany: async () => [] },
-				xpEvent: { createMany: state.xpCreate },
+				quizAttempt: {
+					findUnique: state.attemptFind,
+					upsert: state.attemptUpsert,
+					findMany: state.attemptRows
+				},
+				xpEvent: { createMany: state.xpCreate, deleteMany: state.xpDelete },
 				levelProgress: { findMany: async () => [], count: async () => 0 },
 				leaderboardEntry: { findMany: async () => [] },
-				userBadge: { createMany: async () => ({ count: 0 }) }
+				userBadge: { createMany: async () => ({ count: 0 }), deleteMany: state.badgeDelete }
 			})
 	}
 }))
@@ -46,8 +54,12 @@ const picks = (wrong: number) =>
 
 beforeEach(() => {
 	vi.clearAllMocks()
-	state.attemptCreate.mockResolvedValue({ count: 1 })
+	state.attemptFind.mockResolvedValue(null)
+	state.attemptUpsert.mockResolvedValue({})
+	state.attemptRows.mockResolvedValue([])
 	state.xpCreate.mockResolvedValue({ count: 1 })
+	state.xpDelete.mockResolvedValue({ count: 0 })
+	state.badgeDelete.mockResolvedValue({ count: 0 })
 })
 
 describe('submitQuiz', () => {
@@ -56,9 +68,9 @@ describe('submitQuiz', () => {
 		expect(result.ok).toBe(true)
 		if (!result.ok) return
 		const right = quiz.questions.length - 2
-		expect(result.data).toMatchObject({ score: right, firstAttempt: true })
+		expect(result.data).toMatchObject({ score: right, firstAttempt: true, xpLost: 0 })
 		expect(result.data.awards.xp).toBe(right * XP_AMOUNTS[XP_SOURCES.quizCorrect])
-		expect(state.attemptCreate.mock.calls[0]?.[0].data[0]).toMatchObject({
+		expect(state.attemptUpsert.mock.calls[0]?.[0].create).toMatchObject({
 			userId: USER_ID,
 			quizId: QUIZ_IDS.start,
 			score: right
@@ -66,11 +78,36 @@ describe('submitQuiz', () => {
 		expect(state.refresh).toHaveBeenCalled()
 	})
 
-	it('awards nothing on a repeat submit', async () => {
-		state.attemptCreate.mockResolvedValue({ count: 0 })
-		const result = await submitQuiz({ quizId: QUIZ_IDS.start, answers: picks(0) })
-		expect(result.ok && result.data.awards.xp).toBe(0)
-		expect(state.xpCreate).not.toHaveBeenCalled()
+	it('lets a retry replace the attempt and takes back the XP of answers now wrong', async () => {
+		state.attemptFind.mockResolvedValue({ score: quiz.questions.length })
+		state.xpCreate.mockResolvedValue({ count: 0 })
+		state.xpDelete.mockResolvedValue({ count: 3 })
+		const result = await submitQuiz({ quizId: QUIZ_IDS.start, answers: picks(3) })
+		expect(result.ok).toBe(true)
+		if (!result.ok) return
+		expect(result.data).toMatchObject({
+			firstAttempt: false,
+			score: quiz.questions.length - 3,
+			xpLost: 3 * XP_AMOUNTS[XP_SOURCES.quizCorrect]
+		})
+		expect(state.attemptUpsert.mock.calls[0]?.[0].update).toMatchObject({
+			score: quiz.questions.length - 3
+		})
+		const where = state.xpDelete.mock.calls[0]?.[0].where
+		expect(where.sourceId.startsWith).toBe(`${QUIZ_IDS.start}:`)
+		expect(where.sourceId.notIn).toHaveLength(quiz.questions.length - 3)
+	})
+
+	it('takes back the quiz climber badge when a retry no longer earns it', async () => {
+		state.attemptFind.mockResolvedValue({ score: 5 })
+		state.attemptRows.mockResolvedValue([
+			{ quizId: QUIZ_IDS.start, score: quiz.questions.length },
+			{ quizId: QUIZ_IDS.end, score: 4 }
+		])
+		await submitQuiz({ quizId: QUIZ_IDS.start, answers: picks(0) })
+		expect(state.badgeDelete).toHaveBeenCalledWith({
+			where: { userId: USER_ID, badgeId: { in: [BADGES.quizClimber] } }
+		})
 	})
 
 	it('rejects a partial quiz and an unknown tool', async () => {
@@ -83,6 +120,6 @@ describe('submitQuiz', () => {
 			answers: { ...picks(0), [quiz.questions[0]!.id]: 'oracle' }
 		})
 		expect(bad.ok).toBe(false)
-		expect(state.attemptCreate).not.toHaveBeenCalled()
+		expect(state.attemptUpsert).not.toHaveBeenCalled()
 	})
 })

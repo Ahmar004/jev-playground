@@ -1,27 +1,34 @@
 'use client'
 
 import { useState } from 'react'
+import type { ItemWords } from '@/content/game-schema'
 import type { Recording } from '@/content/recording-schema'
 import type { Task } from '@/content/task-schema'
+import { GameBrief } from '@/features/games/game-brief'
+import { GameItems } from '@/features/games/game-items'
 import { LiveRaces } from '@/features/levels/live-races'
 import { defaultOpponentId, raceLineup, type LevelStage } from '@/features/levels/lineup'
 import { useMode } from '@/features/mode/mode-context'
 import { OpponentPicker } from '@/features/race/opponent-picker'
+import type { RaceState } from '@/features/race/race-state'
 import { RaceStage } from '@/features/race/race-stage'
 import { MODES } from '@/lib/constants'
 
 /**
  * One preset's whole task as a race (R45): Jev against an LLM over every item,
- * replayed from the recordings or run live. Nothing is saved or scored for XP.
+ * replayed from the recordings or run live, with the question both get and every
+ * item's answers, like a game (Step-41). Nothing is saved or scored for XP.
  */
 export function BatchPlay({
 	task,
 	recordings,
-	lesson
+	lesson,
+	words
 }: {
 	task: Task
 	recordings: Recording[]
 	lesson: string
+	words: ItemWords
 }) {
 	const { mode, setMode } = useMode()
 	const { jev, opponents } = raceLineup(recordings)
@@ -36,8 +43,12 @@ export function BatchPlay({
 		)
 	}
 	const stage: LevelStage = { task, title: task.id, judged: false, jev, opponents }
+	const details = (perRacer: RaceState) => (
+		<GameItems words={words} task={task} perRacer={perRacer} code={null} />
+	)
 	return (
 		<div className="flex flex-col gap-6">
+			<GameBrief words={words} task={task} />
 			{mode === MODES.beginner && opponentId !== undefined && (
 				<div className="flex flex-wrap items-center justify-between gap-3">
 					<p className="text-text-muted">Replays real recordings at their recorded speed.</p>
@@ -49,13 +60,20 @@ export function BatchPlay({
 				</div>
 			)}
 			{mode === MODES.beginner && opponent && (
-				<RaceStage key={opponent.modelId} task={task} jev={jev} opponent={opponent} />
+				<RaceStage
+					key={opponent.modelId}
+					task={task}
+					jev={jev}
+					opponent={opponent}
+					details={details}
+				/>
 			)}
 			{mode === MODES.developer && (
 				<LiveRaces
 					stages={[stage]}
 					showHeadings={false}
 					onUseBeginner={() => setMode(MODES.beginner)}
+					details={details}
 				/>
 			)}
 			<p className="bg-surface border-border text-text shadow-card rounded-lg border p-4">

@@ -10,6 +10,9 @@
 		"A Score question rates each review on five levels. Jev returns the level with a probability, so each rating is quick, cheap and consistent.",
 		"Each correct score pulls the rope toward that racer. Being one level off is still a miss, so read the item list to see how close the misses were."
 	],
+	"items": {
+		"plural": "reviews"
+	},
 	"docs": {
 		"path": "/primitives/score",
 		"title": "Score"

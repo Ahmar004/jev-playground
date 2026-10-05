@@ -43,3 +43,10 @@ export const GAMES = buildGameMap(RAW_GAMES, new Set(TASKS.keys()))
 export function getGame(gameId: string): Game | undefined {
 	return GAMES.get(gameId)
 }
+
+/** The game after `id` in listed order, or undefined after the last game. */
+export function nextGame(games: ReadonlyMap<string, Game>, id: string): Game | undefined {
+	const ordered = [...games.values()]
+	const index = ordered.findIndex((game) => game.id === id)
+	return index === -1 ? undefined : ordered[index + 1]
+}

@@ -40,6 +40,10 @@
 		"definition": "Runs live calls with your own API keys, so you can try your own inputs. Every result shows the model and the time it ran."
 	},
 	{
+		"term": "Game",
+		"definition": "An animated race where Jev and an LLM do the same job, so you can see which is faster, cheaper and more accurate."
+	},
+	{
 		"term": "Jev",
 		"definition": "TypeSafe's System One model. It makes fast, typed judgments about a State, such as yes or no, pick one, or rate on a scale. It does not write text."
 	},
@@ -106,9 +110,5 @@
 	{
 		"term": "Token",
 		"definition": "A small piece of text, about four characters of English on average. Providers count and charge for tokens."
-	},
-	{
-		"term": "VS game",
-		"definition": "An animated race where Jev and an LLM do the same job, so you can see which is faster, cheaper and more accurate."
 	}
 ]

@@ -17,6 +17,7 @@ export function LiveRaces({
 	showHeadings,
 	onUseBeginner,
 	scene,
+	details,
 	onFinished
 }: {
 	stages: LevelStage[]
@@ -24,6 +25,7 @@ export function LiveRaces({
 	showHeadings: boolean
 	onUseBeginner: () => void
 	scene?: (perRacer: RaceState) => React.ReactNode
+	details?: (perRacer: RaceState) => React.ReactNode
 	// A finished race's results, with the task it ran.
 	onFinished?: (results: RaceResult[], taskId: string) => void
 }) {
@@ -48,6 +50,7 @@ export function LiveRaces({
 								live={setup.config ?? undefined}
 								onUseBeginner={onUseBeginner}
 								scene={scene}
+								details={details}
 								onFinished={(results) => onFinished?.(results, stage.task.id)}
 							/>
 						</div>

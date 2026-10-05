@@ -90,8 +90,10 @@ export function withEditedState(task: Task, text: string): TaskBuild {
 	if (trimmed.length > MAX_STATE_CHARS) {
 		return { ok: false, error: `The input is over ${MAX_STATE_CHARS} characters.` }
 	}
-	// The stored answer belongs to the original input, so an edited one is not scored.
+	// The stored answer belongs to the original input, so an edited one is not scored. An input
+	// still equal to the preset's own (as text, or as the same JSON) keeps it and is scored.
 	const unscored = (state: unknown) => {
+		if (JSON.stringify(state) === JSON.stringify(item.state)) return task
 		const edited: Record<string, unknown> = { ...item, state }
 		delete edited.label
 		return { ...task, items: [edited] }

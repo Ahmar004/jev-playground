@@ -27,7 +27,7 @@ test('the Leaderboard starts empty and points to the games', async ({ page }) =>
 	await page.getByRole('link', { name: 'Leaderboard' }).first().click()
 	await expect(page).toHaveURL('/leaderboard')
 	await expect(page.getByText(/Nothing here yet/)).toBeVisible()
-	await page.getByRole('link', { name: 'Play a VS game' }).click()
+	await page.getByRole('link', { name: 'Play a game' }).click()
 	await expect(page).toHaveURL('/games')
 	await expect(page.getByRole('link', { name: /Guardrail Gauntlet/ })).toBeVisible()
 })
@@ -74,6 +74,41 @@ test('number crunch shows Code beside the models in its summary', async ({ page 
 	await page.getByRole('button', { name: 'Skip to result' }).click()
 	const result = page.getByRole('region', { name: 'Result', exact: true })
 	await expect(result.getByRole('row', { name: /^Code/ })).toContainText('12 of 12')
+})
+
+test('Play next game opens the next game; the last game offers only All games', async ({
+	page
+}) => {
+	await signIn(page, EMAIL)
+	await page.goto('/games/guardrail-gauntlet')
+	await page.getByRole('link', { name: 'Play next game' }).click()
+	await expect(page).toHaveURL('/games/needle-hunt')
+	await expect(page.getByRole('heading', { level: 1 })).toContainText('Needle')
+	// From a finished race, the next game starts fresh: no leftover result or threshold.
+	await page.goto('/games/twin-finder')
+	await page.getByRole('button', { name: 'Start the race' }).click()
+	await page.getByRole('button', { name: 'Skip to result' }).click()
+	await expect(page.getByRole('region', { name: 'Result', exact: true })).toBeVisible()
+	await page.getByRole('link', { name: 'Play next game' }).click()
+	await expect(page).toHaveURL('/games/confidence-catch')
+	await expect(page.getByRole('region', { name: 'Result', exact: true })).toHaveCount(0)
+	await page.getByRole('button', { name: 'Start the race' }).click()
+	await page.getByRole('button', { name: 'Skip to result' }).click()
+	await page
+		.getByRole('region', { name: 'Set the confidence threshold' })
+		.getByRole('slider')
+		.fill('0')
+	await page.getByRole('link', { name: 'Play next game' }).click()
+	await expect(page).toHaveURL('/games/citation-cop')
+	await expect(page.getByRole('region', { name: 'Result', exact: true })).toHaveCount(0)
+	await expect(page.getByRole('region', { name: 'Set the confidence threshold' })).toHaveCount(0)
+	await expect(page.getByRole('button', { name: 'Start the race' })).toBeVisible()
+	await expect(page.getByRole('link', { name: 'Play next game' })).toHaveCount(0)
+	await page
+		.getByRole('navigation', { name: 'More games' })
+		.getByRole('link', { name: 'All games' })
+		.click()
+	await expect(page).toHaveURL('/games')
 })
 
 test('a game works at phone width without horizontal scroll', async ({ page }) => {

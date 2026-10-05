@@ -54,7 +54,7 @@ async function WelcomeTourLoader({ firstLevel }: { firstLevel: PathLevel }) {
 const TILES = [
 	{
 		href: ROUTES.games,
-		label: 'Play the VS games',
+		label: 'Play the games',
 		blurb: 'Jev against an LLM on the same job.',
 		Icon: GamesIcon,
 		hue: 'bg-llm/15 text-llm'

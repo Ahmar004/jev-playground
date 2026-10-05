@@ -12,23 +12,29 @@ const PERCENT = 100
 
 export type PublicQuestion = { id: string; prompt: string; topicTitle: string }
 
-/** One question per screen. The answers and explanations stay on the server until the quiz is submitted. */
+/**
+ * One question per screen. The answers and explanations stay on the server until the quiz is
+ * submitted. `onCancel` makes it a retry (Step-42): Cancel or Esc goes back to the results.
+ */
 export function QuizTaker({
 	quizId,
 	title,
 	intro,
-	questions
+	questions,
+	onCancel
 }: {
 	quizId: QuizId
 	title: string
 	intro: string
 	questions: PublicQuestion[]
+	onCancel?: () => void
 }) {
 	const [index, setIndex] = useState(0)
 	const [picks, setPicks] = useState<Record<string, string>>({})
 	const { submit, pending, done } = useQuizSubmit(quizId)
 	const headingRef = useRef<HTMLLegendElement>(null)
-	const moved = useRef(false)
+	// A retry starts from the results, so its first question takes the focus at once.
+	const moved = useRef(onCancel !== undefined)
 	useEffect(() => {
 		if (moved.current) headingRef.current?.focus()
 	}, [index])
@@ -41,6 +47,12 @@ export function QuizTaker({
 	return (
 		<form
 			className="flex max-w-2xl flex-col gap-4"
+			onKeyDown={(event) => {
+				if (event.key === 'Escape' && onCancel && !pending && !done) {
+					event.preventDefault()
+					onCancel()
+				}
+			}}
 			onSubmit={(event) => {
 				event.preventDefault()
 				if (!pick || pending || done) return
@@ -53,6 +65,12 @@ export function QuizTaker({
 		>
 			<h1 className="text-text text-3xl font-extrabold">{title}</h1>
 			<p className="text-text-muted">{intro}</p>
+			{onCancel && (
+				<p className="text-text bg-surface border-border rounded-lg border p-3 text-sm">
+					You are retrying this quiz. When you submit, this attempt replaces your saved score, and
+					your XP and badges for this quiz follow the new answers.
+				</p>
+			)}
 			<p className="text-text-muted text-sm font-medium" aria-live="polite">
 				Question {index + 1} of {questions.length} - {question.topicTitle}
 			</p>
@@ -102,6 +120,11 @@ export function QuizTaker({
 				<Button type="submit" disabled={!pick || pending || done}>
 					{last ? (pending || done ? 'Scoring...' : 'Submit quiz') : 'Next'}
 				</Button>
+				{onCancel && (
+					<Button type="button" variant="ghost" disabled={pending || done} onClick={onCancel}>
+						Cancel retry
+					</Button>
+				)}
 			</div>
 		</form>
 	)

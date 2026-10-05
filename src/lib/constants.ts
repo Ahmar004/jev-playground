@@ -186,7 +186,7 @@ export type ItemOutcome = (typeof ITEM_OUTCOMES)[keyof typeof ITEM_OUTCOMES]
 // Levels on the Path in the finished product; the pathfinder badge needs all of them (spec 6.1, DESIGN 10).
 export const LEVEL_COUNT = 8
 
-// VS games (spec 7). Each one has its own animation.
+// Games (spec 7). Each one has its own animation.
 export const GAME_ANIMATIONS = {
 	gate: 'gate',
 	lines: 'lines',
@@ -209,7 +209,7 @@ export const DEFAULT_CONFIDENCE_THRESHOLD = 0.9
 // Speed Race is also timed, so it writes Leaderboard entries (DESIGN 8).
 export const SPEED_RACE_GAME_ID = 'speed-race'
 
-// The P0 VS games; finishing all of them earns the gamer badge (DESIGN 10).
+// The P0 games; finishing all of them earns the gamer badge (DESIGN 10).
 export const P0_GAME_COUNT = 4
 
 // Level 1 is the one the first_race badge is for.

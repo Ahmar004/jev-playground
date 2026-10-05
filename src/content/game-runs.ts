@@ -5,7 +5,7 @@ import { currentRecordings } from './recordings'
 import { RACERS, SPEED_RACE_GAME_ID } from '@/lib/constants'
 import type { RunTotals } from '@/runner/types'
 
-/** The task a timed game races: a VS game's task, or Speed Race's level task. */
+/** The task a timed game races: a game's task, or Speed Race's level task. */
 export function gameTaskId(gameId: string): string | null {
 	const game = GAMES.get(gameId)
 	if (game) return game.taskId

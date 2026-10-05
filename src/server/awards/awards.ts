@@ -32,8 +32,15 @@ export async function grantBadge(tx: Tx, userId: string, badgeId: BadgeId): Prom
 	return count === 1
 }
 
-/** Grants every badge the user now qualifies for and returns only the new ones. */
-export async function syncBadges(tx: Tx, userId: string): Promise<BadgeId[]> {
+/**
+ * Grants every badge the user now qualifies for and returns only the new ones. A badge in
+ * `revocable` that the user no longer qualifies for is taken back (a lower quiz retry).
+ */
+export async function syncBadges(
+	tx: Tx,
+	userId: string,
+	revocable: readonly BadgeId[] = []
+): Promise<BadgeId[]> {
 	const [doneRows, correctPredictions, gameRows, quizRows] = await Promise.all([
 		tx.levelProgress.findMany({
 			where: { userId, status: LEVEL_STATUS.done },
@@ -55,13 +62,13 @@ export async function syncBadges(tx: Tx, userId: string): Promise<BadgeId[]> {
 		doneRows.map((row) => row.levelId).filter((levelId) => LEVELS.has(levelId))
 	)
 	const quizScores = Object.fromEntries(quizRows.map((row) => [row.quizId, row.score]))
+	const earned = earnedBadges({ doneLevelIds, correctPredictions, finishedGameIds, quizScores })
+	const lost = revocable.filter((badgeId) => !earned.includes(badgeId))
+	if (lost.length > 0) {
+		await tx.userBadge.deleteMany({ where: { userId, badgeId: { in: lost } } })
+	}
 	const added: BadgeId[] = []
-	for (const badgeId of earnedBadges({
-		doneLevelIds,
-		correctPredictions,
-		finishedGameIds,
-		quizScores
-	})) {
+	for (const badgeId of earned) {
 		const { count } = await tx.userBadge.createMany({
 			data: [{ userId, badgeId }],
 			skipDuplicates: true

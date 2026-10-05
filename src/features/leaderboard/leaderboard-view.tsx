@@ -22,10 +22,10 @@ export function LeaderboardView({
 		return (
 			<div className="bg-surface border-border shadow-card flex max-w-2xl flex-col items-start gap-3 rounded-lg border p-5">
 				<p className="text-text">
-					Nothing here yet. Finish a VS game or Speed Race and your results appear on this page.
+					Nothing here yet. Finish a game or Speed Race and your results appear on this page.
 				</p>
 				<Button asChild>
-					<Link href={ROUTES.games}>Play a VS game</Link>
+					<Link href={ROUTES.games}>Play a game</Link>
 				</Button>
 			</div>
 		)

@@ -11,6 +11,8 @@ import { useMode } from '@/features/mode/mode-context'
 import { OpponentPicker } from '@/features/race/opponent-picker'
 import { RaceStage, type RaceResult } from '@/features/race/race-stage'
 import { DEFAULT_CONFIDENCE_THRESHOLD, GAME_ANIMATIONS, MODES } from '@/lib/constants'
+import { GameBrief } from './game-brief'
+import { GameItems } from './game-items'
 import { gameRunInput } from './game-run'
 import { GameScene } from './game-scene'
 import { GameSummary } from './game-summary'
@@ -19,7 +21,8 @@ import { ThresholdPanel } from './threshold-panel'
 import { useRecordGameRun } from './use-record-game-run'
 
 /**
- * One VS game: the race with its animation, then the summary. A finished run
+ * One game: what the racers are asked, the race with its animation and every item's
+ * answers, then the summary. A finished run
  * is saved to the Leaderboard (the server recomputes Beginner numbers).
  */
 export function GamePlay({
@@ -47,6 +50,9 @@ export function GamePlay({
 	const scene = (perRacer: Parameters<typeof GameScene>[0]['perRacer']) => (
 		<GameScene game={game} task={task} perRacer={perRacer} threshold={threshold} />
 	)
+	const details = (perRacer: Parameters<typeof GameItems>[0]['perRacer']) => (
+		<GameItems words={game.items} task={task} perRacer={perRacer} code={code?.results ?? null} />
+	)
 	const opponent = opponents.find((recording) => recording.modelId === opponentId)
 	const stage: LevelStage = { task, title: game.title, judged: true, jev, opponents }
 
@@ -59,6 +65,7 @@ export function GamePlay({
 	}
 	return (
 		<div className="flex flex-col gap-6">
+			<GameBrief words={game.items} task={task} />
 			{mode === MODES.beginner && opponentId !== undefined && (
 				<div className="flex flex-wrap items-center justify-between gap-3">
 					<p className="text-text-muted">Replays real recordings at their recorded speed.</p>
@@ -79,6 +86,7 @@ export function GamePlay({
 					jev={jev}
 					opponent={opponent}
 					scene={scene}
+					details={details}
 					onFinished={onFinished}
 				/>
 			)}
@@ -88,13 +96,14 @@ export function GamePlay({
 					showHeadings={false}
 					onUseBeginner={() => setMode(MODES.beginner)}
 					scene={scene}
+					details={details}
 					onFinished={onFinished}
 				/>
 			)}
 			{results && mode === MODES.beginner && game.animation === GAME_ANIMATIONS.fall && (
 				<ThresholdPanel jev={jev} threshold={threshold} onThresholdChange={setThreshold} />
 			)}
-			{results && <GameSummary game={game} results={results} code={code} />}
+			{results && <GameSummary game={game} results={results} code={code?.totals ?? null} />}
 		</div>
 	)
 }

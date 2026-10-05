@@ -3,7 +3,10 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { OpponentPicker } from '@/features/race/opponent-picker'
+import { answerLabel } from '@/features/games/item-view'
 import { DEFAULT_OPPONENT, MODES } from '@/lib/constants'
+import { FanOutTable } from './fan-out-table'
+import { fanOutQuestions } from './fan-out'
 import { PendingCard, SideCard } from './side-card'
 import { ShareControls } from './share-controls'
 import type { ArenaPresetView, ArenaSide } from './snapshot'
@@ -23,6 +26,9 @@ function Replay({
 	const { record } = useRecordArenaRun()
 	const sides = [jev, opponent]
 	const replay = useArenaReplay(sides, () => record(view.preset.id))
+	const label = (value: unknown) => answerLabel(view.preset.items, view.task, value)
+	const fanOut = fanOutQuestions(view.task) !== null
+	const expected = view.task.items[0]?.label
 	return (
 		<div className="flex flex-col gap-4">
 			<div className="flex flex-wrap items-center gap-3">
@@ -41,7 +47,7 @@ function Replay({
 				<div className="grid gap-4 md:grid-cols-2" aria-live="polite">
 					{sides.map((side) =>
 						replay.shown.includes(side.racer) ? (
-							<SideCard key={side.racer} side={side} mode={MODES.beginner} />
+							<SideCard key={side.racer} side={side} mode={MODES.beginner} label={label} />
 						) : (
 							<PendingCard key={side.racer} racer={side.racer} modelId={side.modelId} />
 						)
@@ -50,10 +56,14 @@ function Replay({
 			)}
 			{replay.status === 'done' && (
 				<div className="flex flex-col gap-3">
-					{view.expected !== null && (
-						<p className="text-text">
-							Expected answer: <span className="font-bold wrap-anywhere">{view.expected}</span>
-						</p>
+					{fanOut ? (
+						<FanOutTable task={view.task} sides={sides} />
+					) : (
+						expected !== undefined && (
+							<p className="text-text">
+								Expected answer: <span className="font-bold wrap-anywhere">{label(expected)}</span>
+							</p>
+						)
 					)}
 					<p className="text-text-muted max-w-2xl">{view.preset.lesson}</p>
 					<div>

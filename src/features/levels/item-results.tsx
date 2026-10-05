@@ -1,4 +1,10 @@
-import { AlertIcon, SuccessIcon, WrongIcon, InfoIcon } from '@/components/ui/icons'
+import {
+	AlertIcon,
+	ChevronRightIcon,
+	SuccessIcon,
+	WrongIcon,
+	InfoIcon
+} from '@/components/ui/icons'
 import type { Task } from '@/content/task-schema'
 import { answerText, itemOutcome, valueText } from '@/features/race/answer-text'
 import { RacerTag } from '@/features/race/racer-tag'
@@ -56,10 +62,17 @@ export function ItemResults({ task, recordings }: { task: Task; recordings: Race
 	return (
 		<details
 			data-guide={GUIDE_TARGETS.itemResults}
-			className="bg-surface border-border shadow-card rounded-lg border p-4"
+			className="group bg-surface border-border shadow-card rounded-lg border p-4"
 		>
-			<summary className="text-text focus-visible:outline-accent cursor-pointer rounded font-bold focus-visible:outline focus-visible:outline-2">
-				See every item
+			<summary className="text-text focus-visible:outline-accent flex cursor-pointer list-none flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded focus-visible:outline focus-visible:outline-2 [&::-webkit-details-marker]:hidden">
+				<span className="inline-flex items-center gap-2 font-bold">
+					<ChevronRightIcon className="group-open:rotate-90 motion-safe:transition-transform" />
+					See every item
+				</span>
+				<span className="text-text-muted inline-flex items-center gap-1 text-sm">
+					<InfoIcon />
+					Open this to see the results for each individual item.
+				</span>
 			</summary>
 			<ol className="mt-4 flex flex-col gap-4">
 				{task.items.map((item, index) => (

@@ -1,21 +1,21 @@
 # Jev's Playground
 
-An interactive website that teaches where System One models like Jev (TypeSafe's fast, typed-judgment model) work well, where they break, and where a frontier LLM or plain code is the better tool. You learn by playing: levels, VS games where Jev races an LLM, a side-by-side Arena, a hands-on Sandbox and quizzes.
+An interactive website that teaches where System One models like Jev (TypeSafe's fast, typed-judgment model) work well, where they break, and where a frontier LLM or plain code is the better tool. You learn by playing: levels, games where Jev races an LLM, a side-by-side Arena, a hands-on Sandbox and quizzes.
 
 It works with no setup at all. Beginner mode replays real recorded runs, so nobody needs an API key. Developer mode runs everything live with your own keys.
 
 ## What you can do
 
-| Area      | What it is                                                                                                                                                                                                                   |
-| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Path      | 8 levels, each with the same loop: Learn, Predict, Play, Reveal, Check. Speed Race, Write Me a Poem, Count the Fruits / Date First, How Sure Are You?, Break It Down, The Router, Spot the Phish, Trick Jev. None is locked. |
-| VS games  | 8 animated races where Jev and an LLM do the same job at their real latency: Guardrail Gauntlet, Needle Hunt, Number Crunch Showdown, Review Tug-of-War, Smart Home Dash, Twin Finder, Confidence Catch, Citation Cop.       |
-| Arena     | Preset tasks run side by side, with each model's answer, Jev's probabilities and confidence, latency and cost. Batch mode runs a whole task at once. Results can be shared as a read-only link.                              |
-| Sandbox   | Build a Jev state and its Noul, Choice and Score questions in a form or raw JSON. It warns about known Jev weaknesses, checks Jev's size limits before sending, and copies the setup as a curl or TypeScript request.        |
-| Quizzes   | A start quiz and an end quiz, so you can see what you learned.                                                                                                                                                               |
-| Progress  | XP, badges, a completion card, and a personal Leaderboard of model runs.                                                                                                                                                     |
-| Guide     | A short welcome tour for new accounts that ends on "Start here: Play level 1", plus one-time tips inside a level (such as opening "See every item" in Reveal). Replay it from the account menu or Home.                      |
-| Reference | A Glossary, and a Methodology page that explains how every number was measured, including the load test.                                                                                                                     |
+| Area      | What it is                                                                                                                                                                                                                                                                                         |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Path      | 8 levels, each with the same loop: Learn, Predict, Play, Reveal, Check. Speed Race, Write Me a Poem, Count the Fruits / Date First, How Sure Are You?, Break It Down, The Router, Spot the Phish, Trick Jev. None is locked.                                                                       |
+| Games     | 8 animated races where Jev and an LLM do the same job at their real latency, each showing the question both get and every item with each racer's answer: Guardrail Gauntlet, Needle Hunt, Number Crunch Showdown, Review Tug-of-War, Smart Home Dash, Twin Finder, Confidence Catch, Citation Cop. |
+| Arena     | Preset tasks run side by side, with each model's answer, Jev's probabilities and confidence, latency and cost. Each preset shows its question and options first. Batch mode runs a whole task at once. Results can be shared as a read-only link.                                                  |
+| Sandbox   | Build a Jev state and its Noul, Choice and Score questions in a form or raw JSON. It warns about known Jev weaknesses, checks Jev's size limits before sending, and copies the setup as a curl or TypeScript request.                                                                              |
+| Quizzes   | A start quiz and an end quiz, so you can see what you learned. Retry either one; the latest attempt counts.                                                                                                                                                                                        |
+| Progress  | XP, badges, a completion card, and a personal Leaderboard of model runs.                                                                                                                                                                                                                           |
+| Guide     | A short welcome tour for new accounts that ends on "Start here: Play level 1", plus one-time tips inside a level (such as opening "See every item" in Reveal). Replay it from the account menu or Home.                                                                                            |
+| Reference | A Glossary, and a Methodology page that explains how every number was measured, including the load test.                                                                                                                                                                                           |
 
 The path is honest about Jev: it wins on speed and cost for fast judgments at scale, it visibly loses on text generation, counting, math and dates, and some lessons show plain code winning outright.
 

@@ -32,7 +32,7 @@ Use these words consistently in UI, code and docs.
 | Developer mode | Live calls with the user's own keys.                                                                                         |
 | Recording      | One stored, real result from the owner's keys, used by Beginner mode.                                                        |
 | Level          | One lesson on the learning path.                                                                                             |
-| VS game        | An animated race where Jev and an LLM do the same job.                                                                       |
+| Game           | An animated race where Jev and an LLM do the same job.                                                                       |
 | Arena          | Side-by-side comparison of Jev and an LLM on a task.                                                                         |
 | Sandbox        | Hands-on builder for Jev states and questions.                                                                               |
 | Racer          | Jev or the LLM inside a game.                                                                                                |
@@ -129,8 +129,8 @@ A Beginner/Developer switch sits in the header on every page. Anyone can switch 
 | Home          | Welcome, path progress, one-click "Play level 1: Speed Race", optional start quiz.                                               |
 | Path          | The 8 levels with status (not started, in progress, done, skipped).                                                              |
 | Level         | One level's Learn, Predict, Play, Reveal and Check steps.                                                                        |
-| Games         | The VS games.                                                                                                                    |
-| Game          | One VS game.                                                                                                                     |
+| Games         | The games.                                                                                                                       |
+| Game          | One game.                                                                                                                        |
 | Arena         | Side-by-side comparisons.                                                                                                        |
 | Sandbox       | Jev state and question builder.                                                                                                  |
 | Quizzes       | Start quiz and end quiz, with results and solutions.                                                                             |
@@ -182,7 +182,7 @@ After the first sign-in, Home shows one button that starts level 1 (Speed Race) 
 | 7   | Spot the Phish [R36]                       | One email is checked for many phishing signals in a single Jev request; each signal lights up with its probability and a short explanation.                                                                                        | Asking many questions in one request.                | Jev                             | `/patterns/fan-out`                                                |
 | 8   | Trick Jev [R37]                            | The user tries to fool Jev with wording. In Beginner mode they pick from recorded trick attempts; in Developer mode they write their own.                                                                                          | Literal reading and precise instructions.            | Varies; shows Jev can be fooled | jaggedness#literal-reading, jaggedness#adversarial-content         |
 
-## 7. VS games [R38]
+## 7. Games [R38]
 
 ### 7.1 Rules for every game
 
@@ -193,6 +193,7 @@ After the first sign-in, Home shows one button that starts level 1 (Speed Race) 
 - Opponent: in Beginner mode the user picks Haiku 4.5, Sonnet 5.5 or Opus 5.5. In Developer mode it is any model the user's LLM key can reach.
 - Both racers get the same inputs and the same expected answer format. [R92]
 - An LLM output that can't be parsed counts as a miss and is shown, not hidden. [R44]
+- Each game shows its context: the question and options both racers get, and every item with its right answer and each racer's answer, so the player can see which ones each racer got right or wrong (ROADMAP Step-40).
 - Every game ends with a Reveal-style summary: winner, why, numbers, and a TypeSafe docs link.
 - All games are timed, so every finished run adds entries to the user's Leaderboard (section 10.5).
 
@@ -216,6 +217,7 @@ After the first sign-in, Home shows one button that starts level 1 (Speed Race) 
 - In Developer mode users can edit a preset's inputs, or write their own task, and run it live. [R41]
 - In Developer mode users pick which LLM to compare against. [R42]
 - Results show each model's answer, Jev's probabilities and confidence, latency and cost. [R43]
+- Each preset shows what both models get before the run: the input, the question and the answer options with their meanings, and answers read in the preset's own words. A preset with many questions shows each question's result.
 - If an LLM returns output that can't be parsed into the expected format, the raw output and a "couldn't parse" note are shown. [R44]
 - Batch mode (P1) runs one task on many items and shows speed and cost at scale. [R45]
 - Share (P0) [R46]:
@@ -249,6 +251,7 @@ After the first sign-in, Home shows one button that starts level 1 (Speed Race) 
 - Users can see the solutions to every quiz. [R58]
 - Every answer comes with a short explanation. [R60]
 - Users who take both quizzes see how much their score improved from start to end. [R59]
+- Users can retry a quiz. The latest attempt counts for the score, the improvement, XP and badges.
 
 ### 10.3 Progress [R62]
 
@@ -263,7 +266,7 @@ Level status, quiz attempts, XP, badges and leaderboard entries are saved to the
 ### 10.5 Leaderboard [R64]
 
 - There is one leaderboard per user, and only for Jev and the LLMs, never for players.
-- It ranks the results Jev and the LLMs achieved in the timed games (all VS games and Speed Race) that this user has run: accuracy, time and cost per model, per game, each entry labelled with its mode.
+- It ranks the results Jev and the LLMs achieved in the timed games (all games and Speed Race) that this user has run: accuracy, time and cost per model, per game, each entry labelled with its mode.
 - A new user sees an empty state: "Begin playing and testing out Jev and LLMs to fill up this leaderboard here."
 - Leaderboard entries store numbers and model IDs only, never task text.
 
@@ -349,7 +352,7 @@ The Step-3 slice plan builds every P0 item before any P1 item.
 ## 16. Decisions made in Step-0.1 (2026-10-01)
 
 - The owner has a TypeSafe (Jev) key and an Anthropic key for recording Beginner mode.
-- VS games: the 8 in section 7, with the last four as P1.
+- Games: the 8 in section 7, with the last four as P1.
 - Sign-in is email and password with confirmation off.
 - Share links are stored snapshots. The shared result page is the only page anyone can open without signing in, and it is read-only.
 - The leaderboard is per user, for models only, never players.

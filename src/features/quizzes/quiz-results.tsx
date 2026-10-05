@@ -7,9 +7,13 @@ import { QUIZ_IDS } from '@/lib/constants'
 import { ROUTES } from '@/lib/links'
 import type { QuizAnswers } from '@/server/quiz/score'
 import { ImprovementNote } from './improvement-note'
+import { RetryQuizButton } from './quiz-retry'
 import { QUIZ_TOOL_LABELS, toolLabel } from './tools'
 
-/** Score, the explanation of every answer and the solutions (R58, R60), with the improvement when both quizzes are done (R59). */
+/**
+ * Score, the explanation of every answer and the solutions (R58, R60), with the improvement when
+ * both quizzes are done (R59). Shows the latest attempt, the one that counts, and offers a retry.
+ */
 export function QuizResults({
 	quiz,
 	answers,
@@ -32,6 +36,12 @@ export function QuizResults({
 			<h2 id="results-heading" className="text-text text-2xl font-bold">
 				You scored {score} of {total}
 			</h2>
+			<div className="flex flex-wrap items-center gap-3">
+				<RetryQuizButton />
+				<p className="text-text-muted text-sm">
+					Your latest attempt counts for your score, XP and badges.
+				</p>
+			</div>
 			<ImprovementNote start={startScore} end={endScore} total={total} />
 			<ol className="flex flex-col gap-3">
 				{quiz.questions.map((question, index) => {
@@ -58,6 +68,7 @@ export function QuizResults({
 				})}
 			</ol>
 			<div className="flex flex-wrap gap-3">
+				<RetryQuizButton variant="secondary" />
 				<Button asChild variant="secondary">
 					<Link href={ROUTES.quizzes}>All quizzes</Link>
 				</Button>

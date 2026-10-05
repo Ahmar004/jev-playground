@@ -5,7 +5,7 @@ import { formatCost, formatDuration, NOT_SCORED } from '@/features/race/format'
 import { ModeLabel } from '@/features/race/mode-label'
 import { RacerTag } from '@/features/race/racer-tag'
 import { ITEM_OUTCOMES, type ItemOutcome, type Mode, type Racer } from '@/lib/constants'
-import { AnswerView } from './answer-view'
+import { AnswerView, type AnswerLabel } from './answer-view'
 import type { ArenaSide } from './snapshot'
 import { ScrollRegion } from '@/components/ui/scroll-region'
 
@@ -35,9 +35,18 @@ export function PendingCard({ racer, modelId }: { racer: Racer; modelId: string 
 /**
  * One racer's result on the Arena's item: its answer with probabilities and
  * confidence, latency, cost and the mode label (R43, R84). A reply that can't
- * be parsed shows its raw text with a note, never hidden (R44).
+ * be parsed shows its raw text with a note, never hidden (R44). `label` puts the
+ * answer in the preset's words.
  */
-export function SideCard({ side, mode }: { side: ArenaSide; mode: Mode }) {
+export function SideCard({
+	side,
+	mode,
+	label
+}: {
+	side: ArenaSide
+	mode: Mode
+	label?: AnswerLabel
+}) {
 	const { racer, modelId, at, result } = side
 	const outcome = itemOutcome(result)
 	const badge = OUTCOME_BADGE[outcome]
@@ -48,7 +57,7 @@ export function SideCard({ side, mode }: { side: ArenaSide; mode: Mode }) {
 				<Badge variant={badge.variant}>{badge.label}</Badge>
 			</div>
 			{result.ok ? (
-				<AnswerView racer={racer} result={result} />
+				<AnswerView racer={racer} result={result} label={label} />
 			) : (
 				<div className="flex flex-col gap-2">
 					<p className="text-text text-sm">

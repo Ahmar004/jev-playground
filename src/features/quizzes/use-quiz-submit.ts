@@ -8,7 +8,10 @@ import { toast } from '@/lib/toast'
 import { submitQuiz } from '@/server/actions/quiz'
 import type { QuizId } from '@/lib/constants'
 
-/** Submits a finished quiz. The server scores it, and its refresh swaps the page to the results. */
+/**
+ * Submits a finished quiz, first try or retry. The server scores it and saves it as the
+ * attempt that counts, and its refresh swaps the page to the results.
+ */
 export function useQuizSubmit(quizId: QuizId) {
 	const mutation = useMutation({
 		mutationFn: async (answers: Record<string, string>) => {
@@ -19,6 +22,14 @@ export function useQuizSubmit(quizId: QuizId) {
 		onSuccess: (data) => {
 			if (data.firstAttempt) {
 				track(ANALYTICS_EVENTS.QUIZ_COMPLETED, { quiz_id: quizId, score: data.score })
+			} else {
+				toast({
+					title: `Retry saved: you scored ${data.score} of ${data.total}`,
+					description:
+						data.xpLost > 0
+							? `Your latest attempt counts now, so ${data.xpLost} XP from answers you missed this time was taken back.`
+							: 'Your latest attempt counts now.'
+				})
 			}
 			announceAwards(data.awards)
 		},

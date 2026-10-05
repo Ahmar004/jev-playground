@@ -47,21 +47,29 @@ function Bar({
 	)
 }
 
+// Puts an answer in the page's words ("Same product", "Positive"); without it, answers show as stored.
+export type AnswerLabel = (value: unknown) => string
+
 function JevAnswerBlock({
 	name,
 	answer,
-	showName
+	showName,
+	label
 }: {
 	name: string
 	answer: JevAnswer
 	showName: boolean
+	label?: AnswerLabel
 }) {
 	const fill = RACER_STYLE[RACERS.jev].fill
 	if (answer.type === QUESTION_KINDS.noul) {
+		const yesWord = label?.(true)
+		const yesText =
+			yesWord && yesWord !== 'Yes' ? `Probability yes (${yesWord})` : 'Probability yes'
 		return (
 			<ul className="flex flex-col gap-2">
 				<Bar
-					label={showName ? `${name}: probability yes` : 'Probability yes'}
+					label={showName ? `${name}: probability yes` : yesText}
 					value={answer.noul}
 					highlighted={answer.noul >= 0.5}
 					fill={fill}
@@ -72,7 +80,7 @@ function JevAnswerBlock({
 	const isChoice = answer.type === QUESTION_KINDS.choice
 	const picked = isChoice ? answer.choice : String(answer.score)
 	const headline = isChoice
-		? `Picked: ${answer.choice}`
+		? `Picked: ${label ? label(answer.choice) : answer.choice}`
 		: `Score ${answer.score}: ${answer.legend[String(answer.score)] ?? ''}`
 	return (
 		<div className="flex flex-col gap-2">
@@ -88,7 +96,15 @@ function JevAnswerBlock({
 }
 
 /** A racer's parsed answer as plain text, bars and numbers (R43, R86). Not for failed or unparsed results. */
-export function AnswerView({ racer, result }: { racer: Racer; result: ItemResult }) {
+export function AnswerView({
+	racer,
+	result,
+	label
+}: {
+	racer: Racer
+	result: ItemResult
+	label?: AnswerLabel
+}) {
 	if (racer === RACERS.jev) {
 		const answers = jevAnswersSchema.safeParse(result.parsed)
 		if (answers.success) {
@@ -101,6 +117,7 @@ export function AnswerView({ racer, result }: { racer: Racer; result: ItemResult
 							name={name}
 							answer={answer}
 							showName={entries.length > 1 || name !== ANSWER_KEY}
+							label={label}
 						/>
 					))}
 				</div>
@@ -119,5 +136,9 @@ export function AnswerView({ racer, result }: { racer: Racer; result: ItemResult
 			</ul>
 		)
 	}
-	return <p className="text-text font-bold wrap-anywhere">{valueText(result.parsed)}</p>
+	return (
+		<p className="text-text font-bold wrap-anywhere">
+			{label ? label(result.parsed) : valueText(result.parsed)}
+		</p>
+	)
 }

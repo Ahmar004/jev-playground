@@ -4,6 +4,7 @@ import { Suspense } from 'react'
 import { LEVELS } from '@/content/levels'
 import { getQuiz } from '@/content/quizzes'
 import { QuizResults } from '@/features/quizzes/quiz-results'
+import { QuizRetry } from '@/features/quizzes/quiz-retry'
 import { QuizTaker } from '@/features/quizzes/quiz-taker'
 import { QUIZ_IDS, isQuizId, type QuizId } from '@/lib/constants'
 import { ROUTES } from '@/lib/links'
@@ -27,40 +28,39 @@ const TOPIC_TITLES: Record<string, string> = Object.fromEntries(
 )
 
 // Reads the user's attempt: no attempt means the quiz, and an attempt means
-// the results. The answers reach the browser only in the results.
+// the results, with a retry (Step-42). The answers reach the browser only in the results.
 async function QuizLoader({ quizId }: { quizId: QuizId }) {
 	const session = await getSession()
 	if (!session) redirect(ROUTES.signIn)
 	const attempts = await getQuizAttempts(session.userId)
 	const quiz = getQuiz(quizId)
 	const attempt = attempts[quizId]
-	if (!attempt) {
-		return (
-			<QuizTaker
-				key={session.userId}
-				quizId={quizId}
-				title={quiz.title}
-				intro={quiz.intro}
-				questions={quiz.questions.map(({ id, prompt, topic }) => ({
-					id,
-					prompt,
-					topicTitle: TOPIC_TITLES[topic] ?? topic
-				}))}
-			/>
-		)
+	const taker = {
+		quizId,
+		title: quiz.title,
+		intro: quiz.intro,
+		questions: quiz.questions.map(({ id, prompt, topic }) => ({
+			id,
+			prompt,
+			topicTitle: TOPIC_TITLES[topic] ?? topic
+		}))
 	}
+	if (!attempt) return <QuizTaker key={session.userId} {...taker} />
 	return (
-		<div className="flex max-w-2xl flex-col gap-4">
-			<h1 className="text-text text-3xl font-extrabold">{quiz.title}</h1>
-			<QuizResults
-				quiz={quiz}
-				answers={attempt.answers}
-				score={attempt.score}
-				topicTitles={TOPIC_TITLES}
-				startScore={attempts[QUIZ_IDS.start]?.score ?? null}
-				endScore={attempts[QUIZ_IDS.end]?.score ?? null}
-			/>
-		</div>
+		// A saved retry changes takenAt, so the page remounts on its new results.
+		<QuizRetry key={`${session.userId}:${attempt.takenAt}`} taker={taker}>
+			<div className="flex max-w-2xl flex-col gap-4">
+				<h1 className="text-text text-3xl font-extrabold">{quiz.title}</h1>
+				<QuizResults
+					quiz={quiz}
+					answers={attempt.answers}
+					score={attempt.score}
+					topicTitles={TOPIC_TITLES}
+					startScore={attempts[QUIZ_IDS.start]?.score ?? null}
+					endScore={attempts[QUIZ_IDS.end]?.score ?? null}
+				/>
+			</div>
+		</QuizRetry>
 	)
 }
 

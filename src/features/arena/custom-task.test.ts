@@ -82,6 +82,13 @@ describe('withEditedState', () => {
 		expect(built.ok && built.task.items[0]).toEqual({ id: 'i1', state: 'changed' })
 	})
 
+	it('keeps the stored answer while the input is still the preset own, so the run is scored', () => {
+		const text = withEditedState(textTask, '  original\n')
+		expect(text.ok && text.task.items[0]).toEqual({ id: 'i1', state: 'original', label: true })
+		const json = withEditedState(jsonTask, JSON.stringify({ a: 'x', b: 'y' }, null, 2))
+		expect(json.ok && json.task.items[0]?.label).toBe(false)
+	})
+
 	it('parses an object state as JSON', () => {
 		const built = withEditedState(jsonTask, '{"a":"1","b":"2"}')
 		expect(built.ok && built.task.items[0]?.state).toEqual({ a: '1', b: '2' })

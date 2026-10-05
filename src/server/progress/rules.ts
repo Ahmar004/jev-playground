@@ -15,7 +15,7 @@ import {
 export type BadgeStats = {
 	doneLevelIds: ReadonlySet<string>
 	correctPredictions: number
-	// The P0 VS games the user has finished (they have a Leaderboard entry).
+	// The P0 games the user has finished (they have a Leaderboard entry).
 	finishedGameIds?: ReadonlySet<string>
 	// The score of each quiz the user has taken.
 	quizScores?: Partial<Record<string, number>>

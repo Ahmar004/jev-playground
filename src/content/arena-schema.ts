@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { itemWordsSchema } from './game-schema'
 
 const text = z.string().min(1)
 
@@ -10,6 +11,8 @@ export const arenaPresetSchema = z.strictObject({
 	blurb: text,
 	taskId: text,
 	itemId: text,
-	lesson: text
+	lesson: text,
+	// What the task's items and yes or no answers are called (the batch list, the answers).
+	items: itemWordsSchema
 })
 export type ArenaPreset = z.infer<typeof arenaPresetSchema>

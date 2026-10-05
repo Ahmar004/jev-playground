@@ -35,7 +35,12 @@ export default async function ArenaBatchPage({ params }: PageProps<'/arena/batch
 				{view.preset.blurb} Here Jev and an LLM do all {view.task.items.length} items of the task,
 				so speed and cost add up to something you can compare.
 			</p>
-			<BatchPlay task={view.task} recordings={view.recordings} lesson={view.preset.lesson} />
+			<BatchPlay
+				task={view.task}
+				recordings={view.recordings}
+				lesson={view.preset.lesson}
+				words={view.preset.items}
+			/>
 		</main>
 	)
 }

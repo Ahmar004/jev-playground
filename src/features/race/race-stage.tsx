@@ -60,6 +60,7 @@ export function RaceStage({
 	live,
 	onUseBeginner,
 	scene,
+	details,
 	onFinished
 }: {
 	task: Task
@@ -71,6 +72,8 @@ export function RaceStage({
 	onUseBeginner?: () => void
 	// A game's animation, drawn from the race's live state above the tracks.
 	scene?: (perRacer: RaceState) => React.ReactNode
+	// Shown under the race and its controls, from the same state (a game's item list).
+	details?: (perRacer: RaceState) => React.ReactNode
 	// The racers' final totals with their labels, once the race finishes.
 	onFinished?: (results: RaceResult[]) => void
 }) {
@@ -131,6 +134,7 @@ export function RaceStage({
 					onUseBeginner={onUseBeginner}
 				/>
 			)}
+			{details?.(race.perRacer)}
 		</div>
 	)
 }

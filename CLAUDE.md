@@ -8,7 +8,7 @@ Keep sessions short: one ROADMAP step per session, and save progress and hand-of
 
 ## What this project is
 
-Jev's Playground is an interactive website that teaches where System One models like Jev work well, where they break, and where a frontier LLM or plain code is the better tool. It teaches through levels, VS games, an Arena, a Sandbox and quizzes, in Beginner mode (replays of real recordings, no keys) and Developer mode (live calls with the user's own keys). It runs on localhost until the Vercel deploy (ROADMAP Step-29), and then launches to TypeSafe's Discord community (100k+ people), so it must be fast, scalable, reliable and secure (Rule-0.01).
+Jev's Playground is an interactive website that teaches where System One models like Jev work well, where they break, and where a frontier LLM or plain code is the better tool. It teaches through levels, games, an Arena, a Sandbox and quizzes, in Beginner mode (replays of real recordings, no keys) and Developer mode (live calls with the user's own keys). It runs on localhost until the Vercel deploy (ROADMAP Step-29), and then launches to TypeSafe's Discord community (100k+ people), so it must be fast, scalable, reliable and secure (Rule-0.01).
 
 ## Stack and commands
 
@@ -57,7 +57,7 @@ Prisma 7 reads its CLI settings from `prisma.config.ts`, which loads `.env.local
 - No emojis anywhere: not in code, comments, commit messages or UI. Icons come from `@/components/ui/icons`.
 - No long dashes. Use a single hyphen "-" wherever a dash is needed.
 - Don't bloat docs. Every line must prevent a concrete mistake or answer a real question. In docs, state the claim, then the reason behind it, in plain sentences.
-- Use the vocabulary in spec 1.2 (Jev, LLM, Code, State, Question, Noul, Choice, Score, Confidence, Beginner mode, Developer mode, Recording, Level, VS game, Arena, Sandbox, Racer) and don't invent synonyms. Enum-like values (modes, providers, question kinds, level status) come from one constants module, never inline literals.
+- Use the vocabulary in spec 1.2 (Jev, LLM, Code, State, Question, Noul, Choice, Score, Confidence, Beginner mode, Developer mode, Recording, Level, Game, Arena, Sandbox, Racer) and don't invent synonyms. Enum-like values (modes, providers, question kinds, level status) come from one constants module, never inline literals.
 
 ## Product guardrails
 
