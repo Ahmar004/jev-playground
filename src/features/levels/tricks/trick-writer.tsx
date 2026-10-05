@@ -86,7 +86,7 @@ export function TrickWriter({
 	children
 }: {
 	question: string
-	// Why Jev can't be asked yet (no TypeSafe key); null when ready.
+	// Why Jev can't be asked yet (no TypeSafe or OpenRouter key); null when ready.
 	missing: string | null
 	attempts: TrickAttempt[]
 	pending: boolean
@@ -107,7 +107,7 @@ export function TrickWriter({
 				</h3>
 				<p className="text-text-muted">
 					Jev is asked: &quot;{question}&quot; Write a message that makes Jev answer wrong, say what
-					the right answer is, and Jev answers it live with your TypeSafe key.
+					the right answer is, and Jev answers it live with your own key.
 				</p>
 			</div>
 			{missing !== null && (

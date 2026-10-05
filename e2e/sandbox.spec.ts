@@ -13,6 +13,7 @@ import {
 // Flow 6 (DESIGN 14): Sandbox template > edit in Form, see the JSON in sync > over-limit block > Copy as code.
 const EMAIL = freshEmail()
 const TS_KEY = 'ts-e2e-fake-key-0001'
+const OR_KEY = 'sk-or-e2e-fake-key-0003'
 const CORS = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*' }
 
 test.describe.configure({ mode: 'serial' })
@@ -203,8 +204,8 @@ test('Developer mode runs the setup on Jev with your TypeSafe key, and explains 
 	// Without a key there is nothing to run with, and the page says how to fix that.
 	await expect(page.getByRole('dialog', { name: 'Your API keys' })).toBeVisible()
 	await page.keyboard.press('Escape')
-	await expect(page.getByRole('button', { name: 'Add your TypeSafe key' })).toBeVisible()
-	await page.getByRole('button', { name: 'Add your TypeSafe key' }).click()
+	await expect(page.getByRole('button', { name: 'Add your Jev key' })).toBeVisible()
+	await page.getByRole('button', { name: 'Add your Jev key' }).click()
 	await page.getByLabel('TypeSafe (Jev) key').fill(TS_KEY)
 	await page.getByLabel('TypeSafe (Jev) key').press('Enter')
 	await expect(page.getByText('Key works.')).toBeVisible()
@@ -219,6 +220,59 @@ test('Developer mode runs the setup on Jev with your TypeSafe key, and explains 
 	// A setup over the limit cannot be sent.
 	await page.getByLabel(/^State/).fill('x'.repeat(140_000))
 	await expect(page.getByRole('button', { name: 'Run on Jev' })).toBeDisabled()
+})
+
+test('Developer mode runs the setup on Jev with only an OpenRouter key, straight from the browser', async () => {
+	const seen = { systemone: 0, keyInUrl: 0, model: '', auth: '' }
+	await page.route('https://openrouter.ai/**', async (route) => {
+		const request = route.request()
+		if (request.url().includes(OR_KEY)) seen.keyInUrl += 1
+		if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: CORS })
+		if (new URL(request.url()).pathname === '/api/v1/models') {
+			return json(route, 200, { data: [{ id: 'a/b', name: 'A: B' }] })
+		}
+		seen.systemone += 1
+		const body = request.postDataJSON() as { model: string; questions: Record<string, Question> }
+		seen.model = body.model
+		seen.auth = request.headers()['authorization'] ?? ''
+		const answers = Object.fromEntries(
+			Object.entries(body.questions).map(([name, question]) => [name, answerFor(question)])
+		)
+		return json(route, 200, {
+			model: 'typesafe/jev-1.13-20260917',
+			answers,
+			usage: { input_tokens: 380, output_tokens: 66, cost: 0.00001596 }
+		})
+	})
+	// Our pass-through must stay unused: an OpenRouter key never reaches our server.
+	let passThroughPosts = 0
+	await page.route(/\/api\/jev$/, async (route) => {
+		if (route.request().method() === 'POST') passThroughPosts += 1
+		return json(route, 200, { data: [] })
+	})
+
+	await page.goto('/sandbox?template=moderation')
+	await page.getByRole('radio', { name: 'Developer' }).click()
+	await expect(page.getByRole('dialog', { name: 'Your API keys' })).toBeVisible()
+	await page.getByLabel('OpenRouter key').fill(OR_KEY)
+	await page.getByLabel('OpenRouter key').press('Enter')
+	await expect(page.getByText(/Key works - 1 models available/)).toBeVisible()
+	await page.keyboard.press('Escape')
+
+	await expect(page.getByText(/with your OpenRouter key/)).toBeVisible()
+	await page.getByRole('button', { name: 'Run on Jev' }).click()
+	await expect(
+		page.getByText(/^Developer mode - run \d{2}:\d{2} - typesafe\/jev-1\.13-20260917$/)
+	).toBeVisible({ timeout: 20_000 })
+	await expect(page.getByText(/Picked:/)).toBeVisible()
+	// Jev's cost comes from the stored price, not "price unknown".
+	await expect(page.getByText('price unknown')).toHaveCount(0)
+
+	expect(seen.systemone).toBe(1)
+	expect(seen.model).toBe('typesafe/jev-1.13')
+	expect(seen.auth).toBe(`Bearer ${OR_KEY}`)
+	expect(seen.keyInUrl).toBe(0)
+	expect(passThroughPosts).toBe(0)
 })
 
 test('a rejected request shows what Jev said, in plain words', async () => {

@@ -20,8 +20,8 @@ export default function SandboxPage() {
 				<h1 className="text-text text-3xl font-extrabold">Sandbox</h1>
 				<p className="text-text-muted max-w-2xl text-lg">
 					Build a state and ask Jev Noul, Choice and Score questions. Start from a template and see
-					its recorded answer, or write your own and run it with your TypeSafe key in Developer
-					mode.
+					its recorded answer, or write your own and run it with your TypeSafe or OpenRouter key in
+					Developer mode.
 				</p>
 			</div>
 			{/* SandboxView reads ?template=, which needs a Suspense boundary. */}

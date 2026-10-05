@@ -84,6 +84,7 @@ describe('raceResults', () => {
 				usage: { inputTokens: 0, outputTokens: 0 },
 				modelId: 'x'
 			}),
+			jevProvider: PROVIDERS.typesafe,
 			llmProvider: PROVIDERS.openai,
 			llmModelId: 'gpt-picked',
 			prices: PRICES,

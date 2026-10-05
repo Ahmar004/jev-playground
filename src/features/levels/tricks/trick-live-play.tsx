@@ -13,7 +13,7 @@ import { jevRacer, type JevCall } from '@/runner/racers'
 import { TrickWriter } from './trick-writer'
 import { useLiveTrick, type TrickAttempt, type TrickInput } from './use-live-trick'
 
-const NO_JEV_KEY = 'Add your TypeSafe key, so Jev can answer your message.'
+const NO_JEV_KEY = 'Add your TypeSafe key or an OpenRouter key, so Jev can answer your message.'
 
 /**
  * Level 8 in Developer mode (R14): the user's own trick goes to Jev live,
@@ -72,6 +72,7 @@ export function TrickLivePlay({
 			{jev && trick.failure && (
 				<LiveFailureAlert
 					failure={trick.failure}
+					jevProvider={jev.provider}
 					llmProvider={setup.provider ?? PROVIDERS.anthropic}
 					onRetry={() => {
 						if (trick.lastInput) ask(trick.lastInput, jev.call)

@@ -15,7 +15,7 @@ const KEY_COPY: Record<Provider, string> = {
 	typesafe:
 		'Used for Jev. TypeSafe blocks calls from browsers, so your key goes to our server, which forwards it to TypeSafe and returns the answer. The server does not store or log your key or what you send.',
 	openrouter:
-		'Used for the LLM. Sent straight from your browser to OpenRouter. It never reaches our server.',
+		'Used for the LLM, and for Jev when you have no TypeSafe key. Sent straight from your browser to OpenRouter. It never reaches our server.',
 	anthropic:
 		'Used for the LLM. Sent straight from your browser to Anthropic. It never reaches our server.',
 	openai:

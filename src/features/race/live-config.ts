@@ -1,5 +1,11 @@
 import type { PriceTable } from '@/content/prices'
-import { JEV_MODEL_ALIAS, RACERS, type LlmProvider, type Racer } from '@/lib/constants'
+import {
+	JEV_MODEL_ALIAS,
+	RACERS,
+	type JevProvider,
+	type LlmProvider,
+	type Racer
+} from '@/lib/constants'
 import type { Task } from '@/content/task-schema'
 import { stopOnProviderFailure } from '@/runner/live'
 import { jevRacer, llmRacer, type JevCall, type LlmCall } from '@/runner/racers'
@@ -8,6 +14,8 @@ import type { LiveRace } from './use-race'
 /** Everything a live race needs, with the keys already bound into the calls (the runner never sees a key). */
 export type LiveConfig = {
 	jevCall: JevCall
+	// Which key Jev runs on, so a failure names the right provider.
+	jevProvider: JevProvider
 	llmCall: LlmCall
 	llmProvider: LlmProvider
 	// The model the user picked; the model that answered is shown once a call returns.

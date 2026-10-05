@@ -125,6 +125,7 @@ export function RaceStage({
 			{race.failure && live && (
 				<LiveFailureAlert
 					failure={race.failure}
+					jevProvider={live.jevProvider}
 					llmProvider={live.llmProvider}
 					onRetry={race.start}
 					onUseBeginner={onUseBeginner}

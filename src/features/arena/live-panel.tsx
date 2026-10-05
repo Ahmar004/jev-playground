@@ -7,7 +7,7 @@ import type { Task } from '@/content/task-schema'
 import { providerErrorMessage } from '@/features/keys/error-copy'
 import { valueText } from '@/features/race/answer-text'
 import type { LiveConfig } from '@/features/race/live-config'
-import { JEV_MODEL_ALIAS, MODES, PROVIDERS, RACERS } from '@/lib/constants'
+import { JEV_MODEL_ALIAS, MODES, RACERS } from '@/lib/constants'
 import type { TaskBuild } from './custom-task'
 import { PendingCard, SideCard } from './side-card'
 import { ShareControls } from './share-controls'
@@ -109,7 +109,7 @@ export function LivePanel({
 						<span>
 							{providerErrorMessage(
 								live.failure.kind,
-								live.failure.racer === RACERS.llm ? config.llmProvider : PROVIDERS.typesafe
+								live.failure.racer === RACERS.llm ? config.llmProvider : config.jevProvider
 							)}
 						</span>
 					</p>

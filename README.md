@@ -21,7 +21,7 @@ The path is honest about Jev: it wins on speed and cost for fast judgments at sc
 ## The two modes
 
 - **Beginner mode** replays real Recordings made with the owner's keys: Jev, plus Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5. Replays animate at the recorded latency, and every result shows its mode, model ID and recording date. Recordings are real outputs, never invented or edited. Beginner mode reads only versioned JSON in `content/`, so it keeps working when every model API is down.
-- **Developer mode** runs live calls with your own keys: Jev via a TypeSafe key, and LLMs via Anthropic, OpenAI, Google or OpenRouter. With an LLM key you pick from the models that key can reach.
+- **Developer mode** runs live calls with your own keys: Jev via a TypeSafe key or an OpenRouter key, and LLMs via Anthropic, OpenAI, Google or OpenRouter. With an LLM key you pick from the models that key can reach.
 
 ### What happens to your keys
 
@@ -97,7 +97,6 @@ Beginner mode needs no model keys. The `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY
 - **No provider SDKs.** Hand-written `fetch` modules cost more code, but they give exact timing and payloads that match the real APIs.
 - **Hand-built SVG charts and CSS animations** instead of a chart library, to keep client bundles small.
 - **Known gaps:**
-  - Jev through an OpenRouter key is not built: its response shape could not be verified without a real key.
   - Prices are stored by hand from each provider's pricing page. A model not in `content/prices.json` shows "price unknown", and so does a promotional price after its last day, until someone checks the pages again.
   - There is no password reset yet.
 

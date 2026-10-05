@@ -7,7 +7,8 @@ import type { ArenaSide } from '@/features/arena/snapshot'
 import { providerErrorMessage } from '@/features/keys/error-copy'
 import { useKeys } from '@/features/keys/keys-context'
 import { useArenaReplay } from '@/features/arena/use-arena-replay'
-import { MODES, PROVIDERS, RACERS } from '@/lib/constants'
+import { jevAccessFor } from '@/features/race/jev-access'
+import { MODES, PROVIDER_LABELS, RACERS } from '@/lib/constants'
 import { buildSandboxTask, type SandboxDoc } from './doc'
 import { useSandboxRun } from './use-sandbox-run'
 
@@ -53,8 +54,8 @@ function BeginnerRun({
 		return (
 			<p className="bg-surface border-border text-text shadow-card rounded-lg border p-4">
 				{jev
-					? 'You changed this setup, so there is no recording of it. Switch to Developer mode with your TypeSafe key to run it, or reset the template to replay its recording. Everything above still works without a key: the Form, the JSON, the checks and Copy as code.'
-					: 'Beginner mode replays recordings of the ready-made templates. Pick a template to see its recorded answer, or switch to Developer mode with your TypeSafe key to run your own setup.'}
+					? 'You changed this setup, so there is no recording of it. Switch to Developer mode with your TypeSafe or OpenRouter key to run it, or reset the template to replay its recording. Everything above still works without a key: the Form, the JSON, the checks and Copy as code.'
+					: 'Beginner mode replays recordings of the ready-made templates. Pick a template to see its recorded answer, or switch to Developer mode with your TypeSafe or OpenRouter key to run your own setup.'}
 			</p>
 		)
 	}
@@ -63,19 +64,19 @@ function BeginnerRun({
 
 function DeveloperRun({ doc, blocked }: { doc: SandboxDoc; blocked: boolean }) {
 	const { keys, setPanelOpen } = useKeys()
-	const jevKey = keys[PROVIDERS.typesafe]
-	const live = useSandboxRun(jevKey?.key)
+	const jev = jevAccessFor(keys)
+	const live = useSandboxRun(jev)
 	const built = buildSandboxTask(doc)
-	if (!jevKey) {
+	if (!jev) {
 		return (
 			<div className="bg-surface border-border shadow-card flex flex-col gap-3 rounded-lg border p-4">
 				<p className="text-text">
-					Running your own setup needs your TypeSafe key, so Jev can answer. The key stays in this
-					tab and is never saved.
+					Running your own setup needs your TypeSafe key or an OpenRouter key, so Jev can answer.
+					The key stays in this tab and is never saved.
 				</p>
 				<div>
 					<Button type="button" onClick={() => setPanelOpen(true)}>
-						Add your TypeSafe key
+						Add your Jev key
 					</Button>
 				</div>
 			</div>
@@ -93,7 +94,9 @@ function DeveloperRun({ doc, blocked }: { doc: SandboxDoc; blocked: boolean }) {
 				<Button type="submit" disabled={live.status === 'running' || blocked || !built.ok}>
 					{live.status === 'running' ? 'Running...' : 'Run on Jev'}
 				</Button>
-				<p className="text-text-muted text-sm">Makes one call to Jev with your TypeSafe key.</p>
+				<p className="text-text-muted text-sm">
+					Makes one call to Jev with your {PROVIDER_LABELS[jev.provider]} key.
+				</p>
 			</div>
 			{!built.ok && (
 				<p role="alert" className="text-danger text-sm">
@@ -106,7 +109,7 @@ function DeveloperRun({ doc, blocked }: { doc: SandboxDoc; blocked: boolean }) {
 					className="bg-surface border-danger text-text shadow-card flex items-start gap-2 rounded-lg border p-4"
 				>
 					<AlertIcon className="text-danger mt-0.5 shrink-0" />
-					<span>{providerErrorMessage(live.failure, PROVIDERS.typesafe)}</span>
+					<span>{providerErrorMessage(live.failure, jev.provider)}</span>
 				</div>
 			)}
 			{live.status === 'running' && <PendingCard racer={RACERS.jev} modelId="Jev" />}
@@ -128,7 +131,7 @@ function DeveloperRun({ doc, blocked }: { doc: SandboxDoc; blocked: boolean }) {
 	)
 }
 
-/** Beginner mode replays a template's recording; Developer mode runs the setup live with the user's TypeSafe key (R49, R50). */
+/** Beginner mode replays a template's recording; Developer mode runs the setup live with the user's TypeSafe or OpenRouter key (R49, R50). */
 export function RunPanel({
 	developer,
 	doc,

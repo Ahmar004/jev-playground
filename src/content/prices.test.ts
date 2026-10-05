@@ -14,12 +14,21 @@ describe('PRICES', () => {
 
 	it('charges nothing for Jev output tokens', () => {
 		expect(PRICES.models['jev-1.13.0']?.outputPerM).toBe(0)
+		expect(PRICES.models['typesafe/jev-1.13-20260917']?.outputPerM).toBe(0)
+	})
+
+	it('prices Jev through OpenRouter the same as TypeSafe does', () => {
+		expect(PRICES.models['typesafe/jev-1.13-20260917']?.inputPerM).toBe(
+			PRICES.models['jev-1.13.0']?.inputPerM
+		)
 	})
 })
 
 // Each provider's official pricing page; a price from anywhere else is a mistake.
 const PRICING_PAGES: Partial<Record<Provider, string>> = {
 	[PROVIDERS.typesafe]: 'https://docs.typesafe.ai/models',
+	// Only Jev's own OpenRouter listing; other OpenRouter models use OpenRouter's live list.
+	[PROVIDERS.openrouter]: 'https://openrouter.ai/api/v1/models/typesafe/jev-1.13/endpoints',
 	[PROVIDERS.anthropic]: 'https://platform.claude.com/docs/en/about-claude/pricing',
 	[PROVIDERS.openai]: 'https://developers.openai.com/api/docs/pricing',
 	[PROVIDERS.google]: 'https://ai.google.dev/gemini-api/docs/pricing'

@@ -24,7 +24,7 @@ const SERVICES = [
 	'Supabase holds your account and the data above.',
 	'Sentry receives error reports with keys and auth headers removed.',
 	'PostHog receives anonymous usage events (a random id for your browser, event names and numbers, no email, no account and no text you typed). Session replay masks everything you type.',
-	'Anthropic, OpenAI, Google and OpenRouter receive your prompts straight from your browser, with your own key, when you run something in Developer mode. TypeSafe receives Jev requests through our server. Their own privacy terms apply to what they receive.'
+	'Anthropic, OpenAI, Google and OpenRouter receive your prompts straight from your browser, with your own key, when you run something in Developer mode. When you run Jev with a TypeSafe key, TypeSafe receives the request through our server; with an OpenRouter key, it goes straight from your browser. Their own privacy terms apply to what they receive.'
 ]
 
 function Section({ title, items }: { title: string; items: string[] }) {

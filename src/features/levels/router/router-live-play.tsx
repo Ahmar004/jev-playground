@@ -90,6 +90,7 @@ function LiveRun({ config, ...props }: Props & { config: LiveConfig | null }) {
 			{config && router.failure && (
 				<LiveFailureAlert
 					failure={router.failure}
+					jevProvider={config.jevProvider}
 					llmProvider={config.llmProvider}
 					onRetry={run}
 					onUseBeginner={props.onUseBeginner}

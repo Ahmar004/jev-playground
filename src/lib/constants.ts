@@ -113,6 +113,9 @@ export const ANSWER_KEY = 'answer'
 // The alias every Jev request sends; the response names the version that answered.
 export const JEV_MODEL_ALIAS = 'jev-latest'
 
+// OpenRouter has no `jev-latest` alias: Jev there is `typesafe/jev-1.13`, and the response names the dated build.
+export const OPENROUTER_JEV_MODEL = 'typesafe/jev-1.13'
+
 // Every racer gets the same number of parallel lanes (DESIGN 1).
 export const RACE_LANES = 4
 
@@ -282,6 +285,11 @@ export const BADGE_LABELS: Record<BadgeId, { name: string; description: string }
 	},
 	[BADGES.sharer]: { name: 'Sharer', description: 'Share a result.' }
 }
+
+// Developer mode (spec 3.4, 4). The keys that can run Jev, in the order the app prefers them:
+// TypeSafe's own endpoint first, OpenRouter for developers TypeSafe has no signup for.
+export const JEV_PROVIDERS = [PROVIDERS.typesafe, PROVIDERS.openrouter] as const
+export type JevProvider = (typeof JEV_PROVIDERS)[number]
 
 // Developer mode (spec 3.4, 4). The LLM providers a user can race Jev against.
 export const LLM_PROVIDERS = [

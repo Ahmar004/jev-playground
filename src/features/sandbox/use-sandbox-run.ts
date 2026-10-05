@@ -12,18 +12,18 @@ import {
 	RUN_STOPPING_ERRORS,
 	type ProviderErrorKind
 } from '@/lib/constants'
-import { callTypeSafe, JEV_PROXY_URL } from '@/runner/providers/typesafe'
+import type { JevAccess } from '@/features/race/jev-access'
 import { jevRacer } from '@/runner/racers'
 
 export type SandboxRunStatus = 'idle' | 'running' | 'done'
 
 /**
- * Developer mode's run: one call to Jev with the user's TypeSafe key, through
- * the same racer the recording CLI uses (R92). A failure that would repeat
- * (bad key, rate limit, outage) is reported for Retry; any other result, even
- * a rejection of the request, is shown as Jev answered it.
+ * Developer mode's run: one call to Jev with the user's TypeSafe or OpenRouter
+ * key, through the same racer the recording CLI uses (R92). A failure that would
+ * repeat (bad key, rate limit, outage) is reported for Retry; any other result,
+ * even a rejection of the request, is shown as Jev answered it.
  */
-export function useSandboxRun(typesafeKey: string | undefined) {
+export function useSandboxRun(jev: JevAccess | null) {
 	const [status, setStatus] = useState<SandboxRunStatus>('idle')
 	const [side, setSide] = useState<ArenaSide | null>(null)
 	const [failure, setFailure] = useState<ProviderErrorKind | null>(null)
@@ -34,7 +34,7 @@ export function useSandboxRun(typesafeKey: string | undefined) {
 
 	const run = (task: Task) => {
 		const item = task.items[0]
-		if (!typesafeKey || !item) return
+		if (!jev || !item) return
 		controller.current?.abort()
 		const abort = new AbortController()
 		controller.current = abort
@@ -47,7 +47,7 @@ export function useSandboxRun(typesafeKey: string | undefined) {
 			task,
 			prices: PRICES,
 			call: async (body, signal) => {
-				const result = await callTypeSafe(body, typesafeKey, signal, JEV_PROXY_URL)
+				const result = await jev.call(body, signal)
 				answeredBy = result.modelId
 				return result
 			}

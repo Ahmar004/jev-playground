@@ -6,13 +6,13 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.46 left (Step-15's live check spent about $0.011), and recordings so far cost $0.49.
 
-**Built (Steps 0-16, 18-30; 17 waits for its own session):**
+**Built (Steps 0-30; Step-16 skipped OpenAI and Google for lack of keys):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
-- Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
+- Beginner mode replays 31 recorded tasks. Developer mode supports Jev through a TypeSafe key or an OpenRouter key (TypeSafe wins when both are set), and LLMs through Anthropic, OpenAI, Google and OpenRouter (Step-17).
 - After a Developer mode run, Reveal shows the last finished live run beside the recordings (races, level 6 cards, level 8 tricks), labelled; tab memory only.
 - `content/prices.json` prices Jev, the Claude models and every OpenAI and Google text model (56 entries, checked 2026-10-04); OpenRouter models use OpenRouter's live list.
-- Tests: 626 Vitest, 114 node:test and 72 Playwright e2e, covering every flow in DESIGN 15.
+- Tests: 707 Vitest, 114 node:test and 74 Playwright e2e, covering every flow in DESIGN 15.
 - k6 locally (2026-10-05): 400 users median 214 ms, p95 583 ms, target met; 1,000 users median 6.7 s, p95 10.1 s, no failed requests but the target is missed (one Node process is CPU-bound at about 86 pages a second).
 - The public README.
 - Real keys checked (Step-15): TypeSafe and Anthropic, level 1 live on localhost, every call 200 with no shape fixes needed. A provider call now times out after 60 s (`PROVIDER_TIMEOUT_MS`) and stops the run with a `timeout` error; `/api/jev` answers 504 on a hung TypeSafe call.
@@ -20,15 +20,14 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 **Open (each is a ROADMAP step, 11-35):**
 
 - Promotional prices end: gpt-5.6-sol on 2026-11-21, gemini-3.6/3.7/3.8-flash on 2026-12-31. After that those models show "price unknown" until someone rechecks the pricing pages and updates `content/prices.json`.
-- Jev through an OpenRouter key isn't built yet (Step-17; the owner's key is now in `.env.local` as `OPENROUTER_API_KEY`, so nothing blocks it).
-- No real-key test for OpenAI, Google or OpenRouter (Step-16 skipped them: no keys). Level 8's live trick was checked live in Step-20.
+- No real-key test for OpenAI, Google or OpenRouter as an LLM (Step-16 skipped them: no keys). Jev through OpenRouter was checked live in Step-17. Level 8's live trick was checked live in Step-20.
 - Lighthouse mobile: LCP is 4.2 to 4.4 s on four pages and 6.6 s on a Level (simulated slow phone); the real page is fast (0.4 to 0.8 s here). Getting the simulated LCP under 2 s needs a much smaller initial JavaScript bundle (see Step-27).
 - The production Supabase project exists, its schema is applied and Confirm email is off (the owner did it). The app is live at https://letsplaywithjev.vercel.app (Vercel project `ahmar9/jev-playground`, function region iad1); production reports to its own Sentry project and shares the one free PostHog project.
 - No password reset (it needs a domain, and none is bought).
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-17 (the OpenRouter key is in `.env.local`) or Step-31 (SEO and sharing), one per session.
+**Next:** Step-31 (SEO and sharing), one step per session.
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -890,3 +889,11 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Signed-in smoke test, done 2026-10-05 on the live URL (the owner created the account, because the agent may not create accounts or enter passwords on a live site; the account is the owner's own, so it stays). Passed: sign-in lands on Home; all 8 levels, 8 VS games, Arena (with batch), Sandbox, quizzes, Glossary, Methodology, Privacy, Leaderboard and Profile return 200 with no error text (about 0.8 to 1.3 s from this browser); Level 1 played end to end in Beginner mode (predict, race replay at recorded speed, result, "Saved to your Leaderboard", and the Leaderboard then shows it); the start quiz saved 3 of 8; Sandbox replays a recording; an Arena run works; Needle Hunt plays; a share link is created with the `vercel.app` address and the Sharer badge, and opens signed-out with noindex and its mode label. Not tested live: Developer mode with real keys (the keys never leave a tab; Step-15 checked that locally) and Delete my account.
 - Found, not a bug in the code: the first sign-in and sign-up attempts showed "Could not reach the server" because the tab had been opened before the owner's redeploy. Its page held the old build's Server Action id, and Vercel logged `Failed to find Server Action ... This request might be from an older or newer deployment`. A reload fixed it. Any visitor with a tab open during a deploy will see the same, so deploy when few people are online after launch. Whether to add a friendlier message for this case is open (Step-33, with the runbook).
 - Decided with the owner: production keeps the current PostHog project (free plan allows one; filter by `$host`). Production gets its own Sentry project `jevs-playground-prod` (steps in `docs/api-setup-guide.md` section 2, step 7). The owner created it, put its DSN into Vercel's `NEXT_PUBLIC_SENTRY_DSN` and redeployed (build 2 m 34 s). Checked: the live JavaScript carries a DSN for a different project id than `.env.local`'s dev DSN, so production reports to `jevs-playground-prod`. PostHog's free plan allows one project, so a separate production project is not possible without deleting the dev one. Recommended: keep the one PostHog project for both (every event carries its `$host`, so filter on `letsplaywithjev.vercel.app`) and make a second free Sentry project for production. Neither Sentry nor PostHog sets an `environment` tag in our code; adding one is a small change for Step-33 (needs the owner's approval to add to ROADMAP).
+
+## Step-17 - Jev through an OpenRouter key (2026-10-05) - done
+
+- Real request first (owner's key from `.env.local`, loaded into the process only): `POST https://openrouter.ai/api/v1/systemone` answers 200 in about 0.7 s with TypeSafe's own request and answers shape. Differences: the model we send is `typesafe/jev-1.13` (there is no `jev-latest` there), the answering model is `typesafe/jev-1.13-20260917`, `usage` also carries `cost`, and the body has extra `id` and `provider` fields that the parser ignores. A first attempt with a guessed question shape got a 400, which only shows OpenRouter validates the same schema as TypeSafe.
+- Price: OpenRouter's endpoints API (`/api/v1/models/typesafe/jev-1.13/endpoints`) lists $0.042 per million input tokens and $0 output, and the real `usage.cost` (0.00001596 for 380 input tokens) equals tokens times that price. `content/prices.json` gets an entry for the dated model id with that page as its source, so cost stays tokens times the stored price (R92) and is not read from `usage.cost`. When TypeSafe ships a new dated build the id changes and the cost shows "price unknown" until someone adds it, the same as the TypeSafe route.
+- Built: `src/runner/providers/openrouter-jev.ts` (reuses `callTypeSafe` with OpenRouter's URL and model id); `src/features/race/jev-access.ts` (`jevAccessFor(keys)` picks TypeSafe through `/api/jev` or OpenRouter direct from the browser, TypeSafe first); `useLiveSetup`, the Sandbox run and the failure alerts use it, so every Developer mode screen (races, level 6, level 8, Arena, Sandbox) works with an OpenRouter key alone. `LiveConfig` gained `jevProvider` so an error names the provider Jev actually ran on. Copy, the Keys panel text for OpenRouter, Methodology (timing differs by route: with OpenRouter the browser measures the call, routing included), Privacy, spec 3.4, DESIGN 5.3 and README are updated. An OpenRouter key never reaches our server (e2e asserts zero POSTs to `/api/jev`).
+- Tests: 11 new Vitest (provider, access resolver, price) and 2 new e2e (Sandbox run, and a full 40-item race on one OpenRouter key). Gates: typecheck, lint, format, 707 Vitest, production build, sandbox and developer-mode e2e 18/18 against intercepted providers. One live run of the real racer (call, parse, score, cost) against OpenRouter passed; it cost a fraction of a cent of the owner's OpenRouter credit, no Anthropic spend.
+- Open: `OPENROUTER_API_KEY` in `.env.local` is no longer needed by any code or script; the owner can delete it (spec R22).

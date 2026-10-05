@@ -142,7 +142,7 @@ The first two keys are for the recording CLI (`corepack pnpm record`) and the th
 
 1. **`TYPESAFE_API_KEY`:** create it in the TypeSafe dashboard, as described at docs.typesafe.ai. It lets the CLI call Jev.
 2. **`ANTHROPIC_API_KEY`:** create it at https://platform.claude.com/settings/keys. It lets the CLI call Claude Opus 5.5, Sonnet 5.5 and Haiku 4.5.
-3. **`OPENROUTER_API_KEY`:** create it at https://openrouter.ai/settings/keys. Step-17 uses it for one real request to see how Jev answers through OpenRouter. Set a small credit limit on the key.
+3. **`OPENROUTER_API_KEY`:** create it at https://openrouter.ai/settings/keys. Step-17 used it for one real request to see how Jev answers through OpenRouter (done on 2026-10-05; the app itself never reads it). Set a small credit limit on the key.
 4. Paste them into `.env.local` as `TYPESAFE_API_KEY`, `ANTHROPIC_API_KEY` and `OPENROUTER_API_KEY`.
 5. Run `corepack pnpm record --dry-run` first. It prints the estimated cost and spends nothing.
 6. When recording and Step-17 are done, delete these values from `.env.local` (spec R22).

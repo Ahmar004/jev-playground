@@ -1,8 +1,16 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { PROVIDERS, PROVIDER_ERROR_KINDS } from '@/lib/constants'
+import { PRICES } from '@/content/prices'
+import {
+	JEV_MODEL_ALIAS,
+	OPENROUTER_JEV_MODEL,
+	PROVIDERS,
+	PROVIDER_ERROR_KINDS
+} from '@/lib/constants'
+import { costUsd, priceFor } from '@/runner/cost'
 import { callGoogle } from './google'
 import { fetchModels } from './model-list'
 import { callOpenAi, callOpenRouter, OPENAI_URL, OPENROUTER_URL } from './openai-compat'
+import { callOpenRouterJev, OPENROUTER_JEV_URL } from './openrouter-jev'
 import { ProviderError } from './provider-error'
 import { callTypeSafe, JEV_PROXY_URL, upstreamMs } from './typesafe'
 
@@ -97,6 +105,60 @@ describe('TypeSafe through the pass-through', () => {
 		expect(upstreamMs('upstream;dur=12.5')).toBe(12.5)
 		expect(upstreamMs(null)).toBeNull()
 		expect(upstreamMs('other;dur=1')).toBeNull()
+	})
+})
+
+describe('Jev through OpenRouter', () => {
+	// The real response shape, captured with one request on 2026-10-05.
+	const real = JSON.stringify({
+		model: 'typesafe/jev-1.13-20260917',
+		answers: { animal: { type: 'noul', noul: 0.99 } },
+		usage: { input_tokens: 380, output_tokens: 66, cost: 0.00001596 },
+		id: 'gen-dec-1',
+		provider: 'TypeSafe'
+	})
+	const request = { model: JEV_MODEL_ALIAS, state: 'x', questions: {} }
+
+	it('posts to the systemone route with OpenRouter model id, and the key only in the header', async () => {
+		const fetchMock = mockFetch(new Response(real))
+		await callOpenRouterJev(request, KEY)
+		const [url, init] = fetchMock.mock.calls[0] ?? []
+		expect(String(url)).toBe(OPENROUTER_JEV_URL)
+		expect(String(url)).not.toContain(KEY)
+		expect(new Headers(init?.headers).get('authorization')).toBe(`Bearer ${KEY}`)
+		const sent = JSON.parse(String(init?.body))
+		expect(sent.model).toBe(OPENROUTER_JEV_MODEL)
+		expect(sent.state).toBe('x')
+		expect(String(init?.body)).not.toContain(KEY)
+	})
+
+	it('returns the dated model id, token counts and the answers text', async () => {
+		mockFetch(new Response(real))
+		const result = await callOpenRouterJev(request, KEY)
+		expect(result.modelId).toBe('typesafe/jev-1.13-20260917')
+		expect(result.usage).toEqual({ inputTokens: 380, outputTokens: 66 })
+		expect(result.text).toBe(real)
+	})
+
+	it('maps a 401 to an invalid-key error that keeps no body', async () => {
+		mockFetch(new Response('{"error":{"message":"bad key sk-live-test-key-555"}}', { status: 401 }))
+		const error = await callOpenRouterJev(request, KEY).catch((e: unknown) => e)
+		expect(error).toBeInstanceOf(ProviderError)
+		expect((error as ProviderError).kind).toBe(PROVIDER_ERROR_KINDS.invalidKey)
+		expect((error as ProviderError).body).toBe('')
+	})
+
+	it("treats OpenRouter's 400 for a request Jev rejects as malformed", async () => {
+		mockFetch(new Response('{"error":{"message":"invalid questions"}}', { status: 400 }))
+		const error = await callOpenRouterJev(request, KEY).catch((e: unknown) => e)
+		expect((error as ProviderError).kind).toBe(PROVIDER_ERROR_KINDS.malformed)
+	})
+
+	it('costs Jev through OpenRouter at its published price, as OpenRouter charged', () => {
+		const price = priceFor(PRICES, ['typesafe/jev-1.13-20260917'])
+		expect(price).toMatchObject({ inputPerM: 0.042, outputPerM: 0 })
+		const cost = costUsd({ inputTokens: 380, outputTokens: 66 }, price)
+		expect(cost).toBeCloseTo(0.00001596, 10)
 	})
 })
 

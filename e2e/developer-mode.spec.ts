@@ -13,6 +13,7 @@ import {
 const EMAIL = freshEmail()
 const TS_KEY = 'ts-e2e-fake-key-0001'
 const ANTHROPIC_KEY = 'sk-ant-e2e-fake-key-0002'
+const OPENROUTER_KEY = 'sk-or-e2e-fake-key-0004'
 const CORS = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*' }
 
 test.describe.configure({ mode: 'serial' })
@@ -184,7 +185,92 @@ test('flow 4: keys panel, live race, labels, then Remove all', async ({ page }) 
 	await page.getByRole('button', { name: 'Remove all keys' }).click()
 	await expect(page.getByLabel('TypeSafe (Jev) key')).toBeVisible()
 	await page.keyboard.press('Escape')
-	await expect(page.getByText('Add your TypeSafe key, so Jev can answer.')).toBeVisible()
+	await expect(
+		page.getByText('Add your TypeSafe key or an OpenRouter key, so Jev can answer.')
+	).toBeVisible()
+})
+
+test('one OpenRouter key runs a whole live race: Jev on systemone, the LLM on chat completions', async ({
+	page
+}) => {
+	const hits = { systemone: 0, chat: 0, passThroughPosts: 0, keyInUrl: 0 }
+	await page.route('https://openrouter.ai/**', async (route) => {
+		const request = route.request()
+		if (request.url().includes(OPENROUTER_KEY)) hits.keyInUrl += 1
+		if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: CORS })
+		const { pathname } = new URL(request.url())
+		if (pathname === '/api/v1/models') {
+			return json(route, 200, {
+				data: [
+					{
+						id: 'openai/gpt-x',
+						name: 'OpenAI: GPT X',
+						pricing: { prompt: '0.000003', completion: '0.000015' }
+					}
+				]
+			})
+		}
+		if (pathname === '/api/v1/chat/completions') {
+			hits.chat += 1
+			return json(route, 200, {
+				model: 'openai/gpt-x-2026',
+				choices: [{ message: { content: '{"answer":"billing"}' } }],
+				usage: { prompt_tokens: 150, completion_tokens: 12 }
+			})
+		}
+		hits.systemone += 1
+		const { questions } = request.postDataJSON() as {
+			questions: Record<string, { type: string; criteria?: Record<string, string> }>
+		}
+		const answers = Object.fromEntries(
+			Object.entries(questions).map(([name, question]) => {
+				if (question.type === 'noul') return [name, { type: 'noul', noul: 0.9 }]
+				const choice = Object.keys(question.criteria ?? {})[0] ?? 'billing'
+				return [name, { type: 'choice', choice, probabilities: { [choice]: 0.9 }, confidence: 0.9 }]
+			})
+		)
+		return json(route, 200, {
+			model: 'typesafe/jev-1.13-20260917',
+			answers,
+			usage: { input_tokens: 200, output_tokens: 20, cost: 0.0000084 }
+		})
+	})
+	// An OpenRouter key must never go through our pass-through.
+	await page.route(/\/api\/jev$/, async (route) => {
+		if (route.request().method() === 'POST') hits.passThroughPosts += 1
+		return json(route, 200, { data: [] })
+	})
+
+	await openPlayInDeveloperMode(page)
+	await saveKey(page, 'OpenRouter', OPENROUTER_KEY)
+	await expect(page.getByText(/1 models available/)).toBeVisible()
+	await page.keyboard.press('Escape')
+
+	await expect(page.getByLabel('Model')).toHaveValue('openai/gpt-x')
+	await page.getByRole('button', { name: 'Start the race' }).click()
+	await expect(page.getByText('Finished. These numbers come from live calls.')).toBeVisible({
+		timeout: 30_000
+	})
+	expect(hits.systemone).toBe(40)
+	expect(hits.chat).toBe(40)
+	expect(hits.passThroughPosts).toBe(0)
+	expect(hits.keyInUrl).toBe(0)
+	await expect(
+		page.getByText(/^Developer mode - run \d{2}:\d{2} - typesafe\/jev-1\.13-20260917$/).first()
+	).toBeVisible()
+	await expect(
+		page.getByText(/^Developer mode - run \d{2}:\d{2} - openai\/gpt-x-2026$/).first()
+	).toBeVisible()
+
+	// Rule-8: the key is in no browser storage.
+	const stored = await page.evaluate(() =>
+		JSON.stringify({
+			local: { ...localStorage },
+			session: { ...sessionStorage },
+			c: document.cookie
+		})
+	)
+	expect(stored).not.toContain(OPENROUTER_KEY)
 })
 
 test('keys vanish on reload and the page starts in Beginner mode (Rule-8)', async ({ page }) => {

@@ -112,11 +112,13 @@ export default function MethodologyPage() {
 				</p>
 				<p className={BODY}>
 					Developer mode uses the same runner and the same math, with your own keys. Jev, Anthropic,
-					OpenAI and Google models use the table below, matched by the exact model ID; a model from
-					OpenRouter is priced from OpenRouter&apos;s published list; any other model shows
-					&quot;price unknown&quot;. Jev&apos;s time in Developer mode is the time our server
-					measured for its call to TypeSafe, so the hop from your browser to our server is not
-					counted.
+					OpenAI and Google models use the table below, matched by the exact model ID, and so does
+					Jev reached through an OpenRouter key; any other model from OpenRouter is priced from
+					OpenRouter&apos;s published list; any other model shows &quot;price unknown&quot;. With a
+					TypeSafe key, Jev&apos;s time in Developer mode is the time our server measured for its
+					call to TypeSafe, so the hop from your browser to our server is not counted. With an
+					OpenRouter key the call goes straight from your browser, so its time is what your browser
+					measured, and it includes OpenRouter&apos;s routing.
 				</p>
 				<p className={BODY}>
 					OpenAI and Google charge more for very long prompts (over 272,000 tokens at OpenAI, over
