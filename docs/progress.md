@@ -22,7 +22,7 @@ Read only this block and all the relevant sections a step needs (Rule-0.0). The 
 
 **Open (ROADMAP Steps 0-35 are done; these are the loose ends):**
 
-- **Production needs Step-35's database change before the next redeploy**, or Home and every level page fail on the missing `guide_seen` column: source `.env.prod-values.local` into the shell for these commands only, then `corepack pnpm exec prisma migrate deploy` (migration `20261005182704_guide_seen`), `corepack pnpm db:run-once` (marks users who already have progress as having seen the guide) and `corepack pnpm check:rls`.
+- Step-35's database change is on production (migration `guide_seen`, run-once backfill, `check:rls` 10 tables, 2026-10-05) and the code is pushed (auto-deploys); the owner tests the live URL.
 
 - Promotional prices end: gpt-5.6-sol on 2026-11-21, gemini-3.6/3.7/3.8-flash on 2026-12-31. After that those models show "price unknown" until someone rechecks the pricing pages and updates `content/prices.json`.
 - No real-key test for OpenAI, Google or OpenRouter as an LLM (Step-16 skipped them: no keys). Jev through OpenRouter was checked live in Step-17. Level 8's live trick was checked live in Step-20.
@@ -32,7 +32,7 @@ Read only this block and all the relevant sections a step needs (Rule-0.0). The 
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** ROADMAP Step-36 ("Play next level" on a level's Check tab). Before that, Step-31 and Steps 32-35 are built and verified locally but only show on the live URL after the owner redeploys; then paste the live URL into a Discord channel and check the card. Remaining ideas are the loose ends above (a smaller initial bundle for Lighthouse, a manual accessibility pass).
+**Next:** ROADMAP Step-36 ("Play next level" on a level's Check tab). Steps 31-35 are pushed to `main`, which deploys; then paste the live URL into a Discord channel and check the card. Remaining ideas are the loose ends above (a smaller initial bundle for Lighthouse, a manual accessibility pass).
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -941,4 +941,4 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Fixed while verifying: the dim layer remounts when a step gains a target, which put it after the card in the DOM, so the card was dimmed too; the card is now `z-70` over the `z-60` dim (checked by pixel values in both themes).
 - e2e: `signUp` skips the tour (and waits for the save) unless `{ keepTour: true }`, so older tests are unaffected. New `e2e/guide.spec.ts`: the full tour into level 1 with all three tips and persistence after reload, skip plus replay from the account menu, and screenshots of two steps at desktop and phone in both themes. The axe audit scans the open tour too.
 - Verified on a production build: Vitest 778/778, Playwright 124/124 (axe included), lint, typecheck and format clean. The Chrome extension was not connected, so the visual check used Playwright screenshots.
-- Open, owner: apply the migration and run-once SQL to production before redeploying (exact commands in "Current state").
+- Shipped with the owner's approval: production got the migration, the run-once backfill and a passing `check:rls` (10 tables) first, then the push to `main` deployed it. The owner tests the live URL.
