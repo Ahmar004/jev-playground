@@ -1,0 +1,107 @@
+{
+	"id": "carnival-hoops",
+	"kind": "fan_out",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"urgent": {
+				"type": "noul",
+				"instructions": "Does the customer say it is urgent, or ask for something to happen today or right now?"
+			},
+			"refund": {
+				"type": "noul",
+				"instructions": "Does the customer ask for their money back?"
+			},
+			"angry": {
+				"type": "noul",
+				"instructions": "Is the customer angry or annoyed with the shop?"
+			},
+			"needs_human": {
+				"type": "noul",
+				"instructions": "Does the customer ask to speak to a person, or mention a safety risk or legal action?"
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "c1",
+			"state": "Hi, I was charged twice for order #5521. Please refund the extra payment today. This is the third time I have asked and I am really fed up.",
+			"label": {
+				"urgent": true,
+				"refund": true,
+				"angry": true,
+				"needs_human": false
+			}
+		},
+		{
+			"id": "c2",
+			"state": "Hello! The new garden chairs arrived and they look lovely. Do you sell matching cushions?",
+			"label": {
+				"urgent": false,
+				"refund": false,
+				"angry": false,
+				"needs_human": false
+			}
+		},
+		{
+			"id": "c3",
+			"state": "The kettle I bought from you sparks when I switch it on, so I've stopped using it. Could someone call me about this?",
+			"label": {
+				"urgent": false,
+				"refund": false,
+				"angry": false,
+				"needs_human": true
+			}
+		},
+		{
+			"id": "c4",
+			"state": "I need to change my delivery address before the courier leaves today, because I'm moving house tomorrow.",
+			"label": {
+				"urgent": true,
+				"refund": false,
+				"angry": false,
+				"needs_human": false
+			}
+		},
+		{
+			"id": "c5",
+			"state": "Your product is rubbish and your service is worse. I want a full refund, and if I don't get one I'm taking you to court.",
+			"label": {
+				"urgent": false,
+				"refund": true,
+				"angry": true,
+				"needs_human": true
+			}
+		},
+		{
+			"id": "c6",
+			"state": "Could I return the blue jumper for a refund? It's a bit too small. No rush at all.",
+			"label": {
+				"urgent": false,
+				"refund": true,
+				"angry": false,
+				"needs_human": false
+			}
+		},
+		{
+			"id": "c7",
+			"state": "URGENT: my child swallowed one of the small magnets from your toy set. What should I do? Please have someone call me now!",
+			"label": {
+				"urgent": true,
+				"refund": false,
+				"angry": false,
+				"needs_human": true
+			}
+		},
+		{
+			"id": "c8",
+			"state": "This is the second broken mug in a row and I'm really annoyed. I'd like my money back, please, and I want to speak to a manager.",
+			"label": {
+				"urgent": false,
+				"refund": true,
+				"angry": true,
+				"needs_human": true
+			}
+		}
+	]
+}

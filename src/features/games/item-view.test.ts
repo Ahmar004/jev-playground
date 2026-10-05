@@ -76,4 +76,32 @@ describe('answerValue and jevNote', () => {
 		expect(jevNote(task, 'llm', result('billing'))).toBeNull()
 		expect(answerValue(task, 'llm', result(null, false))).toBeNull()
 	})
+
+	it('names the yes tags of a fan-out answer, in the order the task asks them', () => {
+		const { game: hoops, task } = game('carnival-hoops')
+		if (!task) throw new Error('No task')
+		const jev = result({
+			urgent: { type: 'noul', noul: 0.91 },
+			refund: { type: 'noul', noul: 0.88 },
+			angry: { type: 'noul', noul: 0.1 },
+			needs_human: { type: 'noul', noul: 0.2 }
+		})
+		expect(answerLabel(hoops.items, task, answerValue(task, 'jev', jev))).toBe('Urgent, Refund')
+		expect(jevNote(task, 'jev', jev)).toBe(
+			'chance of yes: Urgent 91%, Refund 88%, Angry 10%, Needs human 20%'
+		)
+		const none = { urgent: false, refund: false, angry: false, needs_human: false }
+		expect(answerLabel(hoops.items, task, answerValue(task, 'llm', result(none)))).toBe('No tags')
+		expect(answerValue(task, 'llm', result(null, false))).toBeNull()
+	})
+
+	it("reads Jev + Code's combined answer and says how many days Code counted", () => {
+		const { game: defense, task } = game('date-defense')
+		if (!task) throw new Error('No task')
+		const combined = result({ answer: false, detail: { days: 37 } })
+		expect(answerLabel(defense.items, task, answerValue(task, 'jev_code', combined))).toBe(
+			'Too late'
+		)
+		expect(jevNote(task, 'jev_code', combined)).toBe('Code counted 37 days')
+	})
 })

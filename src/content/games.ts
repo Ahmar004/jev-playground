@@ -1,5 +1,11 @@
 import citationCop from '../../content/games/citation-cop.json'
 import confidenceCatch from '../../content/games/confidence-catch.json'
+import inboxKeeper from '../../content/games/inbox-keeper.json'
+import headlineInvaders from '../../content/games/headline-invaders.json'
+import severityArchery from '../../content/games/severity-archery.json'
+import negationMaze from '../../content/games/negation-maze.json'
+import carnivalHoops from '../../content/games/carnival-hoops.json'
+import dateDefense from '../../content/games/date-defense.json'
 import guardrailGauntlet from '../../content/games/guardrail-gauntlet.json'
 import needleHunt from '../../content/games/needle-hunt.json'
 import numberCrunch from '../../content/games/number-crunch.json'
@@ -19,7 +25,13 @@ const RAW_GAMES: unknown[] = [
 	smartHomeDash,
 	twinFinder,
 	confidenceCatch,
-	citationCop
+	citationCop,
+	inboxKeeper,
+	headlineInvaders,
+	severityArchery,
+	negationMaze,
+	carnivalHoops,
+	dateDefense
 ]
 
 /** Parses games and checks ids and task ids, keyed by id in listed order. */

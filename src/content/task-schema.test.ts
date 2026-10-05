@@ -10,7 +10,8 @@ import {
 	findLinesTask,
 	generateTask,
 	noulTask,
-	scoreTask
+	scoreTask,
+	windowTask
 } from '@/runner/testing/tasks'
 
 // A valid choice task as plain JSON, mutated per test.
@@ -120,6 +121,12 @@ describe('taskSchema', () => {
 		const task = JSON.parse(JSON.stringify(countTask))
 		delete task.llm
 		expect(messages(task).join()).toMatch(/llm question/)
+	})
+
+	it('rejects a combine task whose Jev answer question differs from the llm question', () => {
+		const task = JSON.parse(JSON.stringify(windowTask))
+		task.jev.questions.answer.instructions = 'Something else?'
+		expect(messages(task).join()).toMatch(/same as the llm question/)
 	})
 
 	it('rejects raw questions outside a generate task', () => {

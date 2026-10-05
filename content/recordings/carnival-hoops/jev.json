@@ -1,0 +1,174 @@
+{
+	"taskId": "carnival-hoops",
+	"taskHash": "0ea8f68befd6beec7c11e81df38ecf4898c8beb9fc89c04ed7edd00731044dd7",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-05T20:45:06.781Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "c1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"urgent\":{\"type\":\"noul\",\"noul\":0.98},\"refund\":{\"type\":\"noul\",\"noul\":0.99},\"angry\":{\"type\":\"noul\",\"noul\":0.97},\"needs_human\":{\"type\":\"noul\",\"noul\":0.03}},\"usage\":{\"input_tokens\":380,\"output_tokens\":71}}",
+			"parsed": {
+				"urgent": { "type": "noul", "noul": 0.98 },
+				"refund": { "type": "noul", "noul": 0.99 },
+				"angry": { "type": "noul", "noul": 0.97 },
+				"needs_human": { "type": "noul", "noul": 0.03 }
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 665.3152,
+			"usage": { "inputTokens": 380, "outputTokens": 71 },
+			"costUsd": 0.00001596,
+			"lane": 0,
+			"startMs": 0.07209999999997763,
+			"endMs": 665.8923
+		},
+		{
+			"itemId": "c2",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"urgent\":{\"type\":\"noul\",\"noul\":0.02},\"refund\":{\"type\":\"noul\",\"noul\":0.01},\"angry\":{\"type\":\"noul\",\"noul\":0.02},\"needs_human\":{\"type\":\"noul\",\"noul\":0.02}},\"usage\":{\"input_tokens\":362,\"output_tokens\":71}}",
+			"parsed": {
+				"urgent": { "type": "noul", "noul": 0.02 },
+				"refund": { "type": "noul", "noul": 0.01 },
+				"angry": { "type": "noul", "noul": 0.02 },
+				"needs_human": { "type": "noul", "noul": 0.02 }
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 656.1323,
+			"usage": { "inputTokens": 362, "outputTokens": 71 },
+			"costUsd": 0.000015204,
+			"lane": 1,
+			"startMs": 18.275599999999997,
+			"endMs": 674.5363
+		},
+		{
+			"itemId": "c3",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"urgent\":{\"type\":\"noul\",\"noul\":0.26},\"refund\":{\"type\":\"noul\",\"noul\":0.07},\"angry\":{\"type\":\"noul\",\"noul\":0.64},\"needs_human\":{\"type\":\"noul\",\"noul\":0.95}},\"usage\":{\"input_tokens\":371,\"output_tokens\":71}}",
+			"parsed": {
+				"urgent": { "type": "noul", "noul": 0.26 },
+				"refund": { "type": "noul", "noul": 0.07 },
+				"angry": { "type": "noul", "noul": 0.64 },
+				"needs_human": { "type": "noul", "noul": 0.95 }
+			},
+			"credit": 0.75,
+			"correct": false,
+			"latencyMs": 523.4565,
+			"usage": { "inputTokens": 371, "outputTokens": 71 },
+			"costUsd": 0.000015582,
+			"lane": 2,
+			"startMs": 18.751199999999983,
+			"endMs": 542.3574
+		},
+		{
+			"itemId": "c4",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"urgent\":{\"type\":\"noul\",\"noul\":0.95},\"refund\":{\"type\":\"noul\",\"noul\":0.01},\"angry\":{\"type\":\"noul\",\"noul\":0.08},\"needs_human\":{\"type\":\"noul\",\"noul\":0.03}},\"usage\":{\"input_tokens\":364,\"output_tokens\":71}}",
+			"parsed": {
+				"urgent": { "type": "noul", "noul": 0.95 },
+				"refund": { "type": "noul", "noul": 0.01 },
+				"angry": { "type": "noul", "noul": 0.08 },
+				"needs_human": { "type": "noul", "noul": 0.03 }
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 457.9458000000001,
+			"usage": { "inputTokens": 364, "outputTokens": 71 },
+			"costUsd": 0.000015288,
+			"lane": 3,
+			"startMs": 19.116600000000005,
+			"endMs": 478.32820000000004
+		},
+		{
+			"itemId": "c5",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"urgent\":{\"type\":\"noul\",\"noul\":0.07},\"refund\":{\"type\":\"noul\",\"noul\":0.99},\"angry\":{\"type\":\"noul\",\"noul\":0.99},\"needs_human\":{\"type\":\"noul\",\"noul\":0.97}},\"usage\":{\"input_tokens\":374,\"output_tokens\":71}}",
+			"parsed": {
+				"urgent": { "type": "noul", "noul": 0.07 },
+				"refund": { "type": "noul", "noul": 0.99 },
+				"angry": { "type": "noul", "noul": 0.99 },
+				"needs_human": { "type": "noul", "noul": 0.97 }
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 347.0883000000001,
+			"usage": { "inputTokens": 374, "outputTokens": 71 },
+			"costUsd": 0.000015708,
+			"lane": 3,
+			"startMs": 478.4361,
+			"endMs": 825.6799000000001
+		},
+		{
+			"itemId": "c6",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"urgent\":{\"type\":\"noul\",\"noul\":0.02},\"refund\":{\"type\":\"noul\",\"noul\":0.97},\"angry\":{\"type\":\"noul\",\"noul\":0.05},\"needs_human\":{\"type\":\"noul\",\"noul\":0.02}},\"usage\":{\"input_tokens\":366,\"output_tokens\":71}}",
+			"parsed": {
+				"urgent": { "type": "noul", "noul": 0.02 },
+				"refund": { "type": "noul", "noul": 0.97 },
+				"angry": { "type": "noul", "noul": 0.05 },
+				"needs_human": { "type": "noul", "noul": 0.02 }
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 437.66690000000006,
+			"usage": { "inputTokens": 366, "outputTokens": 71 },
+			"costUsd": 0.000015372,
+			"lane": 2,
+			"startMs": 542.4132999999999,
+			"endMs": 980.2634
+		},
+		{
+			"itemId": "c7",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"urgent\":{\"type\":\"noul\",\"noul\":0.99},\"refund\":{\"type\":\"noul\",\"noul\":0.02},\"angry\":{\"type\":\"noul\",\"noul\":0.22},\"needs_human\":{\"type\":\"noul\",\"noul\":0.97}},\"usage\":{\"input_tokens\":372,\"output_tokens\":71}}",
+			"parsed": {
+				"urgent": { "type": "noul", "noul": 0.99 },
+				"refund": { "type": "noul", "noul": 0.02 },
+				"angry": { "type": "noul", "noul": 0.22 },
+				"needs_human": { "type": "noul", "noul": 0.97 }
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 408.0247999999999,
+			"usage": { "inputTokens": 372, "outputTokens": 71 },
+			"costUsd": 0.000015624,
+			"lane": 0,
+			"startMs": 665.9546,
+			"endMs": 1074.1328
+		},
+		{
+			"itemId": "c8",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"urgent\":{\"type\":\"noul\",\"noul\":0.11},\"refund\":{\"type\":\"noul\",\"noul\":0.99},\"angry\":{\"type\":\"noul\",\"noul\":0.98},\"needs_human\":{\"type\":\"noul\",\"noul\":0.96}},\"usage\":{\"input_tokens\":377,\"output_tokens\":71}}",
+			"parsed": {
+				"urgent": { "type": "noul", "noul": 0.11 },
+				"refund": { "type": "noul", "noul": 0.99 },
+				"angry": { "type": "noul", "noul": 0.98 },
+				"needs_human": { "type": "noul", "noul": 0.96 }
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 340.6299999999999,
+			"usage": { "inputTokens": 377, "outputTokens": 71 },
+			"costUsd": 0.000015834,
+			"lane": 1,
+			"startMs": 674.5902000000001,
+			"endMs": 1015.3616999999999
+		}
+	],
+	"totals": {
+		"items": 8,
+		"scored": 8,
+		"correct": 7,
+		"accuracy": 0.96875,
+		"wallMs": 1074.0607,
+		"costUsd": 0.000124572,
+		"inputTokens": 2966,
+		"outputTokens": 568,
+		"parseFailures": 0
+	}
+}

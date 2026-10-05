@@ -1,0 +1,302 @@
+{
+	"taskId": "severity-archery",
+	"taskHash": "4b91f5ced3398f18a21c0be530379f6493cac8264ecb7a7c47f37289c00c3f26",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-05T20:44:36.662Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "b1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":0.0,\"confidence\":1.0,\"legend\":{\"0\":\"Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app\",\"1\":\"Minor: a small annoyance with an easy workaround\",\"2\":\"Major: a feature is broken for some users, but they can still get their task done another way\",\"3\":\"Severe: a core feature is broken for many users and there is no workaround\",\"4\":\"Critical: data loss, a security hole, or the whole app down for everyone\"},\"probabilities\":{\"0\":1.0,\"1\":0.0,\"2\":0.0,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":411,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 0,
+					"legend": {
+						"0": "Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app",
+						"1": "Minor: a small annoyance with an easy workaround",
+						"2": "Major: a feature is broken for some users, but they can still get their task done another way",
+						"3": "Severe: a core feature is broken for many users and there is no workaround",
+						"4": "Critical: data loss, a security hole, or the whole app down for everyone"
+					},
+					"probabilities": { "0": 1, "1": 0, "2": 0, "3": 0, "4": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 526.6682000000001,
+			"usage": { "inputTokens": 411, "outputTokens": 17 },
+			"costUsd": 0.000017262000000000002,
+			"lane": 0,
+			"startMs": 0.07120000000003301,
+			"endMs": 527.2663
+		},
+		{
+			"itemId": "b2",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":3.99,\"confidence\":0.99,\"legend\":{\"0\":\"Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app\",\"1\":\"Minor: a small annoyance with an easy workaround\",\"2\":\"Major: a feature is broken for some users, but they can still get their task done another way\",\"3\":\"Severe: a core feature is broken for many users and there is no workaround\",\"4\":\"Critical: data loss, a security hole, or the whole app down for everyone\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":0.0,\"3\":0.0,\"4\":1.0}}},\"usage\":{\"input_tokens\":414,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 3.99,
+					"legend": {
+						"0": "Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app",
+						"1": "Minor: a small annoyance with an easy workaround",
+						"2": "Major: a feature is broken for some users, but they can still get their task done another way",
+						"3": "Severe: a core feature is broken for many users and there is no workaround",
+						"4": "Critical: data loss, a security hole, or the whole app down for everyone"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 0, "3": 0, "4": 1 },
+					"confidence": 0.99
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 588.7256,
+			"usage": { "inputTokens": 414, "outputTokens": 17 },
+			"costUsd": 0.000017388,
+			"lane": 1,
+			"startMs": 18.19670000000002,
+			"endMs": 607.1213
+		},
+		{
+			"itemId": "b3",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":2.0,\"confidence\":1.0,\"legend\":{\"0\":\"Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app\",\"1\":\"Minor: a small annoyance with an easy workaround\",\"2\":\"Major: a feature is broken for some users, but they can still get their task done another way\",\"3\":\"Severe: a core feature is broken for many users and there is no workaround\",\"4\":\"Critical: data loss, a security hole, or the whole app down for everyone\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":1.0,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":414,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 2,
+					"legend": {
+						"0": "Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app",
+						"1": "Minor: a small annoyance with an easy workaround",
+						"2": "Major: a feature is broken for some users, but they can still get their task done another way",
+						"3": "Severe: a core feature is broken for many users and there is no workaround",
+						"4": "Critical: data loss, a security hole, or the whole app down for everyone"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 1, "3": 0, "4": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 487.4541,
+			"usage": { "inputTokens": 414, "outputTokens": 17 },
+			"costUsd": 0.000017388,
+			"lane": 2,
+			"startMs": 18.67360000000002,
+			"endMs": 506.28400000000005
+		},
+		{
+			"itemId": "b4",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":3.0,\"confidence\":0.99,\"legend\":{\"0\":\"Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app\",\"1\":\"Minor: a small annoyance with an easy workaround\",\"2\":\"Major: a feature is broken for some users, but they can still get their task done another way\",\"3\":\"Severe: a core feature is broken for many users and there is no workaround\",\"4\":\"Critical: data loss, a security hole, or the whole app down for everyone\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":0.0,\"3\":1.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":421,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 3,
+					"legend": {
+						"0": "Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app",
+						"1": "Minor: a small annoyance with an easy workaround",
+						"2": "Major: a feature is broken for some users, but they can still get their task done another way",
+						"3": "Severe: a core feature is broken for many users and there is no workaround",
+						"4": "Critical: data loss, a security hole, or the whole app down for everyone"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 0, "3": 1, "4": 0 },
+					"confidence": 0.99
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 431.2661,
+			"usage": { "inputTokens": 421, "outputTokens": 17 },
+			"costUsd": 0.000017682,
+			"lane": 3,
+			"startMs": 19.049300000000017,
+			"endMs": 451.4936000000001
+		},
+		{
+			"itemId": "b5",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":1.18,\"confidence\":0.85,\"legend\":{\"0\":\"Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app\",\"1\":\"Minor: a small annoyance with an easy workaround\",\"2\":\"Major: a feature is broken for some users, but they can still get their task done another way\",\"3\":\"Severe: a core feature is broken for many users and there is no workaround\",\"4\":\"Critical: data loss, a security hole, or the whole app down for everyone\"},\"probabilities\":{\"0\":0.0,\"1\":0.82,\"2\":0.18,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":416,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 1.18,
+					"legend": {
+						"0": "Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app",
+						"1": "Minor: a small annoyance with an easy workaround",
+						"2": "Major: a feature is broken for some users, but they can still get their task done another way",
+						"3": "Severe: a core feature is broken for many users and there is no workaround",
+						"4": "Critical: data loss, a security hole, or the whole app down for everyone"
+					},
+					"probabilities": { "0": 0, "1": 0.82, "2": 0.18, "3": 0, "4": 0 },
+					"confidence": 0.85
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 406.51210000000003,
+			"usage": { "inputTokens": 416, "outputTokens": 17 },
+			"costUsd": 0.000017472,
+			"lane": 3,
+			"startMs": 451.59920000000005,
+			"endMs": 858.2758000000001
+		},
+		{
+			"itemId": "b6",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":0.0,\"confidence\":1.0,\"legend\":{\"0\":\"Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app\",\"1\":\"Minor: a small annoyance with an easy workaround\",\"2\":\"Major: a feature is broken for some users, but they can still get their task done another way\",\"3\":\"Severe: a core feature is broken for many users and there is no workaround\",\"4\":\"Critical: data loss, a security hole, or the whole app down for everyone\"},\"probabilities\":{\"0\":1.0,\"1\":0.0,\"2\":0.0,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":410,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 0,
+					"legend": {
+						"0": "Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app",
+						"1": "Minor: a small annoyance with an easy workaround",
+						"2": "Major: a feature is broken for some users, but they can still get their task done another way",
+						"3": "Severe: a core feature is broken for many users and there is no workaround",
+						"4": "Critical: data loss, a security hole, or the whole app down for everyone"
+					},
+					"probabilities": { "0": 1, "1": 0, "2": 0, "3": 0, "4": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 369.19180000000006,
+			"usage": { "inputTokens": 410, "outputTokens": 17 },
+			"costUsd": 0.00001722,
+			"lane": 2,
+			"startMs": 506.3381,
+			"endMs": 875.6950000000002
+		},
+		{
+			"itemId": "b7",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":3.99,\"confidence\":0.99,\"legend\":{\"0\":\"Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app\",\"1\":\"Minor: a small annoyance with an easy workaround\",\"2\":\"Major: a feature is broken for some users, but they can still get their task done another way\",\"3\":\"Severe: a core feature is broken for many users and there is no workaround\",\"4\":\"Critical: data loss, a security hole, or the whole app down for everyone\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":0.0,\"3\":0.01,\"4\":0.99}}},\"usage\":{\"input_tokens\":414,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 3.99,
+					"legend": {
+						"0": "Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app",
+						"1": "Minor: a small annoyance with an easy workaround",
+						"2": "Major: a feature is broken for some users, but they can still get their task done another way",
+						"3": "Severe: a core feature is broken for many users and there is no workaround",
+						"4": "Critical: data loss, a security hole, or the whole app down for everyone"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 0, "3": 0.01, "4": 0.99 },
+					"confidence": 0.99
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 332.34140000000014,
+			"usage": { "inputTokens": 414, "outputTokens": 17 },
+			"costUsd": 0.000017388,
+			"lane": 0,
+			"startMs": 527.3190999999999,
+			"endMs": 859.7876000000001
+		},
+		{
+			"itemId": "b8",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":2.0,\"confidence\":1.0,\"legend\":{\"0\":\"Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app\",\"1\":\"Minor: a small annoyance with an easy workaround\",\"2\":\"Major: a feature is broken for some users, but they can still get their task done another way\",\"3\":\"Severe: a core feature is broken for many users and there is no workaround\",\"4\":\"Critical: data loss, a security hole, or the whole app down for everyone\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":1.0,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":415,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 2,
+					"legend": {
+						"0": "Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app",
+						"1": "Minor: a small annoyance with an easy workaround",
+						"2": "Major: a feature is broken for some users, but they can still get their task done another way",
+						"3": "Severe: a core feature is broken for many users and there is no workaround",
+						"4": "Critical: data loss, a security hole, or the whole app down for everyone"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 1, "3": 0, "4": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 497.9941,
+			"usage": { "inputTokens": 415, "outputTokens": 17 },
+			"costUsd": 0.00001743,
+			"lane": 1,
+			"startMs": 607.1809000000001,
+			"endMs": 1105.3189
+		},
+		{
+			"itemId": "b9",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":2.97,\"confidence\":0.91,\"legend\":{\"0\":\"Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app\",\"1\":\"Minor: a small annoyance with an easy workaround\",\"2\":\"Major: a feature is broken for some users, but they can still get their task done another way\",\"3\":\"Severe: a core feature is broken for many users and there is no workaround\",\"4\":\"Critical: data loss, a security hole, or the whole app down for everyone\"},\"probabilities\":{\"0\":0.0,\"1\":0.0,\"2\":0.07,\"3\":0.89,\"4\":0.04}}},\"usage\":{\"input_tokens\":413,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 2.97,
+					"legend": {
+						"0": "Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app",
+						"1": "Minor: a small annoyance with an easy workaround",
+						"2": "Major: a feature is broken for some users, but they can still get their task done another way",
+						"3": "Severe: a core feature is broken for many users and there is no workaround",
+						"4": "Critical: data loss, a security hole, or the whole app down for everyone"
+					},
+					"probabilities": { "0": 0, "1": 0, "2": 0.07, "3": 0.89, "4": 0.04 },
+					"confidence": 0.91
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 445.06949999999983,
+			"usage": { "inputTokens": 413, "outputTokens": 17 },
+			"costUsd": 0.000017346,
+			"lane": 3,
+			"startMs": 858.3308000000002,
+			"endMs": 1303.5773000000002
+		},
+		{
+			"itemId": "b10",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"score\",\"score\":1.02,\"confidence\":0.87,\"legend\":{\"0\":\"Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app\",\"1\":\"Minor: a small annoyance with an easy workaround\",\"2\":\"Major: a feature is broken for some users, but they can still get their task done another way\",\"3\":\"Severe: a core feature is broken for many users and there is no workaround\",\"4\":\"Critical: data loss, a security hole, or the whole app down for everyone\"},\"probabilities\":{\"0\":0.07,\"1\":0.84,\"2\":0.09,\"3\":0.0,\"4\":0.0}}},\"usage\":{\"input_tokens\":408,\"output_tokens\":17}}",
+			"parsed": {
+				"answer": {
+					"type": "score",
+					"score": 1.02,
+					"legend": {
+						"0": "Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app",
+						"1": "Minor: a small annoyance with an easy workaround",
+						"2": "Major: a feature is broken for some users, but they can still get their task done another way",
+						"3": "Severe: a core feature is broken for many users and there is no workaround",
+						"4": "Critical: data loss, a security hole, or the whole app down for everyone"
+					},
+					"probabilities": { "0": 0.07, "1": 0.84, "2": 0.09, "3": 0, "4": 0 },
+					"confidence": 0.87
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 470.6925000000001,
+			"usage": { "inputTokens": 408, "outputTokens": 17 },
+			"costUsd": 0.000017136000000000003,
+			"lane": 0,
+			"startMs": 859.8284000000001,
+			"endMs": 1330.7252
+		}
+	],
+	"totals": {
+		"items": 10,
+		"scored": 10,
+		"correct": 10,
+		"accuracy": 1,
+		"wallMs": 1330.654,
+		"costUsd": 0.00017371200000000002,
+		"inputTokens": 4136,
+		"outputTokens": 170,
+		"parseFailures": 0
+	}
+}

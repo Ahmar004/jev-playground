@@ -1,0 +1,20 @@
+{
+	"id": "negation-maze",
+	"title": "Double-Negative Maze",
+	"priority": "p1",
+	"taskId": "negation-maze",
+	"blurb": "A robot crosses a maze, and at every junction a tricky instruction full of negatives says which way to go. A wrong turn hits a wall.",
+	"animation": "maze",
+	"lesson": "Negatives and indirection are on Jev's known-weakness list, so watch its confidence: when it drops, rewrite the instruction plainly or send the case to a person.",
+	"why": [
+		"TypeSafe lists literal reading, double negatives and multi-hop wording among Jev 1.13's weak spots. Every junction here is one of them, written so it has exactly one right answer.",
+		"Jev's confidence comes with every Choice, so a low number marks the instructions it found hard. An LLM that writes out its reasoning instead of the answer format counts as a miss, and its raw output is shown in the list below."
+	],
+	"items": {
+		"plural": "instructions"
+	},
+	"docs": {
+		"path": "/model-jaggedness/jev-1.13#literal-reading",
+		"title": "Literal reading"
+	}
+}

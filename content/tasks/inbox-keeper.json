@@ -1,0 +1,80 @@
+{
+	"id": "inbox-keeper",
+	"kind": "choice",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "choice",
+				"instructions": "Sort this email that arrived in a personal inbox.",
+				"criteria": {
+					"phishing": "Pretends to be a trusted company or person to steal a password, a payment or personal details",
+					"spam": "Unwanted bulk advertising or promotion that is not trying to steal anything",
+					"safe": "A genuine email the reader expects or wants, such as a receipt, a note from someone they know or a real account notice"
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "e1",
+			"state": "From: security@northwind-bank-verify.net\nSubject: Unusual sign-in blocked\n\nDear customer, we blocked a sign-in to your account. To keep access, confirm your username, password and card PIN here within 24 hours: http://northwind-bank-verify.net/secure",
+			"label": "phishing"
+		},
+		{
+			"id": "e2",
+			"state": "From: deals@megasavings-club.com\nSubject: 70% OFF everything this weekend only!!!\n\nHuge clearance sale on sofas, lamps and rugs. Free delivery on orders over $50. Click to shop now.",
+			"label": "spam"
+		},
+		{
+			"id": "e3",
+			"state": "From: orders@northwindshop.com\nSubject: Your order #48213 has shipped\n\nHi Sara, your blue desk lamp left our warehouse today. You can track it from the Orders page in your account. Thanks for shopping with us.",
+			"label": "safe"
+		},
+		{
+			"id": "e4",
+			"state": "From: ceo.office.mark@gmail.com\nSubject: Quick favour\n\nHi, it's Mark, your CEO. I'm in a meeting and can't talk. Please buy five $100 gift cards for a client and email me the codes within the hour. I'll pay you back.",
+			"label": "phishing"
+		},
+		{
+			"id": "e5",
+			"state": "From: events@growfast-academy.com\nSubject: Free webinar: 10,000 followers in 30 days\n\nJoin our free live class and learn the posting secrets top creators use. Seats are limited, so register today!",
+			"label": "spam"
+		},
+		{
+			"id": "e6",
+			"state": "From: reception@brightsmiles-clinic.com\nSubject: Appointment reminder\n\nHi Sara, this is a reminder of your dental check-up on Tuesday 14 October at 10:30. Reply to this email if you need to move it.",
+			"label": "safe"
+		},
+		{
+			"id": "e7",
+			"state": "From: delivery@parcel-track-fee.com\nSubject: Your parcel is on hold\n\nWe could not deliver your parcel because a customs fee of $1.99 is unpaid. Enter your card details at the link below within 48 hours or the parcel will be returned.",
+			"label": "phishing"
+		},
+		{
+			"id": "e8",
+			"state": "From: tom.baker@gmail.com\nSubject: Saturday hike photos\n\nHey Sara, great hike on Saturday! I put the photos in the album we shared last month. The one at the waterfall came out really well.",
+			"label": "safe"
+		},
+		{
+			"id": "e9",
+			"state": "From: offers@travelpoint-deals.com\nSubject: Last-minute beach holidays from $299\n\nSun, sand and savings! Browse hundreds of last-minute deals to Spain, Greece and Turkey. Prices go up on Friday.",
+			"label": "spam"
+		},
+		{
+			"id": "e10",
+			"state": "From: it-helpdesk@company-mail-reset.com\nSubject: Password expires today\n\nYour work email password expires today. Keep your current password by signing in at the link below. If you do not act, your mailbox will be deleted.",
+			"label": "phishing"
+		},
+		{
+			"id": "e11",
+			"state": "From: alerts@northwind-bank.com\nSubject: Your monthly statement is ready\n\nHi Sara, your September statement is ready. For your safety we never put links in our emails, so open our app to view it.",
+			"label": "safe"
+		},
+		{
+			"id": "e12",
+			"state": "From: team@supergreens-vitality.com\nSubject: Doctors hate this morning drink\n\nOur green superfood powder melts fat while you sleep. Order three tubs and get the fourth free. Offer ends at midnight.",
+			"label": "spam"
+		}
+	]
+}

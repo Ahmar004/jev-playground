@@ -103,6 +103,11 @@ test('Play next game opens the next game; the last game offers only All games', 
 	await expect(page.getByRole('region', { name: 'Result', exact: true })).toHaveCount(0)
 	await expect(page.getByRole('region', { name: 'Set the confidence threshold' })).toHaveCount(0)
 	await expect(page.getByRole('button', { name: 'Start the race' })).toBeVisible()
+	await page.getByRole('link', { name: 'Play next game' }).click()
+	await expect(page).toHaveURL('/games/inbox-keeper')
+	// Date Defense, the last game, offers only All games.
+	await page.goto('/games/date-defense')
+	await expect(page.getByRole('button', { name: 'Start the race' })).toBeVisible()
 	await expect(page.getByRole('link', { name: 'Play next game' })).toHaveCount(0)
 	await page
 		.getByRole('navigation', { name: 'More games' })
@@ -160,7 +165,44 @@ test('the four P1 games play and write Leaderboard entries; Confidence Catch has
 	}
 })
 
-// Each game draws its own scene from the finished race (ROADMAP Steps 33 and 34).
+test('the six Step-43 games play, save to the Leaderboard and replay one item in every lane', async ({
+	page
+}) => {
+	await signIn(page, EMAIL)
+	const games = [
+		{ slug: 'inbox-keeper', title: 'Inbox Keeper', noun: 'kick' },
+		{ slug: 'headline-invaders', title: 'Headline Invaders', noun: 'headline' },
+		{ slug: 'severity-archery', title: 'Severity Archery', noun: 'bug' },
+		{ slug: 'negation-maze', title: 'Double-Negative Maze', noun: 'junction' },
+		{ slug: 'carnival-hoops', title: 'Carnival Hoops', noun: 'round' },
+		{ slug: 'date-defense', title: 'Date Defense', noun: 'return' }
+	]
+	for (const game of games) {
+		await page.goto(`/games/${game.slug}`)
+		await expect(page.getByRole('region', { name: 'What Jev and the LLM are asked' })).toBeVisible()
+		await page.getByRole('button', { name: 'Start the race' }).click()
+		await page.getByRole('button', { name: 'Skip to result' }).click()
+		await expect(page.getByRole('region', { name: 'Result', exact: true })).toBeVisible()
+		await expect(page.getByText('Saved to your Leaderboard', { exact: true }).first()).toBeVisible()
+		const scene = page.getByRole('group', { name: new RegExp(`^${game.title} scene`) })
+		await scene
+			.getByRole('button', { name: new RegExp(`^Replay ${game.noun} 3:`) })
+			.first()
+			.click()
+		await expect(scene.getByText(`Replaying ${game.noun} 3 in every lane.`)).toBeVisible()
+		await scene.getByRole('button', { name: 'Show the newest' }).click()
+		await expect(scene.getByText(`Replaying ${game.noun} 3 in every lane.`)).toHaveCount(0)
+	}
+	// Date Defense races three towers, Jev + Code showing the days its code counted.
+	await expect(page.getByRole('region', { name: /guards the warehouse$/ })).toHaveCount(3)
+	await expect(page.getByText(/Code counted \d+ days/).first()).toBeVisible()
+	await page.goto('/leaderboard')
+	for (const game of games) {
+		await expect(page.getByRole('region', { name: game.title, exact: true })).toBeVisible()
+	}
+})
+
+// Each game draws its own scene from the finished race (ROADMAP Steps 33, 34 and 43).
 const GAME_SCENES = [
 	{ slug: 'guardrail-gauntlet', title: 'Guardrail Gauntlet', text: /Threats stopped \d+ of \d+/ },
 	{ slug: 'needle-hunt', title: 'Needle Hunt', text: /picked \d+ lines/ },
@@ -169,7 +211,13 @@ const GAME_SCENES = [
 	{ slug: 'smart-home-dash', title: 'Smart Home Dash', text: /commands reached the right device/ },
 	{ slug: 'twin-finder', title: 'Twin Finder', text: /Different pairs caught \d+ of \d+/ },
 	{ slug: 'confidence-catch', title: 'Confidence Catch', text: /\d+ acted on, \d+ of them wrong/ },
-	{ slug: 'citation-cop', title: 'Citation Cop', text: /Bad citations flagged \d+ of \d+/ }
+	{ slug: 'citation-cop', title: 'Citation Cop', text: /Bad citations flagged \d+ of \d+/ },
+	{ slug: 'inbox-keeper', title: 'Inbox Keeper', text: /Saves \d+ of 12/ },
+	{ slug: 'headline-invaders', title: 'Headline Invaders', text: /Clickbait shot \d+ of 7/ },
+	{ slug: 'severity-archery', title: 'Severity Archery', text: /Bullseyes \d+ of 10/ },
+	{ slug: 'negation-maze', title: 'Double-Negative Maze', text: /Junctions passed \d+ of 10/ },
+	{ slug: 'carnival-hoops', title: 'Carnival Hoops', text: /Hoops right \d+ of 32/ },
+	{ slug: 'date-defense', title: 'Date Defense', text: /Late returns stopped \d+ of 5/ }
 ]
 
 for (const scene of GAME_SCENES) {

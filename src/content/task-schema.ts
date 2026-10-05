@@ -260,6 +260,11 @@ export function taskProblems(task: Task): Problem[] {
 	if (task.combine) {
 		if (!SINGLE_KINDS.has(task.kind)) add('combine needs a choice, noul or score task', 'combine')
 		if (!llmQuestion) add('A task with combine needs an llm question', 'llm')
+		const direct = 'questions' in jev ? jev.questions[ANSWER_KEY] : undefined
+		// Jev alone is scored on this question, so both racers must get it word for word (R92).
+		if (direct && JSON.stringify(direct) !== JSON.stringify(llmQuestion)) {
+			add(`Jev's "${ANSWER_KEY}" question must be the same as the llm question`, 'jev')
+		}
 	} else if (SINGLE_KINDS.has(task.kind)) {
 		const questions = 'questions' in jev ? jev.questions : null
 		const only = questions?.[ANSWER_KEY]

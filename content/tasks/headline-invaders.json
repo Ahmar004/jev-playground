@@ -1,0 +1,89 @@
+{
+	"id": "headline-invaders",
+	"kind": "noul",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "noul",
+				"instructions": "Is this news headline clickbait?",
+				"criteria": {
+					"true": "It hides the key fact to make you click, or teases or exaggerates, as in 'you won't believe', 'this one trick' or 'what happened next'",
+					"false": "It states its news plainly, so you know what the story is about before you click"
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "h1",
+			"state": "You won't believe what this cat did when its owner came home",
+			"label": true
+		},
+		{
+			"id": "h2",
+			"state": "City council approves a new library for the east side, opening in 2027",
+			"label": false
+		},
+		{
+			"id": "h3",
+			"state": "Doctors are stunned by this one simple trick for better sleep",
+			"label": true
+		},
+		{
+			"id": "h4",
+			"state": "Rail strike cancels half of Monday's trains between Leeds and York",
+			"label": false
+		},
+		{
+			"id": "h5",
+			"state": "She opened the old box in the attic. What she found changed everything",
+			"label": true
+		},
+		{
+			"id": "h6",
+			"state": "Heavy rain expected along the coast on Thursday, forecasters say",
+			"label": false
+		},
+		{
+			"id": "h7",
+			"state": "10 foods you eat every day that are secretly ruining your health (number 7 will shock you)",
+			"label": true
+		},
+		{
+			"id": "h8",
+			"state": "Local bakery wins a national award for its sourdough bread",
+			"label": false
+		},
+		{
+			"id": "h9",
+			"state": "The real reason your phone battery dies so fast will make you angry",
+			"label": true
+		},
+		{
+			"id": "h10",
+			"state": "Man wins the lottery jackpot twice in the same year",
+			"label": false
+		},
+		{
+			"id": "h11",
+			"state": "Why thousands are suddenly deleting this popular app",
+			"label": true
+		},
+		{
+			"id": "h12",
+			"state": "School holidays will start one week earlier next year, ministry confirms",
+			"label": false
+		},
+		{
+			"id": "h13",
+			"state": "Scientists finally reveal the truth about coffee, and it's not what you think",
+			"label": true
+		},
+		{
+			"id": "h14",
+			"state": "Museum extends its opening hours on weekends during the summer",
+			"label": false
+		}
+	]
+}

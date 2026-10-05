@@ -1,0 +1,274 @@
+{
+	"taskId": "inbox-keeper",
+	"taskHash": "2685ef5b08ab454fe0d5f5c906afcfdc2336084a9db50c1ee948ed1ae80c9f09",
+	"racer": "jev",
+	"modelId": "jev-1.13.0",
+	"recordedAt": "2026-10-05T20:43:57.826Z",
+	"price": { "inputPerM": 0.042, "outputPerM": 0, "source": "https://docs.typesafe.ai/models" },
+	"lanes": 4,
+	"events": [
+		{
+			"itemId": "e1",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"phishing\",\"confidence\":1.0,\"probabilities\":{\"phishing\":1.0,\"spam\":0.0,\"safe\":0.0}}},\"usage\":{\"input_tokens\":445,\"output_tokens\":42}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "phishing",
+					"probabilities": { "phishing": 1, "spam": 0, "safe": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 656.9634000000001,
+			"usage": { "inputTokens": 445, "outputTokens": 42 },
+			"costUsd": 0.000018690000000000002,
+			"lane": 0,
+			"startMs": 0.08049999999997226,
+			"endMs": 657.7891999999999
+		},
+		{
+			"itemId": "e2",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"spam\",\"confidence\":1.0,\"probabilities\":{\"safe\":0.0,\"phishing\":0.0,\"spam\":1.0}}},\"usage\":{\"input_tokens\":428,\"output_tokens\":40}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "spam",
+					"probabilities": { "safe": 0, "phishing": 0, "spam": 1 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 474.04060000000004,
+			"usage": { "inputTokens": 428, "outputTokens": 40 },
+			"costUsd": 0.000017976000000000002,
+			"lane": 1,
+			"startMs": 19.75709999999998,
+			"endMs": 495.05659999999995
+		},
+		{
+			"itemId": "e3",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"safe\",\"confidence\":0.99,\"probabilities\":{\"spam\":0.0,\"phishing\":0.01,\"safe\":0.99}}},\"usage\":{\"input_tokens\":432,\"output_tokens\":40}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "safe",
+					"probabilities": { "spam": 0, "phishing": 0.01, "safe": 0.99 },
+					"confidence": 0.99
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 521.4898000000001,
+			"usage": { "inputTokens": 432, "outputTokens": 40 },
+			"costUsd": 0.000018144,
+			"lane": 2,
+			"startMs": 20.284299999999973,
+			"endMs": 541.9237
+		},
+		{
+			"itemId": "e4",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"phishing\",\"confidence\":0.97,\"probabilities\":{\"phishing\":0.98,\"spam\":0.0,\"safe\":0.02}}},\"usage\":{\"input_tokens\":439,\"output_tokens\":42}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "phishing",
+					"probabilities": { "phishing": 0.98, "spam": 0, "safe": 0.02 },
+					"confidence": 0.97
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 521.999,
+			"usage": { "inputTokens": 439, "outputTokens": 42 },
+			"costUsd": 0.000018438000000000002,
+			"lane": 3,
+			"startMs": 20.65409999999997,
+			"endMs": 542.7476999999999
+		},
+		{
+			"itemId": "e5",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"spam\",\"confidence\":1.0,\"probabilities\":{\"phishing\":0.0,\"spam\":1.0,\"safe\":0.0}}},\"usage\":{\"input_tokens\":431,\"output_tokens\":40}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "spam",
+					"probabilities": { "phishing": 0, "spam": 1, "safe": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 417.5757,
+			"usage": { "inputTokens": 431, "outputTokens": 40 },
+			"costUsd": 0.000018102,
+			"lane": 1,
+			"startMs": 495.16450000000003,
+			"endMs": 912.8487
+		},
+		{
+			"itemId": "e6",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"safe\",\"confidence\":0.98,\"probabilities\":{\"safe\":0.99,\"phishing\":0.01,\"spam\":0.0}}},\"usage\":{\"input_tokens\":433,\"output_tokens\":40}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "safe",
+					"probabilities": { "safe": 0.99, "phishing": 0.01, "spam": 0 },
+					"confidence": 0.98
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 337.5871000000001,
+			"usage": { "inputTokens": 433, "outputTokens": 40 },
+			"costUsd": 0.000018186,
+			"lane": 2,
+			"startMs": 541.9757999999999,
+			"endMs": 879.7265
+		},
+		{
+			"itemId": "e7",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"phishing\",\"confidence\":1.0,\"probabilities\":{\"phishing\":1.0,\"spam\":0.0,\"safe\":0.0}}},\"usage\":{\"input_tokens\":437,\"output_tokens\":42}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "phishing",
+					"probabilities": { "phishing": 1, "spam": 0, "safe": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 368.97019999999986,
+			"usage": { "inputTokens": 437, "outputTokens": 42 },
+			"costUsd": 0.000018354000000000004,
+			"lane": 3,
+			"startMs": 542.7827,
+			"endMs": 911.875
+		},
+		{
+			"itemId": "e8",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"safe\",\"confidence\":1.0,\"probabilities\":{\"safe\":1.0,\"spam\":0.0,\"phishing\":0.0}}},\"usage\":{\"input_tokens\":423,\"output_tokens\":40}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "safe",
+					"probabilities": { "safe": 1, "spam": 0, "phishing": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 369.23810000000003,
+			"usage": { "inputTokens": 423, "outputTokens": 40 },
+			"costUsd": 0.000017766000000000002,
+			"lane": 0,
+			"startMs": 657.8515,
+			"endMs": 1027.2413999999999
+		},
+		{
+			"itemId": "e9",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"spam\",\"confidence\":1.0,\"probabilities\":{\"phishing\":0.0,\"spam\":1.0,\"safe\":0.0}}},\"usage\":{\"input_tokens\":428,\"output_tokens\":40}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "spam",
+					"probabilities": { "phishing": 0, "spam": 1, "safe": 0 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 525.5256000000002,
+			"usage": { "inputTokens": 428, "outputTokens": 40 },
+			"costUsd": 0.000017976000000000002,
+			"lane": 2,
+			"startMs": 879.7835,
+			"endMs": 1405.4073999999998
+		},
+		{
+			"itemId": "e10",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"phishing\",\"confidence\":0.99,\"probabilities\":{\"phishing\":1.0,\"spam\":0.0,\"safe\":0.0}}},\"usage\":{\"input_tokens\":429,\"output_tokens\":42}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "phishing",
+					"probabilities": { "phishing": 1, "spam": 0, "safe": 0 },
+					"confidence": 0.99
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 329.02099999999996,
+			"usage": { "inputTokens": 429, "outputTokens": 42 },
+			"costUsd": 0.000018018,
+			"lane": 3,
+			"startMs": 911.9189999999999,
+			"endMs": 1241.1017
+		},
+		{
+			"itemId": "e11",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"safe\",\"confidence\":0.78,\"probabilities\":{\"safe\":0.85,\"spam\":0.0,\"phishing\":0.15}}},\"usage\":{\"input_tokens\":425,\"output_tokens\":40}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "safe",
+					"probabilities": { "safe": 0.85, "spam": 0, "phishing": 0.15 },
+					"confidence": 0.78
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 875.4715000000001,
+			"usage": { "inputTokens": 425, "outputTokens": 40 },
+			"costUsd": 0.00001785,
+			"lane": 1,
+			"startMs": 912.8892999999998,
+			"endMs": 1788.4854999999998
+		},
+		{
+			"itemId": "e12",
+			"ok": true,
+			"raw": "{\"model\":\"jev-1.13.0\",\"answers\":{\"answer\":{\"type\":\"choice\",\"choice\":\"spam\",\"confidence\":1.0,\"probabilities\":{\"phishing\":0.0,\"safe\":0.0,\"spam\":1.0}}},\"usage\":{\"input_tokens\":425,\"output_tokens\":40}}",
+			"parsed": {
+				"answer": {
+					"type": "choice",
+					"choice": "spam",
+					"probabilities": { "phishing": 0, "safe": 0, "spam": 1 },
+					"confidence": 1
+				}
+			},
+			"credit": 1,
+			"correct": true,
+			"latencyMs": 367.98759999999993,
+			"usage": { "inputTokens": 425, "outputTokens": 40 },
+			"costUsd": 0.00001785,
+			"lane": 0,
+			"startMs": 1027.3113999999998,
+			"endMs": 1395.512
+		}
+	],
+	"totals": {
+		"items": 12,
+		"scored": 12,
+		"correct": 12,
+		"accuracy": 1,
+		"wallMs": 1788.4049999999997,
+		"costUsd": 0.00021735,
+		"inputTokens": 5175,
+		"outputTokens": 488,
+		"parseFailures": 0
+	}
+}

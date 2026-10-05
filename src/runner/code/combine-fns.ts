@@ -1,7 +1,13 @@
-import { COMBINE_FN_IDS, NOUL_THRESHOLD, QUESTION_KINDS, type CombineFnId } from '@/lib/constants'
+import {
+	COMBINE_FN_IDS,
+	NOUL_THRESHOLD,
+	QUESTION_KINDS,
+	RETURN_WINDOW_DAYS,
+	type CombineFnId
+} from '@/lib/constants'
 import type { JevAnswers } from '@/runner/parse'
 import type { LlmAnswer } from '@/runner/types'
-import { compareDateParts, type DateParts } from './dates'
+import { compareDateParts, daysBetween, type DateParts } from './dates'
 
 /** Arguments a view passes in, such as level 5's slider weights, so views never compute a score. */
 export type CombineArgs = { weights?: Record<string, number> }
@@ -10,7 +16,12 @@ export type CombineArgs = { weights?: Record<string, number> }
 export type CombineOutput = { answer: LlmAnswer; detail?: Record<string, number> }
 
 export const DEFAULT_WEIGHT = 1
-const DATE_SIDES = { first: 'first', second: 'second' } as const
+const DATE_SIDES = {
+	first: 'first',
+	second: 'second',
+	purchase: 'purchase',
+	return: 'return'
+} as const
 type DateSide = (typeof DATE_SIDES)[keyof typeof DATE_SIDES]
 
 function choiceNumber(answers: JevAnswers, key: string): number {
@@ -62,5 +73,13 @@ export const COMBINE_FNS: Record<
 		const composite =
 			entries.reduce((sum, [key, value]) => sum + weightOf(key) * value, 0) / totalWeight
 		return { answer: composite >= NOUL_THRESHOLD, detail: { composite } }
+	},
+	// Date Defense: purchase and return dates extracted by Choice, the days between them counted in code.
+	[COMBINE_FN_IDS.withinWindow]: (answers) => {
+		const days = daysBetween(
+			datePartsOf(answers, DATE_SIDES.purchase),
+			datePartsOf(answers, DATE_SIDES.return)
+		)
+		return { answer: days >= 0 && days <= RETURN_WINDOW_DAYS, detail: { days } }
 	}
 }

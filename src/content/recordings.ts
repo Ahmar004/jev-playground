@@ -11,6 +11,30 @@ import confidenceCatchJev from '../../content/recordings/confidence-catch/jev.js
 import confidenceCatchHaiku from '../../content/recordings/confidence-catch/claude-haiku-4-5-20251001.json'
 import confidenceCatchSonnet from '../../content/recordings/confidence-catch/claude-sonnet-5-5.json'
 import confidenceCatchOpus from '../../content/recordings/confidence-catch/claude-opus-5-5.json'
+import inboxKeeperJev from '../../content/recordings/inbox-keeper/jev.json'
+import inboxKeeperHaiku from '../../content/recordings/inbox-keeper/claude-haiku-4-5-20251001.json'
+import inboxKeeperSonnet from '../../content/recordings/inbox-keeper/claude-sonnet-5-5.json'
+import inboxKeeperOpus from '../../content/recordings/inbox-keeper/claude-opus-5-5.json'
+import headlineInvadersJev from '../../content/recordings/headline-invaders/jev.json'
+import headlineInvadersHaiku from '../../content/recordings/headline-invaders/claude-haiku-4-5-20251001.json'
+import headlineInvadersSonnet from '../../content/recordings/headline-invaders/claude-sonnet-5-5.json'
+import headlineInvadersOpus from '../../content/recordings/headline-invaders/claude-opus-5-5.json'
+import severityArcheryJev from '../../content/recordings/severity-archery/jev.json'
+import severityArcheryHaiku from '../../content/recordings/severity-archery/claude-haiku-4-5-20251001.json'
+import severityArcherySonnet from '../../content/recordings/severity-archery/claude-sonnet-5-5.json'
+import severityArcheryOpus from '../../content/recordings/severity-archery/claude-opus-5-5.json'
+import negationMazeJev from '../../content/recordings/negation-maze/jev.json'
+import negationMazeHaiku from '../../content/recordings/negation-maze/claude-haiku-4-5-20251001.json'
+import negationMazeSonnet from '../../content/recordings/negation-maze/claude-sonnet-5-5.json'
+import negationMazeOpus from '../../content/recordings/negation-maze/claude-opus-5-5.json'
+import carnivalHoopsJev from '../../content/recordings/carnival-hoops/jev.json'
+import carnivalHoopsHaiku from '../../content/recordings/carnival-hoops/claude-haiku-4-5-20251001.json'
+import carnivalHoopsSonnet from '../../content/recordings/carnival-hoops/claude-sonnet-5-5.json'
+import carnivalHoopsOpus from '../../content/recordings/carnival-hoops/claude-opus-5-5.json'
+import dateDefenseJev from '../../content/recordings/date-defense/jev.json'
+import dateDefenseHaiku from '../../content/recordings/date-defense/claude-haiku-4-5-20251001.json'
+import dateDefenseSonnet from '../../content/recordings/date-defense/claude-sonnet-5-5.json'
+import dateDefenseOpus from '../../content/recordings/date-defense/claude-opus-5-5.json'
 import intentRoutingJev from '../../content/recordings/intent-routing/jev.json'
 import intentRoutingHaiku from '../../content/recordings/intent-routing/claude-haiku-4-5-20251001.json'
 import intentRoutingSonnet from '../../content/recordings/intent-routing/claude-sonnet-5-5.json'
@@ -214,6 +238,30 @@ const RAW_RECORDINGS: unknown[] = [
 	confidenceCatchHaiku,
 	confidenceCatchSonnet,
 	confidenceCatchOpus,
+	inboxKeeperJev,
+	inboxKeeperHaiku,
+	inboxKeeperSonnet,
+	inboxKeeperOpus,
+	headlineInvadersJev,
+	headlineInvadersHaiku,
+	headlineInvadersSonnet,
+	headlineInvadersOpus,
+	severityArcheryJev,
+	severityArcheryHaiku,
+	severityArcherySonnet,
+	severityArcheryOpus,
+	negationMazeJev,
+	negationMazeHaiku,
+	negationMazeSonnet,
+	negationMazeOpus,
+	carnivalHoopsJev,
+	carnivalHoopsHaiku,
+	carnivalHoopsSonnet,
+	carnivalHoopsOpus,
+	dateDefenseJev,
+	dateDefenseHaiku,
+	dateDefenseSonnet,
+	dateDefenseOpus,
 	sandboxSupportTicketJev,
 	sandboxSpamCheckJev,
 	sandboxReviewRatingJev,

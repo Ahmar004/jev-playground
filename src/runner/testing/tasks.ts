@@ -223,3 +223,32 @@ export function item(task: Task, id: string): TaskItem {
 	if (!found) throw new Error(`No item ${id} in ${task.id}`)
 	return found
 }
+
+const dayChoices = { '1': null, '2': null, '9': null, '28': null }
+const monthChoices = { '1': null, '2': null, '3': null, '9': null, '10': null }
+const yearChoices = { '2025': null, '2026': null }
+const windowQuestion = {
+	type: 'noul',
+	instructions: 'Was it sent back within 30 days of the purchase?'
+} as const
+
+// Jev answers the task's question itself (scored as Jev alone) and extracts both dates for Code.
+export const windowTask: Task = taskSchema.parse({
+	id: 'test-window',
+	kind: 'noul',
+	version: 1,
+	combine: 'within_window',
+	jev: {
+		questions: {
+			answer: windowQuestion,
+			purchase_day: { type: 'choice', instructions: 'Purchase day?', criteria: dayChoices },
+			purchase_month: { type: 'choice', instructions: 'Purchase month?', criteria: monthChoices },
+			purchase_year: { type: 'choice', instructions: 'Purchase year?', criteria: yearChoices },
+			return_day: { type: 'choice', instructions: 'Return day?', criteria: dayChoices },
+			return_month: { type: 'choice', instructions: 'Return month?', criteria: monthChoices },
+			return_year: { type: 'choice', instructions: 'Return year?', criteria: yearChoices }
+		}
+	},
+	llm: windowQuestion,
+	items: [{ id: 'w1', state: 'Bought 2 September 2026, returned 9 October 2026.', label: false }]
+})

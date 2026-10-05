@@ -15,6 +15,7 @@ import { lineNumberFromKey } from '@/runner/jev-request'
 import type { ItemResult } from '@/runner/types'
 
 const jevAnswersSchema = z.record(z.string(), jevAnswerSchema)
+const combinedSchema = z.object({ answer: z.unknown() })
 
 // What a game scene draws is only what the race's state holds: one stored result per finished call (R92).
 // These helpers turn those results into the few facts a scene shows. They never score or time anything.
@@ -163,34 +164,45 @@ export function yesOf(racer: Racer, result: ItemResult): boolean | null {
 		const noul = noulOf(racer, result)
 		return noul === null ? null : noul >= NOUL_THRESHOLD
 	}
-	return typeof result.parsed === 'boolean' ? result.parsed : null
+	// Jev + Code keeps its combined answer under `answer` (a CombineOutput).
+	const combined = racer === RACERS.jevCode ? combinedSchema.safeParse(result.parsed) : null
+	const value = combined?.success ? combined.data.answer : result.parsed
+	return typeof value === 'boolean' ? value : null
 }
 
 export type CheckTally = {
-	// Items whose right answer is no (a bad citation, a pair that is not the same).
+	// Bad items: a bad citation, a pair that is not the same, a clickbait headline.
 	bad: number
-	// Bad items this racer said no to so far.
+	// Bad items this racer gave the bad answer to so far.
 	caught: number
-	// Bad items this racer said yes to, or could not answer, so far.
+	// Bad items this racer let through, or could not answer, so far.
 	missed: number
-	// Good items this racer said no to so far.
+	// Good items this racer gave the bad answer to so far.
 	falseAlarms: number
 	decided: number
 }
 
-/** The headline numbers of a yes or no game, from the labels and the racer's answers so far. */
-export function checkTally(task: Task, state: RacerState | undefined, racer: Racer): CheckTally {
-	const bad = task.items.filter((item) => item.label === false).length
+/**
+ * The headline numbers of a yes or no game, from the labels and the racer's answers so far.
+ * `badAnswer` is the label of a bad item: no for a bad citation, yes for a clickbait headline.
+ */
+export function checkTally(
+	task: Task,
+	state: RacerState | undefined,
+	racer: Racer,
+	badAnswer = false
+): CheckTally {
+	const bad = task.items.filter((item) => item.label === badAnswer).length
 	const tally: CheckTally = { bad, caught: 0, missed: 0, falseAlarms: 0, decided: 0 }
 	for (const result of state?.results ?? []) {
 		const item = task.items.find((candidate) => candidate.id === result.itemId)
 		if (!item) continue
 		tally.decided += 1
 		const said = yesOf(racer, result)
-		if (item.label === false) {
-			if (said === false) tally.caught += 1
+		if (item.label === badAnswer) {
+			if (said === badAnswer) tally.caught += 1
 			else tally.missed += 1
-		} else if (said === false) {
+		} else if (said === badAnswer) {
 			tally.falseAlarms += 1
 		}
 	}

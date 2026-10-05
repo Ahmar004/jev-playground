@@ -13,6 +13,7 @@ import {
 	scoreOf,
 	yesOf
 } from './scenes/scene-data'
+import { codeDays, fanOutKeys, tagChances, tagsOf } from './scenes/play-data'
 
 // What a game's item list shows: each item's input, its right answer and every racer's answer,
 // as plain text (R86). Read from the stored results only; nothing here scores (R92).
@@ -51,6 +52,10 @@ function linesText(lines: readonly number[]): string {
 	return `Lines ${sorted.slice(0, -1).join(', ')} and ${sorted.at(-1)}`
 }
 
+function isTags(value: unknown): value is Record<string, unknown> {
+	return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
 /** A right answer or a racer's answer in the page's own words: an option name, a level name, yes or no, or lines. */
 export function answerLabel(words: ItemWords, task: Task, value: unknown): string {
 	if (typeof value === 'boolean') return value ? (words.yes ?? 'Yes') : (words.no ?? 'No')
@@ -59,6 +64,10 @@ export function answerLabel(words: ItemWords, task: Task, value: unknown): strin
 	if (task.kind === TASK_KINDS.findLines && Array.isArray(value))
 		return linesText(value.filter((line): line is number => typeof line === 'number'))
 	if (task.kind === TASK_KINDS.choice && typeof value === 'string') return optionLabel(value)
+	if (task.kind === TASK_KINDS.fanOut && isTags(value)) {
+		const yes = fanOutKeys(task).filter((key) => value[key] === true)
+		return yes.length === 0 ? 'No tags' : yes.map(optionLabel).join(', ')
+	}
 	return valueText(value)
 }
 
@@ -71,13 +80,28 @@ export function answerValue(task: Task, racer: Racer, result: ItemResult): unkno
 			return scoreOf(racer, result)
 		case TASK_KINDS.findLines:
 			return pickedLines(racer, result)
+		case TASK_KINDS.fanOut:
+			return tagsOf(racer, result)
 		default:
 			return decisionOf(racer, result)
 	}
 }
 
-/** Jev's own number beside its answer: its confidence in a Choice or its probability of yes; null for anyone else. */
+/**
+ * Jev's own number beside its answer: its confidence in a Choice, its probability of yes, or every
+ * fan-out tag's probability; for Jev + Code, the day count Code worked out. Null for anyone else.
+ */
 export function jevNote(task: Task, racer: Racer, result: ItemResult): string | null {
+	const days = codeDays(racer, result)
+	if (days !== null) return `Code counted ${days} days`
+	const chances = task.kind === TASK_KINDS.fanOut ? tagChances(racer, result) : null
+	if (chances) {
+		const tags = fanOutKeys(task).flatMap((key) => {
+			const chance = chances[key]
+			return chance === undefined ? [] : [`${optionLabel(key)} ${Math.round(chance * PERCENT)}%`]
+		})
+		return `chance of yes: ${tags.join(', ')}`
+	}
 	const confidence = confidenceOf(racer, result)
 	if (confidence !== null) return `${Math.round(confidence * PERCENT)}% sure`
 	const noul = task.kind === TASK_KINDS.noul ? noulOf(racer, result) : null

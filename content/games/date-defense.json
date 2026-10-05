@@ -1,0 +1,22 @@
+{
+	"id": "date-defense",
+	"title": "Date Defense",
+	"priority": "p1",
+	"taskId": "date-defense",
+	"blurb": "Return requests walk to the warehouse, and three towers turn away the ones sent back more than 30 days after purchase: Jev, Jev + Code, and the LLM.",
+	"animation": "towers",
+	"lesson": "Date math is a known weak spot for models, so the safe pattern is Jev + Code: Jev reads the two dates and code counts the days, exactly and in a way you can check.",
+	"why": [
+		"Jev answers the 30-day question directly, and in the same call it also pulls the day, month and year out of each date. Code, a small program, counts the days between them, and the Jev + Code tower shows that count.",
+		"Counting days across months, years and a short February is where models slip. Code never does, and its count lets anyone check the answer. An LLM that writes out its working instead of the answer format counts as a miss."
+	],
+	"items": {
+		"plural": "return requests",
+		"yes": "Inside 30 days",
+		"no": "Too late"
+	},
+	"docs": {
+		"path": "/cookbooks/date_extraction_cookbook",
+		"title": "Date extraction cookbook"
+	}
+}

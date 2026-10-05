@@ -49,8 +49,13 @@ function shareRight(label: Record<string, boolean>, right: (key: string) => bool
 export function isScorable(task: Task, item: TaskItem, racer: Racer): boolean {
 	if (task.kind === TASK_KINDS.generate) return racer === RACERS.llm
 	if (item.label === undefined) return false
-	// On a combine task Jev answers smaller questions; only Jev + Code is scored.
-	return !(racer === RACERS.jev && task.combine)
+	// On a combine task Jev answers smaller questions, so only Jev + Code is scored, unless Jev
+	// is also asked the task's own question as "answer" (Date Defense's Jev alone).
+	return !(racer === RACERS.jev && task.combine && !asksJevDirectly(task))
+}
+
+function asksJevDirectly(task: Task): boolean {
+	return 'questions' in task.jev && Object.hasOwn(task.jev.questions, ANSWER_KEY)
 }
 
 export function missCredit(task: Task, item: TaskItem, racer: Racer): number | null {

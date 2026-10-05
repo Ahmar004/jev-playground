@@ -66,4 +66,34 @@ describe('COMBINE_FNS', () => {
 		expect(weighted.answer).toBe(false)
 		expect(weighted.detail?.composite).toBeCloseTo(0.375)
 	})
+
+	it('within_window counts the days between the two extracted dates against the 30-day window', () => {
+		const dates = (purchase: string[], returned: string[]) => ({
+			purchase_day: choice(purchase[0] ?? ''),
+			purchase_month: choice(purchase[1] ?? ''),
+			purchase_year: choice(purchase[2] ?? ''),
+			return_day: choice(returned[0] ?? ''),
+			return_month: choice(returned[1] ?? ''),
+			return_year: choice(returned[2] ?? '')
+		})
+		expect(COMBINE_FNS.within_window(dates(['2', '9', '2026'], ['9', '10', '2026']))).toEqual({
+			answer: false,
+			detail: { days: 37 }
+		})
+		// February 2026 has 28 days, so 1 February to 2 March is 29 days.
+		expect(COMBINE_FNS.within_window(dates(['1', '2', '2026'], ['2', '3', '2026']))).toEqual({
+			answer: true,
+			detail: { days: 29 }
+		})
+		expect(COMBINE_FNS.within_window(dates(['1', '9', '2026'], ['1', '10', '2026'])).answer).toBe(
+			true
+		)
+		// A return before the purchase is never inside the window.
+		expect(COMBINE_FNS.within_window(dates(['9', '10', '2026'], ['2', '9', '2026'])).answer).toBe(
+			false
+		)
+		expect(() =>
+			COMBINE_FNS.within_window(dates(['31', '2', '2026'], ['1', '3', '2026']))
+		).toThrow()
+	})
 })

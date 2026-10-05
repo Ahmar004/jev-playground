@@ -1,0 +1,20 @@
+{
+	"id": "inbox-keeper",
+	"title": "Inbox Keeper",
+	"priority": "p1",
+	"taskId": "inbox-keeper",
+	"blurb": "Every email is a penalty kick into the zone of its right answer, and each keeper dives to the zone it chose: phishing, spam or safe.",
+	"animation": "penalty",
+	"lesson": "Sorting short texts into a few clear options is Jev's home ground: it saves as many kicks as the LLMs, faster and for a fraction of the cost.",
+	"why": [
+		"Each email is one Choice question with three options and a sentence that says what each one means. Jev returns the option it picked with a confidence, in a fixed format, so a mail filter can act on it straight away.",
+		"The ball always flies into the zone of the right answer, so a save means the keeper chose right. Watch the clock too: Jev's keeper often finishes every kick before the LLM's first dive."
+	],
+	"items": {
+		"plural": "emails"
+	},
+	"docs": {
+		"path": "/primitives/choice",
+		"title": "Choice"
+	}
+}

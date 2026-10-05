@@ -9,7 +9,8 @@ import {
 	generateTask,
 	item,
 	noulTask,
-	scoreTask
+	scoreTask,
+	windowTask
 } from './testing/tasks'
 
 const choice = (picked: string) => ({
@@ -58,6 +59,12 @@ describe('scoreJev', () => {
 		expect(scoreJev(choiceTask, item(choiceTask, 't3'), choice('sales'))).toBeNull()
 		expect(scoreJev(generateTask, item(generateTask, 'g1'), {})).toBeNull()
 		expect(scoreJev(compositeTask, item(compositeTask, 'r1'), {})).toBeNull()
+	})
+
+	it("scores Jev alone on a combine task that also asks Jev the task's question", () => {
+		expect(isScorable(windowTask, item(windowTask, 'w1'), RACERS.jev)).toBe(true)
+		expect(scoreJev(windowTask, item(windowTask, 'w1'), { answer: noul(0.2) })).toBe(1)
+		expect(scoreJev(windowTask, item(windowTask, 'w1'), { answer: noul(0.9) })).toBe(0)
 	})
 })
 

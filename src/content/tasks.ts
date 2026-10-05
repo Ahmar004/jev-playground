@@ -17,6 +17,12 @@ import routerDates from '../../content/tasks/router-dates.json'
 import routerSummary from '../../content/tasks/router-summary.json'
 import guardrailGauntlet from '../../content/tasks/guardrail-gauntlet.json'
 import confidenceCatch from '../../content/tasks/confidence-catch.json'
+import inboxKeeper from '../../content/tasks/inbox-keeper.json'
+import headlineInvaders from '../../content/tasks/headline-invaders.json'
+import severityArchery from '../../content/tasks/severity-archery.json'
+import negationMaze from '../../content/tasks/negation-maze.json'
+import carnivalHoops from '../../content/tasks/carnival-hoops.json'
+import dateDefense from '../../content/tasks/date-defense.json'
 import needleHunt from '../../content/tasks/needle-hunt.json'
 import numberCrunch from '../../content/tasks/number-crunch.json'
 import reviewScore from '../../content/tasks/review-score.json'
@@ -59,6 +65,12 @@ const RAW_TASKS: unknown[] = [
 	citationCheck,
 	intentRouting,
 	confidenceCatch,
+	inboxKeeper,
+	headlineInvaders,
+	severityArchery,
+	negationMaze,
+	carnivalHoops,
+	dateDefense,
 	sandboxSupportTicket,
 	sandboxSpamCheck,
 	sandboxReviewRating,

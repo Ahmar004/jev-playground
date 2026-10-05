@@ -1,0 +1,208 @@
+{
+	"id": "date-defense",
+	"kind": "noul",
+	"version": 1,
+	"combine": "within_window",
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "noul",
+				"instructions": "Was the item sent back within 30 days of the purchase date?",
+				"criteria": {
+					"true": "The return date is 30 days or fewer after the purchase date",
+					"false": "The return date is more than 30 days after the purchase date"
+				}
+			},
+			"purchase_day": {
+				"type": "choice",
+				"instructions": "What is the day of the month of the purchase date?",
+				"criteria": {
+					"1": null,
+					"2": null,
+					"3": null,
+					"4": null,
+					"5": null,
+					"6": null,
+					"7": null,
+					"8": null,
+					"9": null,
+					"10": null,
+					"11": null,
+					"12": null,
+					"13": null,
+					"14": null,
+					"15": null,
+					"16": null,
+					"17": null,
+					"18": null,
+					"19": null,
+					"20": null,
+					"21": null,
+					"22": null,
+					"23": null,
+					"24": null,
+					"25": null,
+					"26": null,
+					"27": null,
+					"28": null,
+					"29": null,
+					"30": null,
+					"31": null
+				}
+			},
+			"purchase_month": {
+				"type": "choice",
+				"instructions": "What is the month number (January is 1) of the purchase date?",
+				"criteria": {
+					"1": null,
+					"2": null,
+					"3": null,
+					"4": null,
+					"5": null,
+					"6": null,
+					"7": null,
+					"8": null,
+					"9": null,
+					"10": null,
+					"11": null,
+					"12": null
+				}
+			},
+			"purchase_year": {
+				"type": "choice",
+				"instructions": "What is the year of the purchase date?",
+				"criteria": {
+					"2024": null,
+					"2025": null,
+					"2026": null,
+					"2027": null
+				}
+			},
+			"return_day": {
+				"type": "choice",
+				"instructions": "What is the day of the month of the return date?",
+				"criteria": {
+					"1": null,
+					"2": null,
+					"3": null,
+					"4": null,
+					"5": null,
+					"6": null,
+					"7": null,
+					"8": null,
+					"9": null,
+					"10": null,
+					"11": null,
+					"12": null,
+					"13": null,
+					"14": null,
+					"15": null,
+					"16": null,
+					"17": null,
+					"18": null,
+					"19": null,
+					"20": null,
+					"21": null,
+					"22": null,
+					"23": null,
+					"24": null,
+					"25": null,
+					"26": null,
+					"27": null,
+					"28": null,
+					"29": null,
+					"30": null,
+					"31": null
+				}
+			},
+			"return_month": {
+				"type": "choice",
+				"instructions": "What is the month number (January is 1) of the return date?",
+				"criteria": {
+					"1": null,
+					"2": null,
+					"3": null,
+					"4": null,
+					"5": null,
+					"6": null,
+					"7": null,
+					"8": null,
+					"9": null,
+					"10": null,
+					"11": null,
+					"12": null
+				}
+			},
+			"return_year": {
+				"type": "choice",
+				"instructions": "What is the year of the return date?",
+				"criteria": {
+					"2024": null,
+					"2025": null,
+					"2026": null,
+					"2027": null
+				}
+			}
+		}
+	},
+	"llm": {
+		"type": "noul",
+		"instructions": "Was the item sent back within 30 days of the purchase date?",
+		"criteria": {
+			"true": "The return date is 30 days or fewer after the purchase date",
+			"false": "The return date is more than 30 days after the purchase date"
+		}
+	},
+	"items": [
+		{
+			"id": "d1",
+			"state": "Hi, I bought this lamp on 2 September 2026 and I'm sending it back today, 9 October 2026.",
+			"label": false
+		},
+		{
+			"id": "d2",
+			"state": "Order placed on 28 January 2026. Return posted on 20 February 2026.",
+			"label": true
+		},
+		{
+			"id": "d3",
+			"state": "Purchased: 15/11/2025. Returned: 10/12/2025. (Dates are day/month/year.)",
+			"label": true
+		},
+		{
+			"id": "d4",
+			"state": "I got these shoes on the 31st of March 2026 and sent them back on the 2nd of May 2026.",
+			"label": false
+		},
+		{
+			"id": "d5",
+			"state": "Bought on December 20, 2025. Sent back on January 17, 2026.",
+			"label": true
+		},
+		{
+			"id": "d6",
+			"state": "Purchase date: 5 June 2026. Return date: 7 July 2026.",
+			"label": false
+		},
+		{
+			"id": "d7",
+			"state": "We bought the pram on 1 February 2026 and returned it on 2 March 2026.",
+			"label": true
+		},
+		{
+			"id": "d8",
+			"state": "Order date 10 August 2026, return date 12 September 2026.",
+			"label": false
+		},
+		{
+			"id": "d9",
+			"state": "Bought on 14 April 2026. The return reached the warehouse on 13 May 2026.",
+			"label": true
+		},
+		{
+			"id": "d10",
+			"state": "Bought 25 October 2025. Returned 26 November 2025.",
+			"label": false
+		}
+	]
+}

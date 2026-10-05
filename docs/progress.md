@@ -4,17 +4,18 @@
 
 Read only this block and all the relevant sections a step needs (Rule-0.0). The dated entries below it are the full history; nothing in them is removed.
 
-**Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.46 left (Step-15's live check spent about $0.011), and recordings so far cost $0.49.
+**Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.30 left (Step-15's live check spent about $0.011; Step-43's recordings $0.155), and recordings so far cost $0.65.
 
-**Built (Steps 0-42, all done; Steps 37 to 42 were tested on 2026-10-06 (see "Testing Steps 37-42") and are not committed yet; Step-16 skipped real-key checks of OpenAI, Google and OpenRouter-as-LLM for lack of keys; Step-17 was blocked first and finished later the same day, see its "done" entry):**
+**Built (Steps 0-43, all done; Steps 37 to 42 were tested on 2026-10-06 and committed by the owner; Step-43 is tested and committed locally, not pushed; Step-16 skipped real-key checks of OpenAI, Google and OpenRouter-as-LLM for lack of keys; Step-17 was blocked first and finished later the same day, see its "done" entry):**
 
-- All 8 levels, 8 games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
-- Beginner mode replays 31 recorded tasks. Developer mode supports Jev through a TypeSafe key or an OpenRouter key (TypeSafe wins when both are set), and LLMs through Anthropic, OpenAI, Google and OpenRouter (Step-17).
+- All 8 levels, 14 games (4 P0, 10 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
+- Beginner mode replays 37 recorded tasks. Developer mode supports Jev through a TypeSafe key or an OpenRouter key (TypeSafe wins when both are set), and LLMs through Anthropic, OpenAI, Google and OpenRouter (Step-17).
 - After a Developer mode run, Reveal shows the last finished live run beside the recordings (races, level 6 cards, level 8 tricks), labelled; tab memory only.
 - `content/prices.json` prices Jev, the Claude models and every OpenAI and Google text model (57 entries, checked 2026-10-04; Step-17 added the dated OpenRouter Jev build on 2026-10-05); OpenRouter models use OpenRouter's live list.
 - Tests: 791 Vitest, 114 node:test and 135 Playwright e2e, covering every flow in DESIGN 15 plus the Steps 37-42 context and quiz retry (`e2e/context.spec.ts`).
 - k6 locally (2026-10-05): 400 users median 214 ms, p95 583 ms, target met; 1,000 users median 6.7 s, p95 10.1 s, no failed requests but the target is missed (one Node process is CPU-bound at about 86 pages a second).
 - The public README.
+- Six arena games (Step-43): Inbox Keeper (penalty shootout, Choice), Headline Invaders (space shooter, Noul), Severity Archery (Score target), Double-Negative Maze (robot maze, Choice on a Jev weakness), Carnival Hoops (fan-out) and Date Defense (towers: Jev, Jev + Code, LLM). SVG plus Motion scenes; each item mark replays that item in every lane; every scene is lazy-loaded. See the Step-43 entry.
 - A first-visit guide (Step-35, `src/features/guide/`): a 6-step welcome tour on Home that ends on "Start here: Play level 1", and one-time tips on a level's Predict, Reveal ("See every item") and Check tabs. Saved per account in `users.guide_seen`; replay from the account menu ("Take the tour") or Home ("Take a guide tour").
 - A level's Check tab ends with "Play next level" beside "Back to Path" once both questions are answered (Step-36); level 8, the last, shows only Back to Path.
 - The Arena shows its context (Step-41, tested): each preset's "What Jev and the LLM are asked" (input as named fields, the question, the options with their meanings), answers and the expected answer in the preset's words, the phishing fan-out's "Question by question" breakdown, and the batch pages gained the games' brief and item list.
@@ -41,7 +42,7 @@ Read only this block and all the relevant sections a step needs (Rule-0.0). The 
 
 **Untested edits (Step-45 tests them):** none. Steps 37-42 were tested on 2026-10-06 (see "Testing Steps 37-42"). Add a step here, with an "Untested, for Step-45" checklist in its entry, whenever one lands untested.
 
-**Next:** ROADMAP Step-43 (4-5 new, more visual games). Steps 37-42 are tested but not committed yet; run `local-review`, then commit them (one commit per step, or one for the batch if the owner prefers) before starting Step-43. Remaining ideas are the loose ends above (a smaller initial bundle for Lighthouse, a manual accessibility pass).
+**Next:** ROADMAP Step-44 (shareable Profile page). Step-43 is committed locally; push it when the owner says (a push to `main` deploys to Vercel). Remaining ideas are the loose ends above (a smaller initial bundle for Lighthouse, a manual accessibility pass).
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -1037,3 +1038,14 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Test-only fixes (no app change): exact text matches where a toast's screen-reader copy duplicated the text, waiting for `?preset=` before clicking Run live (the preset switch goes through `router.replace`, so an early click hit the old panel), and closing the share dialog before navigating.
 - Screenshots reviewed by eye: Product match (desktop, light), the fan-out (phone, dark) and Twin Finder's open item list and bottom row (phone, light) read cleanly with no horizontal scroll. Not fixed, pre-existing: on a phone, a race's "Final numbers" table clips its last column header ("Couldn't parse") at the edge of its own scroll area; the page itself does not scroll sideways.
 - Not covered (left for Step-45): real-key Developer mode runs (Step-45 asks the owner to type keys), and a double click on Submit during a quiz retry (the button disables while pending, and the upsert makes a repeat harmless).
+
+## Step-43 - six new arena games (2026-10-06) - done, tested
+
+- The owner approved six games one by one: Inbox Keeper, Headline Invaders, Severity Archery, Double-Negative Maze, Carnival Hoops and Date Defense. Content: `content/games/` and `content/tasks/` (12, 14, 10, 10, 8 and 10 items). All six are P1, so the P0 badge rule is unchanged.
+- Recorded with Jev and the three Claude models after a dry run: $0.155 in total (the dry run's upper bound was $1.19, because it assumes 500 output tokens per call). All recordings on disk: $0.65.
+- Real results, which the lessons follow: Jev got 12/12 emails, 14/14 headlines, 10/10 bugs, 9/10 junctions (its one miss had 17% confidence), 7/8 hoop rounds, and 10/10 returns both alone and as Jev + Code. Sonnet 5.5 and Opus 5.5 often write their reasoning before the JSON, so the strict parser counts those as misses (R44): Sonnet missed 7/10 junctions and 10/10 returns that way, Opus 8/10 returns. Older recordings show the same pattern (Number Crunch Sonnet 8/12), so the answers were kept as recorded and not re-recorded.
+- Runner: the new combine function `within_window` counts the days between Jev's extracted purchase and return dates (`RETURN_WINDOW_DAYS` 30, detail `days`). A combine task may also ask Jev the task's own question as `answer`; then Jev alone is scored on it (`score.ts`), and `taskProblems` requires that question to equal the llm question (R92).
+- Scenes: `scenes/arena-kit.tsx` (lanes, SVG stage, item marks that replay an item in every lane, the replay bar), `play-data.ts` (readers for plays, fan-out tags, Code's day count, score offsets, the maze path), and one file per scene. `checkTally` takes the bad answer (yes for clickbait), and `yesOf` reads Jev + Code. All 14 scenes now load through `next/dynamic` (options must be an object literal, or Turbopack fails the build).
+- Context: the brief lists fan-out's questions and explains Jev + Code; the item list names fan-out yes tags with their probabilities and Code's day count.
+- Tests: Vitest for the runner, task schema, play data, item view and the six scenes; e2e for each scene at desktop and phone width in both themes, playing all six games with Leaderboard entries and replay, and Play next game now running past Citation Cop to Date Defense, the last game. Claude-in-Chrome was not connected, so the screenshots were checked from Playwright.
+- Not done: ROADMAP's balance line at the top still says $19.47; it changes only with the owner's approval (Rule-0.2).

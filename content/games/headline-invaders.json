@@ -1,0 +1,22 @@
+{
+	"id": "headline-invaders",
+	"title": "Headline Invaders",
+	"priority": "p1",
+	"taskId": "headline-invaders",
+	"blurb": "Headlines descend like invaders, and each racer's ship shoots the ones it calls clickbait while honest news lands on the front page.",
+	"animation": "invaders",
+	"lesson": "A Noul gives a probability for every item, so Jev filters a stream of headlines quickly and shows how sure it was about each one.",
+	"why": [
+		"Each headline gets one yes or no question with a sentence for each answer. Jev's Noul is a probability of yes, and Jev's laser glows brighter the surer it is.",
+		"Shooting an honest headline is friendly fire, and clickbait that lands cracks the front page. Count both kinds of mistake, not only the hits."
+	],
+	"items": {
+		"plural": "headlines",
+		"yes": "Clickbait",
+		"no": "Honest"
+	},
+	"docs": {
+		"path": "/primitives/noul",
+		"title": "Noul"
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"id": "severity-archery",
+	"title": "Severity Archery",
+	"priority": "p1",
+	"taskId": "severity-archery",
+	"blurb": "Every bug report is an arrow: the bullseye is its right severity, and each ring out is one level off, under-rated on the left and over-rated on the right.",
+	"animation": "archery",
+	"lesson": "With a clear sentence for each level, a Score lands bugs on the right severity, and a near miss is far less costly than a wild one.",
+	"why": [
+		"Severity is ordered, from Trivial to Critical, so it is a Score question with five levels, each described in one sentence. Jev returns the level as a number with a probability for every level, so its arrows can land between rings.",
+		"Being one level off and being four levels off are very different mistakes. The target shows which way each racer missed, so you can see if it tends to under-rate or over-rate."
+	],
+	"items": {
+		"plural": "bug reports"
+	},
+	"docs": {
+		"path": "/primitives/score",
+		"title": "Score"
+	}
+}

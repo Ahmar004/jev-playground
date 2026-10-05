@@ -7,7 +7,8 @@ describe('nextGame', () => {
 	})
 
 	it('returns undefined after the last game or for an unknown id', () => {
-		expect(nextGame(GAMES, 'citation-cop')).toBeUndefined()
+		expect(nextGame(GAMES, 'citation-cop')?.id).toBe('inbox-keeper')
+		expect(nextGame(GAMES, 'date-defense')).toBeUndefined()
 		expect(nextGame(GAMES, 'nope')).toBeUndefined()
 	})
 })

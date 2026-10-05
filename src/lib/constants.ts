@@ -98,8 +98,11 @@ export type CodeFnId = (typeof CODE_FN_IDS)[keyof typeof CODE_FN_IDS]
 export const COMBINE_FN_IDS = {
 	countTrue: 'count_true',
 	compareDates: 'compare_dates',
-	weightedComposite: 'weighted_composite'
+	weightedComposite: 'weighted_composite',
+	withinWindow: 'within_window'
 } as const
+// Date Defense's return window: a return this many days or fewer after the purchase is inside it.
+export const RETURN_WINDOW_DAYS = 30
 export type CombineFnId = (typeof COMBINE_FN_IDS)[keyof typeof COMBINE_FN_IDS]
 
 // Option keys for "which date comes first?" tasks.
@@ -195,7 +198,13 @@ export const GAME_ANIMATIONS = {
 	runners: 'runners',
 	belts: 'belts',
 	fall: 'fall',
-	checkpoint: 'checkpoint'
+	checkpoint: 'checkpoint',
+	penalty: 'penalty',
+	invaders: 'invaders',
+	archery: 'archery',
+	maze: 'maze',
+	hoops: 'hoops',
+	towers: 'towers'
 } as const
 export type GameAnimation = (typeof GAME_ANIMATIONS)[keyof typeof GAME_ANIMATIONS]
 

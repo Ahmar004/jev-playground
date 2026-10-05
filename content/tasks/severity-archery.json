@@ -1,0 +1,72 @@
+{
+	"id": "severity-archery",
+	"kind": "score",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "score",
+				"instructions": "How severe is this bug report for a shopping app?",
+				"criteria": [
+					"Trivial: a cosmetic flaw, such as a typo or a slightly wrong position, that changes nothing about using the app",
+					"Minor: a small annoyance with an easy workaround",
+					"Major: a feature is broken for some users, but they can still get their task done another way",
+					"Severe: a core feature is broken for many users and there is no workaround",
+					"Critical: data loss, a security hole, or the whole app down for everyone"
+				]
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "b1",
+			"state": "The word 'recieve' is misspelled in the footer of the About page.",
+			"label": 0
+		},
+		{
+			"id": "b2",
+			"state": "Any logged-in user can open another customer's order history by changing the order number in the page address.",
+			"label": 4
+		},
+		{
+			"id": "b3",
+			"state": "Saved addresses don't load on the checkout page for some users. Typing the address in again works.",
+			"label": 2
+		},
+		{
+			"id": "b4",
+			"state": "On Android, tapping 'Pay now' does nothing for every user, and there is no other way to finish a purchase in the app.",
+			"label": 3
+		},
+		{
+			"id": "b5",
+			"state": "The search box forgets your last search when you go back from a product page. Typing it again works.",
+			"label": 1
+		},
+		{
+			"id": "b6",
+			"state": "The 'Contact us' icon sits two pixels lower than the icons next to it.",
+			"label": 0
+		},
+		{
+			"id": "b7",
+			"state": "Since last night's release the app shows a blank white screen on launch for every user on every device.",
+			"label": 4
+		},
+		{
+			"id": "b8",
+			"state": "Product photos fail to load in the gallery view for users on slow connections. The list view still shows them.",
+			"label": 2
+		},
+		{
+			"id": "b9",
+			"state": "Password reset emails are never sent, so users who forget their password cannot get back into their accounts.",
+			"label": 3
+		},
+		{
+			"id": "b10",
+			"state": "The dark mode switch needs two taps instead of one to change the theme.",
+			"label": 1
+		}
+	]
+}

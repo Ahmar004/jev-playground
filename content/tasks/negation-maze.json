@@ -1,0 +1,70 @@
+{
+	"id": "negation-maze",
+	"kind": "choice",
+	"version": 1,
+	"jev": {
+		"questions": {
+			"answer": {
+				"type": "choice",
+				"instructions": "A robot stands at a junction where it can turn left, go straight on or turn right. Which way does this instruction tell it to go?",
+				"criteria": {
+					"left": "Turn left",
+					"straight": "Go straight on",
+					"right": "Turn right"
+				}
+			}
+		}
+	},
+	"items": [
+		{
+			"id": "j1",
+			"state": "Do not go left, and do not go straight.",
+			"label": "right"
+		},
+		{
+			"id": "j2",
+			"state": "Avoid every direction except the one that is neither straight nor right.",
+			"label": "left"
+		},
+		{
+			"id": "j3",
+			"state": "It is not true that you should avoid going straight.",
+			"label": "straight"
+		},
+		{
+			"id": "j4",
+			"state": "Never fail to turn right here.",
+			"label": "right"
+		},
+		{
+			"id": "j5",
+			"state": "Don't not go straight.",
+			"label": "straight"
+		},
+		{
+			"id": "j6",
+			"state": "Go the opposite way to the opposite of left.",
+			"label": "left"
+		},
+		{
+			"id": "j7",
+			"state": "Left is not allowed. Straight is not allowed either. Take the only way that remains.",
+			"label": "right"
+		},
+		{
+			"id": "j8",
+			"state": "You must not turn. Turning means going left or right.",
+			"label": "straight"
+		},
+		{
+			"id": "j9",
+			"state": "Do not turn right, and do not refuse to turn.",
+			"label": "left"
+		},
+		{
+			"id": "j10",
+			"state": "It is false that right is not the way to go.",
+			"label": "right"
+		}
+	]
+}

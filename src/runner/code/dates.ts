@@ -17,6 +17,13 @@ function toTime({ year, month, day }: DateParts): number {
 	return time
 }
 
+const MS_PER_DAY = 86_400_000
+
+/** Whole days from `first` to `second`, negative when `second` is earlier. Throws on a date that doesn't exist. */
+export function daysBetween(first: DateParts, second: DateParts): number {
+	return Math.round((toTime(second) - toTime(first)) / MS_PER_DAY)
+}
+
 /** Which of two calendar dates comes first. Throws on a date that doesn't exist. */
 export function compareDateParts(first: DateParts, second: DateParts): DateOrder {
 	const a = toTime(first)

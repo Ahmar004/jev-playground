@@ -1,0 +1,20 @@
+{
+	"id": "carnival-hoops",
+	"title": "Carnival Hoops",
+	"priority": "p1",
+	"taskId": "carnival-hoops",
+	"blurb": "Every support email is a round at four hoops: Urgent, Refund, Angry and Needs human. Each racer throws a ball into every hoop it says yes to.",
+	"animation": "hoops",
+	"lesson": "Fan-out asks many yes or no questions about one text in a single call: a close race on accuracy, with Jev answering all four tags fast and cheaply.",
+	"why": [
+		"Tagging one email four ways would take four calls if each question went alone. Fan-out sends all four Nouls with the same email in one Jev call, and every tag still gets its own probability.",
+		"A swish is a right yes, a rim-out is a yes that should have been no, and a dashed ball is a yes the racer never threw. A round counts as right only when all four hoops are right."
+	],
+	"items": {
+		"plural": "support emails"
+	},
+	"docs": {
+		"path": "/patterns/fan-out",
+		"title": "Fan-out"
+	}
+}
