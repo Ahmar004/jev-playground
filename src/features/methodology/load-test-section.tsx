@@ -20,6 +20,12 @@ function percent(rate: number): string {
 /** The published k6 runs (R78), with what they mean in plain words. */
 export function LoadTestSection({ runs }: { runs: LoadTest[] }) {
 	const ranOn = runs[0]?.ranAt.slice(0, 'YYYY-MM-DD'.length)
+	// What one Node process can serve, from the runs themselves so the line cannot go stale.
+	const pagesPerSecond = Math.round(Math.max(...runs.map((run) => run.requestsPerSecond)))
+	const comfortable = Math.max(
+		0,
+		...runs.filter((run) => run.thresholdsPassed).map((run) => run.peakUsers)
+	)
 	return (
 		<section className={SECTION} aria-labelledby="load-test-heading">
 			<h2 id="load-test-heading" className="text-text text-xl font-bold">
@@ -88,6 +94,12 @@ export function LoadTestSection({ runs }: { runs: LoadTest[] }) {
 				cover. The first 1,000-person run also found a real bottleneck: every page waited for one of
 				only 10 database connections. We raised that to 40, which nearly tripled the pages served
 				per second.
+			</p>
+			<p className={BODY}>
+				One Node process served up to about {pagesPerSecond} pages a second on this PC.{' '}
+				{comfortable > 0
+					? `That is comfortably up to ${comfortable.toLocaleString('en-US')} people at once; beyond that pages queue.`
+					: 'No run met the target.'}
 			</p>
 		</section>
 	)

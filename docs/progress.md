@@ -6,14 +6,14 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.46 left (Step-15's live check spent about $0.011), and recordings so far cost $0.49.
 
-**Built (Steps 0-16 and 18-24; 17 is blocked):**
+**Built (Steps 0-16 and 18-25; 17 is blocked):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
 - After a Developer mode run, Reveal shows the last finished live run beside the recordings (races, level 6 cards, level 8 tricks), labelled; tab memory only.
 - `content/prices.json` prices Jev, the Claude models and every OpenAI and Google text model (56 entries, checked 2026-10-04); OpenRouter models use OpenRouter's live list.
 - Tests: 626 Vitest, 114 node:test and 72 Playwright e2e, covering every flow in DESIGN 15.
-- k6 locally: 400 users median 266 ms; 1,000 users median 6.2 s (one Node process is CPU-bound).
+- k6 locally (2026-10-05): 400 users median 214 ms, p95 583 ms, target met; 1,000 users median 6.7 s, p95 10.1 s, no failed requests but the target is missed (one Node process is CPU-bound at about 86 pages a second).
 - The public README.
 - Real keys checked (Step-15): TypeSafe and Anthropic, level 1 live on localhost, every call 200 with no shape fixes needed. A provider call now times out after 60 s (`PROVIDER_TIMEOUT_MS`) and stops the run with a `timeout` error; `/api/jev` answers 504 on a hung TypeSafe call.
 
@@ -29,7 +29,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-25 (rerun the local load test; needs an idle PC and k6). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
+**Next:** Step-26 (accessibility audit with axe). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -835,3 +835,11 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - The header showed "n of 8 levels" by running the whole progress summary (levels, XP sum, badges: 3 queries) on every signed-in page, and Home, Path and Profile then ran the level query again. `src/server/data/progress.ts` now has one request-cached read of the level rows (`getLevelStatuses`); the header uses a new `getProgressCounts` (that read only: 1 query), and `getProgressSummary` builds on the same read. Result: pages that only show the header go from 3 progress queries to 1, and Home, Path and Profile go from 3 + 3 to 3 in total (the shared read is deduped by React `cache()` within a request). The summary's output is unchanged.
 - Tests: two new cases in `progress.test.ts` (exactly one query and no XP or badge query for the header counts; same numbers as the summary). Production build (separate dir) plus 28 e2e (progress, level 1, shell) show the header counter still updates after finishing a level. No load test, as the step says; Step-25 measures it.
 - Left alone on purpose: the other per-page reads (a level's progress, quizzes, profile data) each serve one page and are already parallel.
+
+## Step-25 - local load test rerun (2026-10-05) - done
+
+- Run on an idle PC (about 2% CPU before) against a fresh production build of the current commit, served from `.next-verify` on port 3100 so the owner's `pnpm start` on 3000 (the keyed tab) stayed untouched; `load:session` and k6 both took `BASE_URL=http://localhost:3100`. k6 v2.3.0 (the version of the earlier runs) came from the official release zip, checked against the release's sha256 file, unpacked in the scratchpad and not installed.
+- 400 people: 19,605 pages, 0% failed, median 214 ms, p95 583 ms, p99 765 ms, target met (2026-10-02: 266 ms and 703 ms; the Step-24 header change and the headers work did not slow it). 1,000 people: 20,723 pages, 0% failed, median 6.7 s, p95 10.1 s, p99 12.1 s, target missed (2026-10-02: 6.2 s and 7.4 s). Throughput is flat at about 82 to 86 pages a second at both sizes, which is the ceiling of one Node process on this PC; more people only queue.
+- Methodology now shows the new rows and a computed line: "One Node process served up to about 86 pages a second on this PC. That is comfortably up to 400 people at once; beyond that pages queue." (`load-test-section.tsx`, derived from the result files, two tests). Verified in the built page: the 1,000 and 400 rows, the run date 2026-10-05 and that line. `docs/load-test.md` says how to run on another port and without installing k6.
+- This is a local number. Vercel runs many instances, so Step-32 measures the real deployment; do not read 1,000-user queueing here as the launch capacity.
+- Left behind on purpose: a `load+...@example.com` test user in the dev Supabase (as in earlier runs). `load/.session` was deleted.

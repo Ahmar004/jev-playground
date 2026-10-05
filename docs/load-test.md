@@ -18,6 +18,8 @@ The thresholds fail the run on more than 1% failed requests, a p95 over 2 second
 4. Run: `corepack pnpm load -e K6_VERSION=<k6 version>` for the 1,000-user run, and again with `-e PEAK_USERS=400` for the second published run. A run writes `load/results-<users>.json`; Methodology publishes the 1,000 and 400 files. For a quick smoke run use `-e PEAK_USERS=5 -e RAMP=5s -e HOLD=20s`, and delete the file it writes.
 5. Rebuild so Methodology shows the new numbers, and commit the result files.
 
+To keep another server on port 3000 running, build into another folder and serve it on a different port (`NEXT_DIST_DIR=.next-verify corepack pnpm build`, then `NEXT_DIST_DIR=.next-verify corepack pnpm exec next start -p 3100`), and pass `BASE_URL=http://localhost:3100` to `load:session` and `-e BASE_URL=http://localhost:3100` to k6. k6 does not have to be installed: its zip from the releases page, unpacked anywhere, runs the same.
+
 The journey and the session must target the same server, and nothing else heavy (a build, the test suite) should run during a run, or the numbers measure that instead.
 
 k6 runs on the same PC as the server, so both compete for the CPU. Numbers from a run on a separate machine, or on Vercel, will differ.

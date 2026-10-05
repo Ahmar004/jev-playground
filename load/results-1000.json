@@ -1,17 +1,17 @@
 {
-	"ranAt": "2026-10-02T12:57:35.871Z",
+	"ranAt": "2026-10-05T06:40:02.246Z",
 	"k6Version": "2.3.0",
 	"target": "Local production build (pnpm start) on one Windows PC",
 	"peakUsers": 1000,
 	"durationSeconds": 240,
-	"requests": 21807,
-	"requestsPerSecond": 90.9,
+	"requests": 20723,
+	"requestsPerSecond": 86.3,
 	"failedRate": 0,
 	"latencyMs": {
-		"median": 6248,
-		"p95": 7382,
-		"p99": 7673,
-		"max": 7921
+		"median": 6747,
+		"p95": 10062,
+		"p99": 12145,
+		"max": 13189
 	},
 	"thresholdsPassed": false
 }
