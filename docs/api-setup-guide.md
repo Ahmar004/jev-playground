@@ -171,7 +171,7 @@ The app is hosted on Vercel's free plan at its `vercel.app` address; no custom d
    | `NEXT_PUBLIC_SUPABASE_URL`                                                      | `https://<prod-ref>.supabase.co`                                                    | no (public) |
    | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`                                          | production publishable key                                                          | no (public) |
    | `SUPABASE_SECRET_KEY`                                                           | production secret key (used only by Delete my account)                              | yes         |
-   | `NEXT_PUBLIC_APP_URL`                                                           | the deployment's own address, for example `https://jev-playground.vercel.app`       | no          |
+   | `NEXT_PUBLIC_APP_URL`                                                           | the deployment's own address, for example `https://letsplaywithjev.vercel.app`      | no          |
    | `NEXT_PUBLIC_SENTRY_DSN`, `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | from the Sentry and PostHog projects production should report to (sections 2 and 3) | no (public) |
    | `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN`                             | optional: only for uploading source maps at build time                              | token: yes  |
 

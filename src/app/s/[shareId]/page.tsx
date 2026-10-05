@@ -11,6 +11,7 @@ import { getShare } from '@/server/data/shares'
 // Read-only and not indexed (R87); the X-Robots-Tag header in next.config.ts says the same.
 export const metadata: Metadata = {
 	title: "Shared result - Jev's Playground",
+	description: "A result shared from Jev's Playground. Sign in to try it yourself.",
 	robots: { index: false, follow: false }
 }
 

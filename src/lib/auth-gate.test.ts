@@ -13,6 +13,11 @@ describe('gateRedirect', () => {
 		expect(gateRedirect('/s/abc123', false)).toBeNull()
 	})
 
+	it('lets a signed-out link-preview bot fetch the Open Graph image', () => {
+		expect(gateRedirect('/opengraph-image', false)).toBeNull()
+		expect(gateRedirect('/opengraph-image-1a2b3c', false)).toBeNull()
+	})
+
 	it('sends a signed-in user away from sign-in to Home', () => {
 		expect(gateRedirect('/sign-in', true)).toBe('/')
 	})

@@ -92,7 +92,7 @@ Beginner mode needs no model keys. The `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY
 ## Trade-offs
 
 - **Recordings instead of live calls for beginners.** Nobody needs a key, the owner's keys are never exposed to the public, and the site works when providers are down. The cost: Beginner mode only covers built-in content, and new content means a new paid recording run.
-- **Sign-in before anything else.** Progress, XP and the Leaderboard need an account. Only shared result pages are public, and they are read-only and not indexed.
+- **Sign-in before anything else.** Progress, XP and the Leaderboard need an account. Only shared result pages are public, and they are read-only and not indexed. Because every other page redirects signed-out visitors to sign-in, a link pasted into Discord shows the card from the sign-in page (name, tagline and a generated image), and `sitemap.xml` lists only that page.
 - **A server hop for TypeSafe only.** TypeSafe does not allow browser calls, so its key passes through our server, which neither stores nor logs it. Every other provider is called directly from the browser.
 - **No provider SDKs.** Hand-written `fetch` modules cost more code, but they give exact timing and payloads that match the real APIs.
 - **Hand-built SVG charts and CSS animations** instead of a chart library, to keep client bundles small.

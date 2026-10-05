@@ -25,6 +25,10 @@ export const ROUTES = {
 // (spec 5.1, R87).
 export const SHARE_PATH_PREFIX = '/s/'
 
+// The generated Open Graph image (src/app/opengraph-image.tsx). Next may add a
+// hash after the name, and a link-preview bot is never signed in, so it is public too.
+export const OG_IMAGE_PATH_PREFIX = '/opengraph-image'
+
 // The only external site levels link to for reading (R27, CLAUDE.md > UI rules).
 export const TYPESAFE_DOCS_URL = 'https://docs.typesafe.ai'
 
