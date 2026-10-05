@@ -8,6 +8,7 @@ import { priceGroups, recordingRows } from '@/features/methodology/methodology-d
 import { CLAUDE_MODELS, NOUL_THRESHOLD, PROVIDER_LABELS, RACE_LANES } from '@/lib/constants'
 import { ANTHROPIC_MAX_TOKENS } from '@/runner/providers/anthropic'
 import { FIND_LINES_F1_BAR, SCORE_TOLERANCE } from '@/runner/score'
+import { ScrollRegion } from '@/components/ui/scroll-region'
 
 export const metadata: Metadata = { title: "Methodology - Jev's Playground" }
 
@@ -17,7 +18,6 @@ const TYPESAFE_DOCS_PREFIX = 'https://docs.typesafe.ai/'
 const SECTION = 'bg-surface border-border flex flex-col gap-2 rounded-lg border p-4 shadow-card'
 const SECTION_TITLE = 'text-text text-xl font-bold'
 const BODY = 'text-text-muted'
-const TABLE_WRAPPER = 'overflow-x-auto'
 const TABLE = 'w-full text-left text-sm'
 const CAPTION = 'text-text-muted pb-2 text-left text-sm'
 const HEAD_CELL = 'text-text border-border border-b py-2 pr-4 font-bold'
@@ -126,7 +126,7 @@ export default function MethodologyPage() {
 					day; after that day the model shows &quot;price unknown&quot; until the table is checked
 					again.
 				</p>
-				<div className={TABLE_WRAPPER}>
+				<ScrollRegion label="Model prices" className="overflow-x-auto">
 					<table className={TABLE}>
 						<caption className={CAPTION}>
 							Prices checked on {PRICES.checkedOn}, from each provider&apos;s official pricing page.
@@ -184,7 +184,7 @@ export default function MethodologyPage() {
 							</tbody>
 						))}
 					</table>
-				</div>
+				</ScrollRegion>
 			</section>
 
 			<section className={SECTION}>
@@ -219,7 +219,7 @@ export default function MethodologyPage() {
 				{recordings.length === 0 ? (
 					<p className="text-text">No recordings yet.</p>
 				) : (
-					<div className={TABLE_WRAPPER}>
+					<ScrollRegion label="Recordings table" className="overflow-x-auto">
 						<table className={TABLE}>
 							<caption className={CAPTION}>Every recording currently shown on this site.</caption>
 							<thead>
@@ -249,7 +249,7 @@ export default function MethodologyPage() {
 								))}
 							</tbody>
 						</table>
-					</div>
+					</ScrollRegion>
 				)}
 			</section>
 

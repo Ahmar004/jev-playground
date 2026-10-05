@@ -3,6 +3,7 @@ import type { RunTotals } from '@/runner/types'
 import { formatAccuracy, formatCost, formatDuration } from './format'
 import { ModeLabel } from './mode-label'
 import { RacerTag } from './racer-tag'
+import { ScrollRegion } from '@/components/ui/scroll-region'
 
 export type ScoreboardRow = {
 	racer: Racer
@@ -18,7 +19,7 @@ const CELL = 'border-border text-text border-b py-2 pr-4 tabular-nums'
 /** Accuracy, time and cost per racer, straight from the runner's totals (DESIGN 3.3). */
 export function Scoreboard({ rows, caption }: { rows: ScoreboardRow[]; caption: string }) {
 	return (
-		<div className="overflow-x-auto">
+		<ScrollRegion label={caption} className="overflow-x-auto">
 			<table className="w-full text-left text-sm">
 				<caption className="text-text-muted pb-2 text-left text-sm">{caption}</caption>
 				<thead>
@@ -59,6 +60,6 @@ export function Scoreboard({ rows, caption }: { rows: ScoreboardRow[]; caption: 
 					))}
 				</tbody>
 			</table>
-		</div>
+		</ScrollRegion>
 	)
 }

@@ -10,6 +10,7 @@ import {
 	type CalibrationBucket
 } from '@/runner/calibration'
 import { userPoints, type Ratings } from './ratings'
+import { ScrollRegion } from '@/components/ui/scroll-region'
 
 const PERCENT = 100
 const WIDTH = 480
@@ -178,7 +179,7 @@ export function CalibrationChart({
 				</li>
 				{hasUser && <li>You: open squares, dashed line</li>}
 			</ul>
-			<div className="overflow-x-auto">
+			<ScrollRegion label="Calibration table" className="overflow-x-auto">
 				<table className="w-full text-left text-sm">
 					<caption className="sr-only">Right answers at each confidence level</caption>
 					<thead>
@@ -218,7 +219,7 @@ export function CalibrationChart({
 						))}
 					</tbody>
 				</table>
-			</div>
+			</ScrollRegion>
 		</section>
 	)
 }

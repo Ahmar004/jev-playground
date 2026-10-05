@@ -7,6 +7,7 @@ import { RacerTag } from '@/features/race/racer-tag'
 import { ITEM_OUTCOMES, type ItemOutcome, type Mode, type Racer } from '@/lib/constants'
 import { AnswerView } from './answer-view'
 import type { ArenaSide } from './snapshot'
+import { ScrollRegion } from '@/components/ui/scroll-region'
 
 const OUTCOME_BADGE: Record<
 	ItemOutcome,
@@ -55,9 +56,14 @@ export function SideCard({ side, mode }: { side: ArenaSide; mode: Mode }) {
 							? `The call failed (${result.error}), so there is no answer.`
 							: "The reply couldn't be parsed into the expected format, so it counts as a miss. This is what came back:"}
 					</p>
-					<pre className="bg-surface-hover text-text max-h-48 overflow-auto rounded p-2 text-xs wrap-anywhere whitespace-pre-wrap">
-						{result.raw || '(empty)'}
-					</pre>
+					<ScrollRegion
+						label="Raw reply"
+						className="bg-surface-hover max-h-48 overflow-auto rounded"
+					>
+						<pre className="text-text p-2 text-xs wrap-anywhere whitespace-pre-wrap">
+							{result.raw || '(empty)'}
+						</pre>
+					</ScrollRegion>
 				</div>
 			)}
 			<dl className="text-text-muted grid grid-cols-3 gap-2 text-sm">

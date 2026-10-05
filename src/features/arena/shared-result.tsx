@@ -1,6 +1,7 @@
 import { MODES } from '@/lib/constants'
 import { SideCard } from './side-card'
 import type { ArenaSnapshot } from './snapshot'
+import { ScrollRegion } from '@/components/ui/scroll-region'
 
 /**
  * A shared Arena result, read-only and plain text (R86, R87). A Developer mode
@@ -20,9 +21,14 @@ export function SharedResult({ snapshot }: { snapshot: ArenaSnapshot }) {
 			</header>
 			<section aria-label="Input" className="flex flex-col gap-1">
 				<p className="text-text-muted text-sm">Input</p>
-				<pre className="bg-surface-hover text-text max-h-64 overflow-auto rounded p-3 text-sm wrap-anywhere whitespace-pre-wrap">
-					{snapshot.state}
-				</pre>
+				<ScrollRegion
+					label="Input text"
+					className="bg-surface-hover max-h-64 overflow-auto rounded"
+				>
+					<pre className="text-text p-3 text-sm wrap-anywhere whitespace-pre-wrap">
+						{snapshot.state}
+					</pre>
+				</ScrollRegion>
 				<p className="text-text-muted text-sm">
 					Question:{' '}
 					<span className="text-text wrap-anywhere whitespace-pre-line">{snapshot.question}</span>

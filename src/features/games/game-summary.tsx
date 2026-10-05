@@ -10,6 +10,7 @@ import { RACERS, type Racer } from '@/lib/constants'
 import { ROUTES, typesafeDocsUrl } from '@/lib/links'
 import { isBetterRun } from '@/runner/better-run'
 import type { RunTotals } from '@/runner/types'
+import { ScrollRegion } from '@/components/ui/scroll-region'
 
 type Row = { racer: Racer; name: string; totals: RunTotals }
 
@@ -49,7 +50,7 @@ export function GameSummary({
 				Result
 			</h2>
 			<p className="text-text text-lg font-semibold">{verdict(rows)}</p>
-			<div className="overflow-x-auto">
+			<ScrollRegion label="Result table" className="overflow-x-auto">
 				<table className="w-full min-w-80 text-left text-sm">
 					<caption className="sr-only">Accuracy, time and cost for each racer</caption>
 					<thead className="text-text-muted">
@@ -83,7 +84,7 @@ export function GameSummary({
 						))}
 					</tbody>
 				</table>
-			</div>
+			</ScrollRegion>
 			<p className="text-text font-medium">{game.lesson}</p>
 			{game.why.map((paragraph) => (
 				<p key={paragraph} className="text-text-muted">

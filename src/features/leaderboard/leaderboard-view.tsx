@@ -5,6 +5,7 @@ import { racerName } from '@/features/race/racer-names'
 import { MODES, RACERS } from '@/lib/constants'
 import { ROUTES } from '@/lib/links'
 import type { LeaderboardRow } from '@/server/data/leaderboard'
+import { ScrollRegion } from '@/components/ui/scroll-region'
 
 const MODE_NAMES = { [MODES.beginner]: 'Beginner mode', [MODES.developer]: 'Developer mode' }
 const COLUMNS = ['Racer', 'Mode', 'Right', 'Time', 'Cost', 'Runs']
@@ -39,7 +40,7 @@ export function LeaderboardView({
 						<h2 id={`lb-${gameId}`} className="text-text text-xl font-bold">
 							{title}
 						</h2>
-						<div className="overflow-x-auto">
+						<ScrollRegion label={`Best results in ${title}`} className="overflow-x-auto">
 							<table className="border-border w-full min-w-xl rounded-lg border text-left text-sm">
 								<caption className="sr-only">Your best results in {title}</caption>
 								<thead className="text-text-muted">
@@ -71,7 +72,7 @@ export function LeaderboardView({
 										))}
 								</tbody>
 							</table>
-						</div>
+						</ScrollRegion>
 					</section>
 				)
 			})}

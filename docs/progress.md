@@ -6,7 +6,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.46 left (Step-15's live check spent about $0.011), and recordings so far cost $0.49.
 
-**Built (Steps 0-16 and 18-25; 17 is blocked):**
+**Built (Steps 0-16 and 18-26; 17 is blocked):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
@@ -22,14 +22,14 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 - Promotional prices end: gpt-5.6-sol on 2026-11-21, gemini-3.6/3.7/3.8-flash on 2026-12-31. After that those models show "price unknown" until someone rechecks the pricing pages and updates `content/prices.json`.
 - Jev through an OpenRouter key isn't built (Step-17 is blocked on the owner's OpenRouter key; see its entry below).
 - No real-key test for OpenAI, Google or OpenRouter (Step-16 skipped them: no keys). Level 8's live trick was checked live in Step-20.
-- No accessibility or Lighthouse audit has been run.
+- No Lighthouse audit has been run yet (Step-27).
 - No production Supabase project and no Vercel deploy yet.
 - No password reset (it needs a domain, and none is bought).
 - The database pool (40 per process) is too large for Vercel, where each function instance opens its own (Step-30).
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-26 (accessibility audit with axe). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
+**Next:** Step-27 (Lighthouse mobile page-load check). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -843,3 +843,10 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Methodology now shows the new rows and a computed line: "One Node process served up to about 86 pages a second on this PC. That is comfortably up to 400 people at once; beyond that pages queue." (`load-test-section.tsx`, derived from the result files, two tests). Verified in the built page: the 1,000 and 400 rows, the run date 2026-10-05 and that line. `docs/load-test.md` says how to run on another port and without installing k6.
 - This is a local number. Vercel runs many instances, so Step-32 measures the real deployment; do not read 1,000-user queueing here as the launch capacity.
 - Left behind on purpose: a `load+...@example.com` test user in the dev Supabase (as in earlier runs). `load/.session` was deleted.
+
+## Step-26 - accessibility audit (2026-10-05) - done
+
+- Added `@axe-core/playwright` (dev dependency; ROADMAP names axe, so it is added and recorded in TECH-STACK.md). `e2e/a11y.spec.ts` runs axe with the WCAG 2.0/2.1 A and AA rule sets over 45 pages and states: the sign-in page (both tabs), Home, Path, all 8 levels (and level 1's Predict, Play, Reveal and Check steps), Games and all 8 games, Leaderboard, Arena (plus a preset and batch mode), Sandbox, both quizzes and the Quizzes list, Profile, Glossary, Methodology, Privacy, and Home with the Keys panel open. It runs in light and dark at desktop and phone width (4 tests), after the 1.5 s rise-in, with the theme really applied (Step-23), against the production build.
+- First run: one kind of violation, `scrollable-region-focusable` (serious): a box that scrolls sideways or down (the Sandbox code block, the Methodology tables, the level 1 Reveal scoreboard) cannot be reached by keyboard. Fix: a small `ScrollRegion` (`src/components/ui/scroll-region.tsx`: focusable, labelled region, focus ring), used at all 9 scrollable boxes in the app, not only the 3 that failed (a long answer or a narrower window would have tripped the others). Second run: 0 violations in all 4 combinations. Colour contrast is part of axe's rules, so it was checked in both themes.
+- Not covered by axe, so not claimed: pages in states a test did not reach (a finished race result, an open share dialog, a Developer mode failure alert), the shared result page `/s/<id>`, focus order and screen reader wording by ear, and reduced-motion behaviour. A manual pass on those is still worth doing before launch.
+- Tests: `scroll-region.test.tsx`, plus the audit itself. Gates: lint, typecheck, format, secrets, 686 Vitest plus node:test, production build (separate dir), axe 4/4.

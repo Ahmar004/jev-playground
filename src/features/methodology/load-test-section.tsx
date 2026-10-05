@@ -1,4 +1,5 @@
 import type { LoadTest } from './load-test'
+import { ScrollRegion } from '@/components/ui/scroll-region'
 
 const SECTION = 'bg-surface border-border flex flex-col gap-2 rounded-lg border p-4 shadow-card'
 const BODY = 'text-text-muted'
@@ -44,7 +45,7 @@ export function LoadTestSection({ runs }: { runs: LoadTest[] }) {
 				all the simulated people at the same time. The target is no failed requests and pages under{' '}
 				{seconds(PAGE_BUDGET_MS)} for 95% of loads.
 			</p>
-			<div className="overflow-x-auto">
+			<ScrollRegion label="Load test results" className="overflow-x-auto">
 				<table className="w-full text-left text-sm">
 					<caption className="text-text-muted pb-2 text-left text-sm">
 						Each run ramps up for 1 minute, holds for 2 minutes, then ramps down.
@@ -86,7 +87,7 @@ export function LoadTestSection({ runs }: { runs: LoadTest[] }) {
 						))}
 					</tbody>
 				</table>
-			</div>
+			</ScrollRegion>
 			<p className={BODY}>
 				What it shows: no request failed in any run. At 1,000 people at once, one server process on
 				one PC runs out of processor time, so pages queue and slow down instead of failing. A

@@ -6,6 +6,7 @@ import { CopyIcon } from '@/components/ui/icons'
 import { toast } from '@/lib/toast'
 import type { SandboxDoc } from './doc'
 import { curlSnippet, fetchSnippet } from './snippets'
+import { ScrollRegion } from '@/components/ui/scroll-region'
 
 async function copyText(text: string, what: string): Promise<void> {
 	try {
@@ -51,9 +52,12 @@ export function CodePanel({ doc }: { doc: SandboxDoc }) {
 					<CopyIcon /> Copy {active.label}
 				</Button>
 			</div>
-			<pre className="bg-surface-hover text-text max-h-72 overflow-auto rounded p-3 text-xs whitespace-pre">
-				{code}
-			</pre>
+			<ScrollRegion
+				label={`${active.label} code`}
+				className="bg-surface-hover max-h-72 overflow-auto rounded"
+			>
+				<pre className="text-text p-3 text-xs whitespace-pre">{code}</pre>
+			</ScrollRegion>
 			<p className="text-text-muted text-xs">
 				Replace YOUR_TYPESAFE_KEY with your own key. The Sandbox never puts a real key in this code.
 			</p>

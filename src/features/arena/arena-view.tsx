@@ -10,6 +10,7 @@ import { ROUTES } from '@/lib/links'
 import { BeginnerPanel } from './beginner-panel'
 import { CustomDeveloperPanel, PresetDeveloperPanel } from './developer-panel'
 import type { ArenaPresetView } from './snapshot'
+import { ScrollRegion } from '@/components/ui/scroll-region'
 
 const PRESET_PARAM = 'preset'
 // A pseudo preset id in ?preset=: the Developer mode "Custom task" tab.
@@ -89,9 +90,14 @@ export function ArenaView({ views }: { views: ArenaPresetView[] }) {
 							{!developer && (
 								<>
 									<p className="text-text-muted text-sm">Input</p>
-									<pre className="bg-surface-hover text-text max-h-64 overflow-auto rounded p-3 text-sm wrap-anywhere whitespace-pre-wrap">
-										{selected.state}
-									</pre>
+									<ScrollRegion
+										label="Input text"
+										className="bg-surface-hover max-h-64 overflow-auto rounded"
+									>
+										<pre className="text-text p-3 text-sm wrap-anywhere whitespace-pre-wrap">
+											{selected.state}
+										</pre>
+									</ScrollRegion>
 								</>
 							)}
 							<p className="text-text-muted text-sm">
