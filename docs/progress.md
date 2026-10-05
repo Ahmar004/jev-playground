@@ -2,11 +2,11 @@
 
 ## Current state (read this first; update it at the end of every step)
 
-Read only this block and the sections a step needs (Rule-0.0). The dated entries below it are the full history; nothing in them is removed.
+Read only this block and all the relevant sections a step needs (Rule-0.0). The dated entries below it are the full history; nothing in them is removed.
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.46 left (Step-15's live check spent about $0.011), and recordings so far cost $0.49.
 
-**Built (Steps 0-34, all done; Step-16 skipped real-key checks of OpenAI, Google and OpenRouter-as-LLM for lack of keys; Step-17 was blocked first and finished later the same day, see its "done" entry):**
+**Built (Steps 0-35, all done; Step-16 skipped real-key checks of OpenAI, Google and OpenRouter-as-LLM for lack of keys; Step-17 was blocked first and finished later the same day, see its "done" entry):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports Jev through a TypeSafe key or an OpenRouter key (TypeSafe wins when both are set), and LLMs through Anthropic, OpenAI, Google and OpenRouter (Step-17).
@@ -15,11 +15,14 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 - Tests: 754 Vitest, 114 node:test and 114 Playwright e2e, covering every flow in DESIGN 15.
 - k6 locally (2026-10-05): 400 users median 214 ms, p95 583 ms, target met; 1,000 users median 6.7 s, p95 10.1 s, no failed requests but the target is missed (one Node process is CPU-bound at about 86 pages a second).
 - The public README.
+- A first-visit guide (Step-35, `src/features/guide/`): a 6-step welcome tour on Home that ends on "Start here: Play level 1", and one-time tips on a level's Predict, Reveal ("See every item") and Check tabs. Saved per account in `users.guide_seen`; replay from the account menu ("Take the tour") or Home ("Take a guide tour").
 - Every VS game has its own scene (Steps 33 and 34), drawn from the race state only: gate, document, duel and rope for the P0 games; runners, belts, falling answers (with the live threshold slider) and checkpoint for the P1 games. `docs/runbook.md` and a PostHog funnel cover launch operations (Step-32).
 - SEO and link previews (Step-31): every page has a title, the root layout sets the description and the Open Graph and Twitter card, `src/app/opengraph-image.tsx` draws the 1200x630 image, and `robots.txt` and `sitemap.xml` are built from `NEXT_PUBLIC_APP_URL`.
 - Real keys checked (Step-15): TypeSafe and Anthropic, level 1 live on localhost, every call 200 with no shape fixes needed. A provider call now times out after 60 s (`PROVIDER_TIMEOUT_MS`) and stops the run with a `timeout` error; `/api/jev` answers 504 on a hung TypeSafe call.
 
-**Open (ROADMAP Steps 0-34 are done; these are the loose ends):**
+**Open (ROADMAP Steps 0-35 are done; these are the loose ends):**
+
+- **Production needs Step-35's database change before the next redeploy**, or Home and every level page fail on the missing `guide_seen` column: source `.env.prod-values.local` into the shell for these commands only, then `corepack pnpm exec prisma migrate deploy` (migration `20261005182704_guide_seen`), `corepack pnpm db:run-once` (marks users who already have progress as having seen the guide) and `corepack pnpm check:rls`.
 
 - Promotional prices end: gpt-5.6-sol on 2026-11-21, gemini-3.6/3.7/3.8-flash on 2026-12-31. After that those models show "price unknown" until someone rechecks the pricing pages and updates `content/prices.json`.
 - No real-key test for OpenAI, Google or OpenRouter as an LLM (Step-16 skipped them: no keys). Jev through OpenRouter was checked live in Step-17. Level 8's live trick was checked live in Step-20.
@@ -29,7 +32,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** nothing is left in ROADMAP. Step-31 and Steps 32-34 are built and verified locally but only show on the live URL after the owner redeploys; then paste the live URL into a Discord channel and check the card. Remaining ideas are the loose ends above (a smaller initial bundle for Lighthouse, a manual accessibility pass).
+**Next:** ROADMAP Step-36 ("Play next level" on a level's Check tab). Before that, Step-31 and Steps 32-35 are built and verified locally but only show on the live URL after the owner redeploys; then paste the live URL into a Discord channel and check the card. Remaining ideas are the loose ends above (a smaller initial bundle for Lighthouse, a manual accessibility pass).
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -929,3 +932,13 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Smart Home Dash `runners-scene` (a house of device cells; each racer's runner arrives at the device it routed the latest command to, wrong routes name the device needed), Twin Finder `belts-scene` (two belts carry the shop listings; each racer stamps the pair same or different with Jev's probability, and a strip of stamped tiles), Citation Cop `checkpoint-scene` (a checkpoint with Flagged and Waved through either side, bad citations that got through ringed in red, the latest claim with its source) and Confidence Catch `fall-scene` (answers fall into the team baskets or onto the review desk). The game now holds the confidence threshold (`DEFAULT_CONFIDENCE_THRESHOLD`, 0.9): `ThresholdPanel` is controlled, and dragging its slider re-sorts Jev's answers in the scene as well. The LLM gives no confidence, so every LLM answer is acted on, and the scene says so. `GameScene` dispatches all 8 animations; the chip scene is gone.
 - New pure helpers in `scene-data.ts` (option labels, yes or no, Jev's probability, check tally, confidence, acted-on rule), unit tested; component tests for the four scenes.
 - Verified like Step-33: games e2e 37/37 on a production build (8 games x desktop and phone x light and dark, no horizontal scroll, screenshots in `e2e/screenshots/`, and the slider moving the scene), lint, typecheck, format, env, secrets, standards, 754 Vitest plus node:test, RLS, build.
+
+## Step-35 - first-visit guide (2026-10-05) - done, not yet deployed
+
+- Decided with the owner: a welcome tour on Home plus one-time tips inside a level (not one tour across pages: Reveal only unlocks after a play, and faking it would break Rule-5); Skip right from the first pop-up; the seen flag in the database per account; Home's layout unchanged apart from a small "Take a guide tour" link under the welcome card; replay from the account menu too. The guide only overlays pages.
+- Built: `GUIDE_PARTS` (welcome, predict, reveal, check) in `src/lib/constants.ts`; `User.guideSeen` (`text[]`, migration `20261005182704_guide_seen`); `markGuideSeen` and `resetGuide` (`src/server/actions/guide.ts`, own row only, `refresh()` so Back never reopens a finished tour); `getGuideSeen` (`src/server/data/guide.ts`, one primary-key read on Home and on a level page, in parallel with the existing reads). `prisma/run-once.sql` marks users who already have level progress as having seen the guide, so current users are not interrupted.
+- Client (`src/features/guide/`): `guide.ts` holds the step copy, the `data-guide` target names and the pure placement math (`placeCard`); `use-guide-target.ts` finds the first shown target and tracks its box (waits up to 3 s on Home for the streamed progress card, then centers; level tips wait for their element, so the Reveal tip appears only once "See every item" exists and never on level 6, which has none); `guide-overlay.tsx` is a modal Radix Dialog with a Motion spotlight. Skip tour or Esc turns the level tips off too (toast says so); finishing keeps them. PostHog gets `flow_step_started` with `flow_name: welcome_tour` per step, plus `finished` or `skipped`.
+- Fixed while verifying: the dim layer remounts when a step gains a target, which put it after the card in the DOM, so the card was dimmed too; the card is now `z-70` over the `z-60` dim (checked by pixel values in both themes).
+- e2e: `signUp` skips the tour (and waits for the save) unless `{ keepTour: true }`, so older tests are unaffected. New `e2e/guide.spec.ts`: the full tour into level 1 with all three tips and persistence after reload, skip plus replay from the account menu, and screenshots of two steps at desktop and phone in both themes. The axe audit scans the open tour too.
+- Verified on a production build: Vitest 778/778, Playwright 124/124 (axe included), lint, typecheck and format clean. The Chrome extension was not connected, so the visual check used Playwright screenshots.
+- Open, owner: apply the migration and run-once SQL to production before redeploying (exact commands in "Current state").

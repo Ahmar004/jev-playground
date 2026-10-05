@@ -15,8 +15,10 @@ import {
 	LEVEL_STEPS,
 	LEVEL_WIDGETS,
 	MODES,
-	SPEED_RACE_GAME_ID
+	SPEED_RACE_GAME_ID,
+	type GuidePart
 } from '@/lib/constants'
+import { LevelTips } from '@/features/guide/level-tips'
 import { ModeBanner } from './mode-banner'
 import { CheckStep } from './check-step'
 import { LearnStep } from './learn-step'
@@ -41,12 +43,14 @@ export function LevelStepper({
 	level,
 	tasks,
 	recordings,
-	initialProgress
+	initialProgress,
+	guideSeen
 }: {
 	level: Level
 	tasks: Task[]
 	recordings: Recording[]
 	initialProgress: LevelProgressView
+	guideSeen: GuidePart[]
 }) {
 	const { step, goTo } = useLevelStep()
 	const { mode, setMode } = useMode()
@@ -157,6 +161,7 @@ export function LevelStepper({
 					onBackToPath={() => router.push(ROUTES.path)}
 				/>
 			)}
+			<LevelTips step={step} seen={guideSeen} />
 		</main>
 	)
 }

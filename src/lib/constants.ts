@@ -374,3 +374,21 @@ const QUIZ_ID_VALUES: readonly string[] = Object.values(QUIZ_IDS)
 export function isQuizId(value: string): value is QuizId {
 	return QUIZ_ID_VALUES.includes(value)
 }
+
+// The first-visit guide (ROADMAP Step-35): the welcome tour on Home, then one
+// tip on each level tab that needs it. Saved per user in users.guide_seen.
+export const GUIDE_PARTS = {
+	welcome: 'welcome',
+	predict: 'predict',
+	reveal: 'reveal',
+	check: 'check'
+} as const
+export type GuidePart = (typeof GUIDE_PARTS)[keyof typeof GUIDE_PARTS]
+export const GUIDE_PART_LIST: readonly GuidePart[] = Object.values(GUIDE_PARTS)
+
+const GUIDE_PART_VALUES: readonly string[] = GUIDE_PART_LIST
+
+/** Narrows a stored string; an unknown part (from an older build) is dropped. */
+export function isGuidePart(value: string): value is GuidePart {
+	return GUIDE_PART_VALUES.includes(value)
+}

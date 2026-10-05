@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { GUIDE_TARGETS } from '@/features/guide/guide'
 import { BADGE_LABELS } from '@/lib/constants'
 import { ROUTES } from '@/lib/links'
 import type { ProgressSummary } from '@/server/data/progress'
@@ -28,7 +29,10 @@ export function HomeProgress({
 	const { doneCount, levelCount, xp, badges } = summary
 	const percent = levelCount > 0 ? Math.min(PERCENT, (doneCount / levelCount) * PERCENT) : 0
 	return (
-		<Card className="flex flex-1 flex-col gap-4 p-4 sm:px-6 lg:flex-row lg:items-stretch lg:gap-6">
+		<Card
+			data-guide={GUIDE_TARGETS.pathProgress}
+			className="flex flex-1 flex-col gap-4 p-4 sm:px-6 lg:flex-row lg:items-stretch lg:gap-6"
+		>
 			<div className="flex shrink-0 flex-col justify-center gap-2 lg:w-44">
 				<h2 className="text-text text-xl font-bold">Your progress</h2>
 				<div>

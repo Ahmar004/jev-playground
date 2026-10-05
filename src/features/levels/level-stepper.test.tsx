@@ -6,6 +6,7 @@ import { levelSchema } from '@/content/level-schema'
 import { testLevel } from '@/content/testing/levels'
 import { jevRecording, opusRecording } from '@/features/race/testing/recordings'
 import { choiceTask } from '@/runner/testing/tasks'
+import { GUIDE_PART_LIST } from '@/lib/constants'
 import type { LevelProgressView } from './level-progress'
 
 const push = vi.fn()
@@ -20,6 +21,7 @@ const confetti = vi.fn()
 vi.mock('canvas-confetti', () => ({ default: (options: unknown) => confetti(options) }))
 vi.mock('@/lib/toast', () => ({ toast: vi.fn() }))
 vi.mock('@/lib/analytics/track', () => ({ track: vi.fn() }))
+vi.mock('@/server/actions/guide', () => ({ markGuideSeen: vi.fn(), resetGuide: vi.fn() }))
 vi.mock('@/server/actions/progress', () => ({
 	submitPrediction: vi.fn().mockResolvedValue({ ok: true, data: { saved: true } }),
 	submitCheck: vi.fn(),
@@ -62,6 +64,7 @@ function stepper(initialProgress: LevelProgressView = freshProgress) {
 				tasks={[choiceTask]}
 				recordings={[jevRecording, opusRecording]}
 				initialProgress={initialProgress}
+				guideSeen={[...GUIDE_PART_LIST]}
 			/>
 		</QueryClientProvider>
 	)

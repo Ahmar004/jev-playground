@@ -6,6 +6,7 @@ import { cn } from '@/lib/cn'
 import { ITEM_OUTCOMES, type ItemOutcome } from '@/lib/constants'
 import type { RaceRecording } from '@/runner/combine'
 import type { ItemResult } from '@/runner/types'
+import { GUIDE_TARGETS } from '@/features/guide/guide'
 
 export const OUTCOME_COPY: Record<
 	ItemOutcome,
@@ -53,7 +54,10 @@ export function ItemResults({ task, recordings }: { task: Task; recordings: Race
 			new Map<string, ItemResult>(recording.events.map((event) => [event.itemId, event]))
 	)
 	return (
-		<details className="bg-surface border-border shadow-card rounded-lg border p-4">
+		<details
+			data-guide={GUIDE_TARGETS.itemResults}
+			className="bg-surface border-border shadow-card rounded-lg border p-4"
+		>
 			<summary className="text-text focus-visible:outline-accent cursor-pointer rounded font-bold focus-visible:outline focus-visible:outline-2">
 				See every item
 			</summary>

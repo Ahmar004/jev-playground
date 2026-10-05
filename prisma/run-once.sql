@@ -24,3 +24,11 @@
 --   - Merge conflict in this file? Keep only your SQL. The other side already ran.
 --
 -- Full policy: docs/rules/migrations.md, "Run-once SQL".
+
+-- ROADMAP Step-35: users who already have level progress know the app, so the
+-- first-visit guide (welcome tour and level tips) counts as seen for them.
+-- Only new users, and users who replay it, see the guide.
+UPDATE users
+SET guide_seen = ARRAY['welcome', 'predict', 'reveal', 'check']::text[]
+WHERE cardinality(coalesce(guide_seen, ARRAY[]::text[])) = 0
+	AND EXISTS (SELECT 1 FROM level_progress WHERE level_progress.user_id = users.id);

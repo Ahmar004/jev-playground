@@ -14,6 +14,10 @@ model User {
 	email     String   @unique
 	createdAt DateTime @default(now()) @db.Timestamptz(6)
 	updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+	// The parts of the first-visit guide (ROADMAP Step-35) this user has seen or
+	// skipped, as GUIDE_PARTS values. Empty means a brand-new user: the welcome
+	// tour opens on Home. Replaying the tour empties it again.
+	guideSeen String[] @default([]) @map("guide_seen")
 
 	levelProgress LevelProgress[]
 	checkAnswers  CheckAnswer[]

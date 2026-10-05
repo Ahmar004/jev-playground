@@ -14,6 +14,7 @@ It works with no setup at all. Beginner mode replays real recorded runs, so nobo
 | Sandbox   | Build a Jev state and its Noul, Choice and Score questions in a form or raw JSON. It warns about known Jev weaknesses, checks Jev's size limits before sending, and copies the setup as a curl or TypeScript request.        |
 | Quizzes   | A start quiz and an end quiz, so you can see what you learned.                                                                                                                                                               |
 | Progress  | XP, badges, a completion card, and a personal Leaderboard of model runs.                                                                                                                                                     |
+| Guide     | A short welcome tour for new accounts that ends on "Start here: Play level 1", plus one-time tips inside a level (such as opening "See every item" in Reveal). Replay it from the account menu or Home.                      |
 | Reference | A Glossary, and a Methodology page that explains how every number was measured, including the load test.                                                                                                                     |
 
 The path is honest about Jev: it wins on speed and cost for fast judgments at scale, it visibly loses on text generation, counting, math and dates, and some lessons show plain code winning outright.

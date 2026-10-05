@@ -197,7 +197,7 @@ Every route below is in `src/lib/links.ts`. A header link is added only in the s
 | Route                           | Screen        | Render                   | Contents                                                                                                                                                |
 | ------------------------------- | ------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `/sign-in`                      | Sign-in       | SSG                      | Tabs: Sign in / Create account. Email and password. No password-reset link (out of v1).                                                                 |
-| `/`                             | Home          | PPR                      | Welcome, path progress, "Play level 1: Speed Race" (R65), optional start-quiz card (R57).                                                               |
+| `/`                             | Home          | PPR                      | Welcome, path progress, "Play level 1: Speed Race" (R65), optional start-quiz card (R57), a small "Take a guide tour" link under the welcome card.      |
 | `/path`                         | Path          | PPR                      | 8 level cards with status and Skip / Revisit (R28).                                                                                                     |
 | `/levels/[levelId]`             | Level         | SSG shell + CSR          | Stepper Learn > Predict > Play > Reveal > Check, with `?step=` in the URL.                                                                              |
 | `/games`, `/games/[gameId]`     | Games, Game   | SSG + CSR                | Setup (opponent picker) > Race (scoreboard, Skip to result) > Summary (winner, why, numbers, docs link).                                                |
@@ -211,7 +211,7 @@ Every route below is in `src/lib/links.ts`. A header link is added only in the s
 | `/methodology`                  | Methodology   | SSG                      | Same inputs and format, lanes, default settings, parse and scoring rules, how items are chosen, price and recording dates; load-test results (P1, R78). |
 | `/s/[shareId]`                  | Shared result | per-request SSR, noindex | Read-only snapshot with its mode label and "Sign in to try it yourself". The only page reachable without signing in.                                    |
 
-**Header (every signed-in page):** always one row. Left: the sidebar button and the "Jev's Playground" title (no logo icon). Then the links to Path, Games, Arena, Sandbox, Quizzes, Leaderboard and Profile (R66), shown from 1280 px. Right: the path progress bar n/8 (R67, in the sidebar on phones), the Beginner/Developer switch, the Keys button, the theme switch and the profile button, whose menu shows the email, a Profile link and Sign out. The sidebar (`src/features/shell/side-nav.tsx`) lists every page on every screen width; the links live in `nav-items.tsx`.
+**Header (every signed-in page):** always one row. Left: the sidebar button and the "Jev's Playground" title (no logo icon). Then the links to Path, Games, Arena, Sandbox, Quizzes, Leaderboard and Profile (R66), shown from 1280 px. Right: the path progress bar n/8 (R67, in the sidebar on phones), the Beginner/Developer switch, the Keys button, the theme switch and the profile button, whose menu shows the email, a Profile link, "Take the tour" and Sign out. The sidebar (`src/features/shell/side-nav.tsx`) lists every page on every screen width; the links live in `nav-items.tsx`.
 
 **Pop-ups and panels:**
 
@@ -221,7 +221,8 @@ Every route below is in `src/lib/links.ts`. A header link is added only in the s
 - the delete-share confirm;
 - the Copy as code dialog (`curl` and TypeScript `fetch`, with the key as an env-var placeholder);
 - level-complete and badge celebrations (canvas-confetti plus a toast);
-- the provider-error notice with Retry and "Play the Beginner version".
+- the provider-error notice with Retry and "Play the Beginner version";
+- the first-visit guide (ROADMAP Step-35, `src/features/guide/`): a 6-step welcome tour on Home (what Jev is, the mode switch, the other sections for later, the path, the account menu, then "Start here" on Play level 1), and one tip each on a level's Predict, Reveal ("See every item") and Check tabs. Each pop-up is a modal Radix Dialog with a spotlight on a real element found by its `data-guide` attribute; it only overlays the page and never changes its layout. It opens by itself for a user who hasn't seen it. Skip tour (or Esc) turns the tips off too; finishing keeps them. "Take the tour" in the account menu empties the saved list and opens Home.
 
 **States:** every screen has a loading skeleton, an empty state and an error state. Long live runs show per-item progress (R80).
 
@@ -323,7 +324,7 @@ Level 1 (Speed Race) is also timed, so it writes Leaderboard entries under the g
 
 | Model              | Key                                        | Fields                                                                                                                                                       |
 | ------------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `User`             | `id` = Supabase auth UUID                  | email (existing)                                                                                                                                             |
+| `User`             | `id` = Supabase auth UUID                  | email (existing), guideSeen (the `GUIDE_PARTS` seen or skipped; empty means a new user)                                                                      |
 | `LevelProgress`    | (userId, levelId)                          | status (`in_progress`, `done`, `skipped`; no row means not started), prediction (the saved picks), opponentModelId, predictionCorrect, revealedAt, updatedAt |
 | `CheckAnswer`      | (userId, questionId)                       | levelId, optionId, correct, answeredAt                                                                                                                       |
 | `QuizAttempt`      | (userId, quizId)                           | answers (question ID to the tool picked), score, createdAt                                                                                                   |
@@ -356,6 +357,7 @@ Every action is a `validatedAction`. Every action except `signIn` and `signUp` c
 | `createShare`                                                           | Validates the snapshot with Zod. Requires a consent flag when it holds user text. Caps it at 32 KB. Allows 20 shares per user per 24 hours, counted from `Share` rows (no in-memory counter). Returns the ID.                                                                                                                          |
 | `deleteShare`                                                           | Checks ownership and deletes the row. The shared page reads the row on every request, so the link stops working at once (R87).                                                                                                                                                                                                         |
 | `deleteAccount`                                                         | Takes no input; the id is the session's. Deletes the `User` row (every user table cascades from it), then the Supabase Auth user through `createSecretKeyClient().auth.admin.deleteUser` (needs `SUPABASE_SECRET_KEY`), signs out and redirects to sign-in. Rows first, so a failed auth step can be retried with nothing left behind. |
+| `markGuideSeen`, `resetGuide`                                           | Add guide parts to the user's own `guideSeen`, or empty it to replay the guide. Both call `refresh()`, so going Back never reopens a finished tour.                                                                                                                                                                                    |
 | `signIn`, `signUp`, `signOut`                                           | Supabase Auth through `src/lib/supabase/`. `provisionUser` runs on first sign-in.                                                                                                                                                                                                                                                      |
 
 After a write, a progress action calls `refresh()` from `next/cache`, so the header bar and pages update at once. Per-user reads are not cached, so there is no tag to update. The client applies the change optimistically through TanStack Query, rolls it back on failure, and shows a toast.
@@ -455,6 +457,7 @@ The icons come from `@/components/ui/icons`. A `RacerTag` component is the only 
 7. Start quiz > end quiz > improvement shown > solutions.
 8. Invalid key, 429, or provider down > friendly message with Retry > Beginner fallback.
 9. Theme toggle, keyboard-only pass and phone-width pass.
+10. Sign up > the welcome tour opens on Home > Play level 1 > one tip on Predict, Reveal and Check; Skip tour turns the guide off; "Take the tour" replays it.
 
 ## 16. Slice plan
 

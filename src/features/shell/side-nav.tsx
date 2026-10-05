@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { ChevronRightIcon, CloseIcon, SidebarIcon } from '@/components/ui/icons'
 import { cn } from '@/lib/cn'
+import { GUIDE_TARGETS } from '@/features/guide/guide'
 import { isActive, SIDEBAR_NAV } from './nav-items'
 
 const STAGGER_MS = 30
@@ -20,7 +21,13 @@ export function SideNav({ progress }: { progress: React.ReactNode }) {
 	return (
 		<Dialog.Root>
 			<Dialog.Trigger asChild>
-				<Button type="button" variant="ghost" size="sm" aria-label="Open menu">
+				<Button
+					type="button"
+					variant="ghost"
+					size="sm"
+					aria-label="Open menu"
+					data-guide={GUIDE_TARGETS.sideNav}
+				>
 					<SidebarIcon size={20} />
 				</Button>
 			</Dialog.Trigger>

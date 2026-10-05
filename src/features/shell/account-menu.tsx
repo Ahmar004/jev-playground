@@ -1,20 +1,24 @@
 'use client'
 
 import Link from 'next/link'
-import { AvatarIcon, UserIcon } from '@/components/ui/icons'
+import { AvatarIcon, GuideIcon, UserIcon } from '@/components/ui/icons'
 import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { GUIDE_TARGETS } from '@/features/guide/guide'
+import { useReplayGuide } from '@/features/guide/use-guide-seen'
 import { ROUTES } from '@/lib/links'
 import { SignOutButton } from './sign-out-button'
 import { useSignOut } from './use-sign-out'
 
-/** The profile button: opens the signed-in email (plain text, R86), a Profile link and sign out. */
+/** The profile button: opens the signed-in email (plain text, R86), a Profile link, the guide tour and sign out. */
 export function AccountMenu({ email }: { email: string }) {
 	const { pending, signOut } = useSignOut()
+	const guide = useReplayGuide()
 
 	return (
 		<Popover>
 			<PopoverTrigger
 				aria-label="Account menu"
+				data-guide={GUIDE_TARGETS.accountMenu}
 				className="focus-visible:outline-accent bg-border rounded-full p-0.5 transition-transform duration-200 hover:scale-105 focus-visible:outline focus-visible:outline-2 active:scale-95"
 			>
 				<span className="bg-surface text-text flex size-8 items-center justify-center rounded-full">
@@ -39,6 +43,17 @@ export function AccountMenu({ email }: { email: string }) {
 						<UserIcon />
 						Your profile
 					</Link>
+				</PopoverClose>
+				<PopoverClose asChild>
+					<button
+						type="button"
+						disabled={guide.pending}
+						onClick={guide.replay}
+						className="text-text hover:bg-surface-hover focus-visible:outline-accent flex items-center gap-2 rounded px-3 py-1.5 text-left text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 disabled:opacity-60"
+					>
+						<GuideIcon />
+						Take the tour
+					</button>
 				</PopoverClose>
 				<SignOutButton
 					pending={pending}

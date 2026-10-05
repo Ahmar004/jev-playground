@@ -6,6 +6,7 @@ import { QuestionCard } from '@/components/ui/question-card'
 import { PREDICTABLE_RACERS, type Level } from '@/content/level-schema'
 import { RacerTag } from '@/features/race/racer-tag'
 import type { Prediction } from './judge'
+import { GUIDE_TARGETS } from '@/features/guide/guide'
 
 /** Predict: one two-way pick per question, locked in with Enter or the button (spec 6.1). */
 export function PredictStep({
@@ -34,7 +35,7 @@ export function PredictStep({
 				if (complete) onSubmit(picks)
 			}}
 		>
-			<div className="flex flex-col gap-1">
+			<div className="flex flex-col gap-1" data-guide={GUIDE_TARGETS.predict}>
 				<h2 id="predict-heading" tabIndex={-1} className="text-text text-2xl font-bold">
 					Predict
 				</h2>

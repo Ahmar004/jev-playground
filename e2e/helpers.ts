@@ -21,7 +21,8 @@ export function freshEmail(): string {
 type Cookies = Awaited<ReturnType<BrowserContext['cookies']>>
 const sessions = new Map<string, Cookies>()
 
-export async function signUp(page: Page, email: string) {
+/** Creates an account and lands Home. A new account opens the welcome tour there; it is skipped unless `keepTour` (a test of the guide itself). */
+export async function signUp(page: Page, email: string, options: { keepTour?: boolean } = {}) {
 	await page.goto('/sign-in')
 	await page.getByRole('tab', { name: 'Create account' }).click()
 	const panel = page.getByRole('tabpanel')
@@ -30,6 +31,31 @@ export async function signUp(page: Page, email: string) {
 	await panel.getByRole('button', { name: 'Create account' }).click()
 	await expect(page).toHaveURL('/')
 	sessions.set(email, await page.context().cookies())
+	if (!options.keepTour) await skipWelcomeTour(page)
+}
+
+export const WELCOME_TOUR_TITLE = "Welcome to Jev's Playground"
+
+/**
+ * Skips the welcome tour, which turns the level tips off too (ROADMAP Step-35),
+ * so no pop-up covers what a test clicks. It waits for the save, because a
+ * page.goto right after would cancel it, and closes the confirming toast.
+ */
+export async function skipWelcomeTour(page: Page) {
+	const tour = page.getByRole('dialog', { name: WELCOME_TOUR_TITLE })
+	await expect(tour).toBeVisible()
+	const saved = page.waitForResponse(
+		(response) =>
+			response.request().method() === 'POST' &&
+			response.request().headers()['next-action'] !== undefined
+	)
+	await tour.getByRole('button', { name: 'Skip tour' }).click()
+	await saved
+	await expect(tour).toBeHidden()
+	await page
+		.locator('li', { hasText: 'Tour skipped' })
+		.getByRole('button', { name: 'Dismiss' })
+		.click()
 }
 
 /** Signs in and lands Home. `fresh` forces a real sign-in, for a test of signing in itself or after a sign-out (which ends the saved session). */

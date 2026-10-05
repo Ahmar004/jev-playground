@@ -15,11 +15,14 @@ import {
 	UserIcon
 } from '@/components/ui/icons'
 import { LEVELS } from '@/content/levels'
+import { GUIDE_TARGETS } from '@/features/guide/guide'
+import { WelcomeTour } from '@/features/guide/welcome-tour'
 import { HomeProgress } from '@/features/progress/home-progress'
 import type { PathLevel } from '@/features/progress/path-view'
 import { QUIZ_IDS } from '@/lib/constants'
 import { ROUTES } from '@/lib/links'
 import { getSession } from '@/server/auth/session'
+import { getGuideSeen } from '@/server/data/guide'
 import { getProgressSummary } from '@/server/data/progress'
 
 const firstLevel = [...LEVELS.values()][0]
@@ -30,6 +33,21 @@ async function HomeProgressLoader({ firstLevel }: { firstLevel: PathLevel }) {
 	if (!session) redirect(ROUTES.signIn)
 	const summary = await getProgressSummary(session.userId)
 	return <HomeProgress summary={summary} firstLevel={firstLevel} />
+}
+
+// The guide link and the welcome tour need the user's saved guide parts, so
+// they stream in under <Suspense> too (ROADMAP Step-35).
+async function WelcomeTourLoader({ firstLevel }: { firstLevel: PathLevel }) {
+	const session = await getSession()
+	if (!session) redirect(ROUTES.signIn)
+	const seen = await getGuideSeen(session.userId)
+	return (
+		<WelcomeTour
+			seen={seen}
+			startHref={ROUTES.level(firstLevel.id)}
+			startLabel={`Play level ${firstLevel.order}`}
+		/>
+	)
 }
 
 // Each tile's hue matches its page's icon in the sidebar (nav-items.tsx).
@@ -88,40 +106,47 @@ const TILES = [
 export default function HomePage() {
 	return (
 		<main className="flex flex-1 flex-col gap-6">
-			<section className="border-border bg-surface shadow-card relative overflow-hidden rounded-lg border p-6 sm:p-8">
-				{/* Decorative hues in the racer colors; no text sits on them alone. */}
-				<div
-					aria-hidden
-					className="bg-hue-1/20 dark:bg-hue-1/25 pointer-events-none absolute -top-24 -right-16 size-64 rounded-full blur-3xl"
-				/>
-				<div
-					aria-hidden
-					className="bg-hue-2/20 dark:bg-hue-2/25 pointer-events-none absolute -bottom-24 left-1/3 size-64 rounded-full blur-3xl"
-				/>
-				<div className="relative flex max-w-2xl flex-col gap-4">
-					<span className="bg-accent/12 text-accent inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold">
-						<SparkleIcon />
-						Jev vs LLM vs Code
-					</span>
-					<h1 className="text-text text-3xl font-extrabold sm:text-4xl">
-						Welcome to <span className="text-brand">Jev&apos;s Playground</span>
-					</h1>
-					<p className="text-text-muted text-lg">
-						Jev is a System One model: it makes fast, typed judgments. Here you will race it against
-						an LLM and plain Code, and learn which tool fits which job.
-					</p>
-					{firstLevel && (
-						<div>
-							<Button asChild size="lg">
-								<Link href={ROUTES.level(firstLevel.id)}>
-									<PlayIcon />
-									Play level {firstLevel.order}: {firstLevel.title}
-								</Link>
-							</Button>
-						</div>
-					)}
-				</div>
-			</section>
+			<div className="flex flex-col gap-1">
+				<section className="border-border bg-surface shadow-card relative overflow-hidden rounded-lg border p-6 sm:p-8">
+					{/* Decorative hues in the racer colors; no text sits on them alone. */}
+					<div
+						aria-hidden
+						className="bg-hue-1/20 dark:bg-hue-1/25 pointer-events-none absolute -top-24 -right-16 size-64 rounded-full blur-3xl"
+					/>
+					<div
+						aria-hidden
+						className="bg-hue-2/20 dark:bg-hue-2/25 pointer-events-none absolute -bottom-24 left-1/3 size-64 rounded-full blur-3xl"
+					/>
+					<div className="relative flex max-w-2xl flex-col gap-4">
+						<span className="bg-accent/12 text-accent inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold">
+							<SparkleIcon />
+							Jev vs LLM vs Code
+						</span>
+						<h1 className="text-text text-3xl font-extrabold sm:text-4xl">
+							Welcome to <span className="text-brand">Jev&apos;s Playground</span>
+						</h1>
+						<p className="text-text-muted text-lg">
+							Jev is a System One model: it makes fast, typed judgments. Here you will race it
+							against an LLM and plain Code, and learn which tool fits which job.
+						</p>
+						{firstLevel && (
+							<div>
+								<Button asChild size="lg">
+									<Link href={ROUTES.level(firstLevel.id)} data-guide={GUIDE_TARGETS.startLevel}>
+										<PlayIcon />
+										Play level {firstLevel.order}: {firstLevel.title}
+									</Link>
+								</Button>
+							</div>
+						)}
+					</div>
+				</section>
+				{firstLevel && (
+					<Suspense fallback={<div className="h-4" />}>
+						<WelcomeTourLoader firstLevel={firstLevel} />
+					</Suspense>
+				)}
+			</div>
 			<ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
 				{TILES.map(({ href, label, blurb, Icon, hue }) => (
 					<li key={href}>

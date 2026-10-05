@@ -5,6 +5,7 @@ import { KeyIcon } from '@/components/ui/icons'
 import { cn } from '@/lib/cn'
 import { MODES, type Mode } from '@/lib/constants'
 import { useKeys } from '@/features/keys/keys-context'
+import { GUIDE_TARGETS } from '@/features/guide/guide'
 import { useMode } from './mode-context'
 
 const MODE_OPTIONS: { mode: Mode; label: string }[] = [
@@ -26,7 +27,7 @@ export function ModeSwitch() {
 	}
 
 	return (
-		<div className="flex items-center gap-1">
+		<div className="flex items-center gap-1" data-guide={GUIDE_TARGETS.modeSwitch}>
 			<div
 				role="radiogroup"
 				aria-label="Mode"

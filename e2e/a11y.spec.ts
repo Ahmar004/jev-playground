@@ -1,6 +1,13 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
-import { COLOR_SCHEMES, freshEmail, setColorScheme, signUp, VIEWPORTS } from './helpers'
+import {
+	COLOR_SCHEMES,
+	freshEmail,
+	setColorScheme,
+	signUp,
+	VIEWPORTS,
+	WELCOME_TOUR_TITLE
+} from './helpers'
 
 // Accessibility audit (R88-R91, ROADMAP Step-26): axe over every page, in both
 // themes, at desktop and phone width, against WCAG 2.1 A and AA (spec 12.3).
@@ -96,6 +103,12 @@ for (const scheme of COLOR_SCHEMES) {
 			await page.getByRole('button', { name: 'API keys' }).click()
 			await expect(page.getByRole('dialog', { name: 'Your API keys' })).toBeVisible()
 			await scan(page, '/ (Keys panel open)', findings)
+
+			// The welcome tour is a dialog over Home too (ROADMAP Step-35).
+			await page.goto('/')
+			await page.getByRole('button', { name: 'Take a guide tour' }).click()
+			await expect(page.getByRole('dialog', { name: WELCOME_TOUR_TITLE })).toBeVisible()
+			await scan(page, '/ (welcome tour open)', findings)
 
 			expect(findings, summary(findings)).toEqual([])
 		})

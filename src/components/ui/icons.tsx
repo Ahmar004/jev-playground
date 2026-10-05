@@ -31,6 +31,7 @@ import {
 	Check,
 	CheckCircle,
 	CircleNotch,
+	Compass,
 	Copy,
 	DotsThreeVertical,
 	DownloadSimple,
@@ -132,6 +133,7 @@ export const DownloadIcon = (props: IconProps) => <Glyph source={DownloadSimple}
 export const EditIcon = (props: IconProps) => <Glyph source={PencilSimple} {...props} />
 export const ExternalLinkIcon = (props: IconProps) => <Glyph source={ArrowSquareOut} {...props} />
 export const FilterIcon = (props: IconProps) => <Glyph source={FunnelSimple} {...props} />
+export const GuideIcon = (props: IconProps) => <Glyph source={Compass} {...props} />
 export const GamesIcon = (props: IconProps) => <Glyph source={GameController} {...props} />
 export const HomeIcon = (props: IconProps) => <Glyph source={House} {...props} />
 export const InfoIcon = (props: IconProps) => <Glyph source={Info} {...props} />

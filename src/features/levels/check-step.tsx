@@ -6,6 +6,7 @@ import { QuestionCard } from '@/components/ui/question-card'
 import { SuccessIcon, WrongIcon } from '@/components/ui/icons'
 import type { CheckQuestion } from '@/content/level-schema'
 import type { LevelProgressView } from './level-progress'
+import { GUIDE_TARGETS } from '@/features/guide/guide'
 
 const PRACTICE_NOTE = 'Practice only: your first answer is the one that counts.'
 
@@ -50,7 +51,12 @@ export function CheckStep({
 
 	return (
 		<section aria-labelledby="check-heading" className="flex flex-col gap-6">
-			<h2 id="check-heading" tabIndex={-1} className="text-text text-2xl font-bold">
+			<h2
+				id="check-heading"
+				tabIndex={-1}
+				data-guide={GUIDE_TARGETS.check}
+				className="text-text text-2xl font-bold"
+			>
 				Check
 			</h2>
 			{questions.map((question) => {

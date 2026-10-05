@@ -11,6 +11,7 @@ import { LevelSkeleton } from '@/features/levels/level-skeleton'
 import { LevelStepper } from '@/features/levels/level-stepper'
 import { ROUTES } from '@/lib/links'
 import { getSession } from '@/server/auth/session'
+import { getGuideSeen } from '@/server/data/guide'
 import { getLevelProgress } from '@/server/data/progress'
 
 // Every level is prerendered from content/ (TECH-STACK.md > Rendering strategy: SSG shell + CSR).
@@ -39,7 +40,10 @@ async function LevelProgressLoader({
 }) {
 	const session = await getSession()
 	if (!session) redirect(ROUTES.signIn)
-	const progress = await getLevelProgress(session.userId, level.id)
+	const [progress, guideSeen] = await Promise.all([
+		getLevelProgress(session.userId, level.id),
+		getGuideSeen(session.userId)
+	])
 	return (
 		<LevelStepper
 			key={session.userId}
@@ -47,6 +51,7 @@ async function LevelProgressLoader({
 			tasks={tasks}
 			recordings={recordings}
 			initialProgress={progress}
+			guideSeen={guideSeen}
 		/>
 	)
 }
