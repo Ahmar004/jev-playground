@@ -6,7 +6,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.46 left (Step-15's live check spent about $0.011), and recordings so far cost $0.49.
 
-**Built (Steps 0-16, 18-28 and 30; 17 is blocked, 29 is prepared and waits for the deploy):**
+**Built (Steps 0-16, 18-30; 17 waits for its own session):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
@@ -20,15 +20,15 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 **Open (each is a ROADMAP step, 11-35):**
 
 - Promotional prices end: gpt-5.6-sol on 2026-11-21, gemini-3.6/3.7/3.8-flash on 2026-12-31. After that those models show "price unknown" until someone rechecks the pricing pages and updates `content/prices.json`.
-- Jev through an OpenRouter key isn't built (Step-17 is blocked on the owner's OpenRouter key; see its entry below).
+- Jev through an OpenRouter key isn't built yet (Step-17; the owner's key is now in `.env.local` as `OPENROUTER_API_KEY`, so nothing blocks it).
 - No real-key test for OpenAI, Google or OpenRouter (Step-16 skipped them: no keys). Level 8's live trick was checked live in Step-20.
 - Lighthouse mobile: LCP is 4.2 to 4.4 s on four pages and 6.6 s on a Level (simulated slow phone); the real page is fast (0.4 to 0.8 s here). Getting the simulated LCP under 2 s needs a much smaller initial JavaScript bundle (see Step-27).
-- The production Supabase project exists, its schema is applied and Confirm email is off (the owner did it). The Vercel project `ahmar9/jev-playground` exists but nothing is deployed yet.
+- The production Supabase project exists, its schema is applied and Confirm email is off (the owner did it). The app is live at https://letsplaywithjev.vercel.app (Vercel project `ahmar9/jev-playground`, function region iad1); production reports to its own Sentry project and shares the one free PostHog project.
 - No password reset (it needs a domain, and none is bought).
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** close Step-29 (it is live at https://letsplaywithjev.vercel.app and the signed-in smoke test passed; only the Sentry and PostHog choice for production is left, see its entry), then Step-31 (SEO and sharing). Step-17 waits only for the owner to paste the OpenRouter key into the `OPENROUTER_API_KEY` line of `.env.local` (the placeholder is there).
+**Next:** Step-17 (the OpenRouter key is in `.env.local`) or Step-31 (SEO and sharing), one per session.
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -881,7 +881,7 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - **Fixed:** the file is now `.env.prod-values.local` (nothing loads it; source it into the shell for one command). Production was cleaned: all 32 test Auth users, their rows and the 8 rate-limit counters were deleted (matched by the test email patterns; it held no other user), leaving every table empty. `docs/api-setup-guide.md` and CLAUDE.md "Known pitfalls" say not to use that name.
 - **Not affected:** the Step-25 load test and the Step-27 Lighthouse runs (both before the file existed), and every dev-server run. The Sentry and PostHog projects received events from these runs, which they receive from every local run anyway.
 
-## Step-29 - Vercel deploy (2026-10-05) - prepared, waiting on the owner's deploy
+## Step-29 - Vercel deploy (2026-10-05) - done
 
 - Done: `vercel.json` pins the function region to `iad1` (next to the `us-east-1` production database); `docs/api-setup-guide.md` section 6 lists the Vercel steps and every environment variable (which are secret, which are public, which must not be added); `docs/rules/deployment.md` says the app is deployed to `ahmar9/jev-playground`. `NEXT_PUBLIC_APP_URL` is read by no code yet (Step-31 will), so it does not block a first deploy.
 - Found: the owner created the Vercel project and put the production keys in, but `*.vercel.app` addresses for the project name return 404 and GitHub shows no Vercel deployment or status for the repo, so the project is not connected to the GitHub repo, or has not been deployed. This Chrome is not signed in to Vercel, so the agent cannot see the dashboard.
@@ -889,4 +889,4 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Checked signed-out through curl and Chrome: `/` and the other pages redirect to `/sign-in` (200, 0.24 s), `POST /api/jev` answers 401, a missing `/s/<id>` page says "not found" and is noindex, and the CSP, HSTS, frame-deny and Referrer-Policy headers are present. `/robots.txt` and `/sitemap.xml` are 404 until Step-31. No console errors on the sign-in page.
 - Signed-in smoke test, done 2026-10-05 on the live URL (the owner created the account, because the agent may not create accounts or enter passwords on a live site; the account is the owner's own, so it stays). Passed: sign-in lands on Home; all 8 levels, 8 VS games, Arena (with batch), Sandbox, quizzes, Glossary, Methodology, Privacy, Leaderboard and Profile return 200 with no error text (about 0.8 to 1.3 s from this browser); Level 1 played end to end in Beginner mode (predict, race replay at recorded speed, result, "Saved to your Leaderboard", and the Leaderboard then shows it); the start quiz saved 3 of 8; Sandbox replays a recording; an Arena run works; Needle Hunt plays; a share link is created with the `vercel.app` address and the Sharer badge, and opens signed-out with noindex and its mode label. Not tested live: Developer mode with real keys (the keys never leave a tab; Step-15 checked that locally) and Delete my account.
 - Found, not a bug in the code: the first sign-in and sign-up attempts showed "Could not reach the server" because the tab had been opened before the owner's redeploy. Its page held the old build's Server Action id, and Vercel logged `Failed to find Server Action ... This request might be from an older or newer deployment`. A reload fixed it. Any visitor with a tab open during a deploy will see the same, so deploy when few people are online after launch. Whether to add a friendlier message for this case is open (Step-33, with the runbook).
-- Decided with the owner: production keeps the current PostHog project (free plan allows one; filter by `$host`). Production gets its own Sentry project `jevs-playground-prod` (steps in `docs/api-setup-guide.md` section 2, step 7). Step-29 closes when the owner has created it and put its DSN into Vercel's `NEXT_PUBLIC_SENTRY_DSN` and redeployed. PostHog's free plan allows one project, so a separate production project is not possible without deleting the dev one. Recommended: keep the one PostHog project for both (every event carries its `$host`, so filter on `letsplaywithjev.vercel.app`) and make a second free Sentry project for production. Neither Sentry nor PostHog sets an `environment` tag in our code; adding one is a small change for Step-33 (needs the owner's approval to add to ROADMAP).
+- Decided with the owner: production keeps the current PostHog project (free plan allows one; filter by `$host`). Production gets its own Sentry project `jevs-playground-prod` (steps in `docs/api-setup-guide.md` section 2, step 7). The owner created it, put its DSN into Vercel's `NEXT_PUBLIC_SENTRY_DSN` and redeployed (build 2 m 34 s). Checked: the live JavaScript carries a DSN for a different project id than `.env.local`'s dev DSN, so production reports to `jevs-playground-prod`. PostHog's free plan allows one project, so a separate production project is not possible without deleting the dev one. Recommended: keep the one PostHog project for both (every event carries its `$host`, so filter on `letsplaywithjev.vercel.app`) and make a second free Sentry project for production. Neither Sentry nor PostHog sets an `environment` tag in our code; adding one is a small change for Step-33 (needs the owner's approval to add to ROADMAP).
