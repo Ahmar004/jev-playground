@@ -183,21 +183,18 @@ Database connection pool for serverless. Each Vercel function instance opens its
 - Close idle connections quickly.
 - Use Vercel's recommended helper (`attachDatabasePool` from `@vercel/functions`), so an instance releases its connections when it is suspended. That is a new package, so ask the owner before adding it.
 - Step-24 (fewer queries per page) also helps, because each page holds a connection for less time.
-No Supabase upgrade is needed for this. Upgrade to Pro ($25 a month, about 7,000 PKR) only if the Vercel load test (Step-32) or real launch traffic shows the database maxed out (pooler errors, CPU stuck at 100%).
+No Supabase upgrade is needed for this. Upgrade to Pro ($25 a month, about 7,000 PKR) only if Vercel's usage dashboard or real launch traffic shows the database maxed out (pooler errors, CPU stuck at 100%).
 
 ### Step-31:
 SEO and sharing basics for the `vercel.app` URL: page titles and descriptions, Open Graph images (so links shared on Discord show a card), `sitemap.xml` and `robots.txt` built from `NEXT_PUBLIC_APP_URL`. Shared result pages stay noindex (R87).
 
 ### Step-32:
-Load test on Vercel. Run k6 against the live `vercel.app` URL, inside the free-tier limits, and publish the numbers on Methodology next to the local ones.
-
-### Step-33:
 Runbook and monitoring, docs plus config. Write docs/runbook.md: free Supabase projects pause after 7 days without activity and how to restore one, key rotation, what to do when the Anthropic credit runs low, and where Sentry alerts go. Set up Sentry alert rules and one PostHog funnel (posthog-funnel-builder skill).
 
-### Step-34:
+### Step-33:
 Richer scenes for the 4 P0 VS games (spec 7.2). Replace the chip animations with each game's own metaphor, built in Motion, reduced-motion safe, checked by screenshot in both themes at desktop and phone width.
 
-### Step-35:
+### Step-34:
 The same richer scenes for the 4 P1 VS games.
 
 <hr style="height:4px; background-color:Grey; border:none;">
