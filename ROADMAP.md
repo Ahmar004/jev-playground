@@ -197,4 +197,37 @@ Richer scenes for the 4 P0 VS games (spec 7.2). Replace the chip animations with
 ### Step-34:
 The same richer scenes for the 4 P1 VS games.
 
+### Step-35:
+Step by Step tutorial for a newly signed in user, built like a senior full stack engineer, pop-up guide appears and guides a new user about all important things they should know like for exaample it takes to the page and shows the user important things like clicking "see all items" under reveal under a level to be able to see the results for each item., and then finally it shows the page and pop-up about where should they begin from. Feedback from a person was "there's a lot in here: games, arena, sandbox, quizzes, leaderboard. what's the one path a new person should take in the first 2 mins? right now i wouldn't know where to click first - can we optimise for that?"
+
+### Step-36:
+under the check tab at a level, we shall have an option at the end alongside the "Back to path" option for a "Play next level" option to go to next level directly.
+
+### Step-37:
+add an info i symbol to the right of the "See every item" container, an info i symbol followed by "Open this to see the results for each individual item."
+
+### Step-38:
+Remove "VS" from games, it adds unnecessary ambiguity to the user's mental model.
+
+### Step-39:
+At the bottom of every page in games, we shall have an option to go to the next game, an option "Play next game".
+
+### Step-40:
+Some games do not give proper context, we have to fix that, for example, Guardrail Gauntlet does not show what were those 16 messages to the user, so the point of playing that game does not make sense, because the user can't understand which message was correctly/incorrectly flagged by Jev/LLM. Another example for improvement in games: "Number crunch showdown" does not show the questions that were passed to Jev, LLM and the outputs received, it only shows the last qs asked to both, whereas user shall be able to see all the Qs asked along with the outputs received under that game. Analyse other games as well, and fill in areas of lack of context, which could make the game boring or less interesting to play.
+
+### Step-41:
+Like Step-40, give context under the options at Arena page as well, if there are any areas under there that have any lack of context.
+
+### Step-42:
+Add an option to retry a quiz
+
+### step-43:
+Add 4-5 even more interesting and fun games to the app, that have more visuals and are happening more visually and giving the user a real-time experience through visuals.
+
+### step-44:
+Make profile page shareable to others (both signed-in and unsgned-in users)
+
+### step-45:
+final testing via systematic-debugging skill and end-to-end tests of all workflows except for the flows which require putting in the api keys in the live site (leave those to me, I would test that myself)
+
 <hr style="height:4px; background-color:Grey; border:none;">
