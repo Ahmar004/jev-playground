@@ -203,6 +203,9 @@ export type GameAnimation = (typeof GAME_ANIMATIONS)[keyof typeof GAME_ANIMATION
 export const GATE_DECISIONS = { pass: 'pass', review: 'review', block: 'block' } as const
 export type GateDecision = (typeof GATE_DECISIONS)[keyof typeof GATE_DECISIONS]
 
+// Confidence Catch's threshold before the player moves the slider (spec 7.2).
+export const DEFAULT_CONFIDENCE_THRESHOLD = 0.9
+
 // Speed Race is also timed, so it writes Leaderboard entries (DESIGN 8).
 export const SPEED_RACE_GAME_ID = 'speed-race'
 

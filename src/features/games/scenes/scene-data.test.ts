@@ -4,16 +4,23 @@ import type { RacerState } from '@/features/race/race-state'
 import { computeTotals } from '@/runner/totals'
 import type { ItemResult } from '@/runner/types'
 import {
+	actedOn,
+	checkTally,
+	choiceOptions,
+	confidenceOf,
 	decisionOf,
 	itemText,
 	knotPosition,
 	gateTally,
 	hitPoints,
 	latestResult,
+	noulOf,
+	optionLabel,
 	pickedLines,
 	resultForItem,
 	scoreLevelNames,
-	scoreOf
+	scoreOf,
+	yesOf
 } from './scene-data'
 
 function result(itemId: string, parsed: unknown, correct: boolean, ok = true): ItemResult {
@@ -239,5 +246,90 @@ describe('knotPosition', () => {
 		expect(knotPosition(20, 0, 20)).toBe(4)
 		expect(knotPosition(0, 20, 20)).toBe(96)
 		expect(knotPosition(0, 0, 0)).toBe(50)
+	})
+})
+
+const jevNoul = (noul: number) => ({ answer: { type: 'noul', noul } })
+
+describe('choiceOptions and optionLabel', () => {
+	it("lists the task's option keys in order and reads them as words", () => {
+		expect(choiceOptions(gateTask)).toEqual(['pass', 'review', 'block'])
+		expect(optionLabel('door_lock')).toBe('Door lock')
+		expect(optionLabel('tv')).toBe('TV')
+	})
+
+	it('is empty when the question is not a Choice', () => {
+		const noul = {
+			...gateTask,
+			jev: { questions: { answer: { type: 'noul', instructions: 'Same?' } } }
+		} as unknown as Task
+		expect(choiceOptions(noul)).toEqual([])
+	})
+})
+
+describe('yesOf and noulOf', () => {
+	it("reads Jev's probability against the bar and an LLM's boolean", () => {
+		expect(yesOf('jev', result('p1', jevNoul(0.97), true))).toBe(true)
+		expect(yesOf('jev', result('p1', jevNoul(0.5), true))).toBe(true)
+		expect(yesOf('jev', result('p1', jevNoul(0.12), true))).toBe(false)
+		expect(yesOf('llm', result('p1', false, true))).toBe(false)
+		expect(noulOf('jev', result('p1', jevNoul(0.97), true))).toBe(0.97)
+		expect(noulOf('llm', result('p1', true, true))).toBeNull()
+	})
+
+	it('is null when the output did not parse or is not a yes or no (R44)', () => {
+		expect(yesOf('llm', result('p1', null, false, false))).toBeNull()
+		expect(yesOf('llm', result('p1', 'maybe', false))).toBeNull()
+		expect(yesOf('jev', result('p1', jevChoice('a'), false))).toBeNull()
+	})
+})
+
+describe('checkTally', () => {
+	const checkTask = {
+		...gateTask,
+		kind: 'noul',
+		items: [
+			{ id: 'c1', state: 'a', label: true },
+			{ id: 'c2', state: 'b', label: false },
+			{ id: 'c3', state: 'c', label: false },
+			{ id: 'c4', state: 'd', label: true }
+		]
+	} as unknown as Task
+
+	it('counts bad items caught, bad items missed and good items wrongly flagged', () => {
+		const results = [
+			result('c1', jevNoul(0.1), false),
+			result('c2', jevNoul(0.05), true),
+			result('c3', jevNoul(0.9), false)
+		]
+		expect(checkTally(checkTask, state('jev', results), 'jev')).toEqual({
+			bad: 2,
+			caught: 1,
+			missed: 1,
+			falseAlarms: 1,
+			decided: 3
+		})
+	})
+
+	it('counts an unparsed answer on a bad item as missed', () => {
+		expect(
+			checkTally(checkTask, state('llm', [result('c2', null, false, false)]), 'llm')
+		).toMatchObject({
+			caught: 0,
+			missed: 1
+		})
+	})
+})
+
+describe('confidenceOf and actedOn', () => {
+	it("is Jev's confidence in its pick, and nothing for an LLM", () => {
+		expect(confidenceOf('jev', result('c1', jevChoice('billing'), true))).toBe(1)
+		expect(confidenceOf('llm', result('c1', 'billing', true))).toBeNull()
+	})
+
+	it('acts on an answer at or above the threshold, and always on an answer with no confidence', () => {
+		expect(actedOn(0.9, 0.9)).toBe(true)
+		expect(actedOn(0.89, 0.9)).toBe(false)
+		expect(actedOn(null, 0.99)).toBe(true)
 	})
 })

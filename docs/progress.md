@@ -6,19 +6,20 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.46 left (Step-15's live check spent about $0.011), and recordings so far cost $0.49.
 
-**Built (Steps 0-31, all done; Step-16 skipped real-key checks of OpenAI, Google and OpenRouter-as-LLM for lack of keys; Step-17 was blocked first and finished later the same day, see its "done" entry):**
+**Built (Steps 0-34, all done; Step-16 skipped real-key checks of OpenAI, Google and OpenRouter-as-LLM for lack of keys; Step-17 was blocked first and finished later the same day, see its "done" entry):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports Jev through a TypeSafe key or an OpenRouter key (TypeSafe wins when both are set), and LLMs through Anthropic, OpenAI, Google and OpenRouter (Step-17).
 - After a Developer mode run, Reveal shows the last finished live run beside the recordings (races, level 6 cards, level 8 tricks), labelled; tab memory only.
 - `content/prices.json` prices Jev, the Claude models and every OpenAI and Google text model (57 entries, checked 2026-10-04; Step-17 added the dated OpenRouter Jev build on 2026-10-05); OpenRouter models use OpenRouter's live list.
-- Tests: 707 Vitest, 114 node:test and 82 Playwright e2e, covering every flow in DESIGN 15.
+- Tests: 754 Vitest, 114 node:test and 114 Playwright e2e, covering every flow in DESIGN 15.
 - k6 locally (2026-10-05): 400 users median 214 ms, p95 583 ms, target met; 1,000 users median 6.7 s, p95 10.1 s, no failed requests but the target is missed (one Node process is CPU-bound at about 86 pages a second).
 - The public README.
+- Every VS game has its own scene (Steps 33 and 34), drawn from the race state only: gate, document, duel and rope for the P0 games; runners, belts, falling answers (with the live threshold slider) and checkpoint for the P1 games. `docs/runbook.md` and a PostHog funnel cover launch operations (Step-32).
 - SEO and link previews (Step-31): every page has a title, the root layout sets the description and the Open Graph and Twitter card, `src/app/opengraph-image.tsx` draws the 1200x630 image, and `robots.txt` and `sitemap.xml` are built from `NEXT_PUBLIC_APP_URL`.
 - Real keys checked (Step-15): TypeSafe and Anthropic, level 1 live on localhost, every call 200 with no shape fixes needed. A provider call now times out after 60 s (`PROVIDER_TIMEOUT_MS`) and stops the run with a `timeout` error; `/api/jev` answers 504 on a hung TypeSafe call.
 
-**Open (ROADMAP Steps 32-35 are not started; these are the loose ends from Steps 0-30):**
+**Open (ROADMAP Steps 0-34 are done; these are the loose ends):**
 
 - Promotional prices end: gpt-5.6-sol on 2026-11-21, gemini-3.6/3.7/3.8-flash on 2026-12-31. After that those models show "price unknown" until someone rechecks the pricing pages and updates `content/prices.json`.
 - No real-key test for OpenAI, Google or OpenRouter as an LLM (Step-16 skipped them: no keys). Jev through OpenRouter was checked live in Step-17. Level 8's live trick was checked live in Step-20.
@@ -28,7 +29,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-32 (load test on Vercel), one step per session. Step-31 is built and verified locally but only shows on the live URL after the owner redeploys; then paste the live URL into a Discord channel and check the card.
+**Next:** nothing is left in ROADMAP. Step-31 and Steps 32-34 are built and verified locally but only show on the live URL after the owner redeploys; then paste the live URL into a Discord channel and check the card. Remaining ideas are the loose ends above (a smaller initial bundle for Lighthouse, a manual accessibility pass).
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -922,3 +923,9 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Verified on a production build in `.next-verify` (port 3100): 16 Playwright runs (4 games x desktop and phone x light and dark) with no horizontal scroll and screenshots in `e2e/screenshots/`, axe on all pages, and the games and shell specs. Gates: lint, typecheck, format, env, secrets, standards, 741 Vitest plus node:test, RLS, build.
 - Fixed two older e2e locators that broke when Step-26 added "Result table" and "<game> table" scroll regions: `getByRole('region', { name: 'Result' })` and the Leaderboard game regions now use `exact: true`.
 - Constant added: `GATE_DECISIONS` in `src/lib/constants.ts`.
+
+## Step-34 - richer scenes for the 4 P1 VS games (2026-10-05) - done
+
+- Smart Home Dash `runners-scene` (a house of device cells; each racer's runner arrives at the device it routed the latest command to, wrong routes name the device needed), Twin Finder `belts-scene` (two belts carry the shop listings; each racer stamps the pair same or different with Jev's probability, and a strip of stamped tiles), Citation Cop `checkpoint-scene` (a checkpoint with Flagged and Waved through either side, bad citations that got through ringed in red, the latest claim with its source) and Confidence Catch `fall-scene` (answers fall into the team baskets or onto the review desk). The game now holds the confidence threshold (`DEFAULT_CONFIDENCE_THRESHOLD`, 0.9): `ThresholdPanel` is controlled, and dragging its slider re-sorts Jev's answers in the scene as well. The LLM gives no confidence, so every LLM answer is acted on, and the scene says so. `GameScene` dispatches all 8 animations; the chip scene is gone.
+- New pure helpers in `scene-data.ts` (option labels, yes or no, Jev's probability, check tally, confidence, acted-on rule), unit tested; component tests for the four scenes.
+- Verified like Step-33: games e2e 37/37 on a production build (8 games x desktop and phone x light and dark, no horizontal scroll, screenshots in `e2e/screenshots/`, and the slider moving the scene), lint, typecheck, format, env, secrets, standards, 754 Vitest plus node:test, RLS, build.

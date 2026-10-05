@@ -128,3 +128,83 @@ export function knotPosition(jevCorrect: number, llmCorrect: number, itemsTotal:
 	const position = CENTER - lead * CENTER
 	return Math.max(KNOT_MARGIN, Math.min(PERCENT - KNOT_MARGIN, position))
 }
+
+/** The option keys of a Choice task, in the order the task lists them. */
+export function choiceOptions(task: Task): string[] {
+	const question = 'questions' in task.jev ? task.jev.questions[ANSWER_KEY] : undefined
+	return question?.type === QUESTION_KINDS.choice ? Object.keys(question.criteria) : []
+}
+
+const ACRONYM_MAX_LENGTH = 2
+
+/** An option key as words: door_lock becomes "Door lock", and a short key such as tv becomes "TV". */
+export function optionLabel(key: string): string {
+	const words = key.replaceAll('_', ' ')
+	if (words.length <= ACRONYM_MAX_LENGTH) return words.toUpperCase()
+	return words.charAt(0).toUpperCase() + words.slice(1)
+}
+
+function jevAnswer(result: ItemResult) {
+	const answers = jevAnswersSchema.safeParse(result.parsed)
+	return result.ok && answers.success ? answers.data[ANSWER_KEY] : undefined
+}
+
+/** Jev's probability of yes (Noul); null for the LLM or an answer that did not parse. */
+export function noulOf(racer: Racer, result: ItemResult): number | null {
+	if (racer !== RACERS.jev) return null
+	const answer = jevAnswer(result)
+	return answer?.type === QUESTION_KINDS.noul ? answer.noul : null
+}
+
+/** A yes or no (Noul): Jev's probability against the same bar the scorer uses, or the LLM's boolean; null when unparsed (R44). */
+export function yesOf(racer: Racer, result: ItemResult): boolean | null {
+	if (!result.ok) return null
+	if (racer === RACERS.jev) {
+		const noul = noulOf(racer, result)
+		return noul === null ? null : noul >= NOUL_THRESHOLD
+	}
+	return typeof result.parsed === 'boolean' ? result.parsed : null
+}
+
+export type CheckTally = {
+	// Items whose right answer is no (a bad citation, a pair that is not the same).
+	bad: number
+	// Bad items this racer said no to so far.
+	caught: number
+	// Bad items this racer said yes to, or could not answer, so far.
+	missed: number
+	// Good items this racer said no to so far.
+	falseAlarms: number
+	decided: number
+}
+
+/** The headline numbers of a yes or no game, from the labels and the racer's answers so far. */
+export function checkTally(task: Task, state: RacerState | undefined, racer: Racer): CheckTally {
+	const bad = task.items.filter((item) => item.label === false).length
+	const tally: CheckTally = { bad, caught: 0, missed: 0, falseAlarms: 0, decided: 0 }
+	for (const result of state?.results ?? []) {
+		const item = task.items.find((candidate) => candidate.id === result.itemId)
+		if (!item) continue
+		tally.decided += 1
+		const said = yesOf(racer, result)
+		if (item.label === false) {
+			if (said === false) tally.caught += 1
+			else tally.missed += 1
+		} else if (said === false) {
+			tally.falseAlarms += 1
+		}
+	}
+	return tally
+}
+
+/** Jev's confidence in the option it picked (Choice); null for the LLM, which gives none. */
+export function confidenceOf(racer: Racer, result: ItemResult): number | null {
+	if (racer !== RACERS.jev) return null
+	const answer = jevAnswer(result)
+	return answer?.type === QUESTION_KINDS.choice ? answer.confidence : null
+}
+
+/** The machine acts on an answer at or above the threshold (the rule of runner/threshold.ts); an answer with no confidence is always acted on. */
+export function actedOn(confidence: number | null, threshold: number): boolean {
+	return confidence === null || confidence >= threshold
+}

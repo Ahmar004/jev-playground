@@ -113,6 +113,8 @@ test('the four P1 games play and write Leaderboard entries; Confidence Catch has
 	const panel = page.getByRole('region', { name: 'Set the confidence threshold' })
 	await expect(panel).toBeVisible()
 	await panel.getByRole('slider').fill('0')
+	// The scene above re-sorts with the slider: nothing is sent to a person at 0%.
+	await expect(page.getByText(/0 sent to a person/).first()).toBeVisible()
 	await expect(panel.getByText('Sent to a person').locator('..')).toContainText('0 of 20')
 	await panel.getByRole('slider').fill('100')
 	await expect(panel.getByText('Acted on, wrong').locator('..')).toContainText('0 of 20')
@@ -123,15 +125,19 @@ test('the four P1 games play and write Leaderboard entries; Confidence Catch has
 	}
 })
 
-// Each P0 game draws its own scene from the finished race (ROADMAP Step-33).
-const P0_SCENES = [
+// Each game draws its own scene from the finished race (ROADMAP Steps 33 and 34).
+const GAME_SCENES = [
 	{ slug: 'guardrail-gauntlet', title: 'Guardrail Gauntlet', text: /Threats stopped \d+ of \d+/ },
 	{ slug: 'needle-hunt', title: 'Needle Hunt', text: /picked \d+ lines/ },
 	{ slug: 'number-crunch', title: 'Number Crunch Showdown', text: /\d+ of 12 hit points/ },
-	{ slug: 'review-tug-of-war', title: 'Review Tug-of-War', text: /\d+ pulls/ }
+	{ slug: 'review-tug-of-war', title: 'Review Tug-of-War', text: /\d+ pulls/ },
+	{ slug: 'smart-home-dash', title: 'Smart Home Dash', text: /commands reached the right device/ },
+	{ slug: 'twin-finder', title: 'Twin Finder', text: /Different pairs caught \d+ of \d+/ },
+	{ slug: 'confidence-catch', title: 'Confidence Catch', text: /\d+ acted on, \d+ of them wrong/ },
+	{ slug: 'citation-cop', title: 'Citation Cop', text: /Bad citations flagged \d+ of \d+/ }
 ]
 
-for (const scene of P0_SCENES) {
+for (const scene of GAME_SCENES) {
 	for (const [size, viewport] of Object.entries(VIEWPORTS)) {
 		for (const scheme of COLOR_SCHEMES) {
 			test(`${scene.slug} scene at ${size} width in ${scheme}`, async ({ page }) => {

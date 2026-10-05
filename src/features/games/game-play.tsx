@@ -10,7 +10,7 @@ import { defaultOpponentId, raceLineup } from '@/features/levels/lineup'
 import { useMode } from '@/features/mode/mode-context'
 import { OpponentPicker } from '@/features/race/opponent-picker'
 import { RaceStage, type RaceResult } from '@/features/race/race-stage'
-import { GAME_ANIMATIONS, MODES } from '@/lib/constants'
+import { DEFAULT_CONFIDENCE_THRESHOLD, GAME_ANIMATIONS, MODES } from '@/lib/constants'
 import { gameRunInput } from './game-run'
 import { GameScene } from './game-scene'
 import { GameSummary } from './game-summary'
@@ -35,6 +35,7 @@ export function GamePlay({
 	const { jev, opponents } = raceLineup(recordings)
 	const [opponentId, setOpponentId] = useState(() => defaultOpponentId(opponents))
 	const [results, setResults] = useState<RaceResult[] | null>(null)
+	const [threshold, setThreshold] = useState(DEFAULT_CONFIDENCE_THRESHOLD)
 	const { record } = useRecordGameRun()
 	const code = useCodeRun(task, results !== null)
 
@@ -44,7 +45,7 @@ export function GamePlay({
 		if (input) record(input)
 	}
 	const scene = (perRacer: Parameters<typeof GameScene>[0]['perRacer']) => (
-		<GameScene game={game} task={task} perRacer={perRacer} />
+		<GameScene game={game} task={task} perRacer={perRacer} threshold={threshold} />
 	)
 	const opponent = opponents.find((recording) => recording.modelId === opponentId)
 	const stage: LevelStage = { task, title: game.title, judged: true, jev, opponents }
@@ -91,7 +92,7 @@ export function GamePlay({
 				/>
 			)}
 			{results && mode === MODES.beginner && game.animation === GAME_ANIMATIONS.fall && (
-				<ThresholdPanel jev={jev} />
+				<ThresholdPanel jev={jev} threshold={threshold} onThresholdChange={setThreshold} />
 			)}
 			{results && <GameSummary game={game} results={results} code={code} />}
 		</div>

@@ -1,19 +1,25 @@
 'use client'
 
-import { useId, useState } from 'react'
+import { useId } from 'react'
 import { Card } from '@/components/ui/card'
 import type { Recording } from '@/content/recording-schema'
 import { jevChoicePoints, splitByThreshold } from '@/runner/threshold'
 
 const PERCENT = 100
-const DEFAULT_THRESHOLD = 0.9
 
 /**
- * Confidence Catch's slider: re-sorts Jev's recorded answers by confidence.
- * It runs nothing new, so it is an honest view of the recording.
+ * Confidence Catch's slider: re-sorts Jev's recorded answers by confidence, here and in the scene
+ * above (the threshold is held by the game). It runs nothing new, so it is an honest view of the recording.
  */
-export function ThresholdPanel({ jev }: { jev: Recording }) {
-	const [threshold, setThreshold] = useState(DEFAULT_THRESHOLD)
+export function ThresholdPanel({
+	jev,
+	threshold,
+	onThresholdChange
+}: {
+	jev: Recording
+	threshold: number
+	onThresholdChange: (threshold: number) => void
+}) {
 	const sliderId = useId()
 	const points = jevChoicePoints(jev)
 	const split = splitByThreshold(points, threshold)
@@ -42,7 +48,7 @@ export function ThresholdPanel({ jev }: { jev: Recording }) {
 					max={PERCENT}
 					step={1}
 					value={Math.round(threshold * PERCENT)}
-					onChange={(event) => setThreshold(Number(event.target.value) / PERCENT)}
+					onChange={(event) => onThresholdChange(Number(event.target.value) / PERCENT)}
 					className="accent-accent w-full"
 				/>
 			</div>
