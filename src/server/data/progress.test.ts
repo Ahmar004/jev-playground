@@ -11,7 +11,7 @@ const fake = vi.hoisted(() => ({
 }))
 vi.mock('@/server/db/client', () => ({ db: fake }))
 
-const { getLevelProgress, getProgressSummary } = await import('./progress')
+const { getLevelProgress, getProgressCounts, getProgressSummary } = await import('./progress')
 
 beforeEach(() => {
 	vi.clearAllMocks()
@@ -55,6 +55,31 @@ describe('getProgressSummary', () => {
 		fake.xpEvent.aggregate.mockResolvedValue({ _sum: { xp: null } })
 		fake.userBadge.findMany.mockResolvedValue([])
 		expect((await getProgressSummary(USER_ID)).xp).toBe(0)
+	})
+})
+
+describe('getProgressCounts', () => {
+	it('is what the header shows, from one query on the level rows and nothing else', async () => {
+		fake.levelProgress.findMany.mockResolvedValue([
+			{ levelId: 'speed-race', status: LEVEL_STATUS.done },
+			{ levelId: 'ghost', status: LEVEL_STATUS.done },
+			{ levelId: 'write-me-a-poem', status: LEVEL_STATUS.inProgress }
+		])
+		expect(await getProgressCounts(USER_ID)).toEqual({ doneCount: 1, levelCount: LEVELS.size })
+		expect(fake.levelProgress.findMany).toHaveBeenCalledTimes(1)
+		expect(fake.xpEvent.aggregate).not.toHaveBeenCalled()
+		expect(fake.userBadge.findMany).not.toHaveBeenCalled()
+	})
+
+	it('agrees with the summary for the same rows', async () => {
+		fake.levelProgress.findMany.mockResolvedValue([
+			{ levelId: 'speed-race', status: LEVEL_STATUS.done }
+		])
+		fake.xpEvent.aggregate.mockResolvedValue({ _sum: { xp: 0 } })
+		fake.userBadge.findMany.mockResolvedValue([])
+		const counts = await getProgressCounts(USER_ID)
+		const summary = await getProgressSummary(USER_ID)
+		expect(counts).toEqual({ doneCount: summary.doneCount, levelCount: summary.levelCount })
 	})
 })
 

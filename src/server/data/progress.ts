@@ -20,20 +20,42 @@ export type ProgressSummary = {
 	badges: BadgeId[]
 }
 
-/** Per-user, never cached across requests (cache() only dedupes within one): statuses of built levels, total XP and badges. */
-export const getProgressSummary = cache(async (userId: string): Promise<ProgressSummary> => {
-	const [rows, xpSum, badgeRows] = await Promise.all([
-		db.levelProgress.findMany({ where: { userId }, select: { levelId: true, status: true } }),
-		db.xpEvent.aggregate({ where: { userId }, _sum: { xp: true } }),
-		db.userBadge.findMany({ where: { userId }, select: { badgeId: true } })
-	])
+// The one read of a user's level rows. Both the header and a page's summary use it,
+// and cache() makes them share a single query within a request (R75).
+const getLevelStatuses = cache(async (userId: string): Promise<Record<string, LevelStatus>> => {
+	const rows = await db.levelProgress.findMany({
+		where: { userId },
+		select: { levelId: true, status: true }
+	})
 	const statuses: Record<string, LevelStatus> = {}
 	for (const row of rows) {
 		if (LEVELS.has(row.levelId) && isLevelStatus(row.status)) statuses[row.levelId] = row.status
 	}
+	return statuses
+})
+
+function countDone(statuses: Record<string, LevelStatus>): number {
+	return Object.values(statuses).filter((status) => status === LEVEL_STATUS.done).length
+}
+
+/** The header's "n of 8 levels": one query, shared with the summary when a page needs both. */
+export const getProgressCounts = cache(
+	async (userId: string): Promise<{ doneCount: number; levelCount: number }> => ({
+		doneCount: countDone(await getLevelStatuses(userId)),
+		levelCount: LEVELS.size
+	})
+)
+
+/** Per-user, never cached across requests (cache() only dedupes within one): statuses of built levels, total XP and badges. */
+export const getProgressSummary = cache(async (userId: string): Promise<ProgressSummary> => {
+	const [statuses, xpSum, badgeRows] = await Promise.all([
+		getLevelStatuses(userId),
+		db.xpEvent.aggregate({ where: { userId }, _sum: { xp: true } }),
+		db.userBadge.findMany({ where: { userId }, select: { badgeId: true } })
+	])
 	return {
 		statuses,
-		doneCount: Object.values(statuses).filter((status) => status === LEVEL_STATUS.done).length,
+		doneCount: countDone(statuses),
 		levelCount: LEVELS.size,
 		xp: xpSum._sum.xp ?? 0,
 		badges: badgeRows.flatMap((row): BadgeId[] => (isBadgeId(row.badgeId) ? [row.badgeId] : []))

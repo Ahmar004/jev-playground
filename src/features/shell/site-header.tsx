@@ -5,7 +5,7 @@ import { ModeSwitch } from '@/features/mode/mode-switch'
 import { ProgressBar } from '@/features/progress/progress-bar'
 import { ROUTES } from '@/lib/links'
 import { getSession } from '@/server/auth/session'
-import { getProgressSummary } from '@/server/data/progress'
+import { getProgressCounts } from '@/server/data/progress'
 import { AccountMenu } from './account-menu'
 import { HeaderNav } from './header-nav'
 import { SideNav } from './side-nav'
@@ -61,6 +61,6 @@ async function SignedInAccount() {
 async function HeaderProgress() {
 	const session = await getSession()
 	if (!session) return null
-	const { doneCount, levelCount } = await getProgressSummary(session.userId)
+	const { doneCount, levelCount } = await getProgressCounts(session.userId)
 	return <ProgressBar done={doneCount} total={levelCount} />
 }

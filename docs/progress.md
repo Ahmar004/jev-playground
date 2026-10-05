@@ -6,7 +6,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.46 left (Step-15's live check spent about $0.011), and recordings so far cost $0.49.
 
-**Built (Steps 0-16 and 18-23; 17 is blocked):**
+**Built (Steps 0-16 and 18-24; 17 is blocked):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
@@ -22,7 +22,6 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 - Promotional prices end: gpt-5.6-sol on 2026-11-21, gemini-3.6/3.7/3.8-flash on 2026-12-31. After that those models show "price unknown" until someone rechecks the pricing pages and updates `content/prices.json`.
 - Jev through an OpenRouter key isn't built (Step-17 is blocked on the owner's OpenRouter key; see its entry below).
 - No real-key test for OpenAI, Google or OpenRouter (Step-16 skipped them: no keys). Level 8's live trick was checked live in Step-20.
-- The header runs 3+ queries a page.
 - No accessibility or Lighthouse audit has been run.
 - No production Supabase project and no Vercel deploy yet.
 - No password reset (it needs a domain, and none is bought).
@@ -30,7 +29,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-24 (fewer database calls per page). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
+**Next:** Step-25 (rerun the local load test; needs an idle PC and k6). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -830,3 +829,9 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Dark screenshots were light because next-themes ignores the emulated color scheme. `setColorScheme(page, scheme)` sets the `theme` local storage key through an init script (and still emulates), and `captureScheme(page, scheme, options)` asserts the html class, waits 1.5 s for the rise-in animation, then screenshots. Every scheme-looped screenshot in the specs uses them; a spot check of `home-desktop-dark.png` shows the dark theme. The theme-switch test keeps plain emulation because it reloads and expects its own choice to stick.
 - Full suite on the production build: all green (shell 12/12 after fixing that one test; the rest 70/70), no 429 in the log. Gates: lint, typecheck, format, e2e only (no app code changed).
 - Note for later: `next.config.ts` prints a Sentry deprecation ("import `withSentryConfig` from `@sentry/nextjs/config`, v11 stops supporting the old path"). Not urgent; fix it when Sentry 11 is adopted.
+
+## Step-24 - fewer database calls per page (2026-10-05) - done
+
+- The header showed "n of 8 levels" by running the whole progress summary (levels, XP sum, badges: 3 queries) on every signed-in page, and Home, Path and Profile then ran the level query again. `src/server/data/progress.ts` now has one request-cached read of the level rows (`getLevelStatuses`); the header uses a new `getProgressCounts` (that read only: 1 query), and `getProgressSummary` builds on the same read. Result: pages that only show the header go from 3 progress queries to 1, and Home, Path and Profile go from 3 + 3 to 3 in total (the shared read is deduped by React `cache()` within a request). The summary's output is unchanged.
+- Tests: two new cases in `progress.test.ts` (exactly one query and no XP or badge query for the header counts; same numbers as the summary). Production build (separate dir) plus 28 e2e (progress, level 1, shell) show the header counter still updates after finishing a level. No load test, as the step says; Step-25 measures it.
+- Left alone on purpose: the other per-page reads (a level's progress, quizzes, profile data) each serve one page and are already parallel.
