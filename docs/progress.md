@@ -6,7 +6,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.46 left (Step-15's live check spent about $0.011), and recordings so far cost $0.49.
 
-**Built (Steps 0-16 and 18-26; 17 is blocked):**
+**Built (Steps 0-16 and 18-27; 17 is blocked):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
@@ -22,14 +22,14 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 - Promotional prices end: gpt-5.6-sol on 2026-11-21, gemini-3.6/3.7/3.8-flash on 2026-12-31. After that those models show "price unknown" until someone rechecks the pricing pages and updates `content/prices.json`.
 - Jev through an OpenRouter key isn't built (Step-17 is blocked on the owner's OpenRouter key; see its entry below).
 - No real-key test for OpenAI, Google or OpenRouter (Step-16 skipped them: no keys). Level 8's live trick was checked live in Step-20.
-- No Lighthouse audit has been run yet (Step-27).
+- Lighthouse mobile: LCP is 4.2 to 4.4 s on four pages and 6.6 s on a Level (simulated slow phone); the real page is fast (0.4 to 0.8 s here). Getting the simulated LCP under 2 s needs a much smaller initial JavaScript bundle (see Step-27).
 - No production Supabase project and no Vercel deploy yet.
 - No password reset (it needs a domain, and none is bought).
 - The database pool (40 per process) is too large for Vercel, where each function instance opens its own (Step-30).
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-27 (Lighthouse mobile page-load check). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
+**Next:** Step-28 (production Supabase project; needs the owner's Supabase account, see the step). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -846,7 +846,16 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 
 ## Step-26 - accessibility audit (2026-10-05) - done
 
-- Added `@axe-core/playwright` (dev dependency; ROADMAP names axe, so it is added and recorded in TECH-STACK.md). `e2e/a11y.spec.ts` runs axe with the WCAG 2.0/2.1 A and AA rule sets over 45 pages and states: the sign-in page (both tabs), Home, Path, all 8 levels (and level 1's Predict, Play, Reveal and Check steps), Games and all 8 games, Leaderboard, Arena (plus a preset and batch mode), Sandbox, both quizzes and the Quizzes list, Profile, Glossary, Methodology, Privacy, and Home with the Keys panel open. It runs in light and dark at desktop and phone width (4 tests), after the 1.5 s rise-in, with the theme really applied (Step-23), against the production build.
+- Added `@axe-core/playwright` (dev dependency; ROADMAP names axe, so it is added and recorded in TECH-STACK.md). `e2e/a11y.spec.ts` runs axe with the WCAG 2.0/2.1 A and AA rule sets over 38 pages and states: the sign-in page (both tabs), Home, Path, all 8 levels (and level 1's Predict, Play, Reveal and Check steps), Games and all 8 games, Leaderboard, Arena (plus a preset and batch mode), Sandbox, both quizzes and the Quizzes list, Profile, Glossary, Methodology, Privacy, and Home with the Keys panel open. It runs in light and dark at desktop and phone width (4 tests), after the 1.5 s rise-in, with the theme really applied (Step-23), against the production build.
 - First run: one kind of violation, `scrollable-region-focusable` (serious): a box that scrolls sideways or down (the Sandbox code block, the Methodology tables, the level 1 Reveal scoreboard) cannot be reached by keyboard. Fix: a small `ScrollRegion` (`src/components/ui/scroll-region.tsx`: focusable, labelled region, focus ring), used at all 9 scrollable boxes in the app, not only the 3 that failed (a long answer or a narrower window would have tripped the others). Second run: 0 violations in all 4 combinations. Colour contrast is part of axe's rules, so it was checked in both themes.
 - Not covered by axe, so not claimed: pages in states a test did not reach (a finished race result, an open share dialog, a Developer mode failure alert), the shared result page `/s/<id>`, focus order and screen reader wording by ear, and reduced-motion behaviour. A manual pass on those is still worth doing before launch.
 - Tests: `scroll-region.test.tsx`, plus the audit itself. Gates: lint, typecheck, format, secrets, 686 Vitest plus node:test, production build (separate dir), axe 4/4.
+
+## Step-27 - Lighthouse mobile page-load check (2026-10-05) - done, target not fully met
+
+- Lighthouse (latest, via `pnpm dlx`, nothing added to the project) in its default mobile profile (a slow phone on slow 4G, 4x CPU slowdown), performance category, signed in with a load-test session, against the production build on port 3100. One run per page, simulated metrics. Pages: Home, level 1 (`/levels/speed-race`), a VS game (`/games/twin-finder`), Arena, Sandbox.
+- Before -> after, LCP (largest contentful paint): Home 6.9 -> 4.2 s, level 7.3 -> 6.6 s, game 6.6 -> 4.3 s, Arena 4.9 -> 4.4 s, Sandbox 5.8 -> 4.4 s. Performance score: Home 60 -> 80, level 69 -> 68, game 67 -> 76, Arena 73 -> 75, Sandbox 70 -> 75. FCP is about 0.9 s everywhere, TBT 300 to 400 ms, CLS 0 (level 0.023).
+- **R79 (under 2 s on a phone) is met on the real page but not in Lighthouse's slow-phone model.** In the same runs the unthrottled trace shows FCP 0.37 to 0.50 s and LCP 0.37 to 0.84 s on this PC. The model's 4.2 to 6.6 s is mostly downloading and running about 650 to 800 KB of JavaScript on a slow 4G link; no single fix gets it under 2 s, only a much smaller initial bundle does.
+- The three causes fixed: (1) the page-enter `rise` animation faded text in from opacity 0, which delayed the LCP paint by the animation's length (about 0.6 s observed); it now slides up without fading (`globals.css`). (2) PostHog loaded a 33 KB surveys script on every page; `disable_surveys: true`. (3) The Sentry browser SDK (117 KB gzipped, about 600 ms of main-thread time under throttling) loaded before the page was usable; `src/lib/observability/sentry-client.ts` now loads and starts it when the browser is idle, and errors reported before it is ready wait behind the same promise (`captureClientError` and `onRouterTransitionStart` use `reportToSentry`; 5 tests). The trade-off: an error in the first second or two, before the SDK starts, is not reported. A first try at (3) alone changed nothing, because the animation kept LCP late enough for the idle load to count against it; the two together gave the gain.
+- Still open, in order of size: the initial bundle still carries PostHog (97 KB gz; `posthog-js` is imported statically in 6 files, so deferring it means a loader like the Sentry one), Zod (64 KB gz, shared by every page; probably through the Keys panel and provider modules) and Motion and Radix; and the level page's intro text waits for the per-user Suspense (session plus progress query), so it cannot paint with the static shell (render delay about 0.8 s), which needs the Learn step's text moved into the static part of `LevelStepper`. These are the next levers if the number matters before launch; on Vercel the CDN, compression and no localhost round trip also change the picture, so Step-32 should repeat this check on the live URL.
+- Gates: lint, typecheck, format, 691 Vitest plus node:test, production build (separate dir), e2e 31/31 (axe on both themes and widths, shell, level 1, sandbox) on the new build.

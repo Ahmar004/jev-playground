@@ -1,7 +1,7 @@
-import * as Sentry from '@sentry/nextjs'
 import posthog from 'posthog-js'
 import { errorType, normalizeError, type NormalizedError } from '@/lib/errors/normalize-error'
 import { ANALYTICS_EVENTS } from '@/lib/analytics/events'
+import { reportToSentry } from '@/lib/observability/sentry-client'
 
 // Client-side counterpart to capture-error.ts — same job, but posthog-js
 // instead of posthog-node so this never pulls server-only code into the
@@ -15,7 +15,7 @@ export function captureClientError(
 	const normalized = normalizeError(error)
 
 	if (!normalized.isExpected) {
-		Sentry.captureException(error, { extra: context })
+		reportToSentry((sentry) => sentry.captureException(error, { extra: context }))
 	}
 
 	try {

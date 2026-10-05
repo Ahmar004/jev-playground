@@ -33,9 +33,11 @@
 	--animate-drift:
 		drift 14s ease-in-out infinite alternate, hue-pulse 7s ease-in-out infinite alternate;
 
+	/* Slides up without fading: text that starts at opacity 0 is not painted, so
+	   a fade delayed the largest contentful paint by the animation's length
+	   (Lighthouse, ROADMAP Step-27). */
 	@keyframes rise {
 		from {
-			opacity: 0;
 			transform: translateY(14px);
 		}
 	}
