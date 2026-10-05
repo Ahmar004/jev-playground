@@ -6,7 +6,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.46 left (Step-15's live check spent about $0.011), and recordings so far cost $0.49.
 
-**Built (Steps 0-16, 18 and 19; 17 is blocked):**
+**Built (Steps 0-16 and 18-20; 17 is blocked):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
@@ -21,7 +21,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 - Promotional prices end: gpt-5.6-sol on 2026-11-21, gemini-3.6/3.7/3.8-flash on 2026-12-31. After that those models show "price unknown" until someone rechecks the pricing pages and updates `content/prices.json`.
 - Jev through an OpenRouter key isn't built (Step-17 is blocked on the owner's OpenRouter key; see its entry below).
-- No real-key test for OpenAI, Google or OpenRouter (Step-16 skipped them: no keys), and none for level 8's live trick. Run these when a key or the owner is available.
+- No real-key test for OpenAI, Google or OpenRouter (Step-16 skipped them: no keys). Level 8's live trick was checked live in Step-20.
 - No account deletion and no Privacy page.
 - CI is off.
 - e2e dark screenshots render light.
@@ -33,7 +33,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-20 (security review). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
+**Next:** Step-21 (account deletion and Privacy page). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -798,3 +798,14 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Tests: `rate-limit.test.ts`, `client-ip.test.ts`, new cases in the `/api/jev` route test, `auth.test.ts` and `use-auth-form.test.ts`; e2e `shell.spec.ts` (limit plus toast). Gates: lint, typecheck, format:check, check:secrets, check:env, check:standards (24), 662 Vitest plus node:test, shell and developer-mode e2e 20/20 against `next dev -p 3100`. No production build (see Step-18: the owner's `pnpm start` serves the keyed tab).
 - For Step-21's Privacy page: counters hold hashed user ids, emails and IPs for at most a day.
 - Left alone: `error-copy.ts` now says "Too many requests were sent to <provider>" because the same 429 can come from our limit or the provider's.
+
+## Step-20 - security review (2026-10-05) - done
+
+- The `security-review` skill could not run (it diffs against `origin/HEAD`, which is not set, and reviews a branch diff, not the whole app), so the four ROADMAP items were reviewed by hand.
+- Auth and ownership: all 6 Server Action files call `requireUser()` (sign-in and sign-up are public by design); every `userId` comes from the session, never from input; every page passes `session.userId` to the data functions; the one route, `/api/jev`, needs a session. The shared result page reads by an unguessable id on purpose (R87). No change needed.
+- Dependencies: `pnpm audit --prod` had 3 critical (all Next.js 16.3.0: RCE in the Image optimizer, `next/og` and a Windows case), 10 high, 3 moderate, 1 low. Updated within range: `next` 16.3.8, `posthog-js` 1.435.8, `@sentry/nextjs` 10.76.0. Critical is now 0. The remaining 13 (9 high, 3 moderate, 1 low) are build or CLI tooling that never runs in the app: Prisma's CLI (`mysql2`, `deepmerge-ts`, `fast-uri`), Sentry's build plugins (`fast-uri`, `brace-expansion`) and a low `dompurify` inside posthog-js (needs an `IN_PLACE` option posthog does not use). No `pnpm.overrides` were added: forcing newer majors into those tools risks breaking the build for no runtime gain. Recheck when Prisma 8 and Sentry 11 settle (Prisma 8 is still a release candidate; Sentry 11 is out, a major bump left for later).
+- Headers (`src/lib/csp.ts`, `next.config.ts`): the CSP keeps its `connect-src` allowlist and now adds `frame-ancestors 'none'`, `base-uri 'self'`, `form-action 'self'` and `object-src 'none'` (none needs a nonce); every response also gets HSTS (2 years), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin` and a `Permissions-Policy` turning off camera, microphone and geolocation. Script and style sources stay unrestricted on purpose (Next inlines scripts; a nonce CSP would make every page dynamic). Checked on a real response with curl, and the suites below pass with the stricter policy.
+- Key-leak recheck (Rule-8): keys are only in the Keys React context; the only browser-storage use is an analytics dedupe marker and a chunk-reload timestamp; Google keys go in a header; key inputs are `type="password"` with `ph-no-capture`; PostHog replay masks all inputs; the Sentry scrub and the logger redaction (with their tests) are unchanged; the rate-limit table stores only hashes. No change needed.
+- Real-key check done on the way, in the owner's keyed tab (old 09:08 build, Developer mode): the level 8 live trick sent a real message to Jev, which answered "Jev saw through it", labelled "Developer mode - run 10:21 - jev-1.13.0", with no console errors. That closes the gap Step-15 left.
+- Tooling: `NEXT_DIST_DIR` (default `.next`) lets a build go to its own folder, so a verification build does not replace the one a running `pnpm start` serves; `.next-*` is ignored by git and ESLint, and CLAUDE.md "Known pitfalls" says how to use it.
+- Gates: lint, typecheck, format:check, check:secrets, check:standards, Vitest plus node:test, a production build of Next 16.3.8, and the full e2e suite 74/74 on that build (then 32/32 of shell, sandbox, arena and developer-mode again after the headers change). The owner's `pnpm start` on port 3000 was not rebuilt, so the keyed tab still runs the old build; it should be restarted from a fresh build when the keyed tab is no longer needed.

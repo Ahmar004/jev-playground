@@ -36,3 +36,34 @@ export function connectSrc({
 	]
 	return `connect-src ${[...new Set(hosts)].join(' ')}`
 }
+
+// Directives that cannot break Next.js's inline scripts, so they need no nonce:
+// nobody may frame the app, and nothing may change the base URL, post a form
+// off-site or load a plugin. Script and style sources stay open on purpose.
+const HARDENING_DIRECTIVES = [
+	"frame-ancestors 'none'",
+	"base-uri 'self'",
+	"form-action 'self'",
+	"object-src 'none'"
+]
+
+/** The whole Content-Security-Policy header value. */
+export function contentSecurityPolicy(options: Parameters<typeof connectSrc>[0]): string {
+	return [connectSrc(options), ...HARDENING_DIRECTIVES].join('; ')
+}
+
+const HSTS_TWO_YEARS_SECONDS = 63072000
+
+// Sent on every response (ROADMAP Step-20). Browsers ignore HSTS over plain
+// http, so localhost is unaffected. The referrer policy keeps a shared result's
+// URL from leaking to the provider pages the app links to.
+export const SECURITY_HEADERS = [
+	{
+		key: 'Strict-Transport-Security',
+		value: `max-age=${HSTS_TWO_YEARS_SECONDS}; includeSubDomains`
+	},
+	{ key: 'X-Content-Type-Options', value: 'nosniff' },
+	{ key: 'X-Frame-Options', value: 'DENY' },
+	{ key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+	{ key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' }
+]

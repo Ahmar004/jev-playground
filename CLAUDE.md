@@ -120,8 +120,10 @@ These restate spec rules that code can break silently. The spec section holds th
 Each of these cost a past session time; `docs/progress.md` has the details.
 
 - The dev server can hit a Turbopack panic (exit 0xc0000142) on this machine, so run e2e against a production build: `corepack pnpm build`, `corepack pnpm start`, then e2e with `E2E_BASE_URL`. A `pnpm start` server serves the last build, so UI changes need a rebuild first.
+- To verify without disturbing a `pnpm start` that must keep running (ROADMAP Rule-XYZ keyed tab), build into another folder: `NEXT_DIST_DIR=.next-verify corepack pnpm build`, serve it with `NEXT_DIST_DIR=.next-verify corepack pnpm exec next start -p 3100`, and run e2e with `E2E_BASE_URL=http://localhost:3100`. Next then adds `.next-verify` paths to `tsconfig.json`; revert that with `git checkout tsconfig.json`. `next dev -p 3100` also coexists with `next start` (Next 16 keeps dev output in `.next/dev`).
 - Stop `pnpm start` before `build`, because the build replaces `.next` under the running server. Stopping `pnpm dev` through `TaskStop` leaves node on port 3000, so free the port (`Get-NetTCPConnection -LocalPort 3000`) before starting another server.
 - A level page that renders blank in dev usually means a crashed static-params worker: restart `pnpm dev`.
+- Localhost has an IP: the dev and local production servers send `x-forwarded-for: ::1`. `clientIp` ignores loopback addresses on purpose, so IP rate limits never hit local runs or e2e; the per-email sign-in limit (10 per 15 min) still does.
 - Supabase rate-limits sign-ins, so a full e2e run can fail on `toHaveURL('/')` in a cluster. Wait a minute and rerun.
 - Run `corepack pnpm exec next typegen` after adding a route if `PageProps<...>` types fail in typecheck.
 - Python `open(..., 'w')` writes CRLF on Windows; pass `newline=''` when a script edits files.

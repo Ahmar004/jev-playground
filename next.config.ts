@@ -1,8 +1,11 @@
 import type { NextConfig } from 'next'
 import { withSentryConfig } from '@sentry/nextjs'
-import { connectSrc } from './src/lib/csp'
+import { contentSecurityPolicy, SECURITY_HEADERS } from './src/lib/csp'
 
 const nextConfig: NextConfig = {
+	// A second build can go to its own folder (NEXT_DIST_DIR=.next-verify) so it does
+	// not replace the one a running `next start` is serving. Unset, it is `.next`.
+	distDir: process.env.NEXT_DIST_DIR ?? '.next',
 	reactStrictMode: true,
 	// Next.js 16 Cache Components: nothing is cached unless code opts in with
 	// 'use cache', and a page can mix a prerendered shell with per-request
@@ -21,13 +24,16 @@ const nextConfig: NextConfig = {
 	},
 	// A key can only be sent to the hosts in connect-src (DESIGN 5.4, Rule-8).
 	async headers() {
-		const policy = connectSrc({
+		const policy = contentSecurityPolicy({
 			supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
 			posthogHost: process.env.NEXT_PUBLIC_POSTHOG_HOST,
 			development: process.env.NODE_ENV === 'development'
 		})
 		return [
-			{ source: '/:path*', headers: [{ key: 'Content-Security-Policy', value: policy }] },
+			{
+				source: '/:path*',
+				headers: [{ key: 'Content-Security-Policy', value: policy }, ...SECURITY_HEADERS]
+			},
 			// Shared results are not indexed (R87); the page's robots metadata says the same.
 			{ source: '/s/:path*', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] }
 		]
