@@ -12,6 +12,9 @@ const envSchema = z.object({
 	// run) but optional here, or every Vercel deployment would be forced to
 	// configure a variable the deployed app never actually uses.
 	DIRECT_URL: z.string().url().optional(),
+	// Connections one server process may hold (src/server/db/pool-config.ts).
+	// Unset, it is 40 locally and 5 on Vercel, which sets VERCEL itself.
+	DATABASE_POOL_MAX: z.string().optional(),
 
 	// Optional so a landing-page clone (no accounts, see docs/rules/auth.md)
 	// boots without them — proxy.ts and the Supabase clients themselves

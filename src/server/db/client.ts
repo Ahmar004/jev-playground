@@ -1,6 +1,9 @@
 import 'server-only'
 import { PrismaPg } from '@prisma/adapter-pg'
+import { attachDatabasePool } from '@vercel/functions'
+import { Pool } from 'pg'
 import { PrismaClient } from './generated/client'
+import { poolConnectionLimit, poolIdleTimeout } from './pool-config'
 import { databaseSsl } from './tls'
 
 // Re-exported from the one file allowed to import the generated client, so
@@ -9,24 +12,25 @@ import { databaseSsl } from './tls'
 // reaching for the banned import directly. See docs/rules/database.md.
 export { Prisma } from './generated/client'
 
-// Connections per server process. Every signed-in page runs at least 3 queries
-// (the header's progress), and node-pg's default of 10 capped the load test at
-// about 35 pages a second over a 76 ms round trip to the database. The free
-// Supavisor pooler accepts 200 clients, so 40 leaves room for several
-// instances on Vercel plus the CLI (docs/load-test.md).
-const POOL_MAX_CONNECTIONS = 40
-
 function createClient(): PrismaClient {
 	// Prisma 7 connects through a driver adapter. DATABASE_URL is the Supavisor
 	// transaction pooler (port 6543), so serverless functions share a small
 	// pool instead of each opening its own Postgres connections. TLS is
 	// verified against the Supabase CA (src/server/db/tls.ts).
-	const adapter = new PrismaPg({
+	// The pool is built here, not inside the adapter, so Vercel can see it: its
+	// helper closes the idle connections of an instance that is being suspended
+	// (ROADMAP Step-30). The size is in pool-config.ts (40 locally, 5 on Vercel).
+	const pool = new Pool({
 		connectionString: process.env.DATABASE_URL,
 		ssl: databaseSsl(process.env.DATABASE_URL),
-		max: POOL_MAX_CONNECTIONS
+		max: poolConnectionLimit({
+			VERCEL: process.env.VERCEL,
+			DATABASE_POOL_MAX: process.env.DATABASE_POOL_MAX
+		}),
+		idleTimeoutMillis: poolIdleTimeout({ VERCEL: process.env.VERCEL })
 	})
-	return new PrismaClient({ adapter })
+	if (process.env.VERCEL) attachDatabasePool(pool)
+	return new PrismaClient({ adapter: new PrismaPg(pool) })
 }
 
 // Cache the client on globalThis outside production so hot-reload during

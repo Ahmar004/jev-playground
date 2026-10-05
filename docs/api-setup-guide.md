@@ -99,13 +99,13 @@ Don't create tables or users in the SQL editor. Migrations create every table (`
 
 ### Production project (Step-28)
 
-The deployed app uses its own free Supabase project, `jevs-playground-prod`, so the dev project's test users and data never mix with real players. Its values live in `.env.production.local` (gitignored, like every `.env*.local`), never in `.env.local`, and from Step-29 on in Vercel's environment variables.
+The deployed app uses its own free Supabase project, `jevs-playground-prod`, so the dev project's test users and data never mix with real players. Its values live in `.env.prod-values.local` (gitignored, like every `.env*.local`), never in `.env.local`, and from Step-29 on in Vercel's environment variables. **Do not name that file `.env.production.local`**: Next.js loads that name automatically for `next build` and `next start`, so every local production build and server would silently use the production database (this happened once, see `docs/progress.md` Step-30).
 
 1. Create it as in "Create and configure the project" above, with these differences: name `jevs-playground-prod`; region **East US (North Virginia)** (`us-east-1`), the closest to Vercel's default function region `iad1` and to most of the audience, so a page's database round trip stays short; on the form, untick **Enable Data API** (and leave **Enable automatic RLS** unticked), like the dev project. The free plan allows two projects per organization, and this uses the second.
-2. Use **Generate a password** for the database password and copy it at once: Supabase never shows it again, and a lost one is replaced from **Database > Settings > Reset database password**. Keep it only in `.env.production.local`, never in a chat, ticket or commit.
+2. Use **Generate a password** for the database password and copy it at once: Supabase never shows it again, and a lost one is replaced from **Database > Settings > Reset database password**. Keep it only in `.env.prod-values.local`, never in a chat, ticket or commit.
 3. Connection strings: **Connect > Direct**, then the **Session pooler** (port 5432) for `DIRECT_URL` and the **Transaction pooler** (port 6543, `?pgbouncer=true`) for `DATABASE_URL`, built exactly as steps 7 and 8 above. The production host is `aws-0-us-east-1.pooler.supabase.com`, and the user is `postgres.<project-ref>`.
 4. Copy `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and `SUPABASE_SECRET_KEY` from the production project as in steps 9 to 11.
-5. Apply the schema to production only from this machine, with the production values for that command alone (they override `.env.local`: a variable already set wins, see `prisma.config.ts`): load `.env.production.local` into the shell, then run `pnpm exec prisma migrate deploy`, `pnpm db:run-once` and `pnpm check:rls`. Expect 13 migrations applied (all of them at the time of Step-28), "nothing to run" for the run-once file, and "RLS enabled with no policies on all 10 table(s)". The CLI and the scripts verify TLS against the same Supabase CA as the app. Never run `prisma migrate dev` or `reset` against it.
+5. Apply the schema to production only from this machine, with the production values for that command alone (they override `.env.local`: a variable already set wins, see `prisma.config.ts`): load `.env.prod-values.local` into the shell, then run `pnpm exec prisma migrate deploy`, `pnpm db:run-once` and `pnpm check:rls`. Expect 13 migrations applied (all of them at the time of Step-28), "nothing to run" for the run-once file, and "RLS enabled with no policies on all 10 table(s)". The CLI and the scripts verify TLS against the same Supabase CA as the app. Never run `prisma migrate dev` or `reset` against it.
 6. **Authentication > Sign In / Providers > Confirm email must be off**, as on the dev project: without a custom domain there is no email sender of our own, Supabase's built-in sender allows only a few emails an hour, and the app expects a session right after sign-up. New projects start with it on, so switch it off and press **Save changes**. Step-19's rate limits guard sign-ups instead.
 7. In Step-29, add the Vercel URL to **Authentication > URL Configuration** (Site URL and Redirect URLs).
 
@@ -155,3 +155,26 @@ Run these from the repo root:
 2. `corepack pnpm dev`, then open http://localhost:3000. It boots without an "Invalid environment variables" error.
 3. `corepack pnpm check:rls`: connects over verified TLS and prints "RLS enabled with no policies".
 4. Sentry and PostHog are dashboards on their own sites, not pages in our app. After opening http://localhost:3000, PostHog's **Activity** page (us.posthog.com, the project the key belongs to) lists `$pageview` and `app_opened` from `localhost:3000` within a minute or two. Sentry's **Issues** page (sentry.io) lists an error only after the app actually crashes.
+
+## 6. Vercel (hosting, Step-29)
+
+The app is hosted on Vercel's free plan at its `vercel.app` address; no custom domain is bought. The Vercel project is `ahmar9/jev-playground`.
+
+1. Sign in at https://vercel.com with GitHub, **Add New > Project**, import `Ahmar004/jev-playground` and accept the Next.js defaults (pnpm is detected from `pnpm-lock.yaml`; `vercel.json` pins the function region to `iad1`, Washington DC, next to the `us-east-1` production database).
+2. **Settings > Environment Variables**, scope **Production** (and Preview if you want preview deploys to work). Paste each value from `.env.prod-values.local`; mark the secret ones **Sensitive**. Never paste a key into a chat.
+
+   | Variable                                                                        | Value                                                                               | Secret?     |
+   | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------- |
+   | `DATABASE_URL`                                                                  | production transaction pooler string (port 6543, `?pgbouncer=true`)                 | yes         |
+   | `NEXT_PUBLIC_SUPABASE_URL`                                                      | `https://<prod-ref>.supabase.co`                                                    | no (public) |
+   | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`                                          | production publishable key                                                          | no (public) |
+   | `SUPABASE_SECRET_KEY`                                                           | production secret key (used only by Delete my account)                              | yes         |
+   | `NEXT_PUBLIC_APP_URL`                                                           | the deployment's own address, for example `https://jev-playground.vercel.app`       | no          |
+   | `NEXT_PUBLIC_SENTRY_DSN`, `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | from the Sentry and PostHog projects production should report to (sections 2 and 3) | no (public) |
+   | `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN`                             | optional: only for uploading source maps at build time                              | token: yes  |
+
+   Do not add `DIRECT_URL`, `PROD_DB_PASSWORD`, `TYPESAFE_API_KEY` or `ANTHROPIC_API_KEY`: migrations run from your PC, and the recording keys are for the local CLI only (section 4). `NEXT_PUBLIC_*` values are baked into the build, so change one and redeploy.
+
+3. Press **Deploy**. Every push to `main` then deploys to production; check that the build is green in the Deployments tab.
+4. In the production Supabase project, **Authentication > URL Configuration**: set **Site URL** to the deployment address and add `https://<address>/**` to **Redirect URLs**.
+5. Open the address and sign up with a throwaway email. A new account must land on Home straight away (that is what **Confirm email off** in section 1 is for).
