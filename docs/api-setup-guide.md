@@ -122,7 +122,8 @@ Free Developer plan.
 5. **`SENTRY_PROJECT`:** put the project slug on the `SENTRY_PROJECT` line.
    Result: `SENTRY_PROJECT="jevs-playground"`
 6. **`SENTRY_AUTH_TOKEN`:** leave it as `SENTRY_AUTH_TOKEN=""`. It only uploads source maps at build time; set it at the Vercel launch (**Settings > Auth Tokens**).
-7. Recommended: open **Settings > Projects > jevs-playground > Security & Privacy** and keep **Data Scrubber** and **Use Default Scrubbers** on. The app already strips key headers before sending (DESIGN 12); this is a second layer.
+7. Production project (Step-29): so local runs and real visitors do not mix, create a second project in the same organization named `jevs-playground-prod`. Open `https://<your-org-slug>.sentry.io/projects/new/` directly (the left-sidebar **Projects** page can hide the button), pick **Next.js**, name it, leave **Team** as it is and click **Create project**. Then take its DSN as in step 3 and put it only in Vercel's `NEXT_PUBLIC_SENTRY_DSN` (**Settings > Environment Variables**, Production), then redeploy; `.env.local` keeps the development project's DSN. `SENTRY_ORG`, `SENTRY_PROJECT` and `SENTRY_AUTH_TOKEN` stay unset on Vercel because they only upload source maps.
+8. Recommended: open **Settings > Projects > jevs-playground > Security & Privacy** and keep **Data Scrubber** and **Use Default Scrubbers** on. The app already strips key headers before sending (DESIGN 12); this is a second layer.
 
 ## 3. PostHog (product analytics)
 
@@ -137,13 +138,14 @@ Free plan, US Cloud.
 
 ## 4. Recording keys (owner only)
 
-These two keys are for the recording CLI (`corepack pnpm record`) and nothing else. The app never reads them, and they never go to Vercel.
+The first two keys are for the recording CLI (`corepack pnpm record`) and the third is for Step-17's one real request. The app never reads them, and they never go to Vercel.
 
 1. **`TYPESAFE_API_KEY`:** create it in the TypeSafe dashboard, as described at docs.typesafe.ai. It lets the CLI call Jev.
 2. **`ANTHROPIC_API_KEY`:** create it at https://platform.claude.com/settings/keys. It lets the CLI call Claude Opus 5.5, Sonnet 5.5 and Haiku 4.5.
-3. Paste them into `.env.local` as `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY`.
-4. Run `corepack pnpm record --dry-run` first. It prints the estimated cost and spends nothing.
-5. When recording is done, delete both values from `.env.local` (spec R22).
+3. **`OPENROUTER_API_KEY`:** create it at https://openrouter.ai/settings/keys. Step-17 uses it for one real request to see how Jev answers through OpenRouter. Set a small credit limit on the key.
+4. Paste them into `.env.local` as `TYPESAFE_API_KEY`, `ANTHROPIC_API_KEY` and `OPENROUTER_API_KEY`.
+5. Run `corepack pnpm record --dry-run` first. It prints the estimated cost and spends nothing.
+6. When recording and Step-17 are done, delete these values from `.env.local` (spec R22).
 
 Never paste a key into a chat: `.claude-logs/` commits every prompt.
 
@@ -173,7 +175,7 @@ The app is hosted on Vercel's free plan at its `vercel.app` address; no custom d
    | `NEXT_PUBLIC_SENTRY_DSN`, `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | from the Sentry and PostHog projects production should report to (sections 2 and 3) | no (public) |
    | `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN`                             | optional: only for uploading source maps at build time                              | token: yes  |
 
-   Do not add `DIRECT_URL`, `PROD_DB_PASSWORD`, `TYPESAFE_API_KEY` or `ANTHROPIC_API_KEY`: migrations run from your PC, and the recording keys are for the local CLI only (section 4). `NEXT_PUBLIC_*` values are baked into the build, so change one and redeploy.
+   Do not add `DIRECT_URL`, `PROD_DB_PASSWORD`, `TYPESAFE_API_KEY`, `ANTHROPIC_API_KEY` or `OPENROUTER_API_KEY`: migrations run from your PC, and the owner keys are for local scripts only (section 4). `NEXT_PUBLIC_*` values are baked into the build, so change one and redeploy.
 
 3. Press **Deploy**. Every push to `main` then deploys to production; check that the build is green in the Deployments tab.
 4. In the production Supabase project, **Authentication > URL Configuration**: set **Site URL** to the deployment address and add `https://<address>/**` to **Redirect URLs**.

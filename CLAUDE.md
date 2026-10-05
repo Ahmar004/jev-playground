@@ -120,7 +120,7 @@ These restate spec rules that code can break silently. The spec section holds th
 Each of these cost a past session time; `docs/progress.md` has the details.
 
 - The dev server can hit a Turbopack panic (exit 0xc0000142) on this machine, so run e2e against a production build: `corepack pnpm build`, `corepack pnpm start`, then e2e with `E2E_BASE_URL`. A `pnpm start` server serves the last build, so UI changes need a rebuild first.
-- To verify without disturbing a `pnpm start` that must keep running (ROADMAP Rule-XYZ keyed tab), build into another folder: `NEXT_DIST_DIR=.next-verify corepack pnpm build`, serve it with `NEXT_DIST_DIR=.next-verify corepack pnpm exec next start -p 3100`, and run e2e with `E2E_BASE_URL=http://localhost:3100`. Next then adds `.next-verify` paths to `tsconfig.json`; revert that with `git checkout tsconfig.json`. `next dev -p 3100` also coexists with `next start` (Next 16 keeps dev output in `.next/dev`).
+- To verify without disturbing a `pnpm start` that must keep running (for example a tab that holds keys in memory), build into another folder: `NEXT_DIST_DIR=.next-verify corepack pnpm build`, serve it with `NEXT_DIST_DIR=.next-verify corepack pnpm exec next start -p 3100`, and run e2e with `E2E_BASE_URL=http://localhost:3100`. Next then adds `.next-verify` paths to `tsconfig.json`; revert that with `git checkout tsconfig.json`. `next dev -p 3100` also coexists with `next start` (Next 16 keeps dev output in `.next/dev`).
 - Stop `pnpm start` before `build`, because the build replaces `.next` under the running server. Stopping `pnpm dev` through `TaskStop` leaves node on port 3000, so free the port (`Get-NetTCPConnection -LocalPort 3000`) before starting another server.
 - A level page that renders blank in dev usually means a crashed static-params worker: restart `pnpm dev`.
 - Localhost has an IP: the dev and local production servers send `x-forwarded-for: ::1`. `clientIp` ignores loopback addresses on purpose, so IP rate limits never hit local runs or e2e; the per-email sign-in limit (10 per 15 min) still does.
@@ -154,7 +154,7 @@ See `.claude/skills/*/SKILL.md` for full detail. In short:
 
 ## Local now, Vercel later
 
-The app runs on localhost until ROADMAP Step-29 deploys it to Vercel at its free `vercel.app` URL (spec R95). This repo is now the owner's personal repo. Deploy only inside that step, or when the owner asks, and only to Vercel (ROADMAP Rule-9, `docs/rules/deployment.md`). Build everything so it runs on Vercel unchanged:
+The app is live on Vercel at https://letsplaywithjev.vercel.app (free `vercel.app` URL, project `ahmar9/jev-playground`, spec R95), backed by the production Supabase project. This repo is the owner's personal repo. Deploy only when the owner asks, and only to Vercel (ROADMAP Rule-9, `docs/rules/deployment.md`). Local runs stay on the dev database. Everything must run on Vercel unchanged:
 
 - No file writes at runtime. Recordings are build-time JSON that only the local CLI writes.
 - No state kept in one process's memory. Rate limits and counters live in Postgres.
