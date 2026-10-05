@@ -6,7 +6,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.46 left (Step-15's live check spent about $0.011), and recordings so far cost $0.49.
 
-**Built (Steps 0-16 and 18-20; 17 is blocked):**
+**Built (Steps 0-16 and 18-21; 17 is blocked):**
 
 - All 8 levels, 8 VS games (4 P0, 4 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 31 recorded tasks. Developer mode supports TypeSafe (Jev), Anthropic, OpenAI, Google and OpenRouter (LLMs).
@@ -22,7 +22,6 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 - Promotional prices end: gpt-5.6-sol on 2026-11-21, gemini-3.6/3.7/3.8-flash on 2026-12-31. After that those models show "price unknown" until someone rechecks the pricing pages and updates `content/prices.json`.
 - Jev through an OpenRouter key isn't built (Step-17 is blocked on the owner's OpenRouter key; see its entry below).
 - No real-key test for OpenAI, Google or OpenRouter (Step-16 skipped them: no keys). Level 8's live trick was checked live in Step-20.
-- No account deletion and no Privacy page.
 - CI is off.
 - e2e dark screenshots render light.
 - The header runs 3+ queries a page.
@@ -33,7 +32,7 @@ Read only this block and the sections a step needs (Rule-0.0). The dated entries
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Next:** Step-21 (account deletion and Privacy page). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
+**Next:** Step-22 (GitHub CI). Step-17 stays open until the owner puts an OpenRouter key in `.env.local`. The owner is away and works over remote-control; read ROADMAP Rule-XYZ first: the localhost Chrome tab holds the TypeSafe and Anthropic keys in memory, so never close or reload it. A session's Claude-in-Chrome tools get their own empty tab group and can't see the owner's tabs, so the agent can't reuse the keyed tab.
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -809,3 +808,13 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Real-key check done on the way, in the owner's keyed tab (old 09:08 build, Developer mode): the level 8 live trick sent a real message to Jev, which answered "Jev saw through it", labelled "Developer mode - run 10:21 - jev-1.13.0", with no console errors. That closes the gap Step-15 left.
 - Tooling: `NEXT_DIST_DIR` (default `.next`) lets a build go to its own folder, so a verification build does not replace the one a running `pnpm start` serves; `.next-*` is ignored by git and ESLint, and CLAUDE.md "Known pitfalls" says how to use it.
 - Gates: lint, typecheck, format:check, check:secrets, check:standards, Vitest plus node:test, a production build of Next 16.3.8, and the full e2e suite 74/74 on that build (then 32/32 of shell, sandbox, arena and developer-mode again after the headers change). The owner's `pnpm start` on port 3000 was not rebuilt, so the keyed tab still runs the old build; it should be restarted from a fresh build when the keyed tab is no longer needed.
+
+## Step-21 - account deletion and Privacy page (2026-10-05) - done
+
+- Skills: test-driven-development (tests first, by hand). No subagents, no Anthropic spend.
+- `deleteAccount` (`src/server/actions/account.ts`): takes no input and uses the session's id, deletes the `User` row (every user table cascades from it: progress, check answers, quiz attempts, XP, badges, leaderboard entries, shares), then the Supabase Auth user with `createSecretKeyClient().auth.admin.deleteUser`, signs out and redirects to sign-in. Rows go first, so a failed auth step can be retried with nothing left behind; an auth user that is already gone (404) still ends in the redirect. Profile has "Delete your account" with a confirm dialog (Cancel and Esc keep the account) and a toast on failure (`delete-account.tsx`, `use-delete-account.ts`).
+- `/privacy` (in the app shell, so behind sign-in like every page except a shared result): what we store, never store, who else sees what, and how to delete. Linked from the footer and the sidebar. Spec 13 gained the hashed rate-limit counters; DESIGN screens and actions list both new things.
+- **`SUPABASE_SECRET_KEY` is now required** for Delete my account. It was empty; with the owner's approval it was copied from the Supabase dashboard's `default` secret key into `.env.local` through the clipboard, never printed or typed into the chat. `docs/api-setup-guide.md` step 1.11 now says how to get it. Step-29 must add it to Vercel as a normal (not public) environment variable.
+- Verified for real: the e2e creates a user, cancels once, deletes, lands on sign-in, and the same credentials are then rejected ("do not match an account"), so the Supabase user and the rows are gone. A temporary real-database probe was started but not needed after that.
+- Analytics are anonymous (nothing calls `identify`), so deleting an account leaves no PostHog person to remove; the Privacy page says the anonymous events stay.
+- Tests: `account.test.ts` (6), `use-delete-account.test.ts` (3), `delete-account.test.tsx` (4), nav test; e2e `account.spec.ts` (2, with Privacy screenshots in both themes at both widths; the dark ones still render light until Step-23). Gates: lint, typecheck, format, secrets, standards, Vitest plus node:test, production build (separate dir), and 23 e2e (account, progress, shell) on that build.

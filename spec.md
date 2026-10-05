@@ -317,6 +317,7 @@ Level status, quiz attempts, XP, badges and leaderboard entries are saved to the
 | XP and badges                                          | Request bodies of TypeSafe pass-through calls      |
 | Leaderboard entries (numbers and model IDs only)       | Personal data beyond email                         |
 | Shared snapshots (only when the user chooses to share) |                                                    |
+| Hashed counters for rate limits (a day at most)        |                                                    |
 | Recordings (global, owner-created)                     |                                                    |
 | Theme choice (in the browser)                          |                                                    |
 

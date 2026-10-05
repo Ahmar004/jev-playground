@@ -27,6 +27,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 							<Link href={ROUTES.methodology} className={FOOTER_LINK}>
 								Methodology
 							</Link>
+							<Link href={ROUTES.privacy} className={FOOTER_LINK}>
+								Privacy
+							</Link>
 						</nav>
 					</footer>
 				</div>

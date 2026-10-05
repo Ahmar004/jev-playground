@@ -16,11 +16,11 @@ describe('isActive', () => {
 })
 
 describe('nav lists', () => {
-	it('the sidebar holds every header link plus Home, Glossary and Methodology', () => {
+	it('the sidebar holds every header link plus Home, Glossary, Methodology and Privacy', () => {
 		const sidebar = SIDEBAR_NAV.map((item) => item.href)
 		for (const item of HEADER_NAV) expect(sidebar).toContain(item.href)
 		expect(sidebar).toEqual(
-			expect.arrayContaining([ROUTES.home, ROUTES.glossary, ROUTES.methodology])
+			expect.arrayContaining([ROUTES.home, ROUTES.glossary, ROUTES.methodology, ROUTES.privacy])
 		)
 		expect(new Set(sidebar).size).toBe(sidebar.length)
 	})

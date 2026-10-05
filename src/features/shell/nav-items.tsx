@@ -8,6 +8,7 @@ import {
 	PathIcon,
 	QuizIcon,
 	SandboxIcon,
+	ShieldCheckIcon,
 	TrophyIcon,
 	UserIcon
 } from '@/components/ui/icons'
@@ -48,6 +49,12 @@ export const SIDEBAR_NAV: NavItem[] = [
 		label: 'Methodology',
 		Icon: MethodologyIcon,
 		hue: 'bg-llm/15 text-llm'
+	},
+	{
+		href: ROUTES.privacy,
+		label: 'Privacy',
+		Icon: ShieldCheckIcon,
+		hue: 'bg-accent/15 text-accent'
 	}
 ]
 

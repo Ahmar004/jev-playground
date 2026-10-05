@@ -6,6 +6,7 @@ export const ROUTES = {
 	path: '/path',
 	glossary: '/glossary',
 	methodology: '/methodology',
+	privacy: '/privacy',
 	level: (levelId: string) => `/levels/${levelId}`,
 	games: '/games',
 	game: (gameId: string) => `/games/${gameId}`,

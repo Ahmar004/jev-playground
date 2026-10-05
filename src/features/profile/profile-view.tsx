@@ -5,8 +5,9 @@ import { QUIZ_IDS } from '@/lib/constants'
 import type { ProfileData } from '@/server/data/profile'
 import { BadgesGrid } from './badges-grid'
 import { CompletionCard } from './completion-card'
+import { DeleteAccount } from './delete-account'
 
-/** XP, badges, quiz improvement, the completion card and the user's shares (spec 5, DESIGN 6). */
+/** XP, badges, quiz improvement, the completion card, the user's shares and account deletion (spec 5, DESIGN 6). */
 export function ProfileView({ profile, quizTotal }: { profile: ProfileData; quizTotal: number }) {
 	const { quizzes } = profile
 	return (
@@ -30,6 +31,7 @@ export function ProfileView({ profile, quizTotal }: { profile: ProfileData; quiz
 			</section>
 			<CompletionCard profile={profile} total={quizTotal} />
 			<MyShares shares={profile.shares} />
+			<DeleteAccount />
 		</div>
 	)
 }

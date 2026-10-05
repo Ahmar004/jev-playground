@@ -53,6 +53,7 @@ import {
 	Play,
 	Plus,
 	Scales,
+	ShieldCheck,
 	SidebarSimple,
 	SignOut,
 	Sparkle,
@@ -148,6 +149,7 @@ export const QuizIcon = (props: IconProps) => <Glyph source={Exam} {...props} />
 export const SandboxIcon = (props: IconProps) => <Glyph source={Flask} {...props} />
 export const SearchIcon = (props: IconProps) => <Glyph source={MagnifyingGlass} {...props} />
 export const SettingsIcon = (props: IconProps) => <Glyph source={Gear} {...props} />
+export const ShieldCheckIcon = (props: IconProps) => <Glyph source={ShieldCheck} {...props} />
 export const SidebarIcon = (props: IconProps) => <Glyph source={SidebarSimple} {...props} />
 export const SignOutIcon = (props: IconProps) => <Glyph source={SignOut} {...props} />
 export const SkipIcon = (props: IconProps) => <Glyph source={FastForward} {...props} />

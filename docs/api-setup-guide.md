@@ -18,7 +18,7 @@ The full list of lines to fill, and where each value comes from:
 | `DIRECT_URL`                           | Session pooler string with your password                                     | Supabase, step 1.7  |
 | `NEXT_PUBLIC_SUPABASE_URL`             | `https://<project-ref>.supabase.co`                                          | Supabase, step 1.9  |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Publishable key, `sb_publishable_...`                                        | Supabase, step 1.10 |
-| `SUPABASE_SECRET_KEY`                  | Leave empty                                                                  | -                   |
+| `SUPABASE_SECRET_KEY`                  | Secret key, `sb_secret_...` (needed by Delete my account)                    | Supabase, step 1.11 |
 | `NEXT_PUBLIC_SENTRY_DSN`               | DSN, `https://...ingest...sentry.io/...`                                     | Sentry, step 2.3    |
 | `SENTRY_ORG`                           | Organization slug                                                            | Sentry, step 2.4    |
 | `SENTRY_PROJECT`                       | `jevs-playground`                                                            | Sentry, step 2.5    |
@@ -85,7 +85,8 @@ Don't use the **Direct connection** or **Transaction pooler** entries in the dia
    Result: `NEXT_PUBLIC_SUPABASE_URL="https://abcdefghijklmnop.supabase.co"`
 10. **`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`:** open **Project Settings** (the gear at the bottom of the left sidebar) **> API Keys**, on the **Publishable and secret API keys** tab. If no publishable key is listed, click **Create new API keys**. Copy the **Publishable key** (it starts with `sb_publishable_`) and put it on the `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` line. Don't use the keys on the **Legacy API keys** tab (`anon`, `service_role`); Supabase is retiring them.
     Result: `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="sb_publishable_AbCdEf123..."`
-11. **`SUPABASE_SECRET_KEY`:** leave it as `SUPABASE_SECRET_KEY=""`. Nothing in the app uses it yet.
+11. **`SUPABASE_SECRET_KEY`:** on the same **Publishable and secret API keys** tab, copy the **Secret** key (`sb_secret_...`, click the eye or copy icon on the `default` secret key). Put it on the `SUPABASE_SECRET_KEY` line. The app uses it for one thing: removing your Supabase sign-in when you press **Delete my account** on Profile (the profile page's delete only works with it set). It is server-only and bypasses all access rules, so never prefix it with `NEXT_PUBLIC_`, never paste it into the browser, and on Vercel add it as a normal (not public) environment variable.
+    Result: `SUPABASE_SECRET_KEY="sb_secret_AbCdEf123..."`
 
 Check the database lines before moving on:
 
