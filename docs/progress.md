@@ -40,9 +40,9 @@ Read only this block and all the relevant sections a step needs (Rule-0.0). The 
 
 **Pitfalls:** see CLAUDE.md "Known pitfalls".
 
-**Untested edits (Step-44 tests them):** Step-44's own six fixes are tested locally (Vitest and the full e2e) but not deployed; see the Step-44 entry's "Remaining" list. Steps 37-42 were tested on 2026-10-06 (see "Testing Steps 37-42"). Add a step here, with an "Untested, for Step-44" checklist in its entry, whenever one lands untested. Older entries say "Step-45" for this final testing; it is ROADMAP Step-44 now.
+**Untested edits (Step-44 tests them):** nothing is untested now: Step-44's six fixes were committed (724659c), deployed and re-checked live on 2026-10-06. Steps 37-42 were tested on 2026-10-06 (see "Testing Steps 37-42"). Add a step here, with an "Untested, for Step-44" checklist in its entry, whenever one lands untested. Older entries say "Step-45" for this final testing; it is ROADMAP Step-44 now.
 
-**Next:** continue ROADMAP Step-44 (part 1 done on 2026-10-06: local gates and 160/160 e2e green, live Developer mode pass with the owner's keys, six bugs fixed but not committed). Start from the "Remaining for Step-44" list at the end of the Step-44 entry: local-review, commit, push on the owner's word, re-check the fixes live. Then Step-45 (hardening for 1,000+ concurrent visitors). No load tests against the production database.
+**Next:** ROADMAP Step-45 (hardening for 1,000+ concurrent visitors; no load tests against the production database). Step-44 is done (see its entry).
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -1050,7 +1050,7 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Tests: Vitest for the runner, task schema, play data, item view and the six scenes; e2e for each scene at desktop and phone width in both themes, playing all six games with Leaderboard entries and replay, and Play next game now running past Citation Cop to Date Defense, the last game. Claude-in-Chrome was not connected, so the screenshots were checked from Playwright.
 - Not done: ROADMAP's balance line at the top still says $19.47; it changes only with the owner's approval (Rule-0.2).
 
-## Step-44 - final testing, part 1 (2026-10-06) - in progress, paused for a fresh session
+## Step-44 - final testing (2026-10-06) - done
 
 - Skill: systematic-debugging (read by hand from the superpowers plugin 6.3.0). Every bug below was reproduced first, its root cause found, a failing test written, then fixed.
 - Owner's decisions this session: test on the live site with the owner's own account (no throwaway account); Anthropic spend up to $3 allowed (about $0.02 used, all on Claude Haiku 4.5); the LLM picker defaults to the cheapest priced model; model lists hide models that can't race.
@@ -1073,9 +1073,4 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - Spend: Anthropic about $0.02 (Haiku: level 1, level 6, Date Defense, Arena, batch); OpenRouter and Google on the owner's own keys, under $0.01.
 - Nothing committed yet. The working tree holds the fixes above plus the owner's ROADMAP Step-44/45 edits and this file.
 
-**Remaining for Step-44 (next session):**
-
-1. Run `local-review`, then commit (`fix(...)` for the six bugs plus the e2e timeout) and the `chore(logs)` commit; push only when the owner says (a push to `main` deploys to Vercel).
-2. After the deploy, re-check on the live site with the owner's keys: level 4 Reveal shows "no (3% likely yes)"; Arena Review rating shows "Score x: <level>"; the Google list has no Antigravity/TTS/Nano Banana and the pickers open on the cheapest priced model (Haiku 4.5 on Anthropic); a new share shows "run <date> <time> UTC". Use only in-app links in that tab (a URL load drops the keys).
-3. Not yet covered live: OpenAI (no key), the Keys panel's invalid-key path (can't type a fake key on a non-localhost site; e2e covers it), and the Beginner mode flows on the live URL (covered by the local e2e run against the same code).
-4. Then mark Step-44 done in "Current state", and move to Step-45.
+**Finished (2026-10-06, same day):** local-review passed (lint, typecheck, format, env, secrets, standards, 825 Vitest plus node:test, build); committed as 724659c (fix) and c462ea5 (logs) and pushed on the owner's word; Vercel deployed c462ea5. Re-checked live with the owner's keys: level 4 Reveal reads "no (3% likely yes)"; Arena Review rating reads "Score 3.75: Very positive" with bar 4 bold; the pickers open on Claude Haiku 4.5 (Anthropic), Gemini 2.5 Flash-Lite (Google) and a cheap model (OpenRouter), and Google's list has no Antigravity, TTS or image models, OpenRouter's none of Jev, image or audio; a new share reads "run 2026-10-06 00:25 UTC" and was deleted afterwards. Not covered live: OpenAI (no key), the Keys panel's invalid-key path (e2e covers it), Beginner mode flows on the live URL (local e2e covers the same code). Spend: about $0.0003 more on Haiku.
