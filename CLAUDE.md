@@ -42,7 +42,7 @@ Prisma 7 reads its CLI settings from `prisma.config.ts`, which loads `.env.local
   - `docs/api-setup-guide.md`: how to set up each external API and service, and which `.env.local` values it gives. Add a service's section in the same step that adds the service (Rule-10).
 - Don't invent requirements. A decision these docs don't settle is an open question for the user. Where they are silent on how something looks or behaves, follow the existing screens and design tokens.
 - Keep `ROADMAP.md`, this file, `spec.md`, `TECH-STACK.md` and `DESIGN.md` consistent (Rule-3). When one changes, check the others.
-- Docs at the repo root: `ROADMAP.md`, `CLAUDE.md`, `AGENTS.md`, `spec.md`, `TECH-STACK.md`, `DESIGN.md`, `README.md` and `CAPTURE-TEST.md` (required by 8x). Every other doc goes in `docs/`.
+- Docs at the repo root: `ROADMAP.md`, `CLAUDE.md`, `AGENTS.md`, `spec.md`, `TECH-STACK.md`, `DESIGN.md`, `README.md`, `CONTRIBUTING.md` (the owner asked for it at the root, where GitHub links it) and `CAPTURE-TEST.md` (required by 8x). Every other doc goes in `docs/`.
 
 ## Time budget and right-sizing
 

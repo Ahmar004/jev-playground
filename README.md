@@ -1,8 +1,27 @@
 # Jev's Playground
 
+**Release Version 2.0** - see [Release 2.0](#release-20) for what this release shipped. Live at https://letsplaywithjev.vercel.app.
+
+If you are looking to contribute, please have a look at [CONTRIBUTING.md](CONTRIBUTING.md).
+
 An interactive website that teaches where System One models like Jev (TypeSafe's fast, typed-judgment model) work well, where they break, and where a frontier LLM or plain code is the better tool. You learn by playing: levels, games where Jev races an LLM, a side-by-side Arena, a hands-on Sandbox and quizzes.
 
 It works with no setup at all. Beginner mode replays real recorded runs, so nobody needs an API key. Developer mode runs everything live with your own keys.
+
+## Table of contents
+
+- [What you can do](#what-you-can-do)
+- [The two modes](#the-two-modes)
+  - [What happens to your keys](#what-happens-to-your-keys)
+- [How it works](#how-it-works)
+- [Tech stack](#tech-stack)
+- [Run it locally](#run-it-locally)
+  - [Scripts](#scripts)
+- [Numbers so far](#numbers-so-far)
+- [Trade-offs](#trade-offs)
+- [How AI was used to build it](#how-ai-was-used-to-build-it)
+- [Docs](#docs)
+- [Release 2.0](#release-20)
 
 ## What you can do
 
@@ -67,7 +86,7 @@ corepack pnpm dev                     # http://localhost:3000
 
 `docs/api-setup-guide.md` walks through creating the Supabase, Sentry and PostHog projects, and says which value goes on which `.env.local` line. `src/lib/env.ts` validates every variable at boot, so a bad value fails at once with a clear message. On machines where `pnpm` is not on PATH, prefix every script with `corepack`, as above.
 
-Beginner mode needs no model keys. The `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY` lines are for the owner's recording CLI only; leave them empty.
+Beginner mode needs no model keys. The `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY` lines are for the owner's recording CLI only; leave them empty. `CONTRIBUTING.md` has the full setup, how to run the tests and the checks a pull request must pass.
 
 ### Scripts
 
@@ -82,11 +101,11 @@ Beginner mode needs no model keys. The `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY
 
 ## Numbers so far
 
-- **Tests:** 619 Vitest and 114 `node:test` tests, plus 72 Playwright end-to-end tests that cover every user flow.
+- **Tests:** 834 Vitest and 114 `node:test` tests, plus 160 Playwright end-to-end tests that cover every user flow, including an accessibility audit (axe) of every page in both themes at desktop and phone width.
 - **Recordings:** 37 tasks recorded for real. They cost $0.65 of Anthropic credit, and Jev cost under a cent in total.
-- **Load (k6, local production build, one Node process on one PC):**
-  - 400 simultaneous users: 0 failures, median 266 ms, p95 703 ms.
-  - 1,000 simultaneous users: 0 failures, but a 6.2 s median, because one Node process runs out of CPU.
+- **Load (k6, local production build, one Node process on one PC, 2026-10-05):**
+  - 400 simultaneous users: 0 failures, median 214 ms, p95 583 ms.
+  - 1,000 simultaneous users: 0 failures, but a 6.7 s median, because one Node process runs out of CPU (about 86 pages a second). Vercel runs many instances, so this is not the live site's limit.
 
   Methodology publishes both runs.
 
@@ -99,7 +118,8 @@ Beginner mode needs no model keys. The `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY
 - **Hand-built SVG charts and CSS animations** instead of a chart library, to keep client bundles small.
 - **Known gaps:**
   - Prices are stored by hand from each provider's pricing page. A model not in `content/prices.json` shows "price unknown", and so does a promotional price after its last day, until someone checks the pages again.
-  - There is no password reset yet.
+  - There is no password reset yet: sending reset emails needs an email sender on a domain we own, and none is bought.
+  - Lighthouse's simulated slow phone still puts the largest paint at 4.2 to 6.6 s (the real page paints in under 1 s on a normal connection). Getting the simulation under 2 s needs a smaller first JavaScript download.
 
 ## How AI was used to build it
 
@@ -122,4 +142,65 @@ The whole project was built with Claude Code, with one human owner making every 
 | `docs/progress.md`        | What is done, and the hand-off to the next step.             |
 | `docs/api-setup-guide.md` | Setting up Supabase, Sentry, PostHog and the recording keys. |
 | `docs/load-test.md`       | Running the k6 load test.                                    |
+| `docs/runbook.md`         | Running the live site: outages, key rotation, alerts.        |
+| `CONTRIBUTING.md`         | How to contribute, run the app and test it locally.          |
 | `AGENTS.md`, `CLAUDE.md`  | Engineering and project rules for the coding agent.          |
+
+## Release 2.0
+
+**In short:** Release 1.0 was the 8x hackathon submission (2026-10-03): the full app, running on one laptop. Release 2.0 puts it on the internet for everyone. It is live at a public address, safer, ready for a crowd, runs live with more model providers, and is easier and more fun to learn from: a guided first visit, the full context in every game, six new games with animated scenes, and quizzes you can retry. It covers ROADMAP Steps 9 to 45 (2026-10-04 to 2026-10-06).
+
+### Live on the internet
+
+- Deployed on Vercel at https://letsplaywithjev.vercel.app (free plan), with its server functions in Washington, D.C. (`iad1`), next to a separate production Supabase project in US East. Test accounts and dev data never mix with real players.
+- Production errors go to their own Sentry project, and a PostHog funnel follows new players from opening the app to finishing a level.
+- Links shared on Discord and elsewhere show a card with a title, a description and a generated image. `robots.txt` and `sitemap.xml` are built from the site's address.
+- Database connections are sized for serverless: 5 per function instance, released when an instance is suspended, so a traffic spike does not exhaust Supabase's free connection pooler.
+- `docs/runbook.md` says what to do when something breaks: the site is down, the database is paused, a key must be rotated, or the credit runs low.
+- GitHub CI runs lint, types, formatting, the secrets scan, the unit tests and the build on every push.
+
+### Safer
+
+- Rate limits are stored in Postgres, so every server instance shares them: the TypeSafe pass-through (600 calls a minute per user, 1,200 per IP), sign-in (10 tries per email and 30 per IP in 15 minutes) and sign-up (20 per IP an hour). A limited request shows a clear message.
+- Supabase Auth now counts its own sign-in limits per visitor instead of per Vercel server. Without this, everyone arriving at once would have shared one small limit and seen "Too many attempts" after about 30 sign-ups.
+- A full security review: sign-in and ownership checks on every server action and route; a Content Security Policy that lets keys go only to the providers' own addresses; HSTS, no framing and a strict referrer policy; a dependency audit; and a recheck that no key can leak.
+- "Delete my account" on Profile removes everything we store about you, including your sign-in. A Privacy page says what we store and what we never store.
+
+### Developer mode, complete
+
+- Every level now runs live with your keys, including level 6 (The Router) and level 8 (Trick Jev, where your own trick text goes to Jev).
+- After a live run, Reveal shows your live numbers beside the recorded ones, each labelled with its mode, model and time.
+- Jev also runs with an OpenRouter key, so a TypeSafe key is no longer required to run Jev live.
+- OpenAI and Google models show a real cost: 57 prices from each provider's official pricing page, with the date they were checked.
+- Checked with real keys on the live site for TypeSafe, Anthropic, Google and OpenRouter. A provider that hangs stops after 60 seconds with a clear message.
+- The model pickers start on the cheapest priced model and hide models that cannot answer in text (image, audio, speech and agent models).
+
+### Easier and more fun to learn
+
+- A short welcome tour for new accounts ends on "Start here: Play level 1", with one-time tips inside a level.
+- "Play next level" at the end of a level, and "Play next game" at the bottom of every game.
+- Every game shows the exact question Jev and the LLM get, and every item with each racer's answer, so you can see why each one won or lost. The Arena does the same for its presets.
+- Six new arena games where you watch Jev and the LLM play in an animated scene: Inbox Keeper, Headline Invaders, Severity Archery, Double-Negative Maze, Carnival Hoops and Date Defense. Every result is a real recording.
+- The first eight games got their own animated scenes in place of moving chips.
+- "VS" is gone from the names: they are just Games.
+- Quizzes can be retried, and the latest attempt counts.
+- The Sandbox form can now set Noul criteria and Choice option descriptions, which only the JSON view could set before.
+- Reveal's "See every item" box says what it holds.
+
+### Faster and accessible
+
+- Pages that only show the header make 1 progress query instead of 3.
+- On a simulated slow phone, Home's largest paint went from 6.9 s to 4.2 s: text no longer fades in, the error tracker loads once the page is idle, and an unused 33 KB survey script is gone.
+- An accessibility audit (axe, WCAG 2.1 AA) of 38 pages and states, in light and dark, at desktop and phone width, reports 0 violations. Scrollable boxes can now be reached by keyboard.
+
+### Tested
+
+- Final testing on the live site found and fixed six bugs, among them Jev's answers shown as raw JSON in some levels, a missing Score label in the Arena, and times on shared results shown without a time zone.
+- End-to-end tests sign in once and reuse the session, so a full run no longer trips Supabase's sign-in limit, and the dark-theme screenshots really show the dark theme.
+
+### Known gaps
+
+- No password reset yet (it needs an email sender on our own domain).
+- No real-key check yet for OpenAI models (no key was available).
+- Some promotional prices end on 2026-11-21 and 2026-12-31; those models show "price unknown" until the prices are rechecked.
+- More launch hardening is the next step, ROADMAP Step-46: fewer server calls per page view, a "site updated" message after a deploy, and a lighter first load on phones.
