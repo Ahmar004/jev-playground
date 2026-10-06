@@ -228,6 +228,9 @@ Add 4-5 even more interesting and fun games to the app, that have more visuals a
 final testing via systematic-debugging skill and end-to-end tests of all workflows and for the flows which require putting in the api keys in the live site, open up site in claude-in-chrome and ask me to type in the keys, and then you test all the developer mode workflows as well, don't perform load tests on prod db, we have to keep this db for real users only.
 
 ### step-45:
+Supabase Auth sees each visitor's own IP. Sign-in, sign-up, sign-out and the session refresh run on our Vercel server, so Supabase saw Vercel's few server IPs instead of each visitor's, and its per-IP limits (30 sign-ins or sign-ups and 150 token calls per 5 minutes) would have been shared by every launch visitor: after about 30 sign-ups people would see "Too many attempts" and signed-in people would be signed out. Every server-side Supabase Auth call now sends the visitor's IP in the `Sb-Forwarded-For` header with the server-only secret key (never sent to the browser), and "IP Address Forwarding" is turned on in both Supabase projects (owner did it on 2026-10-06). Tests first, then prove it on the dev project: a burst from one forwarded IP is blocked while another IP still gets through.
+
+### step-46:
 Hardening: focusing again on scalability, reliability, faster response times, optimizing things that could be done, and the ability to withstand a huge traffic, after being shared inside the discord community of Typesafe.ai, which has 100k+members and atleast 1000 members could possilby visit the site at once. Don't cut off any functionality, UI, feature or anything important.
 
 <hr style="height:4px; background-color:Grey; border:none;">

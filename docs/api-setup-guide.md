@@ -18,7 +18,7 @@ The full list of lines to fill, and where each value comes from:
 | `DIRECT_URL`                           | Session pooler string with your password                                     | Supabase, step 1.7  |
 | `NEXT_PUBLIC_SUPABASE_URL`             | `https://<project-ref>.supabase.co`                                          | Supabase, step 1.9  |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Publishable key, `sb_publishable_...`                                        | Supabase, step 1.10 |
-| `SUPABASE_SECRET_KEY`                  | Secret key, `sb_secret_...` (needed by Delete my account)                    | Supabase, step 1.11 |
+| `SUPABASE_SECRET_KEY`                  | Secret key, `sb_secret_...` (Delete my account, per-visitor auth limits)     | Supabase, step 1.11 |
 | `NEXT_PUBLIC_SENTRY_DSN`               | DSN, `https://...ingest...sentry.io/...`                                     | Sentry, step 2.3    |
 | `SENTRY_ORG`                           | Organization slug                                                            | Sentry, step 2.4    |
 | `SENTRY_PROJECT`                       | `jevs-playground`                                                            | Sentry, step 2.5    |
@@ -85,8 +85,9 @@ Don't use the **Direct connection** or **Transaction pooler** entries in the dia
    Result: `NEXT_PUBLIC_SUPABASE_URL="https://abcdefghijklmnop.supabase.co"`
 10. **`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`:** open **Project Settings** (the gear at the bottom of the left sidebar) **> API Keys**, on the **Publishable and secret API keys** tab. If no publishable key is listed, click **Create new API keys**. Copy the **Publishable key** (it starts with `sb_publishable_`) and put it on the `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` line. Don't use the keys on the **Legacy API keys** tab (`anon`, `service_role`); Supabase is retiring them.
     Result: `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="sb_publishable_AbCdEf123..."`
-11. **`SUPABASE_SECRET_KEY`:** on the same **Publishable and secret API keys** tab, copy the **Secret** key (`sb_secret_...`, click the eye or copy icon on the `default` secret key). Put it on the `SUPABASE_SECRET_KEY` line. The app uses it for one thing: removing your Supabase sign-in when you press **Delete my account** on Profile (the profile page's delete only works with it set). It is server-only and bypasses all access rules, so never prefix it with `NEXT_PUBLIC_`, never paste it into the browser, and on Vercel add it as a normal (not public) environment variable.
+11. **`SUPABASE_SECRET_KEY`:** on the same **Publishable and secret API keys** tab, copy the **Secret** key (`sb_secret_...`, click the eye or copy icon on the `default` secret key). Put it on the `SUPABASE_SECRET_KEY` line. The app uses it for two things: removing your Supabase sign-in when you press **Delete my account** on Profile (the profile page's delete only works with it set), and sending each visitor's IP with every server-side sign-in, sign-up, sign-out and session refresh (step 12), which Supabase accepts only with a secret key. It is server-only and bypasses all access rules, so never prefix it with `NEXT_PUBLIC_`, never paste it into the browser, and on Vercel add it as a normal (not public) environment variable.
     Result: `SUPABASE_SECRET_KEY="sb_secret_AbCdEf123..."`
+12. **Authentication > Rate Limits > IP Address Forwarding: on.** Supabase limits sign-ins, sign-ups and token refreshes per IP (30 and 150 per 5 minutes), and our server makes those calls, so without this every visitor shares the server's IP and one small limit (ROADMAP Step-45). With it on, Supabase counts the IP our server sends in the `Sb-Forwarded-For` header (`src/lib/supabase/auth-request.ts`). New projects start with it off. Check it works: 31 sign-up attempts from one forwarded IP get `429 over_request_rate_limit` on the 31st, and another IP still gets through.
 
 Check the database lines before moving on:
 
@@ -106,8 +107,9 @@ The deployed app uses its own free Supabase project, `jevs-playground-prod`, so 
 3. Connection strings: **Connect > Direct**, then the **Session pooler** (port 5432) for `DIRECT_URL` and the **Transaction pooler** (port 6543, `?pgbouncer=true`) for `DATABASE_URL`, built exactly as steps 7 and 8 above. The production host is `aws-0-us-east-1.pooler.supabase.com`, and the user is `postgres.<project-ref>`.
 4. Copy `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and `SUPABASE_SECRET_KEY` from the production project as in steps 9 to 11.
 5. Apply the schema to production only from this machine, with the production values for that command alone (they override `.env.local`: a variable already set wins, see `prisma.config.ts`): load `.env.prod-values.local` into the shell, then run `pnpm exec prisma migrate deploy`, `pnpm db:run-once` and `pnpm check:rls`. Expect 13 migrations applied (all of them at the time of Step-28), "nothing to run" for the run-once file, and "RLS enabled with no policies on all 10 table(s)". The CLI and the scripts verify TLS against the same Supabase CA as the app. Never run `prisma migrate dev` or `reset` against it.
-6. **Authentication > Sign In / Providers > Confirm email must be off**, as on the dev project: without a custom domain there is no email sender of our own, Supabase's built-in sender allows only a few emails an hour, and the app expects a session right after sign-up. New projects start with it on, so switch it off and press **Save changes**. Step-19's rate limits guard sign-ups instead.
-7. In Step-29, add the Vercel URL to **Authentication > URL Configuration** (Site URL and Redirect URLs).
+6. **Authentication > Rate Limits > IP Address Forwarding must be on**, as in step 12 above (turned on 2026-10-06).
+7. **Authentication > Sign In / Providers > Confirm email must be off**, as on the dev project: without a custom domain there is no email sender of our own, Supabase's built-in sender allows only a few emails an hour, and the app expects a session right after sign-up. New projects start with it on, so switch it off and press **Save changes**. Step-19's rate limits guard sign-ups instead.
+8. In Step-29, add the Vercel URL to **Authentication > URL Configuration** (Site URL and Redirect URLs).
 
 ## 2. Sentry (error tracking)
 
@@ -165,15 +167,15 @@ The app is hosted on Vercel's free plan at its `vercel.app` address; no custom d
 1. Sign in at https://vercel.com with GitHub, **Add New > Project**, import `Ahmar004/jev-playground` and accept the Next.js defaults (pnpm is detected from `pnpm-lock.yaml`; `vercel.json` pins the function region to `iad1`, Washington DC, next to the `us-east-1` production database).
 2. **Settings > Environment Variables**, scope **Production** (and Preview if you want preview deploys to work). Paste each value from `.env.prod-values.local`; mark the secret ones **Sensitive**. Never paste a key into a chat.
 
-   | Variable                                                                        | Value                                                                               | Secret?     |
-   | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------- |
-   | `DATABASE_URL`                                                                  | production transaction pooler string (port 6543, `?pgbouncer=true`)                 | yes         |
-   | `NEXT_PUBLIC_SUPABASE_URL`                                                      | `https://<prod-ref>.supabase.co`                                                    | no (public) |
-   | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`                                          | production publishable key                                                          | no (public) |
-   | `SUPABASE_SECRET_KEY`                                                           | production secret key (used only by Delete my account)                              | yes         |
-   | `NEXT_PUBLIC_APP_URL`                                                           | the deployment's own address, for example `https://letsplaywithjev.vercel.app`      | no          |
-   | `NEXT_PUBLIC_SENTRY_DSN`, `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | from the Sentry and PostHog projects production should report to (sections 2 and 3) | no (public) |
-   | `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN`                             | optional: only for uploading source maps at build time                              | token: yes  |
+   | Variable                                                                        | Value                                                                                | Secret?     |
+   | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------- |
+   | `DATABASE_URL`                                                                  | production transaction pooler string (port 6543, `?pgbouncer=true`)                  | yes         |
+   | `NEXT_PUBLIC_SUPABASE_URL`                                                      | `https://<prod-ref>.supabase.co`                                                     | no (public) |
+   | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`                                          | production publishable key                                                           | no (public) |
+   | `SUPABASE_SECRET_KEY`                                                           | production secret key (Delete my account, per-visitor auth limits; sign-in needs it) | yes         |
+   | `NEXT_PUBLIC_APP_URL`                                                           | the deployment's own address, for example `https://letsplaywithjev.vercel.app`       | no          |
+   | `NEXT_PUBLIC_SENTRY_DSN`, `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | from the Sentry and PostHog projects production should report to (sections 2 and 3)  | no (public) |
+   | `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN`                             | optional: only for uploading source maps at build time                               | token: yes  |
 
    Do not add `DIRECT_URL`, `PROD_DB_PASSWORD`, `TYPESAFE_API_KEY`, `ANTHROPIC_API_KEY` or `OPENROUTER_API_KEY`: migrations run from your PC, and the owner keys are for local scripts only (section 4). `NEXT_PUBLIC_*` values are baked into the build, so change one and redeploy.
 
