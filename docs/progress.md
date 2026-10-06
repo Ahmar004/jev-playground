@@ -6,7 +6,7 @@ Read only this block and all the relevant sections a step needs (Rule-0.0). The 
 
 **Goal (Rule-0.01):** launch to TypeSafe's Discord community (100k+ people) on Vercel at the free `vercel.app` URL, with no custom domain. The app must be fast, scalable, reliable and secure. There is no deadline. Budget: 10,000 PKR. Anthropic credit: about $19.30 left (Step-15's live check spent about $0.011; Step-43's recordings $0.155; Step-44's live checks about $0.02, so about $19.28 now), and recordings so far cost $0.65.
 
-**Built (Steps 0-46, all done; Step-46 is tested locally and not yet committed or deployed; Steps 37 to 42 were tested on 2026-10-06 and committed by the owner; Step-43 is tested and committed locally, not pushed; Step-16 skipped real-key checks of OpenAI, Google and OpenRouter-as-LLM for lack of keys; Step-17 was blocked first and finished later the same day, see its "done" entry):**
+**Built (Steps 0-46, all done; Step-46 is deployed and checked live; Steps 37 to 42 were tested on 2026-10-06 and committed by the owner; Step-43 is tested and committed locally, not pushed; Step-16 skipped real-key checks of OpenAI, Google and OpenRouter-as-LLM for lack of keys; Step-17 was blocked first and finished later the same day, see its "done" entry):**
 
 - All 8 levels, 14 games (4 P0, 10 P1), Arena with presets, batch mode and share links, Sandbox, start and end quizzes, XP, badges, completion card, Leaderboard, Glossary and Methodology.
 - Beginner mode replays 37 recorded tasks. Developer mode supports Jev through a TypeSafe key or an OpenRouter key (TypeSafe wins when both are set), and LLMs through Anthropic, OpenAI, Google and OpenRouter (Step-17).
@@ -14,7 +14,7 @@ Read only this block and all the relevant sections a step needs (Rule-0.0). The 
 - `content/prices.json` prices Jev, the Claude models and every OpenAI and Google text model (57 entries, checked 2026-10-04; Step-17 added the dated OpenRouter Jev build on 2026-10-05); OpenRouter models use OpenRouter's live list.
 - Tests: 851 Vitest, 114 node:test and 162 Playwright e2e, covering every flow in DESIGN 15 plus the Steps 37-42 context and quiz retry (`e2e/context.spec.ts`) and Step-46's hardening (`e2e/hardening.spec.ts`).
 - k6 locally (2026-10-06, Step-46, dev database): 400 users median 161 ms, p95 359 ms, target met; 1,000 users median 5.6 s, p95 6.6 s, no failed requests but the target is missed (one Node process is CPU-bound at about 99 requests a second). Methodology reads `load/results-*.json`.
-- Launch hardening (Step-46): router prefetches skip the proxy (`src/proxy.ts` matcher `missing`), so a page view costs one Vercel function call instead of about 25; a Server Action that a deploy left behind shows "The site was just updated. Reload to continue." with a Reload button (`src/lib/errors/stale-deploy.ts`, wired once in `query-provider.tsx`); PostHog loads when the page is idle like Sentry (`src/lib/posthog/client.tsx`, first-load JS on sign-in 415 KB live to 309 KB); `docs/runbook.md` has a launch checklist and "If Vercel pauses the site".
+- Launch hardening (Step-46): router prefetches skip the proxy (`src/proxy.ts` matcher `missing`), so a page view costs one Vercel function call instead of about 25; a Server Action that a deploy left behind shows "The site was just updated. Reload to continue." with a Reload button (`src/lib/errors/stale-deploy.ts`, wired once in `query-provider.tsx`); PostHog loads when the page is idle like Sentry (`src/lib/posthog/client.tsx`, first-load JS on sign-in 415 KB to 318 KB on the live site); `docs/runbook.md` has a launch checklist and "If Vercel pauses the site".
 - The public README.
 - Six arena games (Step-43): Inbox Keeper (penalty shootout, Choice), Headline Invaders (space shooter, Noul), Severity Archery (Score target), Double-Negative Maze (robot maze, Choice on a Jev weakness), Carnival Hoops (fan-out) and Date Defense (towers: Jev, Jev + Code, LLM). SVG plus Motion scenes; each item mark replays that item in every lane; every scene is lazy-loaded. See the Step-43 entry.
 - A first-visit guide (Step-35, `src/features/guide/`): a 6-step welcome tour on Home that ends on "Start here: Play level 1", and one-time tips on a level's Predict, Reveal ("See every item") and Check tabs. Saved per account in `users.guide_seen`; replay from the account menu ("Take the tour") or Home ("Take a guide tour").
@@ -32,8 +32,7 @@ Read only this block and all the relevant sections a step needs (Rule-0.0). The 
 
 **Open (ROADMAP Steps 0-46 are done; these are the loose ends):**
 
-- **Production PostHog looks off:** the live bundle holds no PostHog key (checked 2026-10-06: no `phc_` in any live chunk, no request to posthog.com), so `NEXT_PUBLIC_POSTHOG_KEY` was not set on Vercel when production was last built and the "Beginner activation (production)" funnel gets nothing. The owner checks Vercel > project > Settings > Environment Variables; the value is the same key as `.env.local`, and it needs a redeploy because it is baked into the build.
-- Step-46 is not committed, pushed or deployed yet (the owner decides).
+- Production PostHog was silent until 2026-10-06: `NEXT_PUBLIC_POSTHOG_KEY` was missing on Vercel (found in Step-46), so the "Beginner activation (production)" funnel has data only from that day on. The owner added it (Production, not Sensitive: a `NEXT_PUBLIC_` value is public anyway).
 
 - Step-35's database change is on production (migration `guide_seen`, run-once backfill, `check:rls` 10 tables, 2026-10-05) and the code is pushed (auto-deploys); the owner tests the live URL.
 
@@ -47,7 +46,7 @@ Read only this block and all the relevant sections a step needs (Rule-0.0). The 
 
 **Untested edits (Step-44 tests them):** nothing is untested now: Step-44's six fixes were committed (724659c), deployed and re-checked live on 2026-10-06. Steps 37-42 were tested on 2026-10-06 (see "Testing Steps 37-42"). Add a step here, with an "Untested, for Step-44" checklist in its entry, whenever one lands untested. Older entries say "Step-45" for this final testing; it is ROADMAP Step-44 now.
 
-**Next:** every ROADMAP step is done. Commit and deploy Step-46 when the owner asks, then fix the PostHog key on Vercel. Any new work is proposed in ROADMAP.md first (Rule-4).
+**Next:** every ROADMAP step is done (Step-46 deployed 2026-10-06). Any new work is proposed in ROADMAP.md first (Rule-4).
 
 ## Step-0 - Agent capture setup (2026-09-30) - done
 
@@ -1097,7 +1096,7 @@ Next: Step-8 (README for submission, plus the Loom talking points).
 - `CONTRIBUTING.md` at the root (owner asked; CLAUDE.md's root-docs list updated): the issue-first rule at the top, how to collaborate, local setup, testing, the CI checks, the project rules a change most often breaks, commits and pull requests, and how to report a security problem without a public issue.
 - Open for the owner: the repo has no LICENSE file, and GitHub's private vulnerability reporting is off (Settings > Code security), so CONTRIBUTING asks for an issue with no details instead.
 
-## Step-46 - hardening for launch traffic (2026-10-06) - done, tested locally, not committed
+## Step-46 - hardening for launch traffic (2026-10-06) - done, deployed and checked live
 
 Scope is the owner's "Step-46 plan" in the Step-45 entry. Nothing was removed from the product.
 
@@ -1106,5 +1105,6 @@ Scope is the owner's "Step-46 plan" in the Step-45 entry. Nothing was removed fr
 - **PostHog on idle** (tests first): `src/lib/posthog/client.tsx` `loadPostHog()` / `withPostHog()` mirrors the Sentry loader (`whenIdle` moved to `src/lib/when-idle.ts`). Calls queue in order; once loaded they run synchronously, so `app_opened` still goes out before the first pageview (the funnel's first step). `session_id` is read when the event is sent; `page_name` and `timestamp_utc` when it is made. No key means PostHog never loads. Measured with Playwright Chromium on `/sign-in`: first-load JS 415 KB on the live site vs 309 KB on the local build (local is gzip, Vercel brotli, so the real saving is at least this); PostHog requests start after idle.
 - **Runbook:** "Launch checklist (before a Discord post)" and "If Vercel pauses the site" (503 DEPLOYMENT_PAUSED, Upgrade then Resume on the project overview, or wait 30 days), with the Hobby allowances from https://vercel.com/docs/plans/hobby (checked 2026-10-06). The "Known behaviours" line now describes the reload notice.
 - **k6 rerun** (fresh production build, dev database, k6 v2.2.0 installed by winget at `C:\Program Files\k6\k6.exe`): 400 users 0 failures, median 161 ms, p95 359 ms (Step-25: 214 / 583); 1,000 users 0 failures, median 5.6 s, p95 6.6 s, 99 requests a second (Step-25: 6.7 s / 10.1 s, 86). `load/results-*.json` replaced; Methodology and README read the new numbers. No load test touched production.
-- **Found, not fixed:** production PostHog has no key in its bundle (see Open). Owner's action, not code.
+- **Found and fixed by the owner:** the live bundle held no PostHog key (no `phc_` in any chunk, no request to posthog.com), so production analytics had been off. The owner added `NEXT_PUBLIC_POSTHOG_KEY` on Vercel (Production, Sensitive off) before the deploy.
 - Gates so far: lint, typecheck, format, 851 Vitest plus 114 node:test, production build, e2e hardening 2/2 and shell, account, progress, quizzes, guide, arena, level-1 and games 108/108. Claude-in-Chrome was not connected this session, so the browser checks used Playwright's Chromium.
+- **Deployed** (owner's go-ahead): pushed e40554b and 31137ee (this also pushed the owner's d73a8af); Vercel served it about 4 minutes later and CI passed. Checked live with Playwright Chromium: `/leaderboard` signed out is a 307 to sign-in, with `purpose: prefetch` a 200; first-load JS on `/sign-in` 318 KB (was 415 KB); no PostHog request at load, 4 after idle (`config.js`, `/flags`), so the key is now in the build; a sign-in with a made-up email shows "That email and password do not match an account." with no console errors.
