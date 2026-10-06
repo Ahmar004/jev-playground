@@ -3,6 +3,7 @@
 import { unstable_rethrow } from 'next/navigation'
 import { useTransition } from 'react'
 import { NETWORK_ERROR_MESSAGE } from '@/features/auth/use-auth-form'
+import { handleStaleDeploy } from '@/lib/errors/stale-deploy'
 import { toast } from '@/lib/toast'
 import { signOut } from '@/server/actions/auth'
 
@@ -22,6 +23,7 @@ export function useSignOut() {
 			} catch (thrown) {
 				// A redirect can arrive as a thrown error and must keep going.
 				unstable_rethrow(thrown)
+				if (handleStaleDeploy(thrown)) return
 				showFailure(NETWORK_ERROR_MESSAGE)
 			}
 		})

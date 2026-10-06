@@ -2,6 +2,7 @@
 
 import { unstable_rethrow } from 'next/navigation'
 import { useState, useTransition } from 'react'
+import { handleStaleDeploy } from '@/lib/errors/stale-deploy'
 import { toast } from '@/lib/toast'
 import type { ActionResult } from '@/server/actions/validated-action'
 
@@ -37,6 +38,7 @@ export function useAuthForm(action: (input: Credentials) => Promise<ActionResult
 			} catch (thrown) {
 				// A redirect can arrive as a thrown error and must keep going.
 				unstable_rethrow(thrown)
+				if (handleStaleDeploy(thrown)) return
 				setError(NETWORK_ERROR_MESSAGE)
 			}
 		})

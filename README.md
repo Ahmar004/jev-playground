@@ -101,11 +101,11 @@ Beginner mode needs no model keys. The `TYPESAFE_API_KEY` and `ANTHROPIC_API_KEY
 
 ## Numbers so far
 
-- **Tests:** 834 Vitest and 114 `node:test` tests, plus 160 Playwright end-to-end tests that cover every user flow, including an accessibility audit (axe) of every page in both themes at desktop and phone width.
+- **Tests:** 851 Vitest and 114 `node:test` tests, plus 162 Playwright end-to-end tests that cover every user flow, including an accessibility audit (axe) of every page in both themes at desktop and phone width.
 - **Recordings:** 37 tasks recorded for real. They cost $0.65 of Anthropic credit, and Jev cost under a cent in total.
-- **Load (k6, local production build, one Node process on one PC, 2026-10-05):**
-  - 400 simultaneous users: 0 failures, median 214 ms, p95 583 ms.
-  - 1,000 simultaneous users: 0 failures, but a 6.7 s median, because one Node process runs out of CPU (about 86 pages a second). Vercel runs many instances, so this is not the live site's limit.
+- **Load (k6, local production build, one Node process on one PC, 2026-10-06):**
+  - 400 simultaneous users: 0 failures, median 161 ms, p95 359 ms.
+  - 1,000 simultaneous users: 0 failures, but a 5.6 s median, because one Node process runs out of CPU (about 99 requests a second). Vercel runs many instances, so this is not the live site's limit.
 
   Methodology publishes both runs.
 

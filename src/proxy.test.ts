@@ -11,7 +11,8 @@ const createServerClient = vi.fn<
 vi.mock('server-only', () => ({}))
 vi.mock('@supabase/ssr', () => ({ createServerClient }))
 
-const { default: proxy } = await import('./proxy')
+const { default: proxy, config } = await import('./proxy')
+const { unstable_doesMiddlewareMatch: matches } = await import('next/experimental/testing/server')
 
 beforeEach(() => {
 	createServerClient.mockClear()
@@ -57,5 +58,22 @@ describe('proxy', () => {
 		getClaims.mockResolvedValue({ data: null })
 		const redirect = await proxy(request('198.51.100.4'))
 		expect(new URL(redirect.headers.get('location') ?? '').pathname).toBe('/sign-in')
+	})
+
+	it('runs for page loads and navigations but not for router prefetches', () => {
+		const url = 'https://app.example.com/games'
+		expect(matches({ config, url })).toBe(true)
+		// A client-side navigation is an RSC request: it must still refresh and gate.
+		expect(matches({ config, url, headers: { rsc: '1' } })).toBe(true)
+		// A prefetch only carries the static shell, so skipping it costs no auth
+		// check; each one would otherwise be its own function call on Vercel.
+		expect(matches({ config, url, headers: { rsc: '1', 'next-router-prefetch': '1' } })).toBe(false)
+		expect(matches({ config, url, headers: { purpose: 'prefetch' } })).toBe(false)
+	})
+
+	it('skips API routes, static files and Next internals', () => {
+		for (const path of ['/api/jev', '/_next/static/chunks/a.js', '/icon.svg', '/robots.txt']) {
+			expect(matches({ config, url: `https://app.example.com${path}` })).toBe(false)
+		}
 	})
 })

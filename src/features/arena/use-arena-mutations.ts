@@ -5,6 +5,7 @@ import { announceAwards } from '@/features/levels/awards-toast'
 import { ANALYTICS_EVENTS } from '@/lib/analytics/events'
 import { track } from '@/lib/analytics/track'
 import { MODES } from '@/lib/constants'
+import { isStaleDeployError } from '@/lib/errors/stale-deploy'
 import { toast } from '@/lib/toast'
 import { recordArenaRun } from '@/server/actions/arena'
 import { createShare, deleteShare } from '@/server/actions/share'
@@ -52,12 +53,14 @@ export function useCreateShare(onCreated: (shareId: string) => void) {
 			announceAwards({ xp: 0, badges: data.badges })
 			onCreated(data.id)
 		},
-		onError: (error: unknown) =>
+		onError: (error: unknown) => {
+			if (isStaleDeployError(error)) return
 			toast({
 				title: "Couldn't create the link",
 				description: error instanceof Error ? error.message : 'Try again in a moment.',
 				variant: 'destructive'
 			})
+		}
 	})
 	return { create: mutation.mutate, pending: mutation.isPending }
 }
@@ -74,12 +77,14 @@ export function useDeleteShare(onDeleted: (shareId: string) => void) {
 			onDeleted(shareId)
 			toast({ title: 'Share deleted', description: 'Its link no longer works.' })
 		},
-		onError: (error: unknown) =>
+		onError: (error: unknown) => {
+			if (isStaleDeployError(error)) return
 			toast({
 				title: "Couldn't delete the share",
 				description: error instanceof Error ? error.message : 'Try again in a moment.',
 				variant: 'destructive'
 			})
+		}
 	})
 	return { remove: mutation.mutate, pending: mutation.isPending }
 }

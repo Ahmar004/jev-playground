@@ -2,6 +2,7 @@
 
 import { unstable_rethrow } from 'next/navigation'
 import { useTransition } from 'react'
+import { handleStaleDeploy } from '@/lib/errors/stale-deploy'
 import { toast } from '@/lib/toast'
 import { deleteAccount } from '@/server/actions/account'
 
@@ -29,6 +30,7 @@ export function useDeleteAccount() {
 			} catch (thrown) {
 				// The redirect after a successful delete arrives as a thrown error and must keep going.
 				unstable_rethrow(thrown)
+				if (handleStaleDeploy(thrown)) return
 				toast({
 					title: "Couldn't delete your account",
 					description: NETWORK_ERROR_MESSAGE,

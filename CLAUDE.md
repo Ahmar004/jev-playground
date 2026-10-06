@@ -128,7 +128,7 @@ Each of these cost a past session time; `docs/progress.md` has the details.
 - Supabase rate-limits sign-ins and sign-ups (about 30 per 5 minutes per IP). `e2e/helpers.ts` keeps each email's session cookies after the first sign-up or sign-in, so `signIn(page, email)` only signs in for real once per email in a worker; pass `{ fresh: true }` for a test of signing in itself or after a sign-out. A cluster of `toHaveURL('/')` failures still means the limit was hit: wait a few minutes.
 - Run `corepack pnpm exec next typegen` after adding a route if `PageProps<...>` types fail in typecheck.
 - Python `open(..., 'w')` writes CRLF on Windows; pass `newline=''` when a script edits files.
-- Run the k6 load test on an otherwise idle PC; a build or the test suite running alongside skews it. k6 is not on PATH: `winget install k6 --source winget`.
+- Run the k6 load test on an otherwise idle PC; a build or the test suite running alongside skews it. k6 is not on PATH: `winget install k6 --source winget` (the owner must approve an admin prompt) puts it at `C:\Program Files\k6\k6.exe`; run `load/journey.js` with that path if `corepack pnpm load` can't find `k6`.
 - next-themes ignores the emulated color scheme. In e2e use `setColorScheme(page, scheme)` before navigating (it sets the `theme` local storage key) and `captureScheme(page, scheme, options)` for a themed screenshot (it checks the html class, then waits 1.5 s for the rise-in animation). Don't use it in a test that reloads and expects its own theme choice to persist.
 
 ## Session logs

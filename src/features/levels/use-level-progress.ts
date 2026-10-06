@@ -6,6 +6,7 @@ import type { CheckQuestion } from '@/content/level-schema'
 import { ANALYTICS_EVENTS } from '@/lib/analytics/events'
 import { track } from '@/lib/analytics/track'
 import { LEVEL_STATUS } from '@/lib/constants'
+import { isStaleDeployError } from '@/lib/errors/stale-deploy'
 import { toast } from '@/lib/toast'
 import { useServerState } from '@/lib/use-server-state'
 import {
@@ -47,6 +48,7 @@ export function useLevelProgress(
 
 	const onError = (error: unknown, _input: unknown, previous: LevelProgressView | undefined) => {
 		if (previous) setProgress(previous)
+		if (isStaleDeployError(error)) return
 		toast({
 			title: "Couldn't save your progress",
 			description: errorMessage(error),

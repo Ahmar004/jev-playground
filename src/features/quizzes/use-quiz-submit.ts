@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { announceAwards } from '@/features/levels/awards-toast'
 import { ANALYTICS_EVENTS } from '@/lib/analytics/events'
 import { track } from '@/lib/analytics/track'
+import { isStaleDeployError } from '@/lib/errors/stale-deploy'
 import { toast } from '@/lib/toast'
 import { submitQuiz } from '@/server/actions/quiz'
 import type { QuizId } from '@/lib/constants'
@@ -33,12 +34,14 @@ export function useQuizSubmit(quizId: QuizId) {
 			}
 			announceAwards(data.awards)
 		},
-		onError: (error: unknown) =>
+		onError: (error: unknown) => {
+			if (isStaleDeployError(error)) return
 			toast({
 				title: "Couldn't submit the quiz",
 				description: error instanceof Error ? error.message : 'Try again in a moment.',
 				variant: 'destructive'
 			})
+		}
 	})
 	return { submit: mutation.mutate, pending: mutation.isPending, done: mutation.isSuccess }
 }

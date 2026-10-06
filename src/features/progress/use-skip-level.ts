@@ -3,6 +3,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
 import { LEVEL_STATUS, type LevelStatus } from '@/lib/constants'
+import { isStaleDeployError } from '@/lib/errors/stale-deploy'
 import { toast } from '@/lib/toast'
 import { useServerState } from '@/lib/use-server-state'
 import { setLevelStatus } from '@/server/actions/progress'
@@ -25,6 +26,7 @@ export function useSkipLevel(initial: Record<string, LevelStatus>) {
 		},
 		onError: (error, _levelId, previous) => {
 			if (previous) setStatuses(previous)
+			if (isStaleDeployError(error)) return
 			toast({
 				title: "Couldn't skip the level",
 				description: error instanceof Error ? error.message : 'Try again in a moment.',

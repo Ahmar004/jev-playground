@@ -1,8 +1,8 @@
 'use client'
 
 import { Suspense, useEffect, useRef } from 'react'
-import posthog from 'posthog-js'
 import { usePathname, useSearchParams } from 'next/navigation'
+import { withPostHog } from '@/lib/posthog/client'
 import { ANALYTICS_EVENTS } from './events'
 import { captureAttribution } from './attribution'
 import { track } from './track'
@@ -22,16 +22,14 @@ function AnalyticsProviderInner() {
 		started.current = true
 		captureAttribution()
 
-		let sessionId: string | undefined
-		try {
-			sessionId = posthog.get_session_id()
-		} catch {
-			sessionId = undefined
-		}
-		const marker = sessionId ? `app_opened:${sessionId}` : undefined
-		if (marker && typeof sessionStorage !== 'undefined' && sessionStorage.getItem(marker)) return
-		if (marker && typeof sessionStorage !== 'undefined') sessionStorage.setItem(marker, '1')
-		track(ANALYTICS_EVENTS.APP_OPENED, {})
+		// The session id exists once PostHog has loaded (src/lib/posthog/client.tsx).
+		withPostHog((posthog) => {
+			const sessionId = posthog.get_session_id()
+			const marker = sessionId ? `app_opened:${sessionId}` : undefined
+			if (marker && typeof sessionStorage !== 'undefined' && sessionStorage.getItem(marker)) return
+			if (marker && typeof sessionStorage !== 'undefined') sessionStorage.setItem(marker, '1')
+			track(ANALYTICS_EVENTS.APP_OPENED, {})
+		})
 	}, [])
 
 	// On every route change: PostHog's native $pageview (its funnels/replay
@@ -41,11 +39,8 @@ function AnalyticsProviderInner() {
 	useEffect(() => {
 		if (!pathname) return
 		const url = searchParams?.size ? `${pathname}?${searchParams.toString()}` : pathname
-		try {
-			posthog.capture('$pageview', { $current_url: url })
-		} catch {
-			// Analytics can never break navigation.
-		}
+		// withPostHog never throws: analytics can never break navigation.
+		withPostHog((posthog) => posthog.capture('$pageview', { $current_url: url }))
 		track(ANALYTICS_EVENTS.PAGE_VIEWED, { page_name: pathname })
 	}, [pathname, searchParams])
 

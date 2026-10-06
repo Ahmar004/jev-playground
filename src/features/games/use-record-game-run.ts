@@ -2,6 +2,7 @@
 
 import { useMutation } from '@tanstack/react-query'
 import { announceAwards } from '@/features/levels/awards-toast'
+import { isStaleDeployError } from '@/lib/errors/stale-deploy'
 import { toast } from '@/lib/toast'
 import { recordGameRun } from '@/server/actions/games'
 import type { GameRunInput } from './game-run'
@@ -18,12 +19,14 @@ export function useRecordGameRun() {
 			announceAwards(data.awards)
 			toast({ title: 'Saved to your Leaderboard' })
 		},
-		onError: (error: unknown) =>
+		onError: (error: unknown) => {
+			if (isStaleDeployError(error)) return
 			toast({
 				title: "Couldn't save this run",
 				description: error instanceof Error ? error.message : 'Try again in a moment.',
 				variant: 'destructive'
 			})
+		}
 	})
 	return { record: mutation.mutate }
 }

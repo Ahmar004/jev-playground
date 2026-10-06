@@ -60,7 +60,19 @@ export default async function proxy(request: NextRequest) {
 }
 
 export const config = {
-	// Skip API routes (each handler returns its own JSON 401), static files
-	// and Next internals.
-	matcher: ['/((?!api|_next|_vercel|.*\\..*).*)']
+	matcher: [
+		{
+			// Skip API routes (each handler returns its own JSON 401), static files
+			// and Next internals.
+			source: '/((?!api|_next|_vercel|.*\\..*).*)',
+			// Skip router prefetches too: one page view prefetches about 25 links,
+			// and each would be its own function call on Vercel. A prefetch only
+			// fetches the static shell, which holds no user data; the navigation
+			// that follows runs this proxy, so it still refreshes and gates.
+			missing: [
+				{ type: 'header', key: 'next-router-prefetch' },
+				{ type: 'header', key: 'purpose', value: 'prefetch' }
+			]
+		}
+	]
 }

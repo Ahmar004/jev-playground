@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import type { GuidePart } from '@/lib/constants'
 import { ROUTES } from '@/lib/links'
+import { isStaleDeployError } from '@/lib/errors/stale-deploy'
 import { toast } from '@/lib/toast'
 import { useServerState } from '@/lib/use-server-state'
 import { markGuideSeen, resetGuide } from '@/server/actions/guide'
@@ -23,12 +24,14 @@ export function useGuideSeen(serverSeen: GuidePart[]) {
 			if (!result.ok) throw new Error(result.error)
 		},
 		onMutate: (parts) => setSeen((current) => mergeGuideSeen(current, parts)),
-		onError: () =>
+		onError: (error) => {
+			if (isStaleDeployError(error)) return
 			toast({
 				title: "Couldn't save your guide progress",
 				description: 'The guide may show again on your next visit.',
 				variant: 'destructive'
 			})
+		}
 	})
 	return { seen, markSeen: mutation.mutate }
 }
@@ -45,12 +48,14 @@ export function useReplayGuide() {
 			toast({ title: 'Tour restarted', description: 'The level tips will show again too.' })
 			router.push(ROUTES.home)
 		},
-		onError: (error) =>
+		onError: (error) => {
+			if (isStaleDeployError(error)) return
 			toast({
 				title: "Couldn't restart the tour",
 				description: error instanceof Error ? error.message : 'Try again in a moment.',
 				variant: 'destructive'
 			})
+		}
 	})
 	return { replay: () => mutation.mutate(), pending: mutation.isPending }
 }

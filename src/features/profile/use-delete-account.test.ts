@@ -6,7 +6,10 @@ const action = vi.hoisted(() => vi.fn())
 const rethrow = vi.hoisted(() => vi.fn())
 vi.mock('@/lib/toast', () => ({ toast }))
 vi.mock('@/server/actions/account', () => ({ deleteAccount: action }))
-vi.mock('next/navigation', () => ({ unstable_rethrow: rethrow }))
+vi.mock('next/navigation', async (original) => ({
+	...(await original<typeof import('next/navigation')>()),
+	unstable_rethrow: rethrow
+}))
 
 import { NETWORK_ERROR_MESSAGE, useDeleteAccount } from './use-delete-account'
 

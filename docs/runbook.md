@@ -2,6 +2,28 @@
 
 What to do when something on the live site (https://letsplaywithjev.vercel.app) needs the owner. Setup steps for each service are in `docs/api-setup-guide.md`.
 
+## Launch checklist (before a Discord post)
+
+The site runs on Vercel Hobby (free) and Supabase Free. A launch spike is what can push either past its limit, so check them around every post.
+
+1. The day before: open the live site signed in, play one level, and confirm the Supabase project `jevs-playground-prod` shows as active (not paused) and the newest Vercel deployment is green.
+2. Don't deploy for an hour before and after the post. A deploy makes every tab that was already open show "The site was just updated. Reload to continue." on its next save (Hobby has no Skew Protection).
+3. During the first hours, every 30 minutes: Vercel > Settings > Usage (Function Invocations, Active CPU, Fast Origin Transfer, CDN Requests), Supabase > Reports (database CPU and pooler client connections), and Sentry for new issues.
+4. If any Vercel meter passes about 70% of its monthly allowance, decide on Pro before it reaches 100%, because Hobby pauses the site at the limit (next section). Pro costs $20 a month, paid from the project budget at the top of `ROADMAP.md`, so it is the owner's call.
+5. If traffic looks like abuse rather than visitors (one IP or path hammering the site), turn on Vercel Firewall > **Attack Mode**; Hobby has it, and DDoS mitigation is on by default.
+
+The Hobby allowances per month: 1,000,000 function invocations, 1,000,000 CDN requests, 4 hours of Active CPU, 10 GB Fast Origin Transfer and 100 GB Fast Data Transfer (https://vercel.com/docs/plans/hobby, checked 2026-10-06). A page view costs one function call; router prefetches skip the proxy (`src/proxy.ts`), so they cost none.
+
+## If Vercel pauses the site
+
+Visitors see Vercel's "503 DEPLOYMENT_PAUSED" page instead of the app. Hobby pauses a project that passes a usage limit, and it stays paused for 30 days unless the plan changes.
+
+1. Vercel dashboard > Settings > Billing > **Upgrade** to Pro (card needed; the owner decides this).
+2. Open the project `jev-playground`; a paused project never resumes by itself, so choose **Resume** on the project overview.
+3. Load the live site and sign in to confirm it is back. Nothing in the database is lost by a pause.
+
+Without an upgrade, the only way back is to wait until 30 days have passed.
+
 ## The site is down or every page errors
 
 1. Vercel dashboard > project `jev-playground` > Deployments. If the newest deployment is red or just went out, open the previous green one and choose **Instant Rollback**. A rollback is immediate and needs no rebuild.
@@ -45,6 +67,6 @@ The live site never spends the owner's credit: the owner keys are not on Vercel,
 
 ## Known behaviours, not faults
 
-- A tab opened before a deploy shows "Could not reach the server" on its next sign-in or form, because it holds the old build's Server Action id. A reload fixes it. Deploy when few people are online.
+- A tab opened before a deploy shows "The site was just updated. Reload to continue." with a Reload button on its next save, sign-in or form, because it holds the old build's Server Action ids (`src/lib/errors/stale-deploy.ts`). Navigating reloads on its own. Deploy when few people are online.
 - There is no password reset: it needs an email sender of our own, and no domain is bought.
 - Promotional model prices end on 2026-11-21 (gpt-5.6-sol) and 2026-12-31 (gemini flash models); after that those models show "price unknown" until `content/prices.json` is rechecked.

@@ -1,6 +1,6 @@
 'use client'
 
-import posthog from 'posthog-js'
+import { withPostHog } from '@/lib/posthog/client'
 
 // Common user attributes that link an anonymous session to a known user.
 // Keep these to non-PII, low-cardinality traits — a plan tier, a role, a
@@ -24,19 +24,12 @@ export function identifyUser({
 	distinctId: string
 	traits?: UserTraits
 }): void {
-	try {
-		posthog.identify(distinctId, traits)
-	} catch {
-		// Identity can never break the login it's recording.
-	}
+	// withPostHog never throws: identity can never break the login it's recording.
+	withPostHog((posthog) => posthog.identify(distinctId, traits))
 }
 
 // Call on logout. Clears the identified person and starts a fresh anonymous
 // id, so the next user on a shared device isn't merged into the previous one.
 export function resetAnalytics(): void {
-	try {
-		posthog.reset()
-	} catch {
-		// Reset can never break the logout it's recording.
-	}
+	withPostHog((posthog) => posthog.reset())
 }

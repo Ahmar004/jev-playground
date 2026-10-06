@@ -1,6 +1,6 @@
 'use client'
 
-import posthog from 'posthog-js'
+import { withPostHog } from '@/lib/posthog/client'
 
 // Common user attributes (rule 6). Most are already attached by PostHog's own
 // autocapture and don't need re-implementing here:
@@ -38,11 +38,13 @@ function resolveUserSource(utm: Record<string, string>): 'internal' | 'external'
 // set-once, so later visits don't overwrite the original acquisition source.
 export function captureAttribution(): void {
 	if (typeof window === 'undefined') return
-	try {
-		const utm = readUtmParams(window.location.search)
-		const userSource = resolveUserSource(utm)
-		const appVersion = process.env.NEXT_PUBLIC_APP_VERSION
+	// Read the landing URL and referrer now; PostHog itself may load a moment later.
+	const utm = readUtmParams(window.location.search)
+	const userSource = resolveUserSource(utm)
+	const appVersion = process.env.NEXT_PUBLIC_APP_VERSION
 
+	// withPostHog never throws: attribution can never break the app it's measuring.
+	withPostHog((posthog) => {
 		posthog.register({
 			...utm,
 			user_source: userSource,
@@ -55,7 +57,5 @@ export function captureAttribution(): void {
 			if (utm[key]) firstTouch[`user_${key}`] = utm[key]
 		}
 		posthog.setPersonProperties(undefined, firstTouch)
-	} catch {
-		// Attribution can never break the app it's measuring.
-	}
+	})
 }

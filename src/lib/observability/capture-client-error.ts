@@ -1,7 +1,7 @@
-import posthog from 'posthog-js'
 import { errorType, normalizeError, type NormalizedError } from '@/lib/errors/normalize-error'
 import { ANALYTICS_EVENTS } from '@/lib/analytics/events'
 import { reportToSentry } from '@/lib/observability/sentry-client'
+import { withPostHog } from '@/lib/posthog/client'
 
 // Client-side counterpart to capture-error.ts — same job, but posthog-js
 // instead of posthog-node so this never pulls server-only code into the
@@ -18,7 +18,10 @@ export function captureClientError(
 		reportToSentry((sentry) => sentry.captureException(error, { extra: context }))
 	}
 
-	try {
+	// withPostHog never throws: analytics can never break the error UI it's
+	// reporting from.
+	const shownAt = new Date().toISOString()
+	withPostHog((posthog) => {
 		posthog.captureException(error, context)
 		// The taxonomy's user-facing signal: an error actually reached the UI.
 		// error_type is a category, never the raw message (rule 5). This is the
@@ -27,11 +30,9 @@ export function captureClientError(
 			error_type: errorType(error),
 			status: normalized.status,
 			is_expected: normalized.isExpected,
-			timestamp_utc: new Date().toISOString()
+			timestamp_utc: shownAt
 		})
-	} catch {
-		// Analytics can never break the error UI it's reporting from.
-	}
+	})
 
 	return normalized
 }

@@ -64,6 +64,22 @@ export function ToastDescription({
 	)
 }
 
+export function ToastAction({
+	className,
+	...props
+}: React.ComponentProps<typeof ToastPrimitives.Action>) {
+	return (
+		<ToastPrimitives.Action
+			className={cn(
+				'bg-accent text-accent-ink hover:bg-accent-hover h-8 shrink-0 self-center rounded px-3 text-sm font-semibold',
+				'focus-visible:outline-accent focus-visible:outline focus-visible:outline-2',
+				className
+			)}
+			{...props}
+		/>
+	)
+}
+
 export function ToastClose({
 	className,
 	...props

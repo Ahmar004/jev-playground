@@ -6,7 +6,10 @@ const toast = vi.fn()
 
 vi.mock('@/server/actions/auth', () => ({ signOut }))
 vi.mock('@/lib/toast', () => ({ toast }))
-vi.mock('next/navigation', () => ({ unstable_rethrow: () => {} }))
+vi.mock('next/navigation', async (original) => ({
+	...(await original<typeof import('next/navigation')>()),
+	unstable_rethrow: () => {}
+}))
 
 const { NETWORK_ERROR_MESSAGE } = await import('@/features/auth/use-auth-form')
 const { useSignOut } = await import('./use-sign-out')
@@ -44,5 +47,21 @@ describe('useSignOut', () => {
 				variant: 'destructive'
 			})
 		)
+	})
+
+	it('asks for a reload instead when the site was redeployed since the tab opened', async () => {
+		const { UnrecognizedActionError } =
+			await import('next/dist/client/components/unrecognized-action-error')
+		signOut.mockRejectedValue(new UnrecognizedActionError('Server Action "abc" was not found'))
+		const { result } = renderHook(() => useSignOut())
+
+		act(() => result.current.signOut())
+
+		await waitFor(() =>
+			expect(toast).toHaveBeenCalledWith(
+				expect.objectContaining({ title: 'The site was just updated', persistent: true })
+			)
+		)
+		expect(toast).toHaveBeenCalledTimes(1)
 	})
 })

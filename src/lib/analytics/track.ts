@@ -1,6 +1,5 @@
 'use client'
 
-import posthog from 'posthog-js'
 import { trackEvent } from '@/lib/posthog/client'
 import {
 	ANALYTICS_EVENTS,
@@ -14,17 +13,11 @@ import {
 } from './events'
 
 // Common page attributes (rule 6), computed once per call so no call site has
-// to remember them. session_id comes from PostHog; page_name defaults to the
-// pathname (override it with a stable human name where you have one).
-function commonPageAttributes(): CommonPageAttributes {
-	let sessionId: string | undefined
-	try {
-		sessionId = posthog.get_session_id()
-	} catch {
-		sessionId = undefined
-	}
+// to remember them. page_name defaults to the pathname (override it with a
+// stable human name where you have one). Both are read now, since the event may
+// wait for PostHog to load; session_id is added when it is sent (trackEvent).
+function commonPageAttributes(): Omit<CommonPageAttributes, 'session_id'> {
 	return {
-		session_id: sessionId,
 		page_name: typeof window === 'undefined' ? undefined : window.location.pathname,
 		timestamp_utc: new Date().toISOString()
 	}

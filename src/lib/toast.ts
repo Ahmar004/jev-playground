@@ -6,6 +6,12 @@ export type ToastInput = {
 	title?: string
 	description?: string
 	variant?: 'default' | 'destructive'
+	// A button inside the toast, for the one thing the user should do next.
+	action?: { label: string; onClick: () => void }
+	// Stays until dismissed instead of closing after a few seconds.
+	persistent?: boolean
+	// A toast with a key shows once while it is on screen, however often it is raised.
+	key?: string
 }
 
 type ToastItem = ToastInput & { id: string }
@@ -34,10 +40,11 @@ function dismiss(id: string) {
 // userMessage: `toast({ title: 'Something went wrong', description: userMessage,
 // variant: 'destructive' })`. See docs/rules/error-handling.md.
 export function toast(input: ToastInput): void {
+	if (input.key && toasts.some((item) => item.key === input.key)) return
 	const id = String(nextId++)
 	toasts = [...toasts, { id, ...input }]
 	emit()
-	setTimeout(() => dismiss(id), TOAST_DURATION_MS)
+	if (!input.persistent) setTimeout(() => dismiss(id), TOAST_DURATION_MS)
 }
 
 export function useToast() {

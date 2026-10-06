@@ -1,4 +1,5 @@
 import { scrubBreadcrumb, scrubEvent } from '@/lib/observability/scrub'
+import { whenIdle } from '@/lib/when-idle'
 
 // The Sentry browser SDK is about 117 KB gzipped and cost 600 ms of main-thread
 // time on a throttled phone, so it must not load before the page is usable
@@ -7,19 +8,6 @@ import { scrubBreadcrumb, scrubEvent } from '@/lib/observability/scrub'
 // second or two, before the SDK starts, is not reported.
 
 type SentrySdk = typeof import('@sentry/nextjs')
-
-const IDLE_TIMEOUT_MS = 3000
-const IDLE_FALLBACK_MS = 1000
-
-function whenIdle(): Promise<void> {
-	return new Promise((resolve) => {
-		if (typeof requestIdleCallback === 'function') {
-			requestIdleCallback(() => resolve(), { timeout: IDLE_TIMEOUT_MS })
-		} else {
-			setTimeout(resolve, IDLE_FALLBACK_MS)
-		}
-	})
-}
 
 let loading: Promise<SentrySdk | null> | null = null
 

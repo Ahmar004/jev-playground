@@ -2,7 +2,10 @@ import { act, renderHook, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { NETWORK_ERROR_MESSAGE, useAuthForm } from './use-auth-form'
 
-vi.mock('next/navigation', () => ({ unstable_rethrow: () => {} }))
+vi.mock('next/navigation', async (original) => ({
+	...(await original<typeof import('next/navigation')>()),
+	unstable_rethrow: () => {}
+}))
 const toast = vi.hoisted(() => vi.fn())
 vi.mock('@/lib/toast', () => ({ toast }))
 
